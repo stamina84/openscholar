@@ -19,7 +19,7 @@ default_value: {  }
 default_value_callback: ''
 settings:
   file_directory: presentation-materials
-  file_extensions: 'odt pps ppsx ppt pptx'
+  file_extensions: 'odt pps ppsx ppt'
   max_filesize: ''
   description_field: true
   handler: 'default:file'

@@ -19,7 +19,7 @@ default_value: {  }
 default_value_callback: ''
 settings:
   file_directory: executables
-  file_extensions: 'exe zip gz tar rar'
+  file_extensions: 'exe zip gz tar rar tgz'
   max_filesize: ''
   description_field: true
   handler: 'default:file'
