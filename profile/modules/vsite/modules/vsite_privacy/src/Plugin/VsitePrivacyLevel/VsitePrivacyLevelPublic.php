@@ -8,9 +8,9 @@ use Drupal\vsite_privacy\Plugin\VsitePrivacyLevelPluginBase;
  * Vsite privacy level.
  *
  * @VsitePrivacyLevel(
- *   title = @Translation("Public"),
+ *   title = @Translation("Public on the Web."),
  *   id = "public",
- *   description = @Translation("Accessible to everyone."),
+ *   description = @Translation("Anyone on the Internet can view your site. Your site will show in search results. No sign-in required."),
  *   weight = -1000
  * )
  */

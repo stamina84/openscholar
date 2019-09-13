@@ -2,3 +2,7 @@ services:
   vsite.privacy.manager:
     class: Drupal\vsite_privacy\Plugin\VsitePrivacyLevelManager
     parent: default_plugin_manager
+
+  vsite_privacy.helper:
+    class: Drupal\vsite_privacy\VsitePrivacyHelper
+    arguments: ['@config.factory', '@vsite.context_manager']
