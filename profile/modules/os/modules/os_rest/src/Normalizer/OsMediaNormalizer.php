@@ -115,7 +115,7 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       $output['description'] = $temp['field_media_video_file'][0]['description'];
     }
     elseif ($output['type'] == 'image') {
-      $output['description'] = $temp['field_image_caption'][0]['value'];
+      $output['description'] = isset($temp['field_image_caption'][0]) ? $temp['field_image_caption'][0]['value'] : '';
     }
     $output['thumbnail'] = $temp['thumbnail'][0]['url'];
 
