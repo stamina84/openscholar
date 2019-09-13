@@ -108,11 +108,12 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       $output['filename'] = $file;
     }
 
-    $field = $this->mediaHelper->getField($output['type']);
-    $output['description'] = $temp[$field][0]['description'];
-
     if ($output['type'] == 'image') {
       $output['description'] = isset($temp['field_image_caption'][0]) ? $temp['field_image_caption'][0]['value'] : '';
+    }
+    elseif ($output['type'] == 'document' || $output['type'] == 'video') {
+      $field = $this->mediaHelper->getField($output['type']);
+      $output['description'] = $temp[$field][0]['description'];
     }
     $output['thumbnail'] = $temp['thumbnail'][0]['url'];
 
@@ -131,11 +132,12 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
     }
     if (in_array('description', $entity->_restSubmittedFields)) {
       $entity->_restSubmittedFields = array_diff($entity->_restSubmittedFields, ['description']);
-      $field = $this->mediaHelper->getField($entity->bundle());
-      $entity->_restSubmittedFields[] = $field;
-
       if ($entity->bundle() == 'image') {
         $entity->_restSubmittedFields[] = 'field_image_caption';
+      }
+      else {
+        $field = $this->mediaHelper->getField($entity->bundle());
+        $entity->_restSubmittedFields[] = $field;
       }
     }
     $entity->restSubmittedFields = array_diff($entity->_restSubmittedFields, ['fid']);
@@ -194,12 +196,6 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
 
     if (isset($data['description'])) {
       $field = $this->mediaHelper->getField($original->bundle());
-      $input = [
-        $field => $original->get($field)->get(0)->getValue(),
-      ];
-      $input[$field]['description'] = $data['description'];
-      $fieldList = $entity->get($field);
-
       if ($original->bundle() == 'image') {
         $value = $original->get('field_image_caption');
         $input = [
@@ -208,7 +204,13 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
         $input['field_image_caption']['value'] = $data['description'];
         $fieldList = $entity->get('field_image_caption');
       }
-
+      else {
+        $input = [
+          $field => $original->get($field)->get(0)->getValue(),
+        ];
+        $input[$field]['description'] = $data['description'];
+        $fieldList = $entity->get($field);
+      }
       $class = get_class($fieldList);
       $context['target_instance'] = $fieldList;
       $this->serializer->deserialize(json_encode($input), $class, $format, $context);
