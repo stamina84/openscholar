@@ -309,7 +309,7 @@ function os_events_views_pre_render(ViewExecutable $view) {
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
       $node = $storage->load($nid);
       $build = $view_builder->view($node, $view_mode);
-      $output = render($build);
+      $output = \Drupal::service('renderer')->renderRoot($build);
 
       $view->element['#attached']['drupalSettings']['os_events']['node'][$nid] = $output;
       $dateTime = new DrupalDateTime();
