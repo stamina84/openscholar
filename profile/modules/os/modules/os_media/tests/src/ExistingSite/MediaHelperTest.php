@@ -20,7 +20,7 @@ class MediaHelperTest extends ExistingSiteBase {
   protected $mediaHelper;
 
   /**
-   * Create Events type node.
+   * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
