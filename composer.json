@@ -257,7 +257,8 @@
         "ckeditor/colordialog": "^4.12",
         "drupal/colordialog": "^1.2",
         "oomphinc/composer-installers-extender": "^1.1",
-        "npm-asset/chosen-js": "^1.8"
+        "npm-asset/chosen-js": "^1.8",
+        "drupal/robotstxt": "^1.2"
     },
     "require-dev": {
         "drupal/features": "^3.7",
