@@ -39,7 +39,7 @@
 
             scope.schema = f.schema;
             scope.fileEditAddt = url.generate(libraryPath+'/file_edit_'+f.type+'.html?vers='+version, false);
-            scope.date = $filter('date')(f.changed+'000', 'short');
+            scope.date = $filter('date')(f.created+'000', 'short');
             scope.file.terms = scope.file.terms || [];
 
             scope.fullPath = f.url.slice(0, f.url.lastIndexOf('/')+1);
@@ -59,12 +59,12 @@
               return;
             }
             if (d) {
-              scope.file.timestamp = parseInt(d.getTime() / 1000);
+              scope.file.created = parseInt(d.getTime() / 1000);
               if (dateTimeout) {
                 $timeout.cancel(dateTimeout);
               }
               dateTimeout = $timeout(function () {
-                scope.date = $filter('date')(scope.file.timestamp+'000', 'short');
+                scope.date = $filter('date')(scope.file.created+'000', 'short');
               }, 3000);
             }
           });

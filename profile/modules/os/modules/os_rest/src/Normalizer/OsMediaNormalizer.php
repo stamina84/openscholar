@@ -167,13 +167,14 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       $context['target_instance'] = $fieldList;
       $this->serializer->deserialize(json_encode($input), $class, $format, $context);
     }
-    if (isset($data['changed'])) {
+    debug($data);
+    if (isset($data['created'])) {
       $input = [
-        'changed' => [
-          'value' => $data['changed'],
+        'created' => [
+          'value' => $data['created'],
         ],
       ];
-      $fieldList = $entity->get('changed');
+      $fieldList = $entity->get('created');
       $fieldList->setValue([]);
       $class = get_class($fieldList);
       $context['target_instance'] = $fieldList;
