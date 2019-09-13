@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\os_media\MediaEntityHelperInterface;
 use Drupal\serialization\Normalizer\ContentEntityNormalizer;
 
 /**
@@ -45,6 +46,13 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
   protected $supportedInterfaceOrClass = 'Drupal\media\MediaInterface';
 
   /**
+   * Media Helper for media browser.
+   *
+   * @var \Drupal\os_media\MediaEntityHelperInterface
+   */
+  protected $mediaHelper;
+
+  /**
    * OsMediaNormalizer constructor.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -55,12 +63,15 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
    *   Current Route match.
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The local file system manager.
+   * @param \Drupal\os_media\MediaEntityHelperInterface $media_helper
+   *   Media Helper instance.
    */
-  public function __construct(EntityManagerInterface $entity_manager, EntityTypeManagerInterface $entityTypeManager, RouteMatchInterface $routeMatch, FileSystemInterface $fileSystem) {
+  public function __construct(EntityManagerInterface $entity_manager, EntityTypeManagerInterface $entityTypeManager, RouteMatchInterface $routeMatch, FileSystemInterface $fileSystem, MediaEntityHelperInterface $media_helper) {
     parent::__construct($entity_manager);
     $this->entityTypeManager = $entityTypeManager;
     $this->routeMatch = $routeMatch;
     $this->fileSystem = $fileSystem;
+    $this->mediaHelper = $media_helper;
   }
 
   /**
@@ -169,15 +180,16 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       $this->serializer->deserialize(json_encode($input), $class, $format, $context);
     }
     if (isset($data['alt']) || isset($data['title'])) {
+      $field = $this->mediaHelper->getField($original->bundle());
       $input = [
-        'field_media_image' => $original->get('field_media_image')->get(0)->getValue(),
+        $field => $original->get($field)->get(0)->getValue(),
       ];
 
       if (isset($data['alt'])) {
-        $input['field_media_image']['alt'] = $data['alt'];
+        $input[$field]['alt'] = $data['alt'];
       }
       if (isset($data['title'])) {
-        $input['field_media_image']['title'] = $data['title'];
+        $input[$field]['title'] = $data['title'];
       }
 
       $fieldList = $entity->get('field_media_image');
@@ -187,25 +199,17 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
     }
 
     if (isset($data['description'])) {
-      if ($original->bundle() == 'document') {
-        $input = [
-          'field_media_file' => $original->get('field_media_file')->get(0)->getValue(),
-        ];
-        $input['field_media_file']['description'] = $data['description'];
-        $fieldList = $entity->get('field_media_file');
-      }
+      $field = $this->mediaHelper->getField($original->bundle());
+      $input = [
+        $field => $original->get($field)->get(0)->getValue(),
+      ];
+      $input[$field]['description'] = $data['description'];
+      $fieldList = $entity->get($field);
 
-      elseif ($original->bundle() == 'video') {
+      if ($original->bundle() == 'image') {
+        $value = $original->get('field_image_caption');
         $input = [
-          'field_media_video_file' => $original->get('field_media_video_file')->get(0)->getValue(),
-        ];
-        $input['field_media_video_file']['description'] = $data['description'];
-        $fieldList = $entity->get('field_media_video_file');
-      }
-
-      elseif ($original->bundle() == 'image') {
-        $input = [
-          'field_image_caption' => $original->get('field_image_caption')->get(0)->getValue(),
+          'field_image_caption' => isset($value[0]) ? $value[0]->getValue() : [],
         ];
         $input['field_image_caption']['value'] = $data['description'];
         $fieldList = $entity->get('field_image_caption');

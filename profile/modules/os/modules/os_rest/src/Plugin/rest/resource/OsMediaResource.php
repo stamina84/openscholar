@@ -15,10 +15,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class OsMediaResource extends OsEntityResource {
 
-  const FILE_FIELDS = [
-    'filename',
-  ];
-
   /**
    * Switch between paths based on argument type.
    *
@@ -94,7 +90,7 @@ class OsMediaResource extends OsEntityResource {
   }
 
   /**
-   * Responds to entity PATCH requests.
+   * Responds to media entity PATCH requests and overrides base patch method.
    *
    * @param \Drupal\Core\Entity\EntityInterface $original_entity
    *   The original entity object.
@@ -108,6 +104,7 @@ class OsMediaResource extends OsEntityResource {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function patch(EntityInterface $original_entity, EntityInterface $entity = NULL) {
+    // Get the payload data from the request.
     $data = json_decode(\Drupal::request()->getContent(), TRUE);
     if ($entity == NULL) {
       throw new BadRequestHttpException('No entity content received.');
@@ -117,31 +114,27 @@ class OsMediaResource extends OsEntityResource {
       throw new BadRequestHttpException('Invalid entity type');
     }
 
-    $changed_fields = [];
+    $changedFields = [];
     $fileEntityOrig = [];
+    /** @var \Drupal\os_media\MediaEntityHelper $mediaHelper */
+    $mediaHelper = \Drupal::service('os_media.media_helper');
     foreach ($entity->_restSubmittedFields as $key => $field_name) {
-      // Check for.
-      if (in_array($field_name, self::FILE_FIELDS)) {
-        if ($entity->bundle() == 'image') {
-          $field = 'field_media_image';
-        }
-        elseif ($entity->bundle() == 'document') {
-          $field = 'field_media_file';
-        }
-        elseif ($entity->bundle() == 'video') {
-          $field = 'field_media_video_file';
-        }
+      // Check for fields which actually exist in File entity to update them.
+      if (in_array($field_name, $mediaHelper::FILE_FIELDS)) {
+        $field = $mediaHelper->getField($entity->bundle());
         $fileId = $original_entity->get($field)->get(0)->get('target_id')->getValue();
         $fileEntityOrig = \Drupal::entityTypeManager()->getStorage('file')->load($fileId);
-        $changed_fields[] = $field_name;
+        $changedFields[] = $field_name;
         $fileEntityOrig->set($field_name, $data[$field_name]);
+        // Unset field so that it does not throw error when parent method
+        // is called as they do not exist in the media entity.
         unset($entity->_restSubmittedFields[$key]);
       }
     }
 
     if ($fileEntityOrig) {
       // Validate the received data before saving.
-      $this->validate($fileEntityOrig, $changed_fields);
+      $this->validate($fileEntityOrig, $changedFields);
       try {
         $fileEntityOrig->save();
         $this->logger->notice('Updated entity %type with ID %id.', [
