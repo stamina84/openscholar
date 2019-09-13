@@ -24,6 +24,20 @@
   }
 
   /**
+   * Makes sure that after delete user is redirected current page.
+   *
+   * @param $el
+   *   The delete contextual link element.
+   */
+  function alterDestinationInField($el) {
+    let $link = $el.find('a');
+    let url = new URL($link.attr('href'), window.location.origin);
+    url.searchParams.set('destination', window.location.pathname);
+
+    $link.attr('href', decodeURIComponent(url.toString()));
+  }
+
+  /**
    * Makes sure that after edit, user is redirected to full-view.
    *
    * @param $el
@@ -53,7 +67,7 @@
    */
   function registerDrupalContextualLinkAddedEvent() {
     $(document).once().bind('drupalContextualLinkAdded', function (event, data) {
-      let $deleteOption = data.$el.find('li.entitynodedelete-form, li.entitybibcite-referencedelete-form');
+      let $deleteOption = data.$el.find('li.entitynodedelete-form, li.entitybibcite-referencedelete-form, li.entitymediadelete-form');
 
       if ($deleteOption.length) {
         let entityMapping = drupalSettings.entitySetting.mapping[drupalSettings.entitySetting.type];
@@ -67,10 +81,19 @@
         alterDeleteDestination($deleteOption, redirectLocation);
       }
 
-      let $editOption = data.$el.find('li.entitynodeedit-form, li.entitybibcite-referenceedit-form');
+      let $editOption = data.$el.find('li.entitynodeedit-form, li.entitybibcite-referenceedit-form, li.entitymediaedit-form');
 
       if ($editOption.length) {
         alterEditDestination($editOption);
+      }
+      let $optionInField = data.$el.parents('.field--item');
+      if ($optionInField.length) {
+        if ($deleteOption.length) {
+          alterDestinationInField($deleteOption);
+        }
+        if ($editOption.length) {
+          alterDestinationInField($editOption);
+        }
       }
     });
   }
