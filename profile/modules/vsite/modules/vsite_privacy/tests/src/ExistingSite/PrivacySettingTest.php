@@ -111,7 +111,6 @@ class PrivacySettingTest extends OsExistingSiteTestBase {
    */
   public function testPublicSiteMetatagRobotsNotVisible() {
     $public_group = $this->createGroup([
-      'type' => 'personal',
       'field_privacy_level' => [
         'value' => 'public',
       ],
