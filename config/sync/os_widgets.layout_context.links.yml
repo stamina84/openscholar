@@ -1,0 +1,10 @@
+uuid: de22e2de-01a1-45f6-8d69-4eaf9bc7c3bb
+langcode: en
+status: true
+dependencies: {  }
+id: links
+label: Links
+description: 'Layout Context for Links'
+activationRules: "links\r\nlinks/*"
+weight: 0
+data: {  }
