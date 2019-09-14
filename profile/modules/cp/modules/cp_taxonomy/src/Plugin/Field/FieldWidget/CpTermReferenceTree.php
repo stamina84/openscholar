@@ -45,6 +45,24 @@ class CpTermReferenceTree extends TermReferenceTree {
         'validateTermReferenceTreeElement',
       ],
     ];
+    $renderer = \Drupal::service('renderer');
+    $items = [
+      [
+        '#markup' => '<a href="#" class="expand">' . $this->t('Expand') . '</a>',
+      ],
+      [
+        '#markup' => '<a href="#" class="collapse">' . $this->t('Collapse') . '</a>',
+      ],
+    ];
+    $attributes['class'] = 'toggle-wrapper';
+
+    $prefix_build = [
+      '#theme' => 'item_list',
+      '#items' => $items,
+      '#attributes' => $attributes,
+    ];
+    $prefix_html = $renderer->render($prefix_build);
+    $element['#prefix'] = $prefix_html->__toString();
     return $element;
   }
 
