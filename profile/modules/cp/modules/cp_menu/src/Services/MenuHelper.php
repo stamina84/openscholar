@@ -377,10 +377,10 @@ class MenuHelper implements MenuHelperInterface {
    * {@inheritdoc}
    */
   public function getVsiteMenuOptions(GroupInterface $vsite): array {
-    /** @var \Drupal\group\Entity\GroupContentInterface[] $menus */
-    $menus = $vsite->getContent('group_menu:menu');
+    /** @var \Drupal\group\Entity\GroupContentInterface[] $group_menu_contents */
+    $group_menu_contents = $vsite->getContent('group_menu:menu');
 
-    if (!$menus) {
+    if (!$group_menu_contents) {
       return [
         'main:' => $this->t('Primary Menu'),
         'footer:' => $this->t('Secondary Menu'),
@@ -389,10 +389,10 @@ class MenuHelper implements MenuHelperInterface {
 
     $options = [];
 
-    foreach ($menus as $menu) {
-      /** @var \Drupal\menu_link_content\MenuLinkContentInterface $menu_link_content */
-      $menu_link_content = $menu->getEntity();
-      $options["{$menu_link_content->id()}:"] = $menu->label();
+    foreach ($group_menu_contents as $group_menu_content) {
+      /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $menu */
+      $menu = $group_menu_content->getEntity();
+      $options["{$menu->id()}:"] = $group_menu_content->label();
     }
 
     return $options;

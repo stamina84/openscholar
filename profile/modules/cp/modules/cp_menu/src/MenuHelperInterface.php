@@ -71,6 +71,8 @@ interface MenuHelperInterface {
   /**
    * Returns the parent options while creating a content menu link for a vsite.
    *
+   * The options are meant to be used as form API options.
+   *
    * @param \Drupal\group\Entity\GroupInterface $vsite
    *   The vsite.
    *
