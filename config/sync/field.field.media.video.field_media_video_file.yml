@@ -19,9 +19,9 @@ default_value: {  }
 default_value_callback: ''
 settings:
   file_directory: videos
-  file_extensions: mp4
+  file_extensions: 'mp4 avi m4v mov mpeg ogv wmv'
   max_filesize: ''
-  description_field: false
+  description_field: true
   handler: 'default:file'
   handler_settings: {  }
 field_type: file

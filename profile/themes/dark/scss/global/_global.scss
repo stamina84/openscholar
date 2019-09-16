@@ -63,7 +63,7 @@ aside {
   background: $color-dark1;
 }
 .date, time {
-  color: $color-light-gray2;
+  color: $color-light-gray1;
 }
 .table-hover > tbody > tr:hover {
   background: none;
@@ -77,6 +77,11 @@ a.class_material_field_class_anchor {
 /** accessibility test **/
 button.visually-hidden {
   color: $color-black;
+}
+.messages__wrapper {
+   a, .close span, .sr-only {
+    color: currentColor;
+  }
 }
 /**** node person page content inner block title *****/
 .person-data {
