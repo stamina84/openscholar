@@ -1,0 +1,4 @@
+name: Os custom pager
+type: module
+description: Override views pager.
+core: 8.x
