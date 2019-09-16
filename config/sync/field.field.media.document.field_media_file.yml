@@ -19,7 +19,7 @@ default_value: {  }
 default_value_callback: ''
 settings:
   file_directory: documents
-  file_extensions: 'txt doc docx pdf xls xlsx rtf csv'
+  file_extensions: 'txt doc docx pdf xls xlsx rtf csv bib dot dotx enw ics mrc odp ods odt pot potx pps ppsx ppt pptx ris sas tex wtml wtt wwtfig xlt xltx xml'
   max_filesize: ''
   description_field: true
   handler: 'default:file'

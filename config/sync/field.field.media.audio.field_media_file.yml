@@ -19,7 +19,7 @@ default_value: {  }
 default_value_callback: ''
 settings:
   file_directory: audio-files
-  file_extensions: 'mp3 wav aac flac ogg mp4 mov mpeg avi wmv'
+  file_extensions: 'mp3 ogg oga m4a wav'
   max_filesize: ''
   description_field: true
   handler: 'default:file'

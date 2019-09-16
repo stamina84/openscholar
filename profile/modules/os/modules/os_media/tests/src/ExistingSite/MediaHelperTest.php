@@ -41,6 +41,8 @@ class MediaHelperTest extends ExistingSiteBase {
     $this->assertEquals('field_media_file', $actual);
 
     $this->assertEquals('filename', $this->mediaHelper::FILE_FIELDS[0]);
+
+    $this->assertNotEmpty($this->mediaHelper::ALLOWED_TYPES, 'Returns allowed media types.');
   }
 
 }
