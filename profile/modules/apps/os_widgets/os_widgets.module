@@ -218,6 +218,8 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $bundles = $entity_type_bunlde_info->getBundleInfo($entity_type_id);
       // Override form title value.
       $form['#title'] = t('Add new "%widget" Widget', ['%widget' => $bundles[$entity->bundle()]['label']]);
+      // Override entity label.
+      $form['info']['widget'][0]['value']['#title'] = t('Widget Description');
     }
   }
   switch ($form_id) {
