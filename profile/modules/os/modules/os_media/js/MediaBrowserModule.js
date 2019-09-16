@@ -124,15 +124,15 @@
       $scope.extensions = params.file_extensions.split(' ');
     }
     if (!params.override_extensions) {
-      var types = params.types;
+      var types = $scope.availTypes;
       for (var t in types) {
-        var ext = settings.fetchSetting('extensionMap')[types[t]],
-          i = 0, l = ext ? ext.length : false;
-
+        var ext = settings.fetchSetting('extensionMap')[types[t].value],
+            i = 0, l = ext ? ext.length : false;
+        
         if (!ext) {
           $scope.extensions.push(types[t]);
         } else {
-          for (var i=0; i<l; i++) {
+          for (var i = 0; i < l; i++) {
             if ($scope.extensions.indexOf(ext[i]) === -1) {
               $scope.extensions.push(ext[i]);
             }
