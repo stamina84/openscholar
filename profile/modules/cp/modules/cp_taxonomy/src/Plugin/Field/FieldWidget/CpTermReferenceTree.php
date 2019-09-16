@@ -61,7 +61,7 @@ class CpTermReferenceTree extends TermReferenceTree {
       '#items' => $items,
       '#attributes' => $attributes,
     ];
-    $prefix_html = $renderer->render($prefix_build);
+    $prefix_html = $renderer->renderRoot($prefix_build);
     $element['#prefix'] = $prefix_html->__toString();
     return $element;
   }
