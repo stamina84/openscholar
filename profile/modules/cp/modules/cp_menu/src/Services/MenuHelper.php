@@ -382,8 +382,8 @@ class MenuHelper implements MenuHelperInterface {
 
     if (!$menus) {
       return [
-        'main' => $this->t('Primary Menu'),
-        'footer' => $this->t('Secondary Menu'),
+        'main:' => $this->t('Primary Menu'),
+        'footer:' => $this->t('Secondary Menu'),
       ];
     }
 
@@ -392,7 +392,7 @@ class MenuHelper implements MenuHelperInterface {
     foreach ($menus as $menu) {
       /** @var \Drupal\menu_link_content\MenuLinkContentInterface $menu_link_content */
       $menu_link_content = $menu->getEntity();
-      $options[$menu_link_content->id()] = $menu->label();
+      $options["{$menu_link_content->id()}:"] = $menu->label();
     }
 
     return $options;
