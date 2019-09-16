@@ -186,7 +186,7 @@ taxonomyWidget:
     - os/treeSelector
 
 fileEditor:
-  version: 1.0.2
+  version: 1.0.3
   js:
     js/FileEditor/FileEditor.module.js: { }
   css:
