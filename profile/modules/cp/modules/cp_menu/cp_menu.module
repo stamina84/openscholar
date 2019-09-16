@@ -30,6 +30,9 @@ function cp_menu_form_node_form_alter(&$form, FormStateInterface $form_state, $f
     return;
   }
 
+  // Just use the default menu weight and hide it from the UI.
+  $form['menu']['link']['weight']['#access'] = FALSE;
+
   /** @var \Drupal\group\Entity\GroupContentInterface[] $vsite_menus */
   $vsite_menus = $active_vsite->getContent('group_menu:menu');
 

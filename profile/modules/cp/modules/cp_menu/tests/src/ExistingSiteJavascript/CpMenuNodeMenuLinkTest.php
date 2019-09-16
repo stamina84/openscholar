@@ -135,7 +135,6 @@ class CpMenuNodeMenuLinkTest extends OsExistingSiteJavascriptTestBase {
       'menu[title]' => $title,
       'menu[description]' => '',
       'menu[menu_parent]' => 'main:views_view:views.publications.page_1',
-      'menu[weight]' => 0,
     ], 'Save');
 
     $node = $this->loadNodeByTitle($title);
