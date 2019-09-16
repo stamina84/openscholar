@@ -373,4 +373,29 @@ class MenuHelper implements MenuHelperInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getVsiteMenuOptions(GroupInterface $vsite): array {
+    /** @var \Drupal\group\Entity\GroupContentInterface[] $menus */
+    $menus = $vsite->getContent('group_menu:menu');
+
+    if (!$menus) {
+      return [
+        'main' => $this->t('Primary Menu'),
+        'footer' => $this->t('Secondary Menu'),
+      ];
+    }
+
+    $options = [];
+
+    foreach ($menus as $menu) {
+      /** @var \Drupal\menu_link_content\MenuLinkContentInterface $menu_link_content */
+      $menu_link_content = $menu->getEntity();
+      $options[$menu_link_content->id()] = $menu->label();
+    }
+
+    return $options;
+  }
+
 }
