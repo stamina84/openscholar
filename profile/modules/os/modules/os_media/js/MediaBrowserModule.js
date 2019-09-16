@@ -144,14 +144,16 @@
     $scope.whitelist = settings.fetchSetting('embedWhitelist');
     $scope.maxFilesize = params.max_filesize || settings.fetchSetting('maximumFileSize');
 
-
     $scope.filteredTypes = [];
     $scope.isFiltered = function () {
-      return $scope.filteredTypes.length || $scope.search;
+      if ($scope.filteredTypes !== undefined) {
+        return $scope.filteredTypes.length;
+      }
+      return $scope.search;
     };
 
     $scope.clearFilters = function () {
-      $scope.filteredTypes = defaultFilteredTypes;
+      $scope.filteredTypes = undefined;
       $scope.search = '';
     };
 
@@ -219,7 +221,6 @@
 
     var fetching = service.fetch({})
       .then(function (result) {
-        console.log(result);
 
         $scope.files = result;
         $scope.numFiles = $scope.files.length;
@@ -235,6 +236,18 @@
 
     $scope.changePanes = function (pane, result) {
       if ($scope.activePanes[pane]) {
+        if (pane === 'library') {
+          // Need this logic to fix oversized thumbnail previews.
+          let uri = settings.fetchSetting('filesPath');
+          for (j in $scope.files) {
+            fid = $scope.files[j].fid;
+            for (id in uri) {
+              if (fid === id) {
+                $scope.files[j].thumbnail = uri[id];
+              }
+            }
+          }
+        }
         $scope.pane = pane;
         return true;
       }
@@ -340,8 +353,8 @@
         }
 
         // replace # in filenames cause they will break filename detection
-        var newName = $files[i].name.replace(/[#|\?]/g, '_').replace(/__/g, '_').replace(/_\./g, '.');
-        var hadHashtag = newName != $files[i].name;
+        var newName = $files[i].name.replace(/[#|\?]/g, '_').replace(/__/g, '_').replace(/_\./g, '.').replace(/[(|)]/g, "").replace(/ /g, '_').toLowerCase();
+        var hadHashtag = (newName !== $files[i].name);
         $files[i].sanitized = newName;
 
         var url = urlGenerator.generate(settings.fetchSetting('paths.api') + '/media/filename/' + $files[i].sanitized + '?_format=json', true);

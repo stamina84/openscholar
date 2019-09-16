@@ -1,0 +1,10 @@
+.rss-feed-link, .feed-icons a {
+  display: flex;
+  &:before {
+    content: "";
+    background: url(../../../themes/os_base/images/rss.png);
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+  }
+}

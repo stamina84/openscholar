@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\cp_taxonomy\ExistingSite;
 
-use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
-
 /**
  * Class CpTaxonomyHelperTest.
  *
@@ -13,8 +11,6 @@ use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
  * @package Drupal\Tests\cp_taxonomy\ExistingSite
  */
 class CpTaxonomyHelperTest extends TestBase {
-
-  use CpTaxonomyTestTrait;
 
   /**
    * Cp Taxonomy Helper.
@@ -67,25 +63,25 @@ class CpTaxonomyHelperTest extends TestBase {
   }
 
   /**
-   * Test get widget type default value.
+   * Test get widget types default value.
    */
-  public function testGetWidgetTypeDefaultValue() {
+  public function testGetWidgetTypesDefaultValue() {
     $vid = 'test_vocab';
     $this->createGroupVocabulary($this->group, $vid, ['node:taxonomy_test_1']);
     // Test default widget type.
-    $widget_type = $this->helper->getWidgetType('node:taxonomy_test_1');
-    $this->assertSame('entity_reference_autocomplete', $widget_type);
+    $widget_types = $this->helper->getWidgetTypes('node:taxonomy_test_1');
+    $this->assertSame('cp_entity_reference_autocomplete', $widget_types[$vid]['widget_type']);
   }
 
   /**
-   * Test get widget type value.
+   * Test get widget types value.
    */
-  public function testGetWidgetTypeSetValue() {
+  public function testGetWidgetTypesSetValue() {
     $vid = 'test_vocab';
-    $this->createGroupVocabulary($this->group, $vid, ['node:taxonomy_test_1'], 'options_select');
+    $this->createGroupVocabulary($this->group, $vid, ['node:taxonomy_test_1'], 'cp_options_select');
     // Test default widget type.
-    $widget_type = $this->helper->getWidgetType('node:taxonomy_test_1');
-    $this->assertSame('options_select', $widget_type);
+    $widget_types = $this->helper->getWidgetTypes('node:taxonomy_test_1');
+    $this->assertSame('cp_options_select', $widget_types[$vid]['widget_type']);
   }
 
   /**
