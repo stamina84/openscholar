@@ -10,7 +10,7 @@ field_name: field_widget_title
 entity_type: block_content
 bundle: publication_types
 label: 'Widget Title'
-description: ''
+description: 'The title of the widget that is seen by your visitors.'
 required: false
 translatable: true
 default_value: {  }

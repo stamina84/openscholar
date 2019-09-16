@@ -220,6 +220,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['#title'] = t('Add new "%widget" Widget', ['%widget' => $bundles[$entity->bundle()]['label']]);
       // Override entity label.
       $form['info']['widget'][0]['value']['#title'] = t('Widget Description');
+      $form['info']['widget'][0]['value']['#description'] = t('A brief description of the widget. Only displayed in the Layout section.');
     }
   }
   switch ($form_id) {
