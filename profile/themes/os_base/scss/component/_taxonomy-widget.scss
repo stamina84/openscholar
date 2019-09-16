@@ -18,7 +18,7 @@
       a {
         font-weight: bold;
         &:hover {
-          background: #e3e3e1;
+          background: $color-light-gray15;
         }
       }
       border-top: 1px solid $color-light-gray14;
@@ -42,7 +42,7 @@
         height: 40px;
         overflow: hidden;
         margin-bottom: 3px;
-        background-color: #F3F3F1;
+        background-color: $color-light-gray4;
         position: relative;
         z-index: 1;
         opacity: .94;
