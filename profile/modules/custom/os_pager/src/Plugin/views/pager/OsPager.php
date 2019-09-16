@@ -14,13 +14,13 @@ use Drupal\views\Plugin\views\pager\Full;
  *   title = @Translation("OS pager"),
  *   short_title = @Translation("Custom pager"),
  *   help = @Translation("Paged output format like: < 2 of 11 >"),
- *   theme = "views_mini_pager",
+ *   theme = "os_views_pager",
  *   register_theme = FALSE
  * )
  */
 class OsPager extends Full {
   // Working same as Full pager,
-  // except uses views_mini_pager theme for rendering.
+  // except uses os_views_pager theme for rendering.
   //
   // We need count query when rendering output. (ex. 2 of 11)
 }
