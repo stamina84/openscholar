@@ -31,10 +31,10 @@ content:
     region: content
   field_gallery_media:
     weight: 2
-    label: above
+    label: visually_hidden
     settings:
       image_style: medium
-      image_link: ''
+      image_link: file
     third_party_settings: {  }
     type: image
     region: content
