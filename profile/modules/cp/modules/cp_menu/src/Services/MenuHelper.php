@@ -251,7 +251,7 @@ class MenuHelper implements MenuHelperInterface {
    * {@inheritdoc}
    */
   public function publicationInFormMenuAlterations(array $values, ReferenceInterface $reference, GroupInterface $vsite) :void {
-    $menuId = $values['menu']['menu_parent'];
+    list($menuId,) = explode(':', $values['menu']['menu_parent'], 2);
     $linkId = $values['menu']['id'];
     $enabled = $values['menu']['enabled'];
 
