@@ -2,7 +2,6 @@
 
 namespace Drupal\os_widgets\Controller;
 
-use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\InvokeCommand;
@@ -12,35 +11,11 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\StatusMessages;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Methods for managing a site's Widget Library.
  */
 class WidgetLibraryController extends ControllerBase {
-
-  /**
-   * Load the entity form for a custom block.
-   *
-   * @param string|\Drupal\block_content\BlockContentTypeInterface $block_type
-   *   The type of block being created.
-   *
-   * @return array
-   *   The form.
-   */
-  public function createBlock($block_type) {
-    if (is_string($block_type)) {
-      $block_type = $this->entityTypeManager()->getStorage('block_content_type')->load($block_type);
-    }
-
-    if (!($block_type instanceof BlockContentType)) {
-      throw new NotFoundHttpException("No block type '$block_type' found.");
-    }
-
-    $entity = $this->entityTypeManager()->getStorage('block')->create(['plugin' => $block_type->id()]);
-
-    return $this->entityFormBuilder()->getForm($entity);
-  }
 
   /**
    * Returns ajax commands after the block is saved.
