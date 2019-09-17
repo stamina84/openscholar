@@ -1,0 +1,11 @@
+/** block type taxonomy menu **/
+.block--type-taxonomy {
+  .block-content {
+    > .os-widgets-taxonomy-display-type-menu {
+      border: 0;
+    }
+    .os-widgets-taxonomy-display-type-menu-item {
+      border: 0;
+    }
+  }
+}
