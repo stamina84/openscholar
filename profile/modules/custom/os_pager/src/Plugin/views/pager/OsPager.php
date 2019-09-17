@@ -12,7 +12,7 @@ use Drupal\views\Plugin\views\pager\Full;
  * @ViewsPager(
  *   id = "os_pager",
  *   title = @Translation("OS pager"),
- *   short_title = @Translation("Custom pager"),
+ *   short_title = @Translation("OS pager"),
  *   help = @Translation("Paged output format like: < 2 of 11 >"),
  *   theme = "os_views_pager",
  *   register_theme = FALSE
