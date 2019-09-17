@@ -36,6 +36,7 @@ function os_pager_preprocess_os_views_pager(&$variables) {
   // Current is the page we are currently paged to.
   $variables['items']['current'] = $pager_page_array[$element] + 1;
 
+  // If we have more than 1 page and we are not on the first.
   if ($pager_total[$element] > 1 && $pager_page_array[$element] > 0) {
     $options = [
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
@@ -47,6 +48,7 @@ function os_pager_preprocess_os_views_pager(&$variables) {
     $variables['items']['previous']['attributes'] = new Attribute();
   }
 
+  // Actual page is less than last page.
   if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
     $options = [
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
@@ -62,5 +64,5 @@ function os_pager_preprocess_os_views_pager(&$variables) {
   // cacheability is affected accordingly.
   $variables['#cache']['contexts'][] = 'url.query_args';
 
-  $variables['pager_total'] = $pager_total[$variables['element']];
+  $variables['pager_total'] = $pager_total[$element];
 }
