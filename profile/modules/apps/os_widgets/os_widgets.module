@@ -5,6 +5,7 @@
  * OS widgets.
  */
 
+use Drupal\block_content\BlockContentForm;
 use Drupal\Core\Render\Element;
 use Drupal\os_widgets\Plugin\DisplayVariant\PlaceBlockPageVariant;
 use Drupal\Core\Url;
@@ -210,7 +211,7 @@ function os_widgets_block_content_presave(EntityInterface $entity) {
 function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   /** @var \Drupal\block_content\BlockContentForm $form_object */
   $form_object = $form_state->getFormObject();
-  if (!empty($form_object) && $entity = $form_object->getEntity()) {
+  if ($form_object instanceof BlockContentForm && $entity = $form_object->getEntity()) {
     $entity_type_id = $entity->getEntityTypeId();
     if ($entity_type_id == 'block_content') {
       /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $entity_type_bunlde_info */
