@@ -116,7 +116,8 @@ function _os_software_add_views_display_to_build(&$build, $display_id, $entity) 
 function os_software_media_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   $node = \Drupal::routeMatch()->getParameter('node');
   if ($node instanceof NodeInterface) {
-    if ($node->bundle() == 'software_release') {
+    $field_software_package_values = $node->get('field_software_package')->getValue();
+    if ($node->bundle() == 'software_release' && $field_software_package_values[0]['target_id'] == $entity->id()) {
       // Remove media contextual links on software release node page.
       unset($build['#contextual_links']['media']);
     }
