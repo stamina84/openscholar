@@ -5,7 +5,7 @@ namespace Drupal\os_pager\Plugin\views\pager;
 use Drupal\views\Plugin\views\pager\Full;
 
 /**
- * The plugin to handle full pager.
+ * The plugin to handle os pager.
  *
  * @ingroup views_pager_plugins
  *
