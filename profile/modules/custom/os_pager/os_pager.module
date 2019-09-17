@@ -15,7 +15,6 @@ function os_pager_theme($existing, $type, $theme, $path) {
     'os_views_pager' => [
       'variables' => [
         'tags' => [],
-        'quantity' => 9,
         'element' => 0,
         'parameters' => [],
       ],
