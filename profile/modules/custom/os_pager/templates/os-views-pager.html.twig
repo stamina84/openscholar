@@ -5,6 +5,16 @@
  *
  * Available variables:
  * - items: List of pager items.
+ *   The list is keyed by the following elements:
+ *   - previous: Item for the previous page; not present on the first page
+ *     of results.
+ *   - next: Item for the next page; not present on the last page of results.
+ *   - current: Current page number.
+ *   Sub-sub elements:
+ *   items.previous and items.next contain the following elements:
+ *   - href: URL with appropriate query parameters for the item.
+ *   - attributes: A keyed list of HTML attributes for the item.
+ *   - text: The visible text used for the item link, such as "‹‹" or "››".
  * - pager_total: Number of pages.
  * - tags: Provides link text for the next/previous links.
  * - element: The pager's id.
