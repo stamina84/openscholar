@@ -1,0 +1,6 @@
+cp_taxonomy.tree_collapsible:
+  version: 1.0
+  js:
+    js/cp_taxonomy.tree_collapsible.js: { }
+  dependencies:
+    - core/jquery

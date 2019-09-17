@@ -10,6 +10,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\os\AngularModuleManagerInterface;
+use Drupal\os_media\MediaEntityHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -41,6 +42,13 @@ class MediaBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
   protected $angularModuleManager;
 
   /**
+   * Media Helper service.
+   *
+   * @var \Drupal\os_media\MediaEntityHelper
+   */
+  protected $mediaHelper;
+
+  /**
    * MediaBrowserWidget constructor.
    *
    * @param string $plugin_id
@@ -57,18 +65,30 @@ class MediaBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
    *   Entity type manager.
    * @param \Drupal\os\AngularModuleManagerInterface $angular_module_manager
    *   Angular module manager.
+   * @param \Drupal\os_media\MediaEntityHelper $media_helper
+   *   Media helper instance.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, AngularModuleManagerInterface $angular_module_manager) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, AngularModuleManagerInterface $angular_module_manager, MediaEntityHelper $media_helper) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
     $this->entityTypeManager = $entity_type_manager;
     $this->angularModuleManager = $angular_module_manager;
+    $this->mediaHelper = $media_helper;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['third_party_settings'], $container->get('entity_type.manager'), $container->get('angular.module_manager'));
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('entity_type.manager'),
+      $container->get('angular.module_manager'),
+      $container->get('os_media.media_helper')
+    );
   }
 
   /**
@@ -83,11 +103,15 @@ class MediaBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
     }
     $settings = $this->getFieldSettings();
     $bundles = $settings['handler_settings']['target_bundles'];
+
+    $allTypes = $this->mediaHelper::ALLOWED_TYPES;
     $types = [];
     /** @var \Drupal\media\Entity\MediaType[] $mediaTypes */
     $mediaTypes = $this->entityTypeManager->getStorage('media_type')->loadMultiple($bundles);
     foreach ($mediaTypes as $type) {
-      $types[] = $type->id();
+      if (in_array($type->id(), $allTypes)) {
+        $types[] = $type->id();
+      }
     }
 
     $element['#type'] = 'container';
