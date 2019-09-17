@@ -140,6 +140,7 @@ class TaxonomyTermsWidget extends WidgetBase implements WidgetInterface, Contain
       }
       $main_element[$vid]['#title'] = $vocabulary->label();
     }
+    $main_element['#attached']['library'][] = 'cp_taxonomy/cp_taxonomy.tree_collapsible';
     return $main_element;
   }
 
