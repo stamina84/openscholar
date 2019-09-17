@@ -1,0 +1,15 @@
+.twitter-pull-item {
+  border-bottom: 1px solid #efefef;
+  margin: 0 0 10px 0;
+  padding-bottom: 10px;
+  .tweet-authorphoto {
+    float: left;
+    margin: 0 5px 0 0;
+    img {
+      border-radius: 50px;
+    }
+  }
+  .tweet-author {
+    font-weight: bold;
+  }
+}
