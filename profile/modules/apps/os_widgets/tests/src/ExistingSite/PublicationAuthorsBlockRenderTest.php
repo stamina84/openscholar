@@ -146,27 +146,10 @@ class PublicationAuthorsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       ],
     ]);
 
-    // Set the current user so group creation can rely on it.
-    $this->container->get('current_user')->setAccount($this->createUser());
-    // Enable the user_as_content plugin on the default group type.
-    /** @var \Drupal\group\Entity\Storage\GroupContentTypeStorageInterface $storage */
-    $storage = $this->entityTypeManager->getStorage('group_content_type');
-    /** @var \Drupal\group\Entity\GroupContentTypeInterface[] $plugin */
-    $plugins = $storage->loadByContentPluginId('group_entity:block_content');
-    /** @var \Drupal\group\Entity\GroupContentTypeInterface $plugin */
-    $plugin = reset($plugins);
-
-    $group = Group::create([
-      'type' => 'personal',
-      'title' => 'Site01',
-    ]);
-    $group->save();
-    $this->markEntityForCleanup($group);
-    $group->addContent($block_content, $plugin->getContentPluginId());
-
-    $this->vsiteContextManager->activateVsite($group);
+    $this->group->addContent($block_content, 'group_entity:block_content');
+    $this->vsiteContextManager->activateVsite($this->group);
     $tag = $block_content->getVsiteCacheTag();
-    $this->assertSame('block_content_entity_vsite:' . $group->id(), $tag);
+    $this->assertSame('block_content_entity_vsite:' . $this->group->id(), $tag);
   }
 
 }
