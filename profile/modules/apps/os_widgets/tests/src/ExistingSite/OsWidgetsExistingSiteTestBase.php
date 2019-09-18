@@ -45,27 +45,6 @@ class OsWidgetsExistingSiteTestBase extends OsExistingSiteTestBase {
   }
 
   /**
-   * Creates a block content.
-   *
-   * @param array $values
-   *   (optional) The values used to create the entity.
-   *
-   * @return \Drupal\block_content\Entity\BlockContent
-   *   The created block content entity.
-   */
-  protected function createBlockContent(array $values = []) {
-    $block_content = $this->entityTypeManager->getStorage('block_content')->create($values + [
-      'type' => 'basic',
-    ]);
-    $block_content->enforceIsNew();
-    $block_content->save();
-
-    $this->markEntityForCleanup($block_content);
-
-    return $block_content;
-  }
-
-  /**
    * Creates a media.
    *
    * @param array $values
