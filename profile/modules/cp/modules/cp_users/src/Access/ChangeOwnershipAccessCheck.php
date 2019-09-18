@@ -56,7 +56,7 @@ class ChangeOwnershipAccessCheck implements AccessInterface, ContainerInjectionI
       return AccessResult::forbidden();
     }
 
-    if ($account->hasPermission('administer group')) {
+    if ($account->hasPermission('bypass group access')) {
       return AccessResult::allowed();
     }
 
