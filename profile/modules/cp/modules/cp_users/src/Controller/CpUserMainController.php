@@ -108,8 +108,7 @@ class CpUserMainController extends ControllerBase {
       if ($can_change_ownership && $is_vsite_owner) {
         $role_link = Link::createFromRoute('Change Owner', 'cp.users.owner', ['user' => $u->id()], ['attributes' => ['class' => ['use-ajax']]])->toString();
       }
-      elseif (!$is_vsite_owner &&
-        ($this->currentUser()->hasPermission('change user roles') || $group->getMember($this->currentUser())->hasPermission('manage cp roles'))) {
+      elseif (!$is_vsite_owner && $group->hasPermission('manage cp roles', $this->currentUser())) {
         $role_link = Link::createFromRoute($this->t('Change Role'), 'cp_users.role.change', ['user' => $u->id()], [
           'attributes' => [
             'class' => ['use-ajax'],

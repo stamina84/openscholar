@@ -288,12 +288,18 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $change_owner_link = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/owner?user={$vsite_owner->id()}\"]");
     $this->assertNull($change_owner_link);
 
-    // Make sure a super account is able to change ownership even though one is
-    // not a member.
+    // Tests for super account.
     $this->drupalLogin($super_account);
     $this->visitViaVsite('cp/users', $this->group);
-
     $this->assertSession()->statusCodeEquals(200);
+
+    // Make sure vsite owner is able to change roles.
+    /** @var \Behat\Mink\Element\NodeElement|null $change_role_link_for_member */
+    $change_role_link_for_member = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/change-role/{$member_2->id()}\"]");
+    $this->assertNotNull($change_role_link_for_member);
+
+    // Make sure a super account is able to change ownership even though one is
+    // not a member.
     /** @var \Behat\Mink\Element\NodeElement|null $change_owner_link */
     $change_owner_link = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/owner?user={$member_1->id()}\"]");
     $this->assertNotNull($change_owner_link);
