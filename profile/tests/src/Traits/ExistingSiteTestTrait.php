@@ -250,13 +250,6 @@ trait ExistingSiteTestTrait {
     $block_content->enforceIsNew();
     $block_content->save();
 
-    // Create block.
-    $plugin_id = 'block_content:' . $block_content->uuid();
-    $block_id = 'block_content|' . $block_content->uuid();
-    $block = $this->container->get('entity_type.manager')->getStorage('block')->create(['plugin' => $plugin_id, 'id' => $block_id]);
-    $block->save();
-    $this->markEntityForCleanup($block);
-
     $this->markEntityForCleanup($block_content);
 
     return $block_content;
