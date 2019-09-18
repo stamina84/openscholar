@@ -6,6 +6,7 @@
  */
 
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
+use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -305,4 +306,14 @@ function os_page_attachments(array &$attachments) {
       $attachments['#attached']['html_head'][] = [$noindex_tag, 'robots'];
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for making sure that vsite roles also have access to perform operations on a block_content entity.
+ */
+function os_block_content_access(BlockContentInterface $entity, $operation, AccountInterface $account) {
+  /** @var \Drupal\os\AccessHelperInterface $access_helper */
+  $access_helper = \Drupal::service('os.access_helper');
+
+  return $access_helper->checkAccess($entity, $operation, $account);
 }

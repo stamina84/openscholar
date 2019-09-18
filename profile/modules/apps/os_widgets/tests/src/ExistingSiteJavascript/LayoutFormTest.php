@@ -3,7 +3,6 @@
 namespace Drupal\Tests\os_widgets\ExistingSiteJavascript;
 
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
-use Drupal\Tests\os_widgets\Traits\WidgetCreationTrait;
 
 /**
  * Class LayoutFormTests.
@@ -12,8 +11,6 @@ use Drupal\Tests\os_widgets\Traits\WidgetCreationTrait;
  * @group widgets
  */
 class LayoutFormTest extends OsExistingSiteJavascriptTestBase {
-
-  use WidgetCreationTrait;
 
   /**
    * {@inheritdoc}
