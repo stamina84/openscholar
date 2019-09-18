@@ -113,53 +113,6 @@ class CpMenuNodeMenuLinkTest extends OsExistingSiteJavascriptTestBase {
   }
 
   /**
-   * Tests - Node menu link creation as child.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
-   */
-  public function testChildMenuCreation(): void {
-    $title = $this->randomMachineName();
-
-    $this->visitViaVsite('node/add/blog', $this->group);
-
-    $menu_create_option = $this->getSession()->getPage()->find('css', '#edit-menu summary');
-    $this->assertNotNull($menu_create_option);
-    $menu_create_option->click();
-
-    $this->submitForm([
-      'title[0][value]' => $title,
-      'menu[enabled]' => 1,
-      'menu[title]' => $title,
-      'menu[description]' => '',
-      'menu[menu_parent]' => 'main:views_view:views.publications.page_1',
-      'menu[weight]' => 0,
-    ], 'Save');
-
-    $node = $this->loadNodeByTitle($title);
-    $menu_link_contents = $this->getVsiteNodeMenuLinkContents($node, "menu-primary-{$this->group->id()}");
-    $menu_link_content = reset($menu_link_contents);
-
-    $vsite_parent_menu = $this->menuLinkContentStorage->loadByProperties([
-      'menu_name' => "menu-primary-{$this->group->id()}",
-      'link__uri' => 'route:view.publications.page_1',
-    ]);
-    /** @var \Drupal\menu_link_content\MenuLinkContentInterface $vsite_parent_menu_link_content */
-    $vsite_parent_menu_link_content = reset($vsite_parent_menu);
-
-    // Tests.
-    $this->assertNotNull($menu_link_content);
-    $this->assertInstanceOf(MenuLinkContent::class, $menu_link_content);
-    $this->assertEquals($vsite_parent_menu_link_content->getPluginId(), $menu_link_content->get('parent')->first()->getValue()['value']);
-
-    // Clean up.
-    $node->delete();
-    $this->cleanUpVsiteMenus($this->group);
-  }
-
-  /**
    * Returns vsite menu link contents for a node.
    *
    * @param \Drupal\node\NodeInterface $node

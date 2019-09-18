@@ -18,20 +18,16 @@
 #  parent: cp.build
 cp.content:
   title: 'Site Content'
-  url: 'internal:##'
+  route_name: cp.content.collection
   menu_name: control-panel
   weight: 0
 cp.content.add:
   title: 'Add'
-  url: 'internal:##'
-  parent: cp.content
-cp.content.import:
-  title: 'Import'
-  url: 'internal:##'
+  route_name: cp.content.add.collection
   parent: cp.content
 cp.content.browse:
   title: 'Browse'
-  url: 'internal:##'
+  route_name: cp.content.browse.collection
   parent: cp.content
 cp.content.browse.content:
   title: 'Content'

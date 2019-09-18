@@ -5,6 +5,7 @@
  * OS widgets.
  */
 
+use Drupal\block_content\BlockContentForm;
 use Drupal\Core\Render\Element;
 use Drupal\os_widgets\Plugin\DisplayVariant\PlaceBlockPageVariant;
 use Drupal\Core\Url;
@@ -208,6 +209,21 @@ function os_widgets_block_content_presave(EntityInterface $entity) {
  * Implements hook_form_alter().
  */
 function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\block_content\BlockContentForm $form_object */
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof BlockContentForm && $entity = $form_object->getEntity()) {
+    $entity_type_id = $entity->getEntityTypeId();
+    if ($entity_type_id == 'block_content') {
+      /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $entity_type_bunlde_info */
+      $entity_type_bunlde_info = \Drupal::service('entity_type.bundle.info');
+      $bundles = $entity_type_bunlde_info->getBundleInfo($entity_type_id);
+      // Override form title value.
+      $form['#title'] = t('Add new "%widget" Widget', ['%widget' => $bundles[$entity->bundle()]['label']]);
+      // Override entity label.
+      $form['info']['widget'][0]['value']['#title'] = t('Widget Description');
+      $form['info']['widget'][0]['value']['#description'] = t('A brief description of the widget. Only displayed in the Layout section.');
+    }
+  }
   switch ($form_id) {
     case 'block_content_twitter_feed_form':
     case 'block_content_twitter_feed_edit_form':

@@ -395,6 +395,8 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
   $auto_flags = $config_factory->get('citation_distribute_autoflags');
   /** @var \Drupal\bibcite_entity\Entity\ReferenceInterface $reference */
   $reference = $form_state->getFormObject()->getEntity();
+  /** @var \Drupal\cp_menu\MenuHelperInterface $menu_helper */
+  $menu_helper = \Drupal::service('cp_menu.menu_helper');
 
   if ($reference->id() === NULL) {
     $form['distribution']['widget']['#default_value'] = array_keys(array_filter($auto_flags));
@@ -420,21 +422,8 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
 
   // Menu link options.
   $vsite = \Drupal::service('vsite.context_manager')->getActiveVsite();
-  $defaults = \Drupal::service('cp_menu.menu_helper')->getMenuLinkDefaults($reference, $vsite);
-
-  $menus = $vsite->getContent('group_menu:menu');
-
-  if (!$menus) {
-    $vsite_menus = [
-      'main' => 'Primary Menu',
-      'footer' => 'Secondary Menu',
-    ];
-  }
-  elseif ($menus) {
-    foreach ($menus as $menu) {
-      $vsite_menus[$menu->entity_id_str->target_id] = $menu->label();
-    }
-  }
+  $defaults = $menu_helper->getMenuLinkDefaults($reference, $vsite);
+  $vsite_menus = $menu_helper->getVsiteMenuOptions($vsite);
 
   // Publication details group.
   $form['publication_details'] = [
