@@ -11,7 +11,7 @@ id: slick_media_gallery
 name: slick_media_gallery
 label: 'Slick Media Gallery'
 weight: -10
-group: overlay
+group: ''
 skin: default
 breakpoints: 3
 optimized: false
@@ -79,11 +79,11 @@ options:
           autoplaySpeed: 3000
           pauseOnHover: false
           pauseOnDotsHover: false
-          arrows: false
+          arrows: true
           centerMode: false
           centerPadding: 50px
           dots: false
-          draggable: false
+          draggable: true
           fade: false
           focusOnSelect: false
           infinite: false
@@ -92,12 +92,12 @@ options:
           rows: 1
           slidesPerRow: 1
           slidesToShow: 4
-          slidesToScroll: 4
+          slidesToScroll: 1
           speed: 500
-          swipe: false
-          swipeToSlide: false
+          swipe: true
+          swipeToSlide: true
           edgeFriction: 0.35000000000002
-          touchMove: false
+          touchMove: true
           touchThreshold: 5
           variableWidth: false
           vertical: false
@@ -112,11 +112,11 @@ options:
           autoplaySpeed: 3000
           pauseOnHover: false
           pauseOnDotsHover: false
-          arrows: false
+          arrows: true
           centerMode: false
           centerPadding: 50px
           dots: false
-          draggable: false
+          draggable: true
           fade: false
           focusOnSelect: false
           infinite: false
@@ -127,10 +127,10 @@ options:
           slidesToShow: 2
           slidesToScroll: 2
           speed: 500
-          swipe: false
-          swipeToSlide: false
+          swipe: true
+          swipeToSlide: true
           edgeFriction: 0.35000000000002
-          touchMove: false
+          touchMove: true
           touchThreshold: 5
           variableWidth: false
           vertical: false
@@ -145,11 +145,11 @@ options:
           autoplaySpeed: 3000
           pauseOnHover: false
           pauseOnDotsHover: false
-          arrows: false
+          arrows: true
           centerMode: false
           centerPadding: 50px
           dots: false
-          draggable: false
+          draggable: true
           fade: false
           focusOnSelect: false
           infinite: false
@@ -160,10 +160,10 @@ options:
           slidesToShow: 1
           slidesToScroll: 1
           speed: 500
-          swipe: false
-          swipeToSlide: false
+          swipe: true
+          swipeToSlide: true
           edgeFriction: 0.35000000000002
-          touchMove: false
+          touchMove: true
           touchThreshold: 5
           variableWidth: false
           vertical: false
