@@ -9,7 +9,8 @@
       });
       $('.field--name-field-gallery-media.field--mode-grid .field--items', context).slickLightbox({
         caption: function (element, info) {
-          return $(element).find('img').attr('title') ? $(element).find('img').attr('title') : '';
+          let imageAttribute = $(element).find('img').attr('title');
+          return imageAttribute ? imageAttribute : '';
         }
       });
     }
