@@ -5,3 +5,4 @@ description: Taxonomy Management from the Control Panel
 dependencies:
   - "drupal:vsite"
   - "drupal:term_reference_tree"
+  - drupal:os
