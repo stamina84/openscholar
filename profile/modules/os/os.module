@@ -78,7 +78,7 @@ function os_preprocess_block(array &$vars) {
 }
 
 /**
- * Implements hook_entity_create_access().
+ * Implements hook_entity_create_access() for granting access to entity add paths to vsite roles.
  *
  * Handles entity create inside group via global paths:
  * - `/node/add/<bundle>`
