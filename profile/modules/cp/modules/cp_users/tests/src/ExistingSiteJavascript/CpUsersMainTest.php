@@ -233,7 +233,6 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     ]);
     $this->group->addMember($member_1);
     $this->group->addMember($member_2);
-    $this->group->addMember($super_account);
     $this->addGroupAdmin($vsite_owner, $this->group);
     $this->group->setOwner($vsite_owner)->save();
 
