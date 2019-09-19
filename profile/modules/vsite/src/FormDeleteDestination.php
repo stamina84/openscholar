@@ -20,6 +20,7 @@ class FormDeleteDestination implements FormDeleteDestinationInterface {
       'person' => 'people',
       'presentation' => 'presentations',
       'software_project' => 'software',
+      'software_release' => 'software',
     ],
     'bibcite_reference' => [
       '*' => 'publications',
