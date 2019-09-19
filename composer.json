@@ -158,6 +158,18 @@
             }
         },
         {
+            "type": "package",
+            "package": {
+                "name": "ckeditor/colordialog",
+                "version": "4.12.1",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://download.ckeditor.com/colordialog/releases/colordialog_4.12.1.zip",
+                    "type": "zip"
+                }
+            }
+        },
+        {
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
@@ -241,10 +253,12 @@
         "drupal/chosen": "^2.7",
         "drupal/config_ignore": "^2.1",
         "drupal/mail_login": "^1.0",
+        "drupal/groupmenu": "^1.0-beta4",
+        "ckeditor/colordialog": "^4.12",
+        "drupal/colordialog": "^1.2",
         "oomphinc/composer-installers-extender": "^1.1",
         "npm-asset/chosen-js": "^1.8",
-        "drupal/robotstxt": "^1.2",
-        "drupal/groupmenu": "^1.0-beta4"
+        "drupal/robotstxt": "^1.2"
     },
     "require-dev": {
         "drupal/features": "^3.7",

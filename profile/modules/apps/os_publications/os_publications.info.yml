@@ -13,3 +13,4 @@ dependencies:
   - drupal:shorten
   - drupal:key_value_field
   - drupal:vsite
+  - drupal:cp_menu

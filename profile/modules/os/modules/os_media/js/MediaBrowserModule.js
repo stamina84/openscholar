@@ -1,6 +1,7 @@
 (function ($) {
   var rootPath,
-    open = angular.noop;
+    open = angular.noop,
+    changed = false;
 
   angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'ngFileUpload', 'angularModalService', 'FileEditor', 'mediaBrowser.filters', 'locationFix', 'angularSlideables', 'DrupalSettings', 'UrlGenerator'])
     .run(['mbModal', 'FileEditorOpenModal', function (mbModal, feom) {
@@ -124,15 +125,15 @@
       $scope.extensions = params.file_extensions.split(' ');
     }
     if (!params.override_extensions) {
-      var types = params.types;
+      var types = $scope.availTypes;
       for (var t in types) {
-        var ext = settings.fetchSetting('extensionMap')[types[t]],
-          i = 0, l = ext ? ext.length : false;
+        var ext = settings.fetchSetting('extensionMap')[types[t].value],
+            i = 0, l = ext ? ext.length : false;
 
         if (!ext) {
           $scope.extensions.push(types[t]);
         } else {
-          for (var i=0; i<l; i++) {
+          for (var i = 0; i < l; i++) {
             if ($scope.extensions.indexOf(ext[i]) === -1) {
               $scope.extensions.push(ext[i]);
             }
@@ -203,7 +204,7 @@
     $scope.$on('EntityService.media.delete', function (event, id) {
       // Don't want to worry about what happens when you modify an array you're
       // looping over.
-      if ($scope.selected_file.id == id) {
+      if ($scope.selected_file && $scope.selected_file.id == id) {
         $scope.selected_file = null;
       }
       var deleteMe = false;
@@ -569,7 +570,7 @@
           var found = false;
           // check to see if this file exists
           for (var j = 0; j < $scope.files.length; j++) {
-            if ($scope.files[j].id == file.id) {
+            if ($scope.files[j].mid == file.mid) {
               // we just replaced an existing file.
               file.replaced = true;
               $scope.files[j] = file;
@@ -667,7 +668,7 @@
       if (result == FER.CANCELED && $scope.selected_file.new) {
         service.delete($scope.selected_file);
         for (var j = 0; j < $scope.files.length; j++) {
-          if ($scope.files[j].id == $scope.selected_file.id) {
+          if ($scope.files[j].mid == $scope.selected_file.mid) {
             $scope.files[j].status = 'deleting';
           }
         }
@@ -694,6 +695,12 @@
       }
       else {
         results.push($scope.selected_file);
+      }
+      // Quick implementation to show warning message on /cp/settings/apps-settings/profiles page.
+      if (changed === false) {
+        // HTML element is rendered in Drupal\os_profiles\Plugin\CpSetting\ProfilesSetting.php
+        $(Drupal.theme('fileChangedWarning')).insertBefore('#edit-default-image').hide().fadeIn('slow');
+        changed = true;
       }
 
       close(results);
@@ -854,4 +861,12 @@
         });
       }
   }]);
+  $.extend(Drupal.theme, {
+    fileChangedMarker: function fileChangedMarker() {
+      return '<abbr class="warning file-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
+    },
+    fileChangedWarning: function fileChangedWarning() {
+      return '<div class="file-changed-warning messages messages--warning" role="alert">' + Drupal.theme('fileChangedMarker') + ' ' + Drupal.t('You have unsaved changes.') + '</div>';
+    }
+  });
 })(jQuery);
