@@ -39,7 +39,7 @@ class ChangeOwnershipAccessCheckTest extends OsExistingSiteTestBase {
 
     // Positive tests.
     $super_account = $this->createUser([
-      'administer group',
+      'bypass group access',
     ]);
     $this->assertInstanceOf(AccessResultAllowed::class, $change_ownership_access_check_service->access($super_account));
 
