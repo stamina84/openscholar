@@ -426,4 +426,29 @@ trait ExistingSiteTestTrait {
     return $block_content;
   }
 
+  /**
+   * Creates a contributor.
+   *
+   * @param array $values
+   *   (Optional) Default values for the contributor.
+   *
+   * @return \Drupal\bibcite_entity\Entity\ContributorInterface
+   *   The new contributor entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createContributor(array $values = []) : ContributorInterface {
+    $contributor = Contributor::create($values + [
+      'first_name' => $this->randomString(),
+      'middle_name' => $this->randomString(),
+      'last_name' => $this->randomString(),
+    ]);
+
+    $contributor->save();
+
+    $this->markEntityForCleanup($contributor);
+
+    return $contributor;
+  }
+
 }
