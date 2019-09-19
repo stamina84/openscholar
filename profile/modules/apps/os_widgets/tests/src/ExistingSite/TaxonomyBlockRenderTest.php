@@ -4,6 +4,7 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
 
 use DateTime;
 use DateInterval;
+use Drupal\block_content\BlockContentInterface;
 
 /**
  * Class TaxonomyWidget.
@@ -56,7 +57,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
     $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2']);
 
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -82,7 +83,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
   public function testBuildTaxonomyTermsWithoutCountEnableShowCount() {
     $term = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
 
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -107,7 +108,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
     $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2', 'parent' => $term1->id()]);
 
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -126,7 +127,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $this->assertContains($term1->label(), $markup->__toString());
     $this->assertNotContains($term2->label(), $markup->__toString());
 
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -153,7 +154,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
     $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2', 'parent' => $term1->id()]);
 
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -186,7 +187,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $term4 = $this->createTerm($this->vocabulary, ['name' => 'Lorem4', 'parent' => $term2->id()]);
     $term5 = $this->createTerm($this->vocabulary, ['name' => 'Lorem5']);
 
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -220,7 +221,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $term5 = $this->createTerm($this->vocabulary, ['name' => 'Lorem5']);
     $term6 = $this->createTerm($this->vocabulary, ['name' => 'Lorem6']);
 
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -254,7 +255,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
 
     // Hide description.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -274,7 +275,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $this->assertNotContains($description, $markup->__toString());
 
     // Show description.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -316,7 +317,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     ]);
 
     // Set bundle to search taxonomy_test_1 bundle.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -359,7 +360,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     ]);
 
     // Set bundle but show empty terms.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -405,7 +406,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     ]);
 
     // Set bundle and hide empty terms.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -487,7 +488,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     ]);
 
     // Show count.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -533,7 +534,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     ]);
 
     // Show count disabled.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -556,7 +557,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    */
   public function testBuildDisplayTypeValuesTheme() {
     // Display type menu.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -570,7 +571,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $this->assertSame('os_widgets_taxonomy_display_type_menu', $render['taxonomy']['terms']['#theme']);
 
     // Display type menu.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -598,7 +599,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       ],
     ]);
     // Behavior value select.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -623,7 +624,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
   public function testBuildProperClassNameIsRendered() {
     $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem 1 éáűúőüóö']);
     $this->createTerm($this->vocabulary, ['name' => 'Lorem 2 "+!%/-<>special-chars', 'parent' => $term1->id()]);
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -674,7 +675,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     ]);
 
     // Create bundle past_events.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -724,7 +725,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     ]);
 
     // Create bundle upcoming_events.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -793,7 +794,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     ]);
 
     // Create without bundle.
-    $block_content = $this->createBlockContent([
+    $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
       'field_taxonomy_vocabulary' => [
         $this->vocabulary->id(),
@@ -811,9 +812,17 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Creates a taxonomy block content.
+   *
+   * @param array $values
+   *   (optional) The values used to create the entity.
+   *
+   * @return \Drupal\block_content\BlockContentInterface
+   *   The created block content entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createBlockContent(array $values = []) {
+  protected function createTaxonomyBlockContent(array $values = []): BlockContentInterface {
     // Add default required fields.
     $values += [
       'field_taxonomy_behavior' => ['--all--'],
@@ -821,7 +830,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'field_taxonomy_tree_depth' => [0],
       'field_taxonomy_display_type' => ['classic'],
     ];
-    return parent::createBlockContent($values);
+    return $this->createBlockContent($values);
   }
 
 }
