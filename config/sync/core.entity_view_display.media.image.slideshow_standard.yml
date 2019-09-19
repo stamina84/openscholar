@@ -1,8 +1,9 @@
-uuid: a29018da-8387-476a-8a8d-586cb8a58cb2
+uuid: 7efabcf2-0223-43d4-8b1f-9a0d118e7701
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.media.slideshow_standard
     - field.field.media.image.field_image_caption
     - field.field.media.image.field_media_image
     - field.field.media.image.field_taxonomy_terms
@@ -15,10 +16,12 @@ dependencies:
 third_party_settings:
   layout_builder:
     sections: {  }
-id: media.image.default
+    allow_custom: false
+    enabled: false
+id: media.image.slideshow_standard
 targetEntityType: media
 bundle: image
-mode: default
+mode: slideshow_standard
 content:
   created:
     label: hidden

@@ -1,0 +1,12 @@
+uuid: e359fbb1-1200-41ee-b211-dfd3cb6d4dd9
+langcode: en
+status: true
+dependencies: {  }
+label: 'Crop 985:335'
+id: crop_985_335
+description: ''
+aspect_ratio: '985:335'
+soft_limit_width: null
+soft_limit_height: null
+hard_limit_width: null
+hard_limit_height: null
