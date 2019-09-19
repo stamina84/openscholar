@@ -329,4 +329,44 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
     $this->assertEquals('One Widget to Rule Above All', $test_block_content->info->value);
   }
 
+  /**
+   * Tests block_content delete global path access.
+   *
+   * @covers ::os_block_content_access
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testBlockContentDelete(): void {
+    // Setup.
+    $group_admin = $this->createUser();
+    $this->addGroupAdmin($group_admin, $this->group);
+    $block_content = $this->createBlockContent([
+      'info' => [
+        'value' => 'Transmission',
+      ],
+    ]);
+    $this->group->addContent($block_content, 'group_entity:block_content');
+
+    // Tests.
+    $this->drupalLogin($group_admin);
+
+    $this->visitViaVsite("block/{$block_content->id()}/delete", $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->getSession()->getPage()->pressButton('Delete');
+
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $block_content_storage */
+    $block_content_storage = $entity_type_manager->getStorage('block_content');
+
+    $block_contents = $block_content_storage->loadByProperties([
+      'info' => 'Transmission',
+    ]);
+
+    $this->assertEmpty($block_contents);
+  }
+
 }
