@@ -18,6 +18,7 @@ class PostLogoutRedirectTest extends OsExistingSiteJavascriptTestBase {
    * @covers ::os_link_alter
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testOutsideCpSetting(): void {
     $account = $this->createUser();
@@ -59,7 +60,7 @@ class PostLogoutRedirectTest extends OsExistingSiteJavascriptTestBase {
     // Also check whether the destination of "Admin Login" is working as
     // expected.
     $this->getSession()->getPage()->clickLink('Admin Login');
-    $this->assertStringEndsWith("destination={$this->groupAlias}", $this->getSession()->getCurrentUrl());
+    $this->assertStringEndsWith("{$this->groupAlias}/node", $this->getSession()->getCurrentUrl());
   }
 
   /**
@@ -103,13 +104,13 @@ class PostLogoutRedirectTest extends OsExistingSiteJavascriptTestBase {
 
     $login_link_inside_message = $this->getSession()->getPage()->findLink('log in here');
     $login_link_inside_message->click();
-    $this->assertStringEndsWith("destination={$private_vsite_alias}/publications", $this->getSession()->getCurrentUrl());
+    $this->assertStringEndsWith("{$private_vsite_alias}/publications", $this->getSession()->getCurrentUrl());
 
     $this->visitViaVsite('publications', $private_vsite);
 
     $login_link_inside_footer = $this->getSession()->getPage()->findLink('Admin Login');
     $login_link_inside_footer->click();
-    $this->assertStringEndsWith("destination={$private_vsite_alias}/publications", $this->getSession()->getCurrentUrl());
+    $this->assertStringEndsWith("{$private_vsite_alias}/publications", $this->getSession()->getCurrentUrl());
   }
 
 }
