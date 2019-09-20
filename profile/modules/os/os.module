@@ -66,12 +66,7 @@ function os_preprocess_block(array &$vars) {
     $vars['content']['#markup'] = '';
 
     if (\Drupal::currentUser()->isAnonymous()) {
-      $vars['content']['#markup'] .= Link::createFromRoute(t('Admin Login'), 'user.login')->toString();
-      // Login destination needs to be added via JavaScript. Because, private
-      // vsite routes are denied for anonymous users, therefore,
-      // \Drupal\Core\Routing\RedirectDestination::get fails to get the correct
-      // destination path.
-      $vars['content']['#attached']['library'][] = 'os/osLoginDestinationAlter';
+      $vars['content']['#markup'] .= Link::createFromRoute(t('Admin Login'), 'user.login', [], ['query' => \Drupal::destination()->getAsArray()])->toString();
     }
 
     $vars['content']['#markup'] .= t('<span id="powered-by"><a class="powered-by" href=":link">OpenScholar</a></span>', [':link' => 'https://theopenscholar.com/']);
