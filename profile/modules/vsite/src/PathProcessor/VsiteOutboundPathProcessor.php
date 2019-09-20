@@ -50,9 +50,14 @@ class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
       }
     }
 
-    /** @var \Drupal\group\Entity\GroupInterface $group */
-    if ($request && ($group = $request->get('group')) && (!isset($options['purl_context']) || $options['purl_context'] !== FALSE) && (!isset($options['purl_exit']) || !$options['purl_exit'])) {
-      $path = $this->vsiteContextManager->getAbsoluteUrl($path, $group, $bubbleable_metadata);
+    /** @var \Drupal\group\Entity\GroupInterface $active_vsite */
+    $active_vsite = $this->vsiteContextManager->getActiveVsite();
+
+    if ($request &&
+      $active_vsite &&
+      (!isset($options['purl_context']) || $options['purl_context'] !== FALSE) &&
+      (!isset($options['purl_exit']) || !$options['purl_exit'])) {
+      $path = $this->vsiteContextManager->getAbsoluteUrl($path, $active_vsite, $bubbleable_metadata);
     }
 
     return $path;
