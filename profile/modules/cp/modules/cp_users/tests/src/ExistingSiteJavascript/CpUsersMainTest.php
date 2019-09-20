@@ -2,8 +2,10 @@
 
 namespace Drupal\Tests\cp_users\ExistingSiteJavascript;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
 use Drupal\user\Entity\User;
 
@@ -218,12 +220,19 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
    * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
    * @throws \Behat\Mink\Exception\DriverException
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function testChangeOwnership(): void {
     // Setup.
-    $member = $this->createUser();
+    $member_1 = $this->createUser();
+    $member_2 = $this->createUser();
     $vsite_owner = $this->createUser();
-    $this->group->addMember($member);
+    $super_account = $this->createUser([
+      'bypass group access',
+    ]);
+    $this->group->addMember($member_1);
+    $this->group->addMember($member_2);
     $this->addGroupAdmin($vsite_owner, $this->group);
     $this->group->setOwner($vsite_owner)->save();
 
@@ -241,9 +250,9 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     // Make sure non-vsite-owner can change roles.
     $this->visitViaVsite('cp/users', $this->group);
     /** @var \Behat\Mink\Element\NodeElement|null $change_role_link_for_member */
-    $change_role_link_for_member = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/change-role/{$member->id()}\"]");
+    $change_role_link_for_member = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/change-role/{$member_1->id()}\"]");
     $this->assertNotNull($change_role_link_for_member);
-    $this->visitViaVsite("cp/users/change-role/{$member->id()}", $this->group);
+    $this->visitViaVsite("cp/users/change-role/{$member_1->id()}", $this->group);
     $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalLogout();
@@ -254,7 +263,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
 
     // Make sure vsite owner is able to change roles.
     /** @var \Behat\Mink\Element\NodeElement|null $change_role_link_for_member */
-    $change_role_link_for_member = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/change-role/{$member->id()}\"]");
+    $change_role_link_for_member = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/change-role/{$member_1->id()}\"]");
     $this->assertNotNull($change_role_link_for_member);
 
     // Make sure vsite owner is able to change ownership.
@@ -265,9 +274,11 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $this->waitForAjaxToFinish();
     $this->assertSession()->statusCodeEquals(200);
     $this->submitForm([
-      'new_owner' => $member->id(),
+      'new_owner' => $member_1->id(),
     ], 'Save');
     $this->waitForAjaxToFinish();
+
+    $this->assertVsiteOwnershipChange($this->group, $member_1);
 
     // Make sure that after ownership is passed, previous owner is no longer
     // able to view change ownership option.
@@ -276,10 +287,57 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $change_owner_link = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/owner?user={$vsite_owner->id()}\"]");
     $this->assertNull($change_owner_link);
 
-    // Assert that expected changes have been made.
-    $fresh_group_entity = Group::load($this->group->id());
-    $this->assertEquals($member->id(), $fresh_group_entity->getOwnerId());
-    $new_owner_entity = User::load($member->id());
+    // Tests for super account.
+    $this->drupalLogin($super_account);
+    $this->visitViaVsite('cp/users', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Make sure vsite owner is able to change roles.
+    /** @var \Behat\Mink\Element\NodeElement|null $change_role_link_for_member */
+    $change_role_link_for_member = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/change-role/{$member_2->id()}\"]");
+    $this->assertNotNull($change_role_link_for_member);
+
+    // Make sure a super account is able to change ownership even though one is
+    // not a member.
+    /** @var \Behat\Mink\Element\NodeElement|null $change_owner_link */
+    $change_owner_link = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/owner?user={$member_1->id()}\"]");
+    $this->assertNotNull($change_owner_link);
+    $change_owner_link->click();
+    $this->waitForAjaxToFinish();
+    $this->assertSession()->statusCodeEquals(200);
+    $this->submitForm([
+      'new_owner' => $member_2->id(),
+    ], 'Save');
+    $this->waitForAjaxToFinish();
+
+    $this->assertVsiteOwnershipChange($this->group, $member_2);
+  }
+
+  /**
+   * Asserts whether an account has been made the vsite owner.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $vsite
+   *   The vsite.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   */
+  protected function assertVsiteOwnershipChange(GroupInterface $vsite, AccountInterface $account): void {
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $group_storage */
+    $group_storage = $entity_type_manager->getStorage('group');
+    $group_storage->resetCache([
+      $vsite->id(),
+    ]);
+
+    $fresh_group_entity = Group::load($vsite->id());
+    $this->assertEquals($account->id(), $fresh_group_entity->getOwnerId());
+    /** @var \Drupal\Core\Session\AccountInterface $new_owner_entity */
+    $new_owner_entity = User::load($account->id());
     /** @var \Drupal\group\GroupMembership $group_membership */
     $group_membership = $fresh_group_entity->getMember($new_owner_entity);
     /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
