@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\cp_taxonomy\ExistingSite;
 
+use Drupal\cp_taxonomy\CpTaxonomyHelper;
+
 /**
  * Class CpTaxonomyHelperTest.
  *
@@ -100,6 +102,27 @@ class CpTaxonomyHelperTest extends TestBase {
     $build = [];
     $this->helper->checkTaxonomyTermsListingVisibility($build, '');
     $this->assertEmpty($build);
+  }
+
+  /**
+   * Test tree array given a vocabulary.
+   */
+  public function testGetOptionsTree() {
+    $vid = $this->randomMachineName();
+    $this->createGroupVocabulary($this->group, $vid, ['node:class'], CpTaxonomyHelper::WIDGET_TYPE_OPTIONS_SELECT);
+    $tid = $this->createGroupTerm($this->group, $vid, ['name' => 'term 1']);
+    $sub_tid = $this->createGroupTerm($this->group, $vid, ['name' => 'term 1-1', 'parent' => $tid]);
+    $this->createGroupTerm($this->group, $vid, ['name' => 'term 1-1-1', 'parent' => $sub_tid]);
+    $this->createGroupTerm($this->group, $vid, ['name' => 'term 2']);
+    $this->createGroupTerm($this->group, $vid, ['name' => 'term 3']);
+
+    // Test tree options.
+    $options_tree = $this->helper->getOptionsTree($vid);
+    $this->assertSame('term 1', array_values($options_tree[$vid])[0]->__toString());
+    $this->assertSame('-term 1-1', array_values($options_tree[$vid])[1]->__toString());
+    $this->assertSame('--term 1-1-1', array_values($options_tree[$vid])[2]->__toString());
+    $this->assertSame('term 2', array_values($options_tree[$vid])[3]->__toString());
+    $this->assertSame('term 3', array_values($options_tree[$vid])[4]->__toString());
   }
 
 }
