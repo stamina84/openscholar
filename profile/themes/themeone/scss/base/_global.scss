@@ -56,3 +56,17 @@ h2.block-title {
     border-top: 0 none;
   }
 }
+/*** accessibility test ****/
+.trigger {
+  color: $color-text;
+}
+.block--type-taxonomy {
+  .block-content {
+    .os-widgets-taxonomy-display-type-slider {
+        .os-widgets-taxonomy-display-type-slider-item {
+          background: none;
+          border: 1px solid $color-gray3;
+      }
+    }
+  }
+}

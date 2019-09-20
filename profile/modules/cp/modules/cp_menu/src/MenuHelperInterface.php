@@ -68,4 +68,17 @@ interface MenuHelperInterface {
    */
   public function publicationInFormMenuAlterations(array $values, ReferenceInterface $reference, GroupInterface $vsite): void;
 
+  /**
+   * Returns the parent options while creating a content menu link for a vsite.
+   *
+   * The options are meant to be used as form API options.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $vsite
+   *   The vsite.
+   *
+   * @return array
+   *   A key-value pair of options.
+   */
+  public function getVsiteMenuOptions(GroupInterface $vsite): array;
+
 }

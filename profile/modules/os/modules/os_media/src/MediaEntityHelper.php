@@ -26,6 +26,19 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   ];
 
   /**
+   * Allowed media types for Media browser.
+   */
+  const ALLOWED_TYPES = [
+    'Image' => 'image',
+    'Document' => 'document',
+    'Video' => 'video',
+    'HTML' => 'html',
+    'Executable' => 'executable',
+    'Audio' => 'audio',
+    'Icon' => 'icon',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public function getField(string $bundle) : string {

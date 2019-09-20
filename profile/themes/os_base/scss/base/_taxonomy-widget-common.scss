@@ -1,0 +1,11 @@
+@import 'variables';
+.block--type-taxonomy {
+  .block-content {
+    > .os-widgets-taxonomy-display-type-menu {
+      border-color: $color-light-gray13;
+    }
+    .os-widgets-taxonomy-display-type-menu-item {
+      border-color: $color-light-gray13;
+    }
+  }
+}

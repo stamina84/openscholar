@@ -1,0 +1,22 @@
+/** block type taxonomy menu **/
+.block--type-taxonomy {
+  .block-content {
+    .os-widgets-taxonomy-display-type-menu-item {
+      a {
+        &:hover {
+          color: $color-dark;
+        }
+      }
+    }
+  }
+}
+/** block type taxonomy slider **/
+.block--type-taxonomy {
+  .block-content {
+    .os-widgets-taxonomy-display-type-slider {
+      a {
+        color: $color-dark;
+      }
+    }
+  }
+}

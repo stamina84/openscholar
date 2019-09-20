@@ -251,7 +251,7 @@ class MenuHelper implements MenuHelperInterface {
    * {@inheritdoc}
    */
   public function publicationInFormMenuAlterations(array $values, ReferenceInterface $reference, GroupInterface $vsite) :void {
-    $menuId = $values['menu']['menu_parent'];
+    list($menuId,) = explode(':', $values['menu']['menu_parent'], 2);
     $linkId = $values['menu']['id'];
     $enabled = $values['menu']['enabled'];
 
@@ -371,6 +371,31 @@ class MenuHelper implements MenuHelperInterface {
         'expanded' => TRUE,
       ])->save();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getVsiteMenuOptions(GroupInterface $vsite): array {
+    /** @var \Drupal\group\Entity\GroupContentInterface[] $group_menu_contents */
+    $group_menu_contents = $vsite->getContent('group_menu:menu');
+
+    if (!$group_menu_contents) {
+      return [
+        'main:' => $this->t('Primary Menu'),
+        'footer:' => $this->t('Secondary Menu'),
+      ];
+    }
+
+    $options = [];
+
+    foreach ($group_menu_contents as $group_menu_content) {
+      /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $menu */
+      $menu = $group_menu_content->getEntity();
+      $options["{$menu->id()}:"] = $group_menu_content->label();
+    }
+
+    return $options;
   }
 
 }

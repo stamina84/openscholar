@@ -15,11 +15,14 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\user\UserInterface;
+use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
 
 /**
  * Provides a trait for openscholar tests.
  */
 trait ExistingSiteTestTrait {
+
+  use UserCreationTrait;
 
   /**
    * Configurations to clean up.
@@ -40,6 +43,7 @@ trait ExistingSiteTestTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createGroup(array $values = []): GroupInterface {
+    $owner = $this->createUser();
     /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('group');
     /** @var \Drupal\group\Entity\GroupInterface $group */
@@ -51,6 +55,9 @@ trait ExistingSiteTestTrait {
       ],
       'field_privacy_level' => [
         'value' => 'public',
+      ],
+      'uid' => [
+        'target_id' => $owner->id(),
       ],
     ]);
     $group->enforceIsNew();
