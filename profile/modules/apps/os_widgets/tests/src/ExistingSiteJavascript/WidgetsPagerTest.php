@@ -8,7 +8,7 @@ use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTest
 /**
  * Tests os_widgets module.
  *
- * @group functional
+ * @group functional-javascript
  * @group widgets
  */
 class WidgetsPagerTest extends OsExistingSiteJavascriptTestBase {
