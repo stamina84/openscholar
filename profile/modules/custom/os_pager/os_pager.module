@@ -5,6 +5,7 @@
  * Hook implementations for the os_pager module.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -64,4 +65,5 @@ function os_pager_preprocess_os_views_pager(&$variables) {
   $variables['#cache']['contexts'][] = 'url.query_args';
 
   $variables['pager_total'] = $pager_total[$element];
+  $variables['heading_id'] = Html::getUniqueId('pagination-heading');
 }
