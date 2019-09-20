@@ -1,6 +1,6 @@
-name: Os custom pager
+name: OpenScholar Pager
 type: module
-description: Os custom pager
+description: Hibrid pager what uses the Full pager logic but uses simplier custom theme like views mini pager's.
 core: 8.x
 dependencies:
   - "drupal:views"
