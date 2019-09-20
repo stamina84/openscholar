@@ -5,7 +5,6 @@ cp.users:
     _title: 'Manage Users'
   requirements:
     _group_permission: 'manage cp users'
-    _group_member: 'TRUE'
 cp.users.add:
   path: '/cp/users/add'
   defaults:
@@ -13,7 +12,6 @@ cp.users.add:
     _title: 'Add User'
   requirements:
     _group_permission: 'manage cp users'
-    _group_member: 'TRUE'
 cp.users.remove:
   path: '/cp/users/remove/{user}'
   defaults:
@@ -21,7 +19,6 @@ cp.users.remove:
     _title_callback: '\Drupal\cp_users\Controller\CpUserMainController::removeUserFormTitle'
   requirements:
     _group_permission: 'manage cp users'
-    _group_member: 'TRUE'
 cp.users.owner:
   path: '/cp/users/owner'
   defaults:
@@ -37,7 +34,6 @@ cp_users.role.add_form:
     _title: 'Add vsite role'
   requirements:
     _group_permission: 'manage cp roles'
-    _group_member: 'TRUE'
 
 # To un-hardcode the default group_type, this route needs to be generated when a
 # group type is created.
@@ -49,7 +45,6 @@ cp_users.role.permission_form:
     group_type: personal
   requirements:
     _group_permission: 'manage cp roles'
-    _group_member: 'TRUE'
   options:
     parameters:
       group_type:
@@ -62,7 +57,6 @@ cp_users.role.change:
     _title: 'Change role'
   requirements:
     _group_permission: 'manage cp roles'
-    _group_member: 'TRUE'
 
 # To un-hardcode the default group_type, this route needs to be generated when a
 # group type is created.
@@ -74,7 +68,6 @@ cp_users.role.list:
     group_type: personal
   requirements:
     _group_permission: 'manage cp roles'
-    _group_member: 'TRUE'
   options:
     parameters:
       group_type:
@@ -90,7 +83,6 @@ cp_users.role.role_permission_form:
     group_type: personal
   requirements:
     _group_permission: 'manage cp roles'
-    _group_member: 'TRUE'
   options:
     parameters:
       group_type:
