@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Hook implementations for the os_redirect module.
+ * Hook implementations for the os_pager module.
  */
 
 use Drupal\Core\Template\Attribute;
