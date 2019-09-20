@@ -3,7 +3,6 @@
 namespace Drupal\cp_taxonomy\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsWidgetBase;
@@ -52,26 +51,6 @@ abstract class CpOptionsWidgetBase extends OptionsWidgetBase implements Containe
       $configuration['third_party_settings'],
       $container->get('plugin.manager.entity_reference_selection')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getOptions(FieldableEntityInterface $entity) {
-    if (!isset($this->options)) {
-      $options_provider = $this->fieldDefinition
-        ->getFieldStorageDefinition()
-        ->getOptionsProvider('target_id', $entity);
-      $field_definition = $options_provider->getFieldDefinition();
-      $options = $this->selectionPluginManager->getSelectionHandler($field_definition, $entity)->getReferenceableEntities();
-
-      $options = ['_none' => $this->t('- None -')] + $options;
-
-      array_walk_recursive($options, [$this, 'sanitizeLabel']);
-
-      $this->options = $options;
-    }
-    return $this->options;
   }
 
   /**

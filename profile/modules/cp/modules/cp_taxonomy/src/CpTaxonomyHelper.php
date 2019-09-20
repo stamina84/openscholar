@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
 
 /**
  * Helper functions to handle vocabularies and related entities.
@@ -195,6 +196,39 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
     }
 
     return $widgets;
+  }
+
+  /**
+   * Populates a tree array given a vocabulary.
+   *
+   * @param string $vid
+   *   Vocabulary.
+   *
+   * @return array
+   *   Return array.
+   */
+  public function getOptionsTree($vid) {
+    $vocabulary_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid);
+    $options = [];
+
+    foreach ($vocabulary_terms as $term) {
+      $options[$vid][$term->tid] = str_repeat('-', $term->depth) . $term->name;
+    }
+
+    array_walk_recursive($options, [$this, 'sanitizeLabel']);
+
+    return $options;
+  }
+
+  /**
+   * Sanitizes a string label to display as an option.
+   *
+   * @param string $label
+   *   The label to sanitize.
+   */
+  protected function sanitizeLabel(&$label) {
+    // Allow a limited set of HTML tags.
+    $label = FieldFilteredMarkup::create($label);
   }
 
 }
