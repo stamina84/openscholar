@@ -170,6 +170,9 @@ class ProfilesSetting extends CpSettingBase {
     $form['default_image'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Default Image'),
+      '#attributes' => [
+        'class' => 'node-form',
+      ],
     ];
 
     $form['default_image']['disable_default_image'] = [

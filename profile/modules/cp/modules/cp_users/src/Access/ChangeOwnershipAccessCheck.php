@@ -56,6 +56,10 @@ class ChangeOwnershipAccessCheck implements AccessInterface, ContainerInjectionI
       return AccessResult::forbidden();
     }
 
+    if ($account->hasPermission('bypass group access')) {
+      return AccessResult::allowed();
+    }
+
     if ($active_vsite->hasPermission('manage cp users', $account) &&
       ($active_vsite->getMember($account) !== FALSE) &&
       $active_vsite->getOwnerId() === $account->id()) {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b190948ed6ed01a5731a40290098e52",
+    "content-hash": "c3eb970b0d8511c15fa802b4a3f81beb",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -4779,7 +4779,7 @@
                     "dev-2.x": "2.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-2.0-beta3",
+                    "version": "8.x-2.0-beta4",
                     "datestamp": "1556606885",
                     "security-coverage": {
                         "status": "not-covered",
@@ -4835,7 +4835,7 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-alpha1",
+                    "version": "8.x-1.0-alpha2",
                     "datestamp": "1556602985",
                     "security-coverage": {
                         "status": "not-covered",
@@ -4886,7 +4886,7 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.6",
+                    "version": "8.x-1.7",
                     "datestamp": "1554020884",
                     "security-coverage": {
                         "status": "covered",
@@ -5238,8 +5238,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-alpha2+94-dev",
-                    "datestamp": "1528091885",
+                    "version": "8.x-1.0-alpha2+72-dev",
+                    "datestamp": "1526651284",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -5269,10 +5269,6 @@
                 {
                     "name": "tim.plunkett",
                     "homepage": "https://www.drupal.org/user/241634"
-                },
-                {
-                    "name": "tstoeckler",
-                    "homepage": "https://www.drupal.org/user/107158"
                 }
             ],
             "description": "Integrates the Fullcalender Library from https://fullcalendar.io",
@@ -5427,7 +5423,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.0-alpha1",
-                    "datestamp": "1546375980",
+                    "datestamp": "1559164381",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -5725,10 +5721,6 @@
                     "homepage": "https://www.drupal.org/user/1682976"
                 },
                 {
-                    "name": "julia.leah.ford",
-                    "homepage": "https://www.drupal.org/user/3590443"
-                },
-                {
                     "name": "levelos",
                     "homepage": "https://www.drupal.org/user/54135"
                 },
@@ -5760,7 +5752,7 @@
             "description": "Mailchimp is an integration with the Mailchimp Mass email tool.",
             "homepage": "http://drupal.org/project/mailchimp",
             "support": {
-                "source": "https://git.drupalcode.org/project/mailchimp"
+                "source": "http://cgit.drupalcode.org/mailchimp"
             }
         },
         {
@@ -5848,7 +5840,7 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.7",
+                    "version": "8.x-1.8",
                     "datestamp": "1550692511",
                     "security-coverage": {
                         "status": "covered",
@@ -6031,8 +6023,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.5",
-                    "datestamp": "1550692525",
+                    "version": "8.x-1.8",
+                    "datestamp": "1553618281",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -6214,7 +6206,7 @@
             "description": "Allows users to redirect from old URLs to new URLs.",
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
-                "source": "https://git.drupalcode.org/project/redirect"
+                "source": "http://cgit.drupalcode.org/redirect"
             }
         },
         {
@@ -6587,8 +6579,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.11",
-                    "datestamp": "1552334285",
+                    "version": "8.x-1.13",
+                    "datestamp": "1557244685",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7337,7 +7329,7 @@
             "description": "Provides an accordion views display plugin.",
             "homepage": "https://www.drupal.org/project/views_accordion",
             "support": {
-                "source": "https://git.drupalcode.org/project/views_accordion",
+                "source": "http://cgit.drupalcode.org/views_accordion",
                 "issues": "https://www.drupal.org/project/issues/views_accordion"
             }
         },
@@ -7452,10 +7444,6 @@
             ],
             "authors": [
                 {
-                    "name": "Bobík",
-                    "homepage": "https://www.drupal.org/user/123612"
-                },
-                {
                     "name": "Remon",
                     "homepage": "https://www.drupal.org/user/143827"
                 }
@@ -7463,7 +7451,7 @@
             "description": "A pager which allows an infinite scroll effect for views.",
             "homepage": "https://www.drupal.org/project/views_infinite_scroll",
             "support": {
-                "source": "https://git.drupalcode.org/project/views_infinite_scroll"
+                "source": "http://cgit.drupalcode.org/views_infinite_scroll"
             }
         },
         {
@@ -8252,20 +8240,21 @@
         },
         {
             "name": "kenwheeler/slick",
-            "version": "master",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kenwheeler/slick.git",
-                "reference": "master"
+                "url": "https://github.com/Alexander2Leb/slick.git",
+                "reference": "76f05b1f6a1bd4792cd877d2c9ae22d0c7bcb712"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kenwheeler/slick/archive/master.zip",
-                "reference": "master",
-                "shasum": null
+                "url": "https://api.github.com/repos/Alexander2Leb/slick/zipball/76f05b1f6a1bd4792cd877d2c9ae22d0c7bcb712",
+                "reference": "76f05b1f6a1bd4792cd877d2c9ae22d0c7bcb712",
+                "shasum": ""
             },
-            "type": "drupal-library",
-            "time": "2019-07-16T19:44:46+00:00"
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2017-03-31T12:40:41+00:00"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -9211,7 +9200,7 @@
                 "shasum": null
             },
             "type": "drupal-library",
-            "time": "2019-05-17T18:21:20+00:00"
+            "time": "2016-07-25T18:07:21+00:00"
         },
         {
             "name": "symfony-cmf/routing",
@@ -11088,19 +11077,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
+                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "homepage": "http://fabien.potencier.org"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com",
-                    "role": "Project Founder"
+                    "role": "Project Founder",
+                    "email": "armin.ronacher@active-4.com"
                 },
                 {
                     "name": "Twig Team",
-                    "homepage": "https://twig.symfony.com/contributors",
-                    "role": "Contributors"
+                    "role": "Contributors",
+                    "homepage": "https://twig.symfony.com/contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -14963,7 +14952,6 @@
     "stability-flags": {
         "drupal/config_sync": 15,
         "drupal/context": 10,
-        "kenwheeler/slick": 20,
         "drupal/fullcalendar": 20,
         "drupal/styleguide": 15,
         "drupal/field_tools": 15,

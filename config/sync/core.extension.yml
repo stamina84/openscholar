@@ -112,6 +112,7 @@ module:
   os_metatag: 0
   os_news: 0
   os_office_embed: 0
+  os_pager: 0
   os_pages: 0
   os_presentations: 0
   os_privacy_policy: 0

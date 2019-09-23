@@ -196,13 +196,16 @@ class PublicationSettingsForm extends CpSettingBase {
     $form['os_publications_filter_publication_types'] = [
       '#type' => 'checkboxes',
       '#title' => 'Display on Your Publication Page',
-      '#description' => $this->t('Selected publications types will appear on your Publications page. Unselected publication types can still be added to other locations on your site using widgets.'),
       '#default_value' => $publication_config->get('filter_publication_types'),
       '#options' => ['all' => $this->t('Select All')] + $publication_types_options,
       '#weight' => 0,
       '#sorted_options' => TRUE,
       '#prefix' => '<div class="publication-display form-inline">',
       '#suffix' => '</div>',
+    ];
+    $form['os_publications_filter_publication_types_description'] = [
+      "#type" => 'item',
+      '#markup' => $this->t('Selected publications types will appear on your Publications page. Unselected publication types can still be added to other locations on your site using widgets.'),
     ];
     $form['markup_start'] = [
       "#type" => 'markup',
@@ -244,12 +247,15 @@ class PublicationSettingsForm extends CpSettingBase {
 
     $form['os_publications_export_format'] = [
       '#title' => $this->t('Export format'),
-      '#description' => $this->t('Each selected format will appear in its own export link.'),
       '#type' => 'checkboxes',
       '#default_value' => $publication_config->get('export_format'),
       '#options' => array_map(function ($format) {
         return $format['label'];
       }, $this->formatManager->getExportDefinitions()),
+    ];
+    $form['os_publications_export_format_description'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('Each selected format will appear in its own export link.'),
       '#suffix' => '</div>',
     ];
 
@@ -261,10 +267,13 @@ class PublicationSettingsForm extends CpSettingBase {
     $form['citation_distribute_autoflags'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Distribute to repositories'),
-      '#description' => $this->t('New publications will automatically be flagged for distribution to the selected services.'),
       '#default_value' => $publication_config->get('citation_distribute_autoflags'),
       '#options' => $distribution_options,
       '#prefix' => '<div class="citation-row">',
+    ];
+    $form['citation_distribute_autoflags_description'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('New publications will automatically be flagged for distribution to the selected services.'),
       '#suffix' => '</div>',
     ];
     $form['markup_end'] = [

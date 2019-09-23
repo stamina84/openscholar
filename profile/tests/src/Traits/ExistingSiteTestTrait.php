@@ -2,8 +2,11 @@
 
 namespace Drupal\Tests\openscholar\Traits;
 
+use Drupal\bibcite_entity\Entity\Contributor;
+use Drupal\bibcite_entity\Entity\ContributorInterface;
 use Drupal\bibcite_entity\Entity\Reference;
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
+use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\file\Entity\File;
@@ -211,6 +214,74 @@ trait ExistingSiteTestTrait {
     $this->markEntityForCleanup($reference);
 
     return $reference;
+  }
+
+  /**
+   * Creates a contributor.
+   *
+   * @param array $values
+   *   (Optional) Default values for the contributor.
+   *
+   * @return \Drupal\bibcite_entity\Entity\ContributorInterface
+   *   The new contributor entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createContributor(array $values = []) : ContributorInterface {
+    $contributor = Contributor::create($values + [
+      'first_name' => $this->randomMachineName(),
+      'middle_name' => $this->randomMachineName(),
+      'last_name' => $this->randomMachineName(),
+    ]);
+
+    $contributor->save();
+
+    $this->markEntityForCleanup($contributor);
+
+    return $contributor;
+  }
+
+  /**
+   * Creates a block content.
+   *
+   * @param array $values
+   *   (optional) The values used to create the entity.
+   *
+   * @return \Drupal\block_content\Entity\BlockContent
+   *   The created block content entity.
+   */
+  protected function createBlockContent(array $values = []) {
+    $block_content = $this->container->get('entity_type.manager')->getStorage('block_content')->create($values + [
+      'type' => 'basic',
+    ]);
+    $block_content->enforceIsNew();
+    $block_content->save();
+
+    $this->markEntityForCleanup($block_content);
+
+    return $block_content;
+  }
+
+  /**
+   * Place block content to region.
+   *
+   * @param \Drupal\block_content\BlockContentInterface $block_content
+   *   Block content.
+   * @param string $region
+   *   Region id.
+   * @param string $context
+   *   Layout context.
+   */
+  protected function placeBlockContentToRegion(BlockContentInterface $block_content, string $region, string $context = 'all_pages') {
+    $layout_config = $this->container->get('config.factory')->getEditable('os_widgets.layout_context.' . $context);
+    $data = $layout_config->get('data');
+    $data[] = [
+      'id' => 'block_content|' . $block_content->uuid(),
+      'region' => $region,
+      'weight' => '0',
+    ];
+    $layout_config->set('data', $data);
+    $layout_config->save();
   }
 
   /**
