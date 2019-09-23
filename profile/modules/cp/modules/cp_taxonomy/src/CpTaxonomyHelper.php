@@ -205,9 +205,10 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
     $vocabulary_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid);
     $options = [];
 
+    $options = ['_none' => $this->t('- None -')] + $options;
+
     foreach ($vocabulary_terms as $term) {
       $options[$vid][$term->tid] = FieldFilteredMarkup::create(str_repeat('-', $term->depth) . $term->name);
-      $options = ['_none' => $this->t('- None -')] + $options;
     }
 
     return $options;
