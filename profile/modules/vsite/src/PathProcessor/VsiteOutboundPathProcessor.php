@@ -45,20 +45,16 @@ class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
       }
     }
 
-    if ($purl = $this->vsiteContextManager->getActivePurl()) {
-      if (strpos($path, $purl) !== FALSE) {
-        $options['purl_exit'] = TRUE;
-      }
+    /** @var string $purl */
+    $purl = $this->vsiteContextManager->getActivePurl();
+    if (((bool) $purl) && strpos($path, $purl) !== FALSE) {
+      $options['purl_exit'] = TRUE;
     }
 
-    /** @var \Drupal\group\Entity\GroupInterface $active_vsite */
-    $active_vsite = $this->vsiteContextManager->getActiveVsite();
-
     if ($request &&
-      $active_vsite &&
       (!isset($options['purl_context']) || $options['purl_context'] !== FALSE) &&
       (!isset($options['purl_exit']) || !$options['purl_exit'])) {
-      $path = $this->vsiteContextManager->getAbsoluteUrl($path, $active_vsite, $bubbleable_metadata);
+      $path = "/$purl$path";
     }
 
     // Otherwise, we end up with vsite aliases one after the other.
