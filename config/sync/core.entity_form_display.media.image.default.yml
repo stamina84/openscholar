@@ -11,7 +11,7 @@ dependencies:
   module:
     - content_moderation
     - field_layout
-    - image_widget_crop
+    - image
     - layout_discovery
     - path
 third_party_settings:
@@ -38,19 +38,12 @@ content:
     type: string_textarea
     region: content
   field_media_image:
-    type: image_widget_crop
+    type: image_image
     weight: 2
     region: content
     settings:
-      show_default_crop: true
-      warn_multiple_usages: true
       preview_image_style: thumbnail
-      crop_preview_image_style: crop_thumbnail
       progress_indicator: throbber
-      crop_list:
-        - crop_985_335
-      crop_types_required: {  }
-      show_crop_area: false
     third_party_settings: {  }
   field_taxonomy_terms:
     weight: 26
