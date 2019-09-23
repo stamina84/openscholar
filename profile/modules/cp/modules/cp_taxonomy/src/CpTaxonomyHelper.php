@@ -199,36 +199,18 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
   }
 
   /**
-   * Populates a tree array given a vocabulary.
-   *
-   * @param string $vid
-   *   Vocabulary.
-   *
-   * @return array
-   *   Return array.
+   * {@inheritdoc}
    */
-  public function getOptionsTree($vid) {
+  public function getOptionsTree(string $vid): array {
     $vocabulary_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid);
     $options = [];
 
     foreach ($vocabulary_terms as $term) {
-      $options[$vid][$term->tid] = str_repeat('-', $term->depth) . $term->name;
+      $options[$vid][$term->tid] = FieldFilteredMarkup::create(str_repeat('-', $term->depth) . $term->name);
+      $options = ['_none' => $this->t('- None -')] + $options;
     }
 
-    array_walk_recursive($options, [$this, 'sanitizeLabel']);
-
     return $options;
-  }
-
-  /**
-   * Sanitizes a string label to display as an option.
-   *
-   * @param string $label
-   *   The label to sanitize.
-   */
-  protected function sanitizeLabel(&$label) {
-    // Allow a limited set of HTML tags.
-    $label = FieldFilteredMarkup::create($label);
   }
 
 }

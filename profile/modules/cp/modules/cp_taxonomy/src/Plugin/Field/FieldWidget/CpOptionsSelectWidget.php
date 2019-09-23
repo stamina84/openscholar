@@ -24,14 +24,8 @@ use Drupal\cp_taxonomy\CpTaxonomyHelper;
  * )
  */
 class CpOptionsSelectWidget extends CpOptionsWidgetBase implements ContainerFactoryPluginInterface {
-  /**
-   * Cp taxonomy helper.
-   *
-   * @var \Drupal\cp_taxonomy\CpTaxonomyHelper
-   */
 
   protected $taxonomyHelper;
-
   protected $selectionPluginManager;
   protected $entityTypeManager;
 
