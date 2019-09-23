@@ -4,7 +4,6 @@ namespace Drupal\vsite\Pathprocessor;
 
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\group\Entity\GroupInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -59,11 +58,6 @@ class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
       (!isset($options['purl_context']) || $options['purl_context'] !== FALSE) &&
       (!isset($options['purl_exit']) || !$options['purl_exit'])) {
       $path = $this->vsiteContextManager->getAbsoluteUrl($path, $active_vsite, $bubbleable_metadata);
-    }
-
-    // Otherwise, we end up with vsite aliases one after the other.
-    if (isset($options['entity']) && $options['entity'] instanceof GroupInterface) {
-      $path = '';
     }
 
     return $path;
