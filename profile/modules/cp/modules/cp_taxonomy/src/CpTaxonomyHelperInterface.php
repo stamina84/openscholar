@@ -99,4 +99,15 @@ interface CpTaxonomyHelperInterface {
    */
   public function getWidgetTypes(string $entity_bundle): array;
 
+  /**
+   * Populates a tree array of given a vocabulary and add hyphen to child.
+   *
+   * @param string $vid
+   *   Vocabulary.
+   *
+   * @return array
+   *   Return array.
+   */
+  public function getOptionsTree(string $vid): array;
+
 }
