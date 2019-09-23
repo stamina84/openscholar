@@ -7,10 +7,8 @@ dependencies:
     - field.field.media.image.field_image_caption
     - field.field.media.image.field_media_image
     - field.field.media.image.field_taxonomy_terms
-    - image.style.crop_slideshow
     - media.type.image
   module:
-    - image
     - layout_builder
 third_party_settings:
   layout_builder:
@@ -22,15 +20,6 @@ targetEntityType: media
 bundle: image
 mode: slideshow_wide
 content:
-  field_media_image:
-    type: image
-    weight: 0
-    region: content
-    label: above
-    settings:
-      image_style: crop_slideshow
-      image_link: ''
-    third_party_settings: {  }
   field_taxonomy_terms:
     weight: 1
     label: above
@@ -42,6 +31,7 @@ content:
 hidden:
   created: true
   field_image_caption: true
+  field_media_image: true
   langcode: true
   name: true
   thumbnail: true
