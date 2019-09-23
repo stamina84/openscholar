@@ -18,7 +18,6 @@ dependencies:
     - field.field.block_content.taxonomy.field_widget_title
   module:
     - layout_builder
-    - options
 third_party_settings:
   layout_builder:
     sections: {  }
@@ -27,13 +26,6 @@ targetEntityType: block_content
 bundle: taxonomy
 mode: default
 content:
-  field_taxonomy_bundle:
-    weight: 1
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
   field_widget_title:
     weight: 0
     label: hidden
@@ -44,6 +36,7 @@ content:
     region: content
 hidden:
   field_taxonomy_behavior: true
+  field_taxonomy_bundle: true
   field_taxonomy_display_type: true
   field_taxonomy_offset: true
   field_taxonomy_range: true
