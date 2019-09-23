@@ -33,23 +33,6 @@
         {
             "type": "package",
             "package": {
-                "name": "kenwheeler/slick",
-                "version": "master",
-                "type": "drupal-library",
-                "dist": {
-                    "url": "https://github.com/kenwheeler/slick/archive/master.zip",
-                    "type": "zip"
-                },
-                "source": {
-                    "url": "https://github.com/kenwheeler/slick.git",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
                 "name": "mreq/slick-lightbox",
                 "version": "master",
                 "type": "drupal-library",
@@ -327,11 +310,15 @@
     "extra": {
         "installer-types": [
             "bower-asset",
-            "npm-asset"
+            "npm-asset",
+            "library"
         ],
         "installer-paths": {
             "web/libraries/chosen": [
                 "npm-asset/chosen-js"
+            ],
+            "web/libraries/slick": [
+                "kenwheeler/slick"
             ],
             "web/core": ["type:drupal-core"],
             "web/libraries/{$name}": ["type:drupal-library"],
