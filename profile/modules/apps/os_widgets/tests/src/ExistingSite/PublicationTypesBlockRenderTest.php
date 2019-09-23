@@ -29,7 +29,7 @@ class PublicationTypesBlockRenderTest extends OsWidgetsExistingSiteTestBase {
   /**
    * Test basic listing test without count.
    */
-  public function testBuildListingContributorsWithoutCount() {
+  public function testBuildListingTypesWithoutCount() {
     $block_content = $this->createBlockContent([
       'type' => 'publication_types',
       'field_types_whitelist' => [
@@ -64,7 +64,7 @@ class PublicationTypesBlockRenderTest extends OsWidgetsExistingSiteTestBase {
   /**
    * Test basic listing test with count.
    */
-  public function testBuildListingContributorsWithCount() {
+  public function testBuildListingTypesWithCount() {
     $ref1 = $this->createReference([
       'title' => 'Lorem Ipsum art 1',
       'type' => 'artwork',
@@ -102,7 +102,7 @@ class PublicationTypesBlockRenderTest extends OsWidgetsExistingSiteTestBase {
   /**
    * Test basic listing test with count and vsite content.
    */
-  public function testBuildListingVsiteContributorsWithCount() {
+  public function testBuildListingVsiteTypesWithCount() {
     $ref1 = $this->createReference([
       'type' => 'artwork',
     ]);
