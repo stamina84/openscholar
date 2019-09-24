@@ -39,6 +39,7 @@ class CpRolesHelperTest extends CpUsersExistingSiteTestBase {
     $this->assertContains('personal-administrator', $roles);
     $this->assertContains('personal-member', $roles);
     $this->assertContains('personal-content_editor', $roles);
+    $this->assertContains('personal-enhanced_basic_member', $roles);
   }
 
   /**
