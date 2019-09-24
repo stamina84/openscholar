@@ -1,0 +1,23 @@
+uuid: f4d8fcaf-6727-4ded-95a8-54d3cb712645
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slideshow
+    - field.storage.block_content.field_slideshow_layout
+  module:
+    - options
+id: block_content.slideshow.field_slideshow_layout
+field_name: field_slideshow_layout
+entity_type: block_content
+bundle: slideshow
+label: 'Slideshow Layout'
+description: 'Slideshow images and captions will be laid out in this manner. Note that the layout can be changed at a later date, but the aspect ratio (Standard/Widescreen) is permanent once selected.'
+required: true
+translatable: false
+default_value:
+  -
+    value: 3_1_overlay
+default_value_callback: ''
+settings: {  }
+field_type: list_string

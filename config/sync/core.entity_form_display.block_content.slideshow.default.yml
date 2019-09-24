@@ -6,6 +6,7 @@ dependencies:
     - block_content.type.slideshow
     - field.field.block_content.slideshow.body
     - field.field.block_content.slideshow.field_slideshow
+    - field.field.block_content.slideshow.field_slideshow_layout
   module:
     - content_moderation
     - field_layout
@@ -48,6 +49,12 @@ content:
         add_above: '0'
     third_party_settings: {  }
     type: paragraphs
+    region: content
+  field_slideshow_layout:
+    weight: 103
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
     region: content
   info:
     type: string_textfield

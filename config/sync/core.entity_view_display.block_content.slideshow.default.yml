@@ -6,6 +6,7 @@ dependencies:
     - block_content.type.slideshow
     - field.field.block_content.slideshow.body
     - field.field.block_content.slideshow.field_slideshow
+    - field.field.block_content.slideshow.field_slideshow_layout
   module:
     - layout_builder
     - slick_paragraphs
@@ -51,4 +52,5 @@ content:
     type: slick_paragraphs_vanilla
     region: content
 hidden:
+  field_slideshow_layout: true
   langcode: true
