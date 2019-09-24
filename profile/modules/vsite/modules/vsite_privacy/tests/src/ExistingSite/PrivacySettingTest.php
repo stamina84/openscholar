@@ -111,7 +111,6 @@ class PrivacySettingTest extends OsExistingSiteTestBase {
    */
   public function testPublicSiteMetatagRobotsNotVisible() {
     $public_group = $this->createGroup([
-      'type' => 'personal',
       'field_privacy_level' => [
         'value' => 'public',
       ],
@@ -127,12 +126,7 @@ class PrivacySettingTest extends OsExistingSiteTestBase {
    */
   public function testUnindexedSiteMetatagRobotsVisible() {
     $web_assert = $this->assertSession();
-    $unindexed_group = $this->createGroup([
-      'type' => 'personal',
-      'field_privacy_level' => [
-        'value' => 'unindexed',
-      ],
-    ]);
+    $unindexed_group = $this->createUnIndexedGroup();
     $this->vsiteContextManager->activateVsite($unindexed_group);
     $this->visitViaVsite('', $unindexed_group);
     $web_assert->statusCodeEquals(200);
