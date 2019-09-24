@@ -49,10 +49,12 @@ cp defaults/settings.local.php web/sites/default
 cp defaults/settings.php web/sites/default
 docker-compose up -d
 docker-compose exec php composer install
-./drush.sh sqlq --file=dump.sql
+./drush.sh site-install openscholar -vvv -y --db-url=mysql://osd8dev:drupal@mariadb/osd8dev --existing-config --account-pass=ADMIN_PASSWORD
 ./drush.sh updb -y
 ./drush.sh entup -y
 ./drush.sh cim -y
+make
+./drush.sh cr
 ```
 
 Access your development setup from http://home.d8.theopenscholar.com
