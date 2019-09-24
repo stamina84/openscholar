@@ -204,7 +204,11 @@ function os_link_alter(&$variables) {
       (strpos($redirect_destination->get(), 'cp') !== FALSE)) {
       /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
       $vsite_context_manager = \Drupal::service('vsite.context_manager');
-      $redirect_destination->set("/{$vsite_context_manager->getActivePurl()}");
+      // Active vsite absolute URL is like this `/site01/`, trimming the
+      // rightmost `/` is necessary. Otherwise, it breaks the destination when
+      // user is logged in via `Admin Login` option.
+      // See \os_preprocess_block.
+      $redirect_destination->set(rtrim($vsite_context_manager->getAbsoluteUrl(), '/'));
     }
 
     $variables['options']['query'] = $redirect_destination->getAsArray();
