@@ -9,7 +9,7 @@ dependencies:
     - field.field.block_content.media_gallery.field_gallery_format
     - field.field.block_content.media_gallery.field_gallery_media
     - field.field.block_content.media_gallery.field_widget_title
-    - image.style.medium
+    - image.style.gallery
   module:
     - image
     - layout_builder
@@ -33,7 +33,7 @@ content:
     weight: 2
     label: visually_hidden
     settings:
-      image_style: medium
+      image_style: gallery
       image_link: file
     third_party_settings: {  }
     type: image

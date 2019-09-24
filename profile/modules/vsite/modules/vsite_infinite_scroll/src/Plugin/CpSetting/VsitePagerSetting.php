@@ -43,7 +43,11 @@ class VsitePagerSetting extends CpSettingBase {
         'pager' => 'Pagination',
       ],
       '#default_value' => $config->get('long_list_content_pagination'),
-      '#description' => t('Pagination applies only to Blog, Links, News, FAQs, Publications and Profiles.'),
+    ];
+    $form['long_list_content_pagination']['description'] = [
+      '#type' => 'item',
+      '#markup' => t('Pagination applies only to Blog, Links, News, FAQs, Publications and Profiles.'),
+      '#weight' => 1,
     ];
   }
 

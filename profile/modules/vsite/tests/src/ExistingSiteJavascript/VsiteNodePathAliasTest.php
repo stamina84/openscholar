@@ -116,6 +116,25 @@ class VsiteNodePathAliasTest extends OsExistingSiteJavascriptTestBase {
   }
 
   /**
+   * Test to create node with manual alias without slash.
+   */
+  public function testNodeCreationWithManualWithoutSlash() {
+    $web_assert = $this->assertSession();
+    $this->visitViaVsite('node/add/blog', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $page = $this->getSession()->getPage();
+    $page->fillField('title[0][value]', $this->randomMachineName());
+    $page->findButton('URL alias')->press();
+    $page->findField('path[0][pathauto]')->press();
+    $page->fillField('path[0][alias]', 'alias-without-slash');
+    $page->findButton('Save')->press();
+
+    $url = $this->getUrl();
+    // Check node is created with slashed alias.
+    $this->assertContains('/alias-without-slash', $url);
+  }
+
+  /**
    * Test all path where should be visible the alias.
    *
    * @dataProvider collectionOfVisiblePath
