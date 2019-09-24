@@ -70,7 +70,7 @@ class VsiteIndexMetatag extends MetaNameBase implements ContainerFactoryPluginIn
       return $element;
     }
     $group = $this->vsiteContextManager->getActiveVsite();
-    if (empty($group)) {
+    if (!$group) {
       return $element;
     }
     $privacy_level = $group->get('field_privacy_level')->getValue();

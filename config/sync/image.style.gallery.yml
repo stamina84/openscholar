@@ -1,0 +1,25 @@
+uuid: 247b1b5e-3e0b-4eaa-ae87-7ec3eab17e2a
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.crop_100_122
+  module:
+    - crop
+name: gallery
+label: gallery
+effects:
+  3badfd11-2dd5-481c-95c5-8eb80f9cddc4:
+    uuid: 3badfd11-2dd5-481c-95c5-8eb80f9cddc4
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: crop_100_122
+  b64a3230-1a4a-43e2-b4f4-8734695443b0:
+    uuid: b64a3230-1a4a-43e2-b4f4-8734695443b0
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 180
+      height: 180
+      anchor: center-center
