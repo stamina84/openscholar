@@ -51,15 +51,16 @@ class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
       $options['purl_exit'] = TRUE;
     }
 
-    if ($request &&
-      (!isset($options['purl_context']) || $options['purl_context'] !== FALSE) &&
-      (!isset($options['purl_exit']) || !$options['purl_exit'])) {
-      $path = "/$purl$path";
+    $group = NULL;
+    if (isset($options['entity']) && $options['entity'] instanceof GroupInterface) {
+      $group = $options['entity'];
     }
 
-    // Otherwise, we end up with vsite aliases one after the other.
-    if (isset($options['entity']) && $options['entity'] instanceof GroupInterface) {
-      $path = '';
+    if ($request &&
+      $group &&
+      (!isset($options['purl_context']) || $options['purl_context'] !== FALSE) &&
+      (!isset($options['purl_exit']) || !$options['purl_exit'])) {
+      $path = $this->vsiteContextManager->getAbsoluteUrl($path, $group, $bubbleable_metadata);
     }
 
     return $path;

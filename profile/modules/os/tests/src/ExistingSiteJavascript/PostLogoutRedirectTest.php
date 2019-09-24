@@ -60,7 +60,7 @@ class PostLogoutRedirectTest extends OsExistingSiteJavascriptTestBase {
     // Also check whether the destination of "Admin Login" is working as
     // expected.
     $this->getSession()->getPage()->clickLink('Admin Login');
-    $this->assertStringEndsWith("{$this->groupAlias}/node", $this->getSession()->getCurrentUrl());
+    $this->assertStringEndsWith("destination={$this->groupAlias}/node", $this->getSession()->getCurrentUrl());
   }
 
   /**
@@ -104,13 +104,13 @@ class PostLogoutRedirectTest extends OsExistingSiteJavascriptTestBase {
 
     $login_link_inside_message = $this->getSession()->getPage()->findLink('log in here');
     $login_link_inside_message->click();
-    $this->assertStringEndsWith("{$private_vsite_alias}/publications", $this->getSession()->getCurrentUrl());
+    $this->assertStringEndsWith("destination={$private_vsite_alias}/publications", $this->getSession()->getCurrentUrl());
 
     $this->visitViaVsite('publications', $private_vsite);
 
     $login_link_inside_footer = $this->getSession()->getPage()->findLink('Admin Login');
     $login_link_inside_footer->click();
-    $this->assertStringEndsWith("{$private_vsite_alias}/publications", $this->getSession()->getCurrentUrl());
+    $this->assertStringEndsWith("destination={$private_vsite_alias}/publications", $this->getSession()->getCurrentUrl());
   }
 
 }
