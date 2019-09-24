@@ -402,4 +402,53 @@ trait ExistingSiteTestTrait {
     return reset($nodes);
   }
 
+  /**
+   * Creates a block content.
+   *
+   * @param array $values
+   *   (optional) The values used to create the entity.
+   *
+   * @return \Drupal\block_content\BlockContentInterface
+   *   The created block content entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function createBlockContent(array $values = []): BlockContentInterface {
+    /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+    $block_content = $this->container->get('entity_type.manager')->getStorage('block_content')->create($values + [
+      'type' => 'basic',
+    ]);
+    $block_content->enforceIsNew();
+    $block_content->save();
+
+    $this->markEntityForCleanup($block_content);
+
+    return $block_content;
+  }
+
+  /**
+   * Creates a contributor.
+   *
+   * @param array $values
+   *   (Optional) Default values for the contributor.
+   *
+   * @return \Drupal\bibcite_entity\Entity\ContributorInterface
+   *   The new contributor entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createContributor(array $values = []) : ContributorInterface {
+    $contributor = Contributor::create($values + [
+      'first_name' => $this->randomString(),
+      'middle_name' => $this->randomString(),
+      'last_name' => $this->randomString(),
+    ]);
+
+    $contributor->save();
+
+    $this->markEntityForCleanup($contributor);
+
+    return $contributor;
+  }
+
 }
