@@ -20,8 +20,7 @@ cd some-dir
 composer install --no-dev
 ```
 
-With `composer require ...` you can download new dependencies to your
-installation.
+With `composer require ...` you can download new dependencies to your installation.
 
 ```
 cd some-dir
