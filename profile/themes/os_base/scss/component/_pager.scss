@@ -10,5 +10,15 @@
     }
   }
 }
+.pager-mini {
+  text-align: center;
+  li {
+    display: inline;
+    padding: .7em;
+    &.current {
+      font-weight: bold;
+    }
+  }
+}
 /**** full pager ****/
 @include pager($color-link1);
