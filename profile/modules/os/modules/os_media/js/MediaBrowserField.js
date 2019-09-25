@@ -124,7 +124,7 @@
             var found = false;
             for (var j = 0; j < scope.selectedFiles.length; j++) {
               highlightDupe(scope.selectedFiles[j], false);
-              if ($files[i].id == scope.selectedFiles[j].id) {
+              if ($files[i].mid === scope.selectedFiles[j].mid) {
                 scope.selectedFiles[j] = angular.copy($files[i]);
                 highlightDupe(scope.selectedFiles[j], true);
                 found = true;
