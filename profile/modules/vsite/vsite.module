@@ -295,7 +295,7 @@ function vsite_page_attachments(array &$attachments) {
       'id' => $vsite->id(),
       'label' => $vsite->label(),
       'purl' => $vsiteContext->getActivePurl(),
-      'url' => $vsiteContext->getAbsoluteUrl(),
+      'url' => $vsiteContext->getActiveVsiteAbsoluteUrl(),
     ];
   }
 }
