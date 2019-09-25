@@ -236,52 +236,6 @@ trait ExistingSiteTestTrait {
   }
 
   /**
-   * Creates a contributor.
-   *
-   * @param array $values
-   *   (Optional) Default values for the contributor.
-   *
-   * @return \Drupal\bibcite_entity\Entity\ContributorInterface
-   *   The new contributor entity.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  public function createContributor(array $values = []) : ContributorInterface {
-    $contributor = Contributor::create($values + [
-      'first_name' => $this->randomMachineName(),
-      'middle_name' => $this->randomMachineName(),
-      'last_name' => $this->randomMachineName(),
-    ]);
-
-    $contributor->save();
-
-    $this->markEntityForCleanup($contributor);
-
-    return $contributor;
-  }
-
-  /**
-   * Creates a block content.
-   *
-   * @param array $values
-   *   (optional) The values used to create the entity.
-   *
-   * @return \Drupal\block_content\Entity\BlockContent
-   *   The created block content entity.
-   */
-  protected function createBlockContent(array $values = []) {
-    $block_content = $this->container->get('entity_type.manager')->getStorage('block_content')->create($values + [
-      'type' => 'basic',
-    ]);
-    $block_content->enforceIsNew();
-    $block_content->save();
-
-    $this->markEntityForCleanup($block_content);
-
-    return $block_content;
-  }
-
-  /**
    * Place block content to region.
    *
    * @param \Drupal\block_content\BlockContentInterface $block_content
