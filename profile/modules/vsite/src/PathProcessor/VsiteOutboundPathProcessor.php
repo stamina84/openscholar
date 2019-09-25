@@ -56,11 +56,13 @@ class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
       $group = $options['entity'];
     }
 
+    // Before altering the path, make sure that the request is done from an
+    // active vsite.
     if ($request &&
       $group &&
       (!isset($options['purl_context']) || $options['purl_context'] !== FALSE) &&
       (!isset($options['purl_exit']) || !$options['purl_exit'])) {
-      $path = $this->vsiteContextManager->getAbsoluteUrl($path, $group, $bubbleable_metadata);
+      $path = $this->vsiteContextManager->getActiveVsiteAbsoluteUrl($path);
     }
 
     return $path;

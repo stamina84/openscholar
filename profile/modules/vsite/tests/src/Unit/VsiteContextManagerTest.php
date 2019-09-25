@@ -86,7 +86,7 @@ class VsiteContextManagerTest extends UnitTestCase {
     // That that roles activated as they should.
     $this->assertEquals($group, $this->vsiteContextManager->getActiveVsite());
     $this->assertEquals('site01', $this->vsiteContextManager->getActivePurl());
-    $this->assertEquals('/site01/foo', $this->vsiteContextManager->getAbsoluteUrl('foo'));
+    $this->assertEquals('/site01/foo', $this->vsiteContextManager->getActiveVsiteAbsoluteUrl('foo'));
   }
 
   /**
