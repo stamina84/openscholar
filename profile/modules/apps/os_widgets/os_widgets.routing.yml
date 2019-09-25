@@ -39,3 +39,10 @@ os_widgets.delete_widget:
   requirements:
     _group_permission: 'manage layout'
     _group_member: 'TRUE'
+os_widgets.add_slideshow:
+  path: '/os/add/slideshow/{block_id}'
+  defaults:
+    _form: 'Drupal\os_widgets\Form\AddSlideshowForm'
+    _title: 'Add new slidehow'
+  requirements:
+    _permission: 'access content'
