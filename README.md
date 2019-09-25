@@ -20,8 +20,7 @@ cd some-dir
 composer install --no-dev
 ```
 
-With `composer require ...` you can download new dependencies to your 
-installation.
+With `composer require ...` you can download new dependencies to your installation.
 
 ```
 cd some-dir
@@ -50,9 +49,24 @@ cp defaults/settings.local.php web/sites/default
 cp defaults/settings.php web/sites/default
 docker-compose up -d
 docker-compose exec php composer install
-./drush.sh sqlq --file=dump.sql
+./drush.sh site-install openscholar -vvv -y --db-url=mysql://osd8dev:drupal@mariadb/osd8dev --existing-config --account-pass=ADMIN_PASSWORD
 ./drush.sh updb -y
+./drush.sh entup -y
 ./drush.sh cim -y
+make
+./drush.sh cr
 ```
 
 Access your development setup from http://home.d8.theopenscholar.com
+
+## Note:
+As the Docker image traefik has a new release, if you have downloaded the latest traefik-helper, then it needs modification.
+In traefik-helper.yml file (path: `/tmp/traefik-helper.yml`), if you find image is using latest traefik version like shown below:
+```
+version: '2'
+
+services:
+  traefik:
+    image: traefik
+```
+modify it to use the 1.7 verson as `image: traefik:1.7` to fix Docker errors.

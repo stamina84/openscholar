@@ -73,10 +73,7 @@ final class AccessHelper implements AccessHelperInterface {
    * {@inheritdoc}
    */
   public function checkAccess(EntityInterface $entity, string $operation, AccountInterface $account): AccessResultInterface {
-    if (!($entity instanceof EntityOwnerInterface)) {
-      return AccessResult::neutral();
-    }
-
+    $is_an_entity_owner_type = ($entity instanceof EntityOwnerInterface);
     $plugin_id = "group_entity:{$entity->getEntityTypeId()}";
 
     if ($entity->getEntityTypeId() === 'node') {
@@ -118,9 +115,14 @@ final class AccessHelper implements AccessHelperInterface {
             return AccessResult::allowed();
           }
 
-          if ($group->hasPermission("$operation own $plugin_id entity", $account) &&
-            ($account->id() === $entity->getOwner()->id())) {
-            return AccessResult::allowed();
+          if ($is_an_entity_owner_type) {
+            /** @var \Drupal\user\EntityOwnerInterface $entity_owner */
+            $entity_owner = $entity;
+
+            if ($group->hasPermission("$operation own $plugin_id entity", $account) &&
+              ($account->id() === $entity_owner->getOwner()->id())) {
+              return AccessResult::allowed();
+            }
           }
         }
 
