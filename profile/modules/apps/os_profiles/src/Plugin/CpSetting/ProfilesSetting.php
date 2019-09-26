@@ -186,20 +186,20 @@ class ProfilesSetting extends CpSettingBase {
    * Expands the image_image type to include the alt and title fields.
    */
   public static function processImageCropFile(array &$element, FormStateInterface $form_state, &$complete_form) {
-    if ($element['#files']) {
-      foreach ($element['#files'] as $file) {
-        $element['image_crop'] = [
-          '#type' => 'image_crop',
-          '#file' => $file,
-          '#crop_type_list' => $element['#crop_list'],
-          '#crop_preview_image_style' => $element['#crop_preview_image_style'],
-          '#show_default_crop' => $element['#show_default_crop'],
-          '#show_crop_area' => $element['#show_crop_area'],
-          '#warn_multiple_usages' => $element['#warn_multiple_usages'],
-          '#crop_types_required' => $element['#crop_types_required'],
-        ];
-      }
+    if (empty($element['#files'])) {
+      return $element;
     }
+    $file = reset($element['#files']);
+    $element['image_crop'] = [
+      '#type' => 'image_crop',
+      '#file' => $file,
+      '#crop_type_list' => $element['#crop_list'],
+      '#crop_preview_image_style' => $element['#crop_preview_image_style'],
+      '#show_default_crop' => $element['#show_default_crop'],
+      '#show_crop_area' => $element['#show_crop_area'],
+      '#warn_multiple_usages' => $element['#warn_multiple_usages'],
+      '#crop_types_required' => $element['#crop_types_required'],
+    ];
     return $element;
   }
 
@@ -388,12 +388,10 @@ class ProfilesSetting extends CpSettingBase {
     if (!empty($default_image_fid)) {
       $image_file = File::load($default_image_fid);
       $path = $image_file->getFileUri();
-      // $alt = $media->get('field_media_image')->getValue()[0]['alt'];
       $build = [
         '#theme' => 'image_style',
         '#uri' => $path,
         '#style_name' => $image_style,
-        // '#alt' => $alt,.
       ];
       return $this->renderer->renderRoot($build);
     }
@@ -406,18 +404,6 @@ class ProfilesSetting extends CpSettingBase {
       ];
       return $this->renderer->renderRoot($build);
     }
-  }
-
-  /**
-   * Get default image.
-   */
-  public function getDefaultImage() {
-    $build = [
-      '#theme' => 'image',
-      '#uri' => file_create_url(drupal_get_path('theme', 'os_base') . '/images/person-default-image-big.png'),
-      '#alt' => t('default-image'),
-    ];
-    return $this->renderer->renderRoot($build);
   }
 
   /**
