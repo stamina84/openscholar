@@ -138,13 +138,26 @@ function cp_users_group_role_add_form_submit(array &$form, FormStateInterface $f
 }
 
 /**
- * Implements hook_entity_type_build().
+ * Implements hook_entity_type_build() for adding more info to group_role entity type.
+ *
+ * This does the following:
+ * - Sets a different class for entity list builder.
+ * - Adds the description property to entity type.
  */
 function cp_users_entity_type_build(array &$entity_types) {
   if (isset($entity_types['group_role'])) {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $group_role_type */
     $group_role_type = $entity_types['group_role'];
+    /** @var array $config_export */
+    $config_export = $group_role_type->get('config_export');
+    $config_export[] = 'description';
+    /** @var array $entity_keys */
+    $entity_keys = $group_role_type->get('entity_keys');
+    $entity_keys['description'] = 'description';
+
     $group_role_type->setListBuilderClass(CpRolesListBuilder::class);
+    $group_role_type->set('config_export', $config_export);
+    $group_role_type->set('entity_keys', $entity_keys);
   }
 }
 

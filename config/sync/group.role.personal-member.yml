@@ -11,6 +11,7 @@ internal: false
 audience: member
 group_type: personal
 permissions_ui: true
+description: '<em>Viewer</em> may have read-only access to private sites and private apps.'
 permissions:
   0: 'access group_node overview'
   1: 'create group_node:landing_page entity'

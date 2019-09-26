@@ -11,6 +11,7 @@ internal: false
 audience: member
 group_type: personal
 permissions_ui: true
+description: '<em>Basic members</em> may only add new posts and edit their own posts.'
 permissions:
   - 'view group'
   - 'update own group_membership content'
