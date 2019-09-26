@@ -48,7 +48,7 @@ class ProfilesSetting extends CpSettingBase {
   /**
    * File usage interface to configurate an file object.
    *
-   * @var Drupal\file\FileUsage\FileUsageInterface
+   * @var \Drupal\file\Entity\FileUsageInterface
    */
   protected $fileUsage;
 
@@ -107,12 +107,16 @@ class ProfilesSetting extends CpSettingBase {
    * ImageWidget process call without parent call.
    *
    * @param array $element
-   *   Image element.
+   *   Form element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   * @param array $complete_form
+   *   Form array.
    *
-   * @return mixed
+   * @return array
    *   Modified element.
    */
-  protected static function processImageFile(array &$element) {
+  public static function processImageFile(array &$element, FormStateInterface $form_state, array &$complete_form) {
     $element['#theme'] = 'image_widget';
 
     // Add the image preview.
@@ -173,6 +177,30 @@ class ProfilesSetting extends CpSettingBase {
         ];
       }
     }
+    return $element;
+  }
+
+  /**
+   * Form API callback: Processes a crop_image field element.
+   *
+   * Expands the image_image type to include the alt and title fields.
+   */
+  public static function processImageCropFile(array &$element, FormStateInterface $form_state, &$complete_form) {
+    if ($element['#files']) {
+      foreach ($element['#files'] as $file) {
+        $element['image_crop'] = [
+          '#type' => 'image_crop',
+          '#file' => $file,
+          '#crop_type_list' => $element['#crop_list'],
+          '#crop_preview_image_style' => $element['#crop_preview_image_style'],
+          '#show_default_crop' => $element['#show_default_crop'],
+          '#show_crop_area' => $element['#show_crop_area'],
+          '#warn_multiple_usages' => $element['#warn_multiple_usages'],
+          '#crop_types_required' => $element['#crop_types_required'],
+        ];
+      }
+    }
+    return $element;
   }
 
   /**
@@ -257,14 +285,7 @@ class ProfilesSetting extends CpSettingBase {
       '#weight' => -1,
     ];
 
-    $suffix = '';
-    if (empty($default_fid)) {
-      $suffix .= $this->getDefaultImage() . '<br />';
-    }
-    else {
-      $suffix .= $this->getExampleImage($default_fid, 'crop_photo_person_full') . '<br />';
-    }
-    $suffix .= $this->t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed media types: <strong>image</strong>');
+    $suffix = $this->t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed media types: <strong>image</strong>');
     $upload_location = 'public://' . $this->activeVsite->id() . '/files';
     $allowed_file_types = 'gif png jpg jpeg';
     $field_layout = \Drupal::entityTypeManager()
@@ -282,30 +303,29 @@ class ProfilesSetting extends CpSettingBase {
       '#multiple' => FALSE,
       '#progress_indicator' => 'throbber',
       '#process' => [
-        [get_class($this), 'processFile'],
+        [ManagedFile::class, 'processManagedFile'],
+        [get_class($this), 'processImageFile'],
+        [get_class($this), 'processImageCropFile'],
       ],
       '#theme' => 'image_widget',
-      '#crop_type_list' => $settings['crop_list'],
+      '#crop_list' => $settings['crop_list'],
       '#preview_image_style' => $settings['preview_image_style'],
       '#crop_preview_image_style' => $settings['crop_preview_image_style'],
       '#show_default_crop' => $settings['show_default_crop'],
       '#show_crop_area' => $settings['show_crop_area'],
-      '#warn_mupltiple_usages' => $settings['warn_multiple_usages'],
+      '#warn_multiple_usages' => $settings['warn_multiple_usages'],
+      '#crop_types_required' => [],
     ];
     if ($default_fid = $config->get('default_image_fid')) {
       $form['default_image']['default_image_fid']['#default_value'] = [$default_fid];
     }
-  }
-
-  /**
-   * Custom process for image.
-   */
-  public static function processFile(&$element, FormStateInterface $form_state, &$complete_form) {
-    ManagedFile::processManagedFile($element, $form_state, $complete_form);
-
-    self::processImageFile($element);
-
-    return $element;
+    else {
+      $form['default_image']['default_image_fid']['preview'] = [
+        '#weight' => -10,
+        '#theme' => 'image',
+        '#uri' => file_create_url(drupal_get_path('theme', 'os_base') . '/images/person-default-image-big.png'),
+      ];
+    }
   }
 
   /**
