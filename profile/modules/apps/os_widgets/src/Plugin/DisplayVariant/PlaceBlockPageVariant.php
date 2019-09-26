@@ -119,6 +119,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
         '#default_value' => $context,
         '#options' => $contexts,
         '#title' => $this->t('Select Context'),
+        '#label_attributes' => ['for' => ['block-place-context-selector']],
         '#attributes' => [
           'id' => 'block-place-context-selector',
         ],
@@ -165,12 +166,10 @@ class PlaceBlockPageVariant extends OriginalVariant {
     /** @var \Drupal\block_content\Entity\BlockContentType[] $block_types */
     $block_types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple();
     $factory_links = [];
-    $t = [];
     foreach ($block_types as $bt) {
-      $t[] = $bt->id();
       $factory_links[$bt->id()] = [
         'title' => $bt->label(),
-        'url' => Url::fromRoute('block_content.add_form', ['block_content_type' => $bt->id()]),
+        'url' => Url::fromRoute('os_widgets.create_widget', ['block_content_type' => $bt->id()]),
         'attributes' => [
           'title' => $bt->label(),
           'class' => ['use-ajax'],
@@ -196,6 +195,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
         '#title' => $this->t('Filter Widgets'),
         '#maxlength' => 60,
         '#size' => 60,
+        '#label_attributes' => ['for' => ['filter-widgets']],
         '#attributes' => [
           'id' => [
             'filter-widgets',

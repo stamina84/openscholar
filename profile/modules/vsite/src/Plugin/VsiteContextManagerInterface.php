@@ -2,7 +2,6 @@
 
 namespace Drupal\vsite\Plugin;
 
-use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -32,15 +31,14 @@ interface VsiteContextManagerInterface {
   public function getActivePurl();
 
   /**
-   * Get an absolute url a vsite.
+   * Get absolute url for the active vsite.
    *
    * @param string $path
    *   The URL path that is requested.
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group we want to fetch the url for.
-   * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
-   *   Caching metadata.
+   *
+   * @return string
+   *   The absolute path for the vsite.
    */
-  public function getAbsoluteUrl(string $path = '', GroupInterface $group = NULL, BubbleableMetadata $bubbleable_metadata = NULL);
+  public function getActiveVsiteAbsoluteUrl(string $path = ''): string;
 
 }

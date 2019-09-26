@@ -6,6 +6,7 @@
  */
 
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
+use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -58,13 +59,19 @@ function os_preprocess_html(&$variables) {
  * Implements hook_preprocess_block().
  *
  * Replaces 'Drupal' with 'OpenScholar' in the powered by block.
+ *
+ * @see \Drupal\Core\Routing\RedirectDestination::get()
  */
 function os_preprocess_block(array &$vars) {
   if (isset($vars['plugin_id']) && $vars['plugin_id'] == 'system_powered_by_block') {
     $vars['content']['#markup'] = '';
+    $vars['#cache']['contexts'][] = 'user.roles:anonymous';
+
     if (\Drupal::currentUser()->isAnonymous()) {
+      $vars['#cache']['contexts'][] = 'url.path';
       $vars['content']['#markup'] .= Link::createFromRoute(t('Admin Login'), 'user.login', [], ['query' => \Drupal::destination()->getAsArray()])->toString();
     }
+
     $vars['content']['#markup'] .= t('<span id="powered-by"><a class="powered-by" href=":link">OpenScholar</a></span>', [':link' => 'https://theopenscholar.com/']);
   }
   // Hiding breadcrumb from login and change password page.
@@ -77,7 +84,7 @@ function os_preprocess_block(array &$vars) {
 }
 
 /**
- * Implements hook_entity_create_access().
+ * Implements hook_entity_create_access() for granting access to entity add paths to vsite roles.
  *
  * Handles entity create inside group via global paths:
  * - `/node/add/<bundle>`
@@ -202,7 +209,7 @@ function os_link_alter(&$variables) {
       // rightmost `/` is necessary. Otherwise, it breaks the destination when
       // user is logged in via `Admin Login` option.
       // See \os_preprocess_block.
-      $redirect_destination->set(rtrim($vsite_context_manager->getAbsoluteUrl(), '/'));
+      $redirect_destination->set(rtrim($vsite_context_manager->getActiveVsiteAbsoluteUrl(), '/'));
     }
 
     $variables['options']['query'] = $redirect_destination->getAsArray();
@@ -305,4 +312,14 @@ function os_page_attachments(array &$attachments) {
       $attachments['#attached']['html_head'][] = [$noindex_tag, 'robots'];
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for making sure that vsite roles also have access to perform operations on a block_content entity.
+ */
+function os_block_content_access(BlockContentInterface $entity, $operation, AccountInterface $account) {
+  /** @var \Drupal\os\AccessHelperInterface $access_helper */
+  $access_helper = \Drupal::service('os.access_helper');
+
+  return $access_helper->checkAccess($entity, $operation, $account);
 }

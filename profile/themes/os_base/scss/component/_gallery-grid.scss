@@ -2,16 +2,17 @@
 .block--type-media-gallery {
   .field--name-field-gallery-media {
     .field--items {
-      column-gap: .1em;
-      columns: 2 auto;
-      @media #{$tablet} {
-        columns: 3 175px;
-      }
-      @media #{$normal} {
-        columns: 4 210px;
-      }
+      display: flex;
+      flex-wrap: wrap;
       .field--item {
         padding: 4px;
+        width: 20%;
+        img {
+          width: 100%;
+        }
+        @media #{$mobile} {
+          width: 33.33%;
+        }
       }
     }
   }

@@ -57,16 +57,9 @@ class VsitePrivacyHelper implements VsitePrivacyHelperInterface {
     $directives = $os_publication_settings->get('robotstxt_directives');
 
     // Disallows robots in sites with privacy settings not public.
-    $disallow_purl = ($privacy != 'public');
-    if ($disallow_purl) {
-      $directives[$gid] = "Disallow: /$purl/";
-    }
-    else {
-      // Undoes any previous private vsite settings (see above).
-      // Unsets any Disallow directives for this vsite.
-      if (isset($directives[$gid])) {
-        unset($directives[$gid]);
-      }
+    $directives[$gid] = "Disallow: /$purl/";
+    if ($privacy == 'public') {
+      unset($directives[$gid]);
     }
     if (empty($directives)) {
       return;

@@ -17,10 +17,10 @@ os_widgets.reset_layout:
     _group_permission: 'manage layout'
     _group_member: 'TRUE'
 os_widgets.create_widget:
-  path: '/cp/layout/create/{block_type}'
+  path: '/cp/layout/create/{block_content_type}'
   defaults:
-    _controller: '\Drupal\os_widgets\Controller\WidgetLibraryController::createBlock'
-    _title: 'Create block'
+    _controller: '\Drupal\block_content\Controller\BlockContentController::addForm'
+    _title_callback: 'Drupal\block_content\Controller\BlockContentController::getAddFormTitle'
   requirements:
     _group_permission: 'manage layout'
     _group_member: 'TRUE'

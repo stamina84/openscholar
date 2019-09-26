@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
 
 /**
  * Helper functions to handle vocabularies and related entities.
@@ -195,6 +196,21 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
     }
 
     return $widgets;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptionsTree(string $vid): array {
+    $vocabulary_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid);
+
+    foreach ($vocabulary_terms as $term) {
+      $options[$vid][$term->tid] = FieldFilteredMarkup::create(str_repeat('-', $term->depth) . $term->name);
+    }
+
+    $options = ['_none' => $this->t('- None -')] + $options;
+
+    return $options;
   }
 
 }

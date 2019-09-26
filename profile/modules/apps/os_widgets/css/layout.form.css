@@ -133,3 +133,7 @@ nav.ui-sortable-helper ul.menu {
 #drupal-off-canvas .form-type-vertical-tabs {
   display: none;
 }
+
+.addthis-description p {
+  margin: 10px 0 0 0;
+}

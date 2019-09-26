@@ -300,6 +300,10 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
         }
       }
       break;
+
+    case 'block_content_addthis_form':
+      $form['addthis_description']['#markup'] = \Drupal::token()->replace('[os_widgets:addthis_display_style_description]');
+      break;
   }
 }
 
