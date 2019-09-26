@@ -282,6 +282,10 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['field_types_whitelist']['widget']['#options'][''] = t('Select all');
       ksort($form['field_types_whitelist']['widget']['#options']);
       break;
+
+    case 'block_content_addthis_form':
+      $form['addthis_description']['#markup'] = \Drupal::token()->replace('[os_widgets:addthis_display_style_description]');
+      break;
   }
 }
 
