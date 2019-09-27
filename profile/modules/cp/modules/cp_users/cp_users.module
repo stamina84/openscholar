@@ -10,13 +10,10 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\cp_users\Controller\CpRolesListBuilder;
+use Drupal\cp_users\CpUsersHelper;
 use Drupal\group\Entity\GroupRole;
 use Drupal\group\Entity\GroupRoleInterface;
 use Drupal\group\Entity\GroupTypeInterface;
-
-define('CP_USERS_NEW_USER', 'cp_users_new_user');
-define('CP_USERS_ADD_TO_GROUP', 'cp_users_add_to_group');
-define('CP_USERS_DELETE_FROM_GROUP', 'cp_users_delete_from_group');
 
 /**
  * Defines new mail templates that can be sent.
@@ -50,7 +47,7 @@ function cp_users_mail($key, &$message, $params) {
   ];
 
   switch ($key) {
-    case CP_USERS_NEW_USER:
+    case CpUsersHelper::CP_USERS_NEW_USER:
       $message['subject'] = t('You have been added as a member to the @site-url website', $variables);
       $message['body'] = [];
       $message['body'][] = t('Hi @user-firstname,', $variables);
@@ -70,7 +67,7 @@ function cp_users_mail($key, &$message, $params) {
       $message['headers'] += (isset($params['headers']) && is_array($params['headers'])) ? $params['headers'] : [];
       break;
 
-    case CP_USERS_DELETE_FROM_GROUP:
+    case CpUsersHelper::CP_USERS_DELETE_FROM_GROUP:
       $message['subject'] = t("You have been removed from the @site-url website", $variables);
       $message['body'] = [];
       $message['body'][] = t("Hi @user-firstname,", $variables);

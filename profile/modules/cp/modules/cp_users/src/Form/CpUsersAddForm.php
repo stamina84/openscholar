@@ -14,6 +14,7 @@ use Drupal\Core\Mail\MailManager;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Url;
 use Drupal\cp_users\CpRolesHelperInterface;
+use Drupal\cp_users\CpUsersHelper;
 use Drupal\group\Entity\GroupRoleInterface;
 use Drupal\user\Entity\User;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
@@ -271,7 +272,7 @@ class CpUsersAddForm extends FormBase {
         if ($entity = $form_state->getValue('member-entity')) {
           /** @var \Drupal\user\UserInterface $account */
           $account = $this->entityTypeManager->getStorage('user')->load($entity);
-          $email_key = CP_USERS_ADD_TO_GROUP;
+          $email_key = CpUsersHelper::CP_USERS_ADD_TO_GROUP;
         }
         else {
           $account = User::create([
@@ -282,7 +283,7 @@ class CpUsersAddForm extends FormBase {
             'status' => TRUE,
           ]);
           $account->save();
-          $email_key = CP_USERS_NEW_USER;
+          $email_key = CpUsersHelper::CP_USERS_NEW_USER;
         }
 
         /** @var string $role */
