@@ -11,7 +11,6 @@ internal: false
 audience: member
 group_type: personal
 permissions_ui: true
-description: '<em>Administrators</em> may add, edit or delete any post, and change site settings.'
 permissions:
   0: 'manage cp appearance'
   1: 'manage cp users'
@@ -243,3 +242,4 @@ permissions:
   425: 'update any group_entity:block_content content'
   426: 'update own group_entity:block_content content'
   427: 'view group_entity:block_content content'
+description: '<em>Administrators</em> may add, edit or delete any post, and change site settings.'
