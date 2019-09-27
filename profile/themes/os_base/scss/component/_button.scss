@@ -7,3 +7,19 @@
   background: $color-green;
   border-color: $color-green;
 }
+.btn-danger {
+  background: $color-danger;
+  border-color: $color-danger;
+}
+.btn-warning {
+  color: $color-black;
+  &:hover,&:active,&:focus {
+    color: $color-black;
+  }
+}
+.btn-info {
+  color: $color-black;
+  &:hover,&:active,&:focus {
+    color: $color-black;
+  }
+}
