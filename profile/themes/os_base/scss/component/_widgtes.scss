@@ -215,9 +215,10 @@
 .layout {
   .paragraphs-dropbutton-wrapper {
     .dropbutton {
+      display: flex;
       li {
         list-style-type: none;
-        margin-bottom: 3px;
+        margin-left: 5px;
       }
     }
   }
