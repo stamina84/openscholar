@@ -20,11 +20,6 @@ class SlideshowWidget extends OsWidgetsBase implements OsWidgetsInterface {
    * {@inheritdoc}
    */
   public function buildBlock(&$build, $block_content) {
-    $options = [
-      'query' => [
-        'destination' => \Drupal::service('path.current')->get(),
-      ],
-    ];
     $build['add_slideshow_button'] = [
       '#type' => 'link',
       '#prefix' => '<p>',
@@ -32,7 +27,7 @@ class SlideshowWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#title' => $this->t('Add slideshow'),
       '#url' => Url::fromRoute('os_widgets.add_slideshow', [
         'block_id' => $block_content->id(),
-      ], $options),
+      ]),
       '#attributes' => [
         'class' => [
           'use-ajax',

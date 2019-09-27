@@ -3,6 +3,9 @@
 namespace Drupal\os_widgets\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -87,31 +90,49 @@ class AddSlideshowForm extends ContentEntityForm {
     $group_content = array_shift($group_contents);
     $block_content_group = $group_content->getGroup();
     $group = $this->vsiteContextManager->getActiveVsite();
-    if ($group->id() != $block_content_group->id()) {
+    if ($group && $group->id() != $block_content_group->id()) {
       throw new AccessDeniedHttpException();
     }
     $this->blockContent = $block_content;
     $form = parent::buildForm($form, $form_state);
+    $form['actions']['submit']['#ajax'] = [
+      'callback' => '::ajaxSubmit',
+      'event' => 'click',
+    ];
 
     return $form;
   }
 
   /**
-   * Form submission handler.
+   * Ajax form submission handler.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $paragraph = $this->getEntity();
 
     $this->blockContent->field_slideshow->appendItem($paragraph);
     $this->blockContent->save();
 
-    $this->messenger()->addMessage('Successfully save slideshow to ' . $this->blockContent->label());
+    $response = new AjaxResponse();
+    if ($form_state->hasAnyErrors()) {
+      $response->addCommand(new ReplaceCommand('#drupal-modal--body .add-slideshow-form', $form));
+    }
+    else {
+      $this->messenger()->addMessage('Successfully save slideshow to ' . $this->blockContent->label());
+
+      $instances = $this->blockContent->getInstances();
+      $block = reset($instances);
+      $block_markup = $this->entityTypeManager->getViewBuilder('block')->view($block);
+      $response->addCommand(new ReplaceCommand('Section[data-quickedit-entity-id="block_content/' . $this->blockContent->id() . '"]', $block_markup));
+      $response->addCommand(new CloseModalDialogCommand());
+    }
+
+    return $response;
   }
 
 }
