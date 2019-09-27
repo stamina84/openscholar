@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3eb970b0d8511c15fa802b4a3f81beb",
+    "content-hash": "66cdb5ce6aaad55df56a1c99c675c737",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -8186,21 +8186,14 @@
         },
         {
             "name": "kenwheeler/slick",
-            "version": "1.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Alexander2Leb/slick.git",
-                "reference": "76f05b1f6a1bd4792cd877d2c9ae22d0c7bcb712"
-            },
+            "version": "1.6.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Alexander2Leb/slick/zipball/76f05b1f6a1bd4792cd877d2c9ae22d0c7bcb712",
-                "reference": "76f05b1f6a1bd4792cd877d2c9ae22d0c7bcb712",
-                "shasum": ""
+                "url": "https://github.com/kenwheeler/slick/archive/1.6.0.zip",
+                "reference": null,
+                "shasum": null
             },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-03-31T12:40:41+00:00"
+            "type": "drupal-library"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -9146,7 +9139,7 @@
                 "shasum": null
             },
             "type": "drupal-library",
-            "time": "2019-05-17T18:21:20+00:00"
+            "time": "2016-07-25T18:07:21+00:00"
         },
         {
             "name": "symfony-cmf/routing",
