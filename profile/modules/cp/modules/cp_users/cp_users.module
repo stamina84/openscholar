@@ -204,3 +204,31 @@ function cp_users_group_role_update(GroupRoleInterface $group_role) {
     $cache_tags_invalidator->invalidateTags(['config:system.menu.control-panel']);
   }
 }
+
+/**
+ * Renders a group role title in a format expected by OpenScholar.
+ *
+ * @param \Drupal\group\Entity\GroupRoleInterface $group_role
+ *   The group role.
+ *
+ * @return string
+ *   The rendered title.
+ *
+ * @throws \Exception
+ */
+function cp_users_render_cp_role_label(GroupRoleInterface $group_role): string {
+  /** @var \Drupal\Core\Render\RendererInterface $renderer */
+  $renderer = \Drupal::service('renderer');
+  // The description is stored in the config, which is stored is stored in the
+  // repository, therefore, we can knowingly use raw.
+  $renderable_label = [
+    '#type' => 'inline_template',
+    '#template' => '<span>{{ title }}</span><span>{{ description|raw }}</span>',
+    '#context' => [
+      'title' => $group_role->label(),
+      'description' => $group_role->get('description'),
+    ],
+  ];
+
+  return $renderer->render($renderable_label);
+}
