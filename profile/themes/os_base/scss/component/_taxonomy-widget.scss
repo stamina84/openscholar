@@ -2,7 +2,6 @@
 .item-list {
   margin: 0 10px;
 }
-
 /** block type taxonomy menu **/
 .block--type-taxonomy {
   .block-content {
@@ -13,7 +12,11 @@
         display: block;
         padding: .5em;
       }
+      .term-description {
+         padding-left: .5em;
+      }
     }
+    @include taxonomychildpadding();
     .os-widgets-taxonomy-display-type-menu-item {
       a {
         font-weight: bold;
@@ -23,7 +26,7 @@
       }
       border-top: 1px solid $color-light-gray14;
       .item-list {
-        a {
+        a, .term-description {
           padding-left: 19px;
         }
       }
