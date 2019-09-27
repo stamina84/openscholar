@@ -113,17 +113,15 @@ class AddSlideshowForm extends ContentEntityForm {
    */
   public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    $paragraph = $this->getEntity();
-
-    $this->blockContent->field_slideshow->appendItem($paragraph);
-    $this->blockContent->save();
 
     $response = new AjaxResponse();
     if ($form_state->hasAnyErrors()) {
       $response->addCommand(new ReplaceCommand('#drupal-modal--body .add-slideshow-form', $form));
     }
     else {
-      $this->messenger()->addMessage('Successfully save slideshow to ' . $this->blockContent->label());
+      $paragraph = $this->getEntity();
+      $this->blockContent->field_slideshow->appendItem($paragraph);
+      $this->blockContent->save();
 
       $instances = $this->blockContent->getInstances();
       $block = reset($instances);
