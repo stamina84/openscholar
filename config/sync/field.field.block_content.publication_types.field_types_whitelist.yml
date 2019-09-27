@@ -12,7 +12,7 @@ field_name: field_types_whitelist
 entity_type: block_content
 bundle: publication_types
 label: 'Show the following types'
-description: 'Select the types you want to appear in the widget.'
+description: ''
 required: true
 translatable: false
 default_value: {  }
