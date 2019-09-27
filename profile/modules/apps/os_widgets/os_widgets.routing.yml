@@ -43,6 +43,6 @@ os_widgets.add_slideshow:
   path: '/os/add/slideshow/{block_id}'
   defaults:
     _form: 'Drupal\os_widgets\Form\AddSlideshowForm'
-    _title: 'Add new slidehow'
+    _title: 'Add new slideshow'
   requirements:
     _permission: 'access content'
