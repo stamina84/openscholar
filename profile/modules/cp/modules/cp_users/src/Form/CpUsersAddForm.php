@@ -114,7 +114,7 @@ class CpUsersAddForm extends FormBase {
       return !\in_array($role->id(), $non_configurable_roles, TRUE) && !$role->isInternal();
     });
     foreach ($allowed_roles as $role) {
-      $options[$role->id()] = $role->label();
+      $options[$role->id()] = cp_users_render_cp_role_label($role);
     }
 
     $form['#prefix'] = '<div id="cp-user-add-form">';
