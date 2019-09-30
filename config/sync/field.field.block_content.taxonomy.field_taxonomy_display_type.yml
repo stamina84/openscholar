@@ -12,7 +12,7 @@ field_name: field_taxonomy_display_type
 entity_type: block_content
 bundle: taxonomy
 label: 'Display Type'
-description: 'Each taxonomy term must have its own description (see the term creation/edit form). Also, the Show term descriptions checkbox above must be checked, and the Show child terms checkbox above must be unchecked.'
+description: ''
 required: true
 translatable: false
 default_value:

@@ -119,6 +119,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
         '#default_value' => $context,
         '#options' => $contexts,
         '#title' => $this->t('Select Context'),
+        '#label_attributes' => ['for' => ['block-place-context-selector']],
         '#attributes' => [
           'id' => 'block-place-context-selector',
         ],
@@ -194,6 +195,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
         '#title' => $this->t('Filter Widgets'),
         '#maxlength' => 60,
         '#size' => 60,
+        '#label_attributes' => ['for' => ['filter-widgets']],
         '#attributes' => [
           'id' => [
             'filter-widgets',

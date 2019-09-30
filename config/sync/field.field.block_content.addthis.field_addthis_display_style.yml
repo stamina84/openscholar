@@ -12,7 +12,7 @@ field_name: field_addthis_display_style
 entity_type: block_content
 bundle: addthis
 label: 'Display style'
-description: '[os_widgets:addthis_display_style_description]'
+description: ''
 required: true
 translatable: false
 default_value:

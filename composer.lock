@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3eb970b0d8511c15fa802b4a3f81beb",
+    "content-hash": "740bc8156bd4f8b7f8411b249515c090",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -8185,24 +8185,6 @@
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
-            "name": "kenwheeler/slick",
-            "version": "1.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Alexander2Leb/slick.git",
-                "reference": "76f05b1f6a1bd4792cd877d2c9ae22d0c7bcb712"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Alexander2Leb/slick/zipball/76f05b1f6a1bd4792cd877d2c9ae22d0c7bcb712",
-                "reference": "76f05b1f6a1bd4792cd877d2c9ae22d0c7bcb712",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-03-31T12:40:41+00:00"
-        },
-        {
             "name": "kriswallsmith/assetic",
             "version": "v1.4.0",
             "source": {
@@ -8539,6 +8521,20 @@
             "dist": {
                 "type": "tar",
                 "url": "https://registry.npmjs.org/chosen-js/-/chosen-js-1.8.7.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/slick-carousel",
+            "version": "1.8.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/slick-carousel/-/slick-carousel-1.8.1.tgz",
                 "reference": null,
                 "shasum": null
             },

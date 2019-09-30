@@ -4,6 +4,7 @@ namespace Drupal\vsite\Pathprocessor;
 
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -44,15 +45,24 @@ class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
       }
     }
 
-    if ($purl = $this->vsiteContextManager->getActivePurl()) {
-      if (strpos($path, $purl) !== FALSE) {
-        $options['purl_exit'] = TRUE;
-      }
+    /** @var string $purl */
+    $purl = $this->vsiteContextManager->getActivePurl();
+    if (((bool) $purl) && strpos($path, $purl) !== FALSE) {
+      $options['purl_exit'] = TRUE;
     }
 
-    /** @var \Drupal\group\Entity\GroupInterface $group */
-    if ($request && ($group = $request->get('group')) && (!isset($options['purl_context']) || $options['purl_context'] !== FALSE) && (!isset($options['purl_exit']) || !$options['purl_exit'])) {
-      $path = $this->vsiteContextManager->getAbsoluteUrl($path, $group, $bubbleable_metadata);
+    $group = NULL;
+    if (isset($options['entity']) && $options['entity'] instanceof GroupInterface) {
+      $group = $options['entity'];
+    }
+
+    // Before altering the path, make sure that the request is done from an
+    // active vsite.
+    if ($request &&
+      $group &&
+      (!isset($options['purl_context']) || $options['purl_context'] !== FALSE) &&
+      (!isset($options['purl_exit']) || !$options['purl_exit'])) {
+      $path = $this->vsiteContextManager->getActiveVsiteAbsoluteUrl($path);
     }
 
     return $path;

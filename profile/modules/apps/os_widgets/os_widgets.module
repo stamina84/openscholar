@@ -264,6 +264,10 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
 
         _os_widgets_taxonomy_filter_bundle_options($form, $settings['allowed_vocabulary_reference_types']);
       }
+      $form['field_taxonomy_display_type']['widget']['description']['#markup'] = t('<div>@help_text</div>', [
+        '@help_text' => 'Each taxonomy term must have its own description (see the term creation/edit form). Also, the Show term descriptions checkbox above must be checked, and the Show child terms checkbox above must be unchecked.',
+      ]);
+      $form['field_taxonomy_display_type']['widget']['description']['#weight'] = 2;
       break;
 
     case 'block_content_rss_feed_form':
@@ -281,6 +285,16 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
     case 'block_content_publication_types_edit_form':
       $form['field_types_whitelist']['widget']['#options'][''] = t('Select all');
       ksort($form['field_types_whitelist']['widget']['#options']);
+      $form['field_types_whitelist']['widget']['description']['#markup'] = t('<div class="description full">@help_text</div>', [
+        '@help_text' => 'Select the types you want to appear in the widget.',
+      ]);
+      $form['field_types_whitelist']['widget']['description']['#weight'] = 2;
+
+      break;
+
+    case 'block_content_addthis_form':
+    case 'block_content_addthis_edit_form':
+      $form['addthis_description']['#markup'] = \Drupal::token()->replace('[os_widgets:addthis_display_style_description]');
       break;
   }
 }
@@ -453,8 +467,22 @@ function os_widgets_form_block_content_form_alter(&$form, FormStateInterface &$f
         'callback' => '\Drupal\os_widgets\Controller\WidgetLibraryController::ajaxSubmitEdit',
       ];
     }
-    $form['actions']['delete']['#attributes']['class'][] = 'use-ajax';
+    $delete_button_classes = array_merge($form['actions']['delete']['#attributes']['class'], [
+      'btn',
+      'btn-danger',
+      'use-ajax',
+    ]);
+    $form['actions']['delete']['#attributes']['class'] = $delete_button_classes;
     $form['actions']['delete']['#attributes']['data-dialog-type'] = 'modal';
+    $form['actions']['delete']['#icon'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'span',
+      '#value' => '',
+      '#attributes' => [
+        'class' => ['icon', 'glyphicon', 'glyphicon-trash'],
+        'aria-hidden' => 'true',
+      ],
+    ];
   }
 }
 
