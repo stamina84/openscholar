@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66cdb5ce6aaad55df56a1c99c675c737",
+    "content-hash": "740bc8156bd4f8b7f8411b249515c090",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -8185,17 +8185,6 @@
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
-            "name": "kenwheeler/slick",
-            "version": "1.6.0",
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/kenwheeler/slick/archive/1.6.0.zip",
-                "reference": null,
-                "shasum": null
-            },
-            "type": "drupal-library"
-        },
-        {
             "name": "kriswallsmith/assetic",
             "version": "v1.4.0",
             "source": {
@@ -8532,6 +8521,20 @@
             "dist": {
                 "type": "tar",
                 "url": "https://registry.npmjs.org/chosen-js/-/chosen-js-1.8.7.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/slick-carousel",
+            "version": "1.8.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/slick-carousel/-/slick-carousel-1.8.1.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -9139,7 +9142,7 @@
                 "shasum": null
             },
             "type": "drupal-library",
-            "time": "2016-07-25T18:07:21+00:00"
+            "time": "2019-05-17T18:21:20+00:00"
         },
         {
             "name": "symfony-cmf/routing",

@@ -5,7 +5,10 @@
   Drupal.behaviors.osSlickLightbox = {
     attach: function (context) {
       $('.slick--optionset--slick-media-gallery .slick-track').once('myCustomBehavior').slickLightbox({
-        caption: 'caption'
+        caption: function (element, info) {
+          let imageAttribute = $(element).find('img').attr('title');
+          return imageAttribute ? imageAttribute : '';
+        }
       });
       $('.field--name-field-gallery-media.field--mode-grid .field--items', context).slickLightbox({
         caption: function (element, info) {

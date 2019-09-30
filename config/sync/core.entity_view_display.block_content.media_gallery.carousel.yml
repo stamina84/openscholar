@@ -37,7 +37,7 @@ content:
       optionset_thumbnail: ''
       skin: default
       skin_thumbnail: ''
-      image_style: medium
+      image_style: gallery
       thumbnail_style: ''
       responsive_image_style: ''
       thumbnail_effect: ''
