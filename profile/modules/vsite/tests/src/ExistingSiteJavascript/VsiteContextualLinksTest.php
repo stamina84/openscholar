@@ -134,36 +134,6 @@ class VsiteContextualLinksTest extends OsExistingSiteJavascriptTestBase {
   }
 
   /**
-   * Tests Preview works with destination param in the url for node.
-   *
-   * As if coming from contextual link.
-   *
-   * @covers ::vsite_node_preview_submit
-   *
-   * @throws \Behat\Mink\Exception\ElementNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  public function testNodePreviewWithDestination(): void {
-
-    $blog = $this->createNode([
-      'type' => 'blog',
-    ]);
-    $this->group->addContent($blog, 'group_node:blog');
-    $group_admin = $this->createUser();
-    $this->addGroupAdmin($group_admin, $this->group);
-    $this->drupalLogin($group_admin);
-
-    $destination = '?destination=' . $this->group->get('path')->getValue()[0]['alias'];
-    $this->visitViaVsite("node/{$blog->id()}/edit" . $destination, $this->group);
-    $this->getSession()->getPage()->pressButton('Preview');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->waitForElementVisible('css', '#edit-backlink');
-    $current_url = $this->getSession()->getCurrentUrl();
-    $this->assertContains('preview', $current_url);
-    $this->assertContains('full', $current_url);
-  }
-
-  /**
    * Retrieves the destination parameter value from a link.
    *
    * @param \Behat\Mink\Element\NodeElement $element
