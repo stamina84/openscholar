@@ -39,7 +39,7 @@ class AccessHelperTest extends OsExistingSiteTestBase {
     $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkCreateAccess($account, 'group_node:class'));
 
     // Positive tests.
-    $this->group->addMember($account);
+    $this->addGroupEnhancedMember($account, $this->group);
     $this->assertInstanceOf(AccessResultAllowed::class, $access_helper->checkCreateAccess($account, 'group_node:class'));
   }
 
@@ -156,7 +156,7 @@ class AccessHelperTest extends OsExistingSiteTestBase {
     $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkAccess($entity, $operation, $account));
 
     // Positive tests.
-    $this->group->addMember($account);
+    $this->addGroupEnhancedMember($account, $this->group);
     $entity->setOwner($account)->save();
     $this->assertInstanceOf(AccessResultAllowed::class, $access_helper->checkAccess($entity, $operation, $account));
     $this->addGroupAdmin($account, $this->group);
