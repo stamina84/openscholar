@@ -2,6 +2,7 @@
 
 namespace Drupal\os_widgets\Form;
 
+use Drupal\block_content\BlockContentInterface;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
@@ -15,7 +16,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Form for creating Block content slideshow paragraph.
@@ -72,17 +72,13 @@ class AddSlideshowForm extends ContentEntityForm {
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param int $block_id
-   *   Block content id.
+   * @param \Drupal\block_content\BlockContentInterface $block_content
+   *   Block content entity.
    *
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, int $block_id = NULL) {
-    $block_content = $this->entityTypeManager->getStorage('block_content')->load($block_id);
-    if (!$block_content) {
-      throw new NotFoundHttpException('Block content is not found.');
-    }
+  public function buildForm(array $form, FormStateInterface $form_state, BlockContentInterface $block_content = NULL) {
     if ($block_content->bundle() != 'slideshow') {
       throw new AccessDeniedHttpException('Given block content is not a slideshow.');
     }
