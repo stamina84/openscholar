@@ -45,4 +45,4 @@ os_widgets.add_slideshow:
     _form: 'Drupal\os_widgets\Form\AddSlideshowForm'
     _title: 'Add new slideshow'
   requirements:
-    _permission: 'access content'
+    _group_permission: 'manage layout'
