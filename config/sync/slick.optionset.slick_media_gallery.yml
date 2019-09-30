@@ -72,7 +72,7 @@ options:
   responsives:
     responsive:
       -
-        breakpoint: 1024
+        breakpoint: 1200
         unslick: false
         settings:
           adaptiveHeight: false
@@ -93,7 +93,7 @@ options:
           respondTo: slider
           rows: 1
           slidesPerRow: 1
-          slidesToShow: 4
+          slidesToShow: 5
           slidesToScroll: 1
           speed: 500
           swipe: true
