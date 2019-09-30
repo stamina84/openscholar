@@ -17,7 +17,6 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
    */
   public function setUp() {
     parent::setUp();
-    // TODO: block add/edit not working with group admin, got 403.
     $group_admin = $this->createAdminUser();
     $this->addGroupAdmin($group_admin, $this->group);
     $this->drupalLogin($group_admin);
