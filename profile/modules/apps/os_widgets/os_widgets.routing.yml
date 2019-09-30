@@ -23,7 +23,6 @@ os_widgets.create_widget:
     _title_callback: 'Drupal\block_content\Controller\BlockContentController::getAddFormTitle'
   requirements:
     _group_permission: 'manage layout'
-    _group_member: 'TRUE'
 os_widgets.edit_widget:
   path: '/cp/layout/edit/{block}'
   defaults:
