@@ -238,7 +238,8 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
         $label .= ' (' . $term->entity_reference_count . ')';
       }
       $label = Xss::filter($label);
-      $label = Link::createFromRoute($label, 'entity.taxonomy_term.canonical', ['taxonomy_term' => $term->tid]);
+      $label = Link::createFromRoute($label, 'entity.taxonomy_term.canonical', ['taxonomy_term' => $term->tid],
+      ['attributes' => ['title' => $description]]);
       $term_items[$term->tid] = [
         '#theme' => 'os_widgets_taxonomy_term_item',
         '#term' => $term,
