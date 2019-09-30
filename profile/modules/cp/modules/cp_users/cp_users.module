@@ -220,7 +220,7 @@ function cp_users_render_cp_role_label(GroupRoleInterface $group_role): string {
   // repository, therefore, we can knowingly use raw.
   $renderable_label = [
     '#type' => 'inline_template',
-    '#template' => '<span>{{ title }}</span><span class="block">{{ description|raw }}</span>',
+    '#template' => '<strong>{{ title }}</strong><span class="block">{{ description|raw }}</span>',
     '#context' => [
       'title' => $group_role->label(),
       'description' => $group_role->get('description'),
