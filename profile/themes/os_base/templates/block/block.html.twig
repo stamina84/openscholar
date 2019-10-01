@@ -62,7 +62,7 @@
 
   {% block content %}
     <div{{ content_attributes.addClass('block-content') }}>
-      {{ content }}
+      {{ content|without('field_widget_title') }}
     </div>
   {% endblock %}
 </section>
