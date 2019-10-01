@@ -1,0 +1,13 @@
+os_media.embed_iframe:
+  path: '/media/embed'
+  defaults:
+    _controller: '\Drupal\os_media\Controller\MediaEmbedIframeController::render'
+  requirements:
+    _permission: 'view media'
+os_media.embedly_config:
+  path: 'admin/media/embedly/settings'
+  defaults:
+    _form: '\Drupal\os_media\Form\OsMediaConfigForm'
+    _title: Embedly Api Settings
+  requirements:
+    _permission: 'administer site configuration'

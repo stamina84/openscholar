@@ -1,0 +1,26 @@
+uuid: 5cd6a201-2097-405f-a46b-8c0e3ee1affd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_taxonomy_terms
+    - media.type.html
+id: media.html.field_taxonomy_terms
+field_name: field_taxonomy_terms
+entity_type: media
+bundle: html
+label: 'Tag with Terms'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: reference_taxonomy_term
+      display_name: entity_reference_1
+      arguments:
+        - 'media:*'
+field_type: entity_reference

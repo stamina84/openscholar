@@ -42,8 +42,10 @@
             scope.date = $filter('date')(f.created+'000', 'short');
             scope.file.terms = scope.file.terms || [];
 
-            scope.fullPath = f.url.slice(0, f.url.lastIndexOf('/')+1);
-            scope.extension = '.' + getExtension(f.url);
+            if (f.url) {
+              scope.fullPath = f.url.slice(0, f.url.lastIndexOf('/')+1);
+              scope.extension = '.' + getExtension(f.url);
+            }
             if (scope.file.type == 'image') {
               scope.description_label = 'Image Caption';
             }
@@ -74,7 +76,7 @@
             if (typeof filename != 'string' || !scope.file) {
               return;
             }
-            if (scope.file.schema == 'oembed') {
+            if (scope.file.type === 'oembed') {
               scope.invalidFileName = false;
               return;
             }
@@ -90,7 +92,7 @@
             var lower = filename.toLowerCase();
             if (lower != old) {
               for (var i in files) {
-                if (lower == files[i].filename && scope.file.id != files[i].id) {
+                if (lower == files[i].filename && scope.file.mid != files[i].mid) {
                   scope.invalidFileName = true;
                   return;
                 }

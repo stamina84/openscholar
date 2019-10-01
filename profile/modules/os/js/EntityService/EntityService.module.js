@@ -195,10 +195,6 @@
             throw 'Cannot add entity of type ' + type + ' that already exists.';
           }
 
-          if (vsite) {
-            entity.vsite = vsite;
-          }
-
           if (config[entityType]) {
             for (var k in config[entityType].fields) {
               params[k] = config[entityType].fields[k];
@@ -206,9 +202,9 @@
           }
 
           // rest API call to add entity to server
-          return $http.post(url.generate(settings.fetchSetting('paths.api') + entityType + format, true), entity)
+          return $http.post(urlGenerator.generate(settings.fetchSetting('paths.api') + '/' + entityType + format, true), entity)
             .then(function (resp) {
-              var entity = resp.data[0];
+              var entity = resp.data;
 
               weSaved[entity[idProp]] = entity.changed;
               addToCaches(entityType, idProp, entity);
@@ -221,6 +217,7 @@
                 $rootScope.$broadcast(eventName + '.update', entity);
               }
               ents[entity[idProp]] = entity;
+              return entity;
             })
         };
 

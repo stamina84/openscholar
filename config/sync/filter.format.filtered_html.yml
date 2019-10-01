@@ -48,9 +48,3 @@ filters:
     status: true
     weight: 0
     settings: {  }
-  media_transform:
-    id: media_transform
-    provider: os_media
-    status: false
-    weight: 100
-    settings: {  }

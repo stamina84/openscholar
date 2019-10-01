@@ -48,7 +48,7 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
   /**
    * Media Helper for media browser.
    *
-   * @var \Drupal\os_media\MediaEntityHelperInterface
+   * @var \Drupal\os_media\MediaEntityHelper
    */
   protected $mediaHelper;
 
@@ -105,16 +105,20 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       }
     }
     else {
-      $output['filename'] = $file;
+      $output['filename'] = $media->bundle() == 'html' ? $media->uuid() : $file;
     }
 
     if ($output['type'] == 'image') {
       $output['description'] = isset($temp['field_image_caption'][0]) ? $temp['field_image_caption'][0]['value'] : '';
     }
+    elseif ($output['type'] == 'html') {
+      $output['description'] = $temp['field_media_html_description'][0]['value'] ?? '';
+    }
     elseif ($output['type'] == 'document' || $output['type'] == 'video') {
       $field = $this->mediaHelper->getField($output['type']);
       $output['description'] = $temp[$field][0]['description'];
     }
+    $output['embed'] = $temp['field_media_html'][0]['value'] ?? '';
     $output['thumbnail'] = $temp['thumbnail'][0]['url'];
 
     return $output;
@@ -124,6 +128,10 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
    * {@inheritdoc}
    */
   public function denormalize($data, $class, $format = NULL, array $context = []) {
+    if (!isset($data['bundle']) && $data['embed']) {
+      $data['bundle'] = $this->mediaHelper->getEmbedType($data['embed']);
+    }
+
     $entity = parent::denormalize($data, $class, $format, $context);
 
     if (in_array('alt', $entity->_restSubmittedFields) || in_array('title', $entity->_restSubmittedFields)) {
@@ -135,10 +143,18 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       if ($entity->bundle() == 'image') {
         $entity->_restSubmittedFields[] = 'field_image_caption';
       }
+      elseif ($entity->bundle() == 'html') {
+        $entity->_restSubmittedFields[] = 'field_media_html_description';
+      }
       else {
         $field = $this->mediaHelper->getField($entity->bundle());
         $entity->_restSubmittedFields[] = $field;
       }
+    }
+    if (in_array('embed', $entity->_restSubmittedFields)) {
+      $entity->_restSubmittedFields = array_diff($entity->_restSubmittedFields, ['embed']);
+      $field = $this->mediaHelper->getField($entity->bundle());
+      $entity->_restSubmittedFields[] = $field;
     }
     $entity->restSubmittedFields = array_diff($entity->_restSubmittedFields, ['fid']);
 
@@ -152,17 +168,14 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
     $original = $this->routeMatch->getParameter('media');
 
     if (isset($data['name'])) {
-      $input = [
-        'name' => [
-          'value' => $data['name'],
-        ],
-      ];
+      $input['name']['value'] = $data['name'];
       $fieldList = $entity->get('name');
       $fieldList->setValue([]);
       $class = get_class($fieldList);
       $context['target_instance'] = $fieldList;
       $this->serializer->deserialize(json_encode($input), $class, $format, $context);
     }
+
     if (isset($data['created'])) {
       $input = [
         'created' => [
@@ -175,6 +188,7 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       $context['target_instance'] = $fieldList;
       $this->serializer->deserialize(json_encode($input), $class, $format, $context);
     }
+
     if (isset($data['alt']) || isset($data['title'])) {
       $field = $this->mediaHelper->getField($original->bundle());
       $input = [
@@ -204,6 +218,14 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
         $input['field_image_caption']['value'] = $data['description'];
         $fieldList = $entity->get('field_image_caption');
       }
+      elseif ($original->bundle() == 'html') {
+        $value = $original->get('field_media_html_description');
+        $input = [
+          'field_media_html_description' => isset($value[0]) ? $value[0]->getValue() : [],
+        ];
+        $input['field_media_html_description']['value'] = $data['description'];
+        $fieldList = $entity->get('field_media_html_description');
+      }
       else {
         $input = [
           $field => $original->get($field)->get(0)->getValue(),
@@ -211,6 +233,19 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
         $input[$field]['description'] = $data['description'];
         $fieldList = $entity->get($field);
       }
+      $class = get_class($fieldList);
+      $context['target_instance'] = $fieldList;
+      $this->serializer->deserialize(json_encode($input), $class, $format, $context);
+    }
+
+    if (isset($data['embed'])) {
+      $field = $this->mediaHelper->getField($this->mediaHelper->getEmbedType($data['embed']));
+      $value = $original ? $original->get($field) : [];
+      $input = [
+        $field => isset($value[0]) ? $value[0]->getValue() : [],
+      ];
+      $input[$field]['value'] = $data['embed'];
+      $fieldList = $entity->get($field);
       $class = get_class($fieldList);
       $context['target_instance'] = $fieldList;
       $this->serializer->deserialize(json_encode($input), $class, $format, $context);
