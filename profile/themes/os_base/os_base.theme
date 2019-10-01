@@ -53,8 +53,10 @@ function os_base_preprocess_item_list__os_dropdown(&$variables) {
  * Implements hook_preprocess_HOOK() for block.html.twig.
  */
 function os_base_preprocess_block(&$variables) {
+  $content = $variables['elements']['content'];
   // Adding custom attribute class for block.
   if ($variables['elements']['#base_plugin_id'] == 'block_content') {
+    $variables['label'] = $content['#block_content']->get('field_widget_title')->value;
     $blockType = str_replace('_', '-', $variables['content']['#block_content']->bundle());
     $variables['attributes']['class'][] = 'block--type-' . $blockType;
   }

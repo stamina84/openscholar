@@ -7,8 +7,9 @@ dependencies:
     - media.type.audio
     - media.type.document
     - media.type.executable
+    - media.type.html
     - media.type.image
-    - media.type.video
+    - media.type.oembed
     - node.type.news
 id: node.news.field_attached_media
 field_name: field_attached_media
@@ -26,9 +27,10 @@ settings:
     target_bundles:
       audio: audio
       document: document
+      oembed: oembed
       executable: executable
+      html: html
       image: image
-      video: video
     sort:
       field: _none
     auto_create: false

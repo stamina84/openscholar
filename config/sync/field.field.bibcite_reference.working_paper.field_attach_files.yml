@@ -8,11 +8,11 @@ dependencies:
     - media.type.audio
     - media.type.document
     - media.type.executable
+    - media.type.html
     - media.type.icon
     - media.type.image
+    - media.type.oembed
     - media.type.presentation_materials
-    - media.type.remote
-    - media.type.video
 id: bibcite_reference.working_paper.field_attach_files
 field_name: field_attach_files
 entity_type: bibcite_reference
@@ -29,12 +29,12 @@ settings:
     target_bundles:
       audio: audio
       document: document
+      oembed: oembed
       executable: executable
+      html: html
       icon: icon
       image: image
       presentation_materials: presentation_materials
-      remote: remote
-      video: video
     sort:
       field: _none
     auto_create: false
