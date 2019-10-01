@@ -102,8 +102,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
   public function testAddExistingUser(): void {
     $this->drupalLogin($this->groupAdmin);
     $username = $this->randomMachineName();
-    $group_member = $this->createUser([], $username, FALSE);
-    $this->group->addMember($group_member);
+    $this->createUser([], $username);
 
     $this->visit('/' . $this->modifier . '/cp/users');
     $this->assertContains('/' . $this->modifier . '/cp/users', $this->getSession()->getCurrentUrl(), "First url check, on " . $this->getSession()->getCurrentUrl());
@@ -118,11 +117,12 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $this->assertSession()->responseContains($username);
     $this->getSession()->getPage()->find('css', 'ul.ui-autocomplete li:first-child')->click();
 
-    $page->selectFieldOption('role_existing', 'personal-member');
+    $page->selectFieldOption('role_existing', 'personal-content_editor');
     $page->pressButton("Save");
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertContains('/' . $this->modifier . '/cp/users', $this->getSession()->getCurrentUrl(), "Not on the correct page, on " . $this->getSession()->getCurrentUrl());
     $this->assertTrue($page->hasContent($username), "Username $username not found on page.");
+    $this->assertTrue($page->hasContent('Content editor'), 'Expected role not found on page.');
 
     $remove = $page->find('xpath', '//tr/td[contains(.,"' . $username . '")]/following-sibling::td/a[contains(.,"Remove")]');
     $this->assertNotNull($remove, "Remove link for $username not found.");
@@ -185,11 +185,12 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $page->fillField('Last Name', 'user');
     $page->fillField('Username', 'test-user');
     $page->fillField('E-mail Address', 'test-user@localhost.com');
-    $page->selectFieldOption('role_new', 'personal-member');
+    $page->selectFieldOption('role_new', 'personal-content_editor');
     $page->pressButton('Save');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertContains('/' . $this->modifier . '/cp/users', $this->getSession()->getCurrentUrl(), "Not on correct page after redirect.");
     $this->assertTrue($page->hasContent('test-user'), "Test-user not added to site.");
+    $this->assertTrue($page->hasContent('Content editor'), 'Expected role not set.');
 
     $settings->set('disable_user_creation', 1);
     $settings->save();
@@ -201,9 +202,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
 
     // Cleanup.
     $user = \user_load_by_name('test-user');
-    if ($user) {
-      $this->markEntityForCleanup($user);
-    }
+    $this->markEntityForCleanup($user);
 
     $settings->set('disable_user_creation', 0);
     $settings->save();
