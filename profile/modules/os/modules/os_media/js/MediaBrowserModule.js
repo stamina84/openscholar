@@ -105,7 +105,8 @@
       {label: 'HTML', value: 'html'},
       {label: 'Executable', value: 'executable'},
       {label: 'Audio', value: 'audio'},
-      {label: 'Icon', value: 'icon'}
+      {label: 'Icon', value: 'icon'},
+      {label: 'Embeds', value: 'oembed'},
     ];
 
     let defaultFilteredTypes = params.types;
@@ -113,7 +114,7 @@
     $scope.availFilter = [];
     for (let j in defaultFilteredTypes) {
       for (let k=0; k<allTypes.length; k++) {
-        if (defaultFilteredTypes[j] == allTypes[k].value) {
+        if (defaultFilteredTypes[j] === allTypes[k].value) {
           $scope.availTypes.push(allTypes[k]);
           $scope.availFilter.push(allTypes[k].value);
         }
@@ -170,7 +171,13 @@
 
     // Watch for changes in file list
     $scope.$on('EntityService.media.add', function (event, file) {
-      if (file.changed == file.timestamp) {
+
+      for (var i=0; i < $scope.files.length; i++) {
+        if ($scope.files[i].mid === file.mid) {
+           $scope.existing = true;
+        }
+      }
+      if (!$scope.existing) {
         $scope.files.push(file);
       }
     });
@@ -636,31 +643,32 @@
     $scope.embedSubmit = function () {
       // construct the entity
       var data = {
-        embed: this.embed,
+        name: 'embed',
+        embed: this.embed
       };
 
-      service.add(data).success(function (e) {
-        if (e.data.length) {
+      service.add(data).then(function (file){
+        if (file) {
+          file.embed = $scope.embed;
           $scope.embed = '';
-          e.data[0].new = e.data[0].changed == e.data[0].timestamp;
-          $scope.setSelection(e.data[0].id);
-          service.register(e.data[0]);
+          file.new = file.changed == file.created;
+          $scope.setSelection(file.mid);
+          service.register(file);
 
-          $scope.changePanes('edit')
-        }
-      })
-      .error(function (e) {
-        if ($location.protocol() == 'https') {
-          $scope.embedFailureHttps = true;
-          $timeout(function () {
-            $scope.embedFailureHttps = false;
-          }, 5000);
-        } else {
-          $scope.embedFailure = true;
-          $timeout(function () {
-            $scope.embedFailure = false;
-          }, 5000);
-        }
+          $scope.changePanes('edit');
+          }
+      },function (error){
+          if ($location.protocol() == 'https') {
+            $scope.embedFailureHttps = true;
+            $timeout(function () {
+                $scope.embedFailureHttps = false;
+            }, 5000);
+          } else {
+            $scope.embedFailure = true;
+            $timeout(function () {
+                $scope.embedFailure = false;
+            }, 5000);
+          }
       });
     }
 

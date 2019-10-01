@@ -1,0 +1,11 @@
+uuid: b29d6fe5-61d6-479d-ba2c-2376ecc9496e
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.oembed
+id: media.oembed
+target_entity_type_id: media
+target_bundle: oembed
+default_langcode: site_default
+language_alterable: false

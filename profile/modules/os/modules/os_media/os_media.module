@@ -5,6 +5,7 @@
  * Hook implementations to support the media browser.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
 use Drupal\file\Entity\File;
@@ -64,5 +65,54 @@ function os_media_media_view_alter(array $build, MediaInterface $media, $display
       $imageItem->set('width', $width);
       $imageItem->set('height', $height);
     }
+  }
+}
+
+/**
+ * Implements hook_media_source_info_alter() for adding new Media resources.
+ */
+function os_media_media_source_info_alter(array &$sources) {
+  $all_providers = array_keys(\Drupal::service('media.oembed.provider_repository')->getAll());
+  $sources['html'] = [
+    'id' => 'oembed:html',
+    'label' => t('HTML'),
+    'description' => t('Use HTML for embedding Iframes.'),
+    'allowed_field_types' => ['string'],
+    'thumbnail_uri_metadata_attribute' => 'thumbnail_uri',
+    'default_name_metadata_attribute' => 'default_name',
+    'default_thumbnail_filename' => 'generic.png',
+    'providers' => $all_providers,
+    'class' => '\Drupal\os_media\Plugin\media\Source\MediaEmbed',
+  ];
+
+  $sources['oembed_content'] = [
+    'id' => 'oembed:content',
+    'label' => t('oEmbed Content'),
+    'description' => t('Use oEmbed content from all providers.'),
+    'allowed_field_types' => ['string'],
+    'thumbnail_uri_metadata_attribute' => 'thumbnail_uri',
+    'default_name_metadata_attribute' => 'default_name',
+    'default_thumbnail_filename' => 'generic.png',
+    'providers' => [],
+    'class' => '\Drupal\os_media\Plugin\media\Source\MediaEmbed',
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for replacing placeholder with uuid as name for media entities whose names cannot be easily identified.
+ */
+function os_media_media_insert(EntityInterface $entity) {
+  if ($entity->bundle() === 'html') {
+    if ($entity->name->value === 'embed') {
+      $entity->name->value = $entity->uuid();
+      $entity->save();
+    }
+  }
+  if ($entity->bundle() === 'oembed') {
+    /** @var \Drupal\os_media\MediaEntityHelper $media_helper */
+    $media_helper = \Drupal::service('os_media.media_helper');
+    $resource = $media_helper->fetchEmbedlyResource($entity->field_media_oembed_content->value);
+    $entity->name->value = $resource['title'];
+    $entity->save();
   }
 }
