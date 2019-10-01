@@ -7,6 +7,7 @@ dependencies:
     - field.field.block_content.slideshow.body
     - field.field.block_content.slideshow.field_slideshow
     - field.field.block_content.slideshow.field_slideshow_layout
+    - field.field.block_content.slideshow.field_widget_title
   module:
     - layout_builder
     - slick_paragraphs
@@ -50,6 +51,14 @@ content:
       style: ''
     third_party_settings: {  }
     type: slick_paragraphs_vanilla
+    region: content
+  field_widget_title:
+    weight: 2
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
     region: content
 hidden:
   field_slideshow_layout: true
