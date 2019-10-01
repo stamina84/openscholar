@@ -49,5 +49,4 @@ os_widgets.add_slideshow:
       block_content:
         type: entity:block_content
   requirements:
-    _group_permission: 'manage layout'
-    _group_member: 'TRUE'
+    _custom_access: 'Drupal\os_widgets\Form\AddSlideshowForm::access'
