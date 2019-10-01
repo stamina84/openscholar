@@ -25,7 +25,7 @@ class SlideshowBlockRenderTest extends OsWidgetsExistingSiteTestBase {
 
     $this->assertNotEmpty($render['add_slideshow_button']);
     $this->assertSame('link', $render['add_slideshow_button']['#type']);
-    $this->assertSame('route:os_widgets.add_slideshow;block_id=' . $block_content->id(), $render['add_slideshow_button']['#url']->toUriString());
+    $this->assertSame('route:os_widgets.add_slideshow;block_content=' . $block_content->id(), $render['add_slideshow_button']['#url']->toUriString());
   }
 
 }
