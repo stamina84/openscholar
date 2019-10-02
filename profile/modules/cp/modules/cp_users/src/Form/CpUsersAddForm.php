@@ -141,7 +141,7 @@ class CpUsersAddForm extends FormBase {
         '#type' => 'radios',
         '#title' => $this->t('Role'),
         '#options' => $options,
-        '#default_value' => "{$group->getGroupType()->id()}-member",
+        '#default_value' => $group->getGroupType()->getMemberRoleId(),
       ],
     ];
 
@@ -180,7 +180,7 @@ class CpUsersAddForm extends FormBase {
         '#type' => 'radios',
         '#title' => $this->t('Role'),
         '#options' => $options,
-        '#default_value' => "{$group->getGroupType()->id()}-member",
+        '#default_value' => $group->getGroupType()->getMemberRoleId(),
       ],
     ];
 
