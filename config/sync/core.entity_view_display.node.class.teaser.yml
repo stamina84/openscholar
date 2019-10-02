@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.class.field_year_offered
     - node.type.class
   module:
+    - cp_taxonomy
     - layout_builder
     - link
     - options
@@ -54,12 +55,13 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_taxonomy_terms:
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     weight: 4
     region: content
     label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
   field_year_offered:
     type: string

@@ -243,7 +243,8 @@
         "drupal/blazy": "^2.0",
         "drupal/slick": "^2.0",
         "drupal/slick_paragraphs": "^2.0",
-        "npm-asset/slick-carousel": "^1.8.0"
+        "npm-asset/slick-carousel": "^1.8.0",
+        "ezyang/htmlpurifier": "^4.11"
     },
     "require-dev": {
         "drupal/features": "^3.7",

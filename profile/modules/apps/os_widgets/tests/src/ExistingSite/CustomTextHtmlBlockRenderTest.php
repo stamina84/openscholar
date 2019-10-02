@@ -35,7 +35,7 @@ class CustomTextHtmlBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $block_content = $this->createBlockContent([
       'type' => 'custom_text_html',
       'body' => [
-        'Lorem<script type="application/javascript">var bad_code;</script> Ipsum',
+        'Lorem<script type="application/javascript">var bad_code;</script>Ipsum',
       ],
     ]);
     $view_builder = $this->entityTypeManager
@@ -45,7 +45,9 @@ class CustomTextHtmlBlockRenderTest extends OsWidgetsExistingSiteTestBase {
 
     /** @var \Drupal\Core\Render\Markup $markup_array */
     $markup = $renderer->renderRoot($render);
-    $this->assertContains('<p>Loremvar bad_code; Ipsum</p>', $markup->__toString());
+    $this->assertContains('<p>Lorem</p>', $markup->__toString());
+    $this->assertNotContains('<p><script type="application/javascript">var bad_code;</script></p>', $markup->__toString());
+    $this->assertContains('<p>Ipsum</p>', $markup->__toString());
   }
 
   /**

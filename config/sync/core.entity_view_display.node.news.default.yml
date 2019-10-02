@@ -12,6 +12,7 @@ dependencies:
     - image.style.os_news_full
     - node.type.news
   module:
+    - cp_taxonomy
     - datetime
     - image
     - layout_builder
@@ -60,12 +61,13 @@ content:
     type: image
     region: content
   field_taxonomy_terms:
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     weight: 5
     region: content
-    label: above
+    label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
   links:
     weight: 4

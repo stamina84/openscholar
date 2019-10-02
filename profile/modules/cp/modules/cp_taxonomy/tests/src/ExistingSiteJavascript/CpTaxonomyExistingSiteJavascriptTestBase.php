@@ -5,11 +5,14 @@ namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 use Drupal\group\Entity\GroupRole;
 use Drupal\group\Entity\GroupType;
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
+use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
 
 /**
  * Test base for cp_taxonomy js tests.
  */
 abstract class CpTaxonomyExistingSiteJavascriptTestBase extends OsExistingSiteJavascriptTestBase {
+
+  use CpTaxonomyTestTrait;
 
   /**
    * The entity type manager service.

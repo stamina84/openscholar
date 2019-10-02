@@ -20,6 +20,7 @@ final class CpRolesHelper implements CpRolesHelperInterface {
     'administrator',
     'member',
     'content_editor',
+    'enhanced_basic_member',
   ];
 
   /**
