@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.blog.field_taxonomy_terms
     - node.type.blog
   module:
+    - cp_taxonomy
     - layout_builder
     - text
     - user
@@ -39,12 +40,13 @@ content:
       link: true
     third_party_settings: {  }
   field_taxonomy_terms:
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     weight: 2
     region: content
     label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
   links:
     weight: 3

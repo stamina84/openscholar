@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.faq.field_taxonomy_terms
     - node.type.faq
   module:
+    - cp_taxonomy
     - layout_builder
     - text
     - user
@@ -38,11 +39,12 @@ content:
     region: content
   field_taxonomy_terms:
     weight: 3
-    label: above
+    label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     region: content
   links:
     weight: 2

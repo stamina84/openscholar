@@ -12,6 +12,7 @@ dependencies:
     - field.field.bibcite_reference.working_paper.field_taxonomy_terms
     - image.style.publication_details_image
   module:
+    - cp_taxonomy
     - image
     - key_value_field
     - layout_builder
@@ -57,12 +58,13 @@ content:
       image_link: ''
     third_party_settings: {  }
   field_taxonomy_terms:
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     weight: 1
     region: content
     label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
   full_text:
     type: text_default

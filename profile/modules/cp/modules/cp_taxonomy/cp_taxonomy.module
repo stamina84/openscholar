@@ -50,6 +50,22 @@ function cp_taxonomy_entity_operation_alter(array &$operations, EntityInterface 
 }
 
 /**
+ * Implements hook_theme().
+ */
+function cp_taxonomy_theme($existing, $type, $theme, $path) {
+  return [
+    'cp_taxonomy_comma_separator' => [
+      'variables' => [
+        'title' => '',
+        'items' => [],
+        'items_hidden' => [],
+        'show_more_less' => FALSE,
+      ],
+    ],
+  ];
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  *
  * Remove global vocabularies from the list.

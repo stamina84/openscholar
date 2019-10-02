@@ -4,7 +4,6 @@ namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
 
 /**
  * Tests cache invalidation listing and entity page.
@@ -13,8 +12,6 @@ use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
  * @group cp
  */
 class CpTaxonomyCacheTest extends CpTaxonomyExistingSiteJavascriptTestBase {
-
-  use CpTaxonomyTestTrait;
 
   protected $term;
 

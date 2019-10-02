@@ -4,3 +4,12 @@ cp_taxonomy.tree_collapsible:
     js/cp_taxonomy.tree_collapsible.js: { }
   dependencies:
     - core/jquery
+cp_taxonomy.toggle_terms:
+  version: 1.0
+  js:
+    js/cp_taxonomy.toggle_terms.js: { }
+  css:
+    base:
+      css/cp_taxonomy.toggle_terms.css: { }
+  dependencies:
+    - core/jquery

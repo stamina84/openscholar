@@ -7,6 +7,7 @@ dependencies:
     - field.field.bibcite_reference.statute.field_attach_files
     - field.field.bibcite_reference.statute.field_extra_fields
     - field.field.bibcite_reference.statute.field_publication_image
+    - field.field.bibcite_reference.statute.field_redirect_to_source
     - field.field.bibcite_reference.statute.field_taxonomy_terms
   enforced:
     module:
@@ -15,9 +16,14 @@ dependencies:
       - bibcite_entity.bibcite_reference_type.statute
   module:
     - bibcite_entity
+    - cp_taxonomy
     - image
     - key_value_field
+    - layout_builder
     - text
+third_party_settings:
+  layout_builder:
+    sections: {  }
 _core:
   default_config_hash: '-3298XDQjD7k6kgcyapcLKIZp5xqvH8i9UTxdwq2C24'
 id: bibcite_reference.statute.default
@@ -434,11 +440,12 @@ content:
     region: content
   field_taxonomy_terms:
     weight: 103
-    label: above
+    label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     region: content
   full_text:
     type: text_default

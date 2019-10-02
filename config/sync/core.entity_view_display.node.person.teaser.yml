@@ -21,6 +21,7 @@ dependencies:
     - image.style.crop_photo_person
     - node.type.person
   module:
+    - cp_taxonomy
     - image
     - layout_builder
     - link
@@ -91,12 +92,13 @@ content:
       link_to_entity: false
     third_party_settings: {  }
   field_taxonomy_terms:
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     weight: 8
     region: content
     label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
   field_website:
     type: link

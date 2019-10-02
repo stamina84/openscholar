@@ -4,7 +4,6 @@ namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 
 use Behat\Mink\Element\DocumentElement;
 use Drupal\cp_taxonomy\CpTaxonomyHelper;
-use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
 
 /**
  * Tests taxonomy_terms fields functionality with settings.
@@ -13,8 +12,6 @@ use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
  * @group cp
  */
 class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestBase {
-
-  use CpTaxonomyTestTrait;
 
   protected $testVid;
   protected $term1;
