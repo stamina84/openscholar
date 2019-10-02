@@ -55,4 +55,38 @@ class CpTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->statusCodeEquals(403);
   }
 
+  /**
+   * Tests whether the cp items are in sync with group member role.
+   *
+   * @covers ::cp_group_content_update
+   */
+  public function testGroupMemberRoleSync(): void {
+    // Setup.
+    $test_user = $this->createUser();
+    $this->group->addMember($test_user);
+
+    // Negative test.
+    $this->drupalLogin($test_user);
+
+    $this->visitViaVsite('', $this->group);
+    $this->assertSession()->responseNotContains("{$this->groupAlias}/cp/appearance");
+
+    $this->drupalLogout();
+
+    // Do changes.
+    /** @var \Drupal\group\GroupMembership $group_membership */
+    $group_membership = $this->group->getMember($test_user);
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = $group_membership->getGroupContent();
+    $group_content->set('group_roles', [
+      'target_id' => 'personal-administrator',
+    ])->save();
+
+    // Positive test.
+    $this->drupalLogin($test_user);
+
+    $this->visitViaVsite('', $this->group);
+    $this->assertSession()->responseContains("{$this->groupAlias}/cp/appearance");
+  }
+
 }
