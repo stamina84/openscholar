@@ -20,6 +20,7 @@ dependencies:
     - image.style.crop_photo_person_full
     - node.type.person
   module:
+    - cp_taxonomy
     - image
     - layout_builder
     - link
@@ -90,11 +91,12 @@ content:
     third_party_settings: {  }
   field_taxonomy_terms:
     weight: 8
-    label: above
+    label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     region: content
   field_website:
     weight: 3

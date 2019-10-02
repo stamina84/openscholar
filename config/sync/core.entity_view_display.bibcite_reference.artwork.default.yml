@@ -7,6 +7,7 @@ dependencies:
     - field.field.bibcite_reference.artwork.field_attach_files
     - field.field.bibcite_reference.artwork.field_extra_fields
     - field.field.bibcite_reference.artwork.field_publication_image
+    - field.field.bibcite_reference.artwork.field_redirect_to_source
     - field.field.bibcite_reference.artwork.field_taxonomy_terms
   enforced:
     module:
@@ -15,6 +16,7 @@ dependencies:
       - bibcite_entity.bibcite_reference_type.artwork
   module:
     - bibcite_entity
+    - cp_taxonomy
     - image
     - key_value_field
     - layout_builder
@@ -438,11 +440,12 @@ content:
     region: content
   field_taxonomy_terms:
     weight: 51
-    label: above
+    label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     region: content
   full_text:
     type: text_default
