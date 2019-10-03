@@ -36,7 +36,7 @@ class AddSlideshowAccessCheck implements AccessInterface {
   }
 
   /**
-   * Checks access for access form.
+   * Check access to create slideshow paragraph for a block content.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   Run access checks for this account.
