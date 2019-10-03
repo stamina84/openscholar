@@ -132,3 +132,4 @@ permissions:
   - 'create new books'
   - 'create url aliases'
   - 'promote nodes'
+description: '<em>Basic members</em> may only add new posts and edit their own posts.'

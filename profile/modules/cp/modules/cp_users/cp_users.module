@@ -10,13 +10,10 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\cp_users\Controller\CpRolesListBuilder;
+use Drupal\cp_users\CpUsersHelper;
 use Drupal\group\Entity\GroupRole;
 use Drupal\group\Entity\GroupRoleInterface;
 use Drupal\group\Entity\GroupTypeInterface;
-
-define('CP_USERS_NEW_USER', 'cp_users_new_user');
-define('CP_USERS_ADD_TO_GROUP', 'cp_users_add_to_group');
-define('CP_USERS_DELETE_FROM_GROUP', 'cp_users_delete_from_group');
 
 /**
  * Defines new mail templates that can be sent.
@@ -50,7 +47,7 @@ function cp_users_mail($key, &$message, $params) {
   ];
 
   switch ($key) {
-    case CP_USERS_NEW_USER:
+    case CpUsersHelper::CP_USERS_NEW_USER:
       $message['subject'] = t('You have been added as a member to the @site-url website', $variables);
       $message['body'] = [];
       $message['body'][] = t('Hi @user-firstname,', $variables);
@@ -70,7 +67,7 @@ function cp_users_mail($key, &$message, $params) {
       $message['headers'] += (isset($params['headers']) && is_array($params['headers'])) ? $params['headers'] : [];
       break;
 
-    case CP_USERS_DELETE_FROM_GROUP:
+    case CpUsersHelper::CP_USERS_DELETE_FROM_GROUP:
       $message['subject'] = t("You have been removed from the @site-url website", $variables);
       $message['body'] = [];
       $message['body'][] = t("Hi @user-firstname,", $variables);
@@ -138,13 +135,26 @@ function cp_users_group_role_add_form_submit(array &$form, FormStateInterface $f
 }
 
 /**
- * Implements hook_entity_type_build().
+ * Implements hook_entity_type_build() for adding more info to group_role entity type.
+ *
+ * This does the following:
+ * - Sets a different class for entity list builder.
+ * - Adds the description property to entity type.
  */
 function cp_users_entity_type_build(array &$entity_types) {
   if (isset($entity_types['group_role'])) {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $group_role_type */
     $group_role_type = $entity_types['group_role'];
+    /** @var array $config_export */
+    $config_export = $group_role_type->get('config_export');
+    $config_export[] = 'description';
+    /** @var array $entity_keys */
+    $entity_keys = $group_role_type->get('entity_keys');
+    $entity_keys['description'] = 'description';
+
     $group_role_type->setListBuilderClass(CpRolesListBuilder::class);
+    $group_role_type->set('config_export', $config_export);
+    $group_role_type->set('entity_keys', $entity_keys);
   }
 }
 
@@ -190,4 +200,32 @@ function cp_users_group_role_update(GroupRoleInterface $group_role) {
     $cache_tags_invalidator = \Drupal::service('cache_tags.invalidator');
     $cache_tags_invalidator->invalidateTags(['config:system.menu.control-panel']);
   }
+}
+
+/**
+ * Renders a group role title in a format expected by OpenScholar.
+ *
+ * @param \Drupal\group\Entity\GroupRoleInterface $group_role
+ *   The group role.
+ *
+ * @return string
+ *   The rendered title.
+ *
+ * @throws \Exception
+ */
+function cp_users_render_cp_role_label(GroupRoleInterface $group_role): string {
+  /** @var \Drupal\Core\Render\RendererInterface $renderer */
+  $renderer = \Drupal::service('renderer');
+  // The description is stored in the config, which is stored is stored in the
+  // repository, therefore, we can knowingly use raw.
+  $renderable_label = [
+    '#type' => 'inline_template',
+    '#template' => '<strong>{{ title }}</strong><span class="block">{{ description|raw }}</span>',
+    '#context' => [
+      'title' => $group_role->label(),
+      'description' => $group_role->get('description'),
+    ],
+  ];
+
+  return $renderer->render($renderable_label);
 }
