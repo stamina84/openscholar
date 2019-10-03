@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.news.field_date
     - field.field.node.news.field_photo
     - field.field.node.news.field_redirect_to_source
+    - field.field.node.news.field_taxonomy_terms
     - node.type.news
   module:
     - datetime

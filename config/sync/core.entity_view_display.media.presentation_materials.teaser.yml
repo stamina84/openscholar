@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.media.teaser
     - field.field.media.presentation_materials.field_media_file
+    - field.field.media.presentation_materials.field_taxonomy_terms
     - image.style.thumbnail
     - media.type.presentation_materials
   module:
@@ -26,6 +27,7 @@ content:
 hidden:
   created: true
   field_media_file: true
+  field_taxonomy_terms: true
   langcode: true
   name: true
   uid: true

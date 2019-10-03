@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.group.personal.field_parent_site
+    - field.field.group.personal.field_preset
     - field.field.group.personal.field_privacy_level
     - field.field.group.personal.field_site_description
     - field.field.group.personal.field_site_logo
@@ -58,6 +59,7 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 1
+        third_party_settings: {  }
     allow_custom: true
     enabled: true
 id: group.personal.default

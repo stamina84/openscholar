@@ -8,7 +8,6 @@ dependencies:
     - field.field.block_content.publication_types.field_types_whitelist
     - field.field.block_content.publication_types.field_widget_title
   module:
-    - content_moderation
     - field_layout
     - layout_discovery
 third_party_settings:
@@ -55,11 +54,5 @@ content:
     region: content
     settings:
       include_locked: true
-    third_party_settings: {  }
-  moderation_state:
-    type: moderation_state_default
-    weight: 3
-    settings: {  }
-    region: content
     third_party_settings: {  }
 hidden: {  }

@@ -3,13 +3,27 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.date_format.html_date
     - core.date_format.medium
     - core.entity_view_mode.node.rss
     - field.field.node.events.body
+    - field.field.node.events.field_close_
     - field.field.node.events.field_location
     - field.field.node.events.field_media
+    - field.field.node.events.field_open_date
     - field.field.node.events.field_recurring_date
+    - field.field.node.events.field_send_reminder
+    - field.field.node.events.field_should_send_reminder
+    - field.field.node.events.field_signup
+    - field.field.node.events.field_singup_multiple
+    - field.field.node.events.field_taxonomy_terms
+    - field.field.node.events.rng_capacity
+    - field.field.node.events.rng_registrants_duplicate
+    - field.field.node.events.rng_registrants_maximum
+    - field.field.node.events.rng_registrants_minimum
+    - field.field.node.events.rng_registration_groups
+    - field.field.node.events.rng_registration_type
+    - field.field.node.events.rng_reply_to
+    - field.field.node.events.rng_status
     - node.type.events
   module:
     - date_recur
