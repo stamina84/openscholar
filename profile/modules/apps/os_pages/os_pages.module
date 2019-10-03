@@ -11,6 +11,7 @@ use Drupal\node\Entity\Node;
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_entity_insert().
