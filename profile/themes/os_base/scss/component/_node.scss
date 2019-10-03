@@ -5,7 +5,6 @@
 .is-unpublished {
   background-color: #fff4f4;
 }
-
 .node-preview-container {
   margin-top: 0;
   .node-preview-backlink {
@@ -13,7 +12,14 @@
     color: $color-link1;
   }
 }
-
 .node-preview-form-select {
   padding: ($grid-gutter-width / 2);
+}
+/**** uploaded image ****/
+.field--name-body {
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
 }
