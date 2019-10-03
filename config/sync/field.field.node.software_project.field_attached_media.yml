@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_attached_media
     - media.type.document
+    - media.type.executable
     - node.type.software_project
 id: node.software_project.field_attached_media
 field_name: field_attached_media
@@ -21,8 +22,9 @@ settings:
   handler_settings:
     target_bundles:
       document: document
+      executable: executable
     sort:
       field: _none
     auto_create: false
-    auto_create_bundle: ''
+    auto_create_bundle: document
 field_type: entity_reference

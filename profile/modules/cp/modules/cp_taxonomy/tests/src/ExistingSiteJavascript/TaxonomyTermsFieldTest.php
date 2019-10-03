@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 
-use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
-
 /**
  * Tests taxonomy_terms fields functionality.
  *
@@ -11,8 +9,6 @@ use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
  * @group cp
  */
 class TaxonomyTermsFieldTest extends CpTaxonomyExistingSiteJavascriptTestBase {
-
-  use CpTaxonomyTestTrait;
 
   /**
    * Test group 1.

@@ -26,6 +26,7 @@ dependencies:
     - field.field.node.events.rng_status
     - node.type.events
   module:
+    - cp_taxonomy
     - date_recur
     - layout_builder
     - text
@@ -70,12 +71,13 @@ content:
       count_per_item: true
     third_party_settings: {  }
   field_taxonomy_terms:
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     weight: 3
     region: content
     label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
 hidden:
   field_close_: true

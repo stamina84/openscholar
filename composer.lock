@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "740bc8156bd4f8b7f8411b249515c090",
+    "content-hash": "d4aefad0e86f843eed577116201108da",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -7708,6 +7708,53 @@
             "time": "2019-01-13T22:00:58+00:00"
         },
         {
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "83ab08bc1af7d808a9e0fbf024f1c24bfd73c0a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/83ab08bc1af7d808a9e0fbf024f1c24bfd73c0a7",
+                "reference": "83ab08bc1af7d808a9e0fbf024f1c24bfd73c0a7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "simpletest/simpletest": "dev-master#72de02a7b80c6bb8864ef9bf66d41d2f58f826bd"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ],
+            "time": "2019-07-14T18:58:38+00:00"
+        },
+        {
             "name": "fullcalendar/fullcalendar",
             "version": "v3.10.0",
             "source": {
@@ -14916,16 +14963,16 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "doctrine/lexer": 20,
+        "drupal/advancedqueue": 10,
+        "drupal/bibcite": 20,
         "drupal/config_sync": 15,
         "drupal/context": 10,
-        "drupal/fullcalendar": 20,
-        "drupal/styleguide": 15,
-        "drupal/field_tools": 15,
-        "drupal/advancedqueue": 10,
         "drupal/date_recur_modular": 15,
-        "doctrine/lexer": 20,
+        "drupal/field_tools": 15,
+        "drupal/fullcalendar": 20,
         "drupal/shorten": 20,
-        "drupal/bibcite": 20,
+        "drupal/styleguide": 15,
         "drupal/term_reference_tree": 20,
         "weitzman/drupal-test-traits": 20
     },

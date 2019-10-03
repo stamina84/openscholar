@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.class.field_year_offered
     - node.type.class
   module:
+    - cp_taxonomy
     - entity_reference_revisions
     - layout_builder
     - link
@@ -71,11 +72,12 @@ content:
     region: content
   field_taxonomy_terms:
     weight: 7
-    label: above
+    label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     region: content
   field_year_offered:
     weight: 1

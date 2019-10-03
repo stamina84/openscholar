@@ -1,0 +1,19 @@
+uuid: 84eb6298-4612-4921-9393-e0e1e7033e67
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_html
+    - media.type.html
+id: media.html.field_media_html
+field_name: field_media_html
+entity_type: media
+bundle: html
+label: HTML
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

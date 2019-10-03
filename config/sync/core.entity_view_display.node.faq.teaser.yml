@@ -6,8 +6,10 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.faq.body
     - field.field.node.faq.field_attached_media
+    - field.field.node.faq.field_taxonomy_terms
     - node.type.faq
   module:
+    - cp_taxonomy
     - layout_builder
     - text
     - user
@@ -29,8 +31,16 @@ content:
       trim_length: 600
     third_party_settings: {  }
     region: content
+  field_taxonomy_terms:
+    type: cp_taxonomy_comma_separator
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      label: 'See also'
+      number_of_characters: 94
+    third_party_settings: {  }
 hidden:
   field_attached_media: true
-  field_taxonomy_terms: true
   langcode: true
   links: true

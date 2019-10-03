@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display comma separator entity labels.
+ *
+ * Variables:
+ * - $show_more_less: Boolean value, true if the term labels caharacter number
+     is exceed
+ * - $title: Printed label before tags.
+ * - $items: Visible entity labels with links array.
+ * - $items_hidden: Hidden entity labels with links array.
+ */
+#}
+{% if show_more_less %}
+<div class="more-tags">
+{% endif %}
+  <strong>{{ title }}</strong>
+  {% for item in items %}
+    {{ item|render }}{% if not loop.last %}{{ ', ' }}{% endif %}
+  {% endfor %}
+  {% if show_more_less %}
+    <span class="morecontent"><span class="morechildren">
+        {{ ', ' }}
+        {% for item in items_hidden %}
+          {{ item|render }}{% if not loop.last %}{{ ', ' }}{% endif %}
+        {% endfor %}
+    </span></span>
+  {% endif %}
+{% if show_more_less %}
+</div>
+{% endif %}

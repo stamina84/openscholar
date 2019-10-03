@@ -10,7 +10,6 @@ use Drupal\block\Entity\Block;
 use Drupal\blazy\Blazy;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
-use Drupal\image\Entity\ImageStyle;
 
 /**
  * Implements hook_theme().
@@ -90,7 +89,7 @@ function os_media_gallery_preprocess_block(&$variables) {
       $imageId = $imageItem->get('target_id')->getValue();
       $file = File::load($imageId);
       $path = $file->getFileUri();
-      $uri = ImageStyle::load('large')->buildUrl($path);
+      $uri = file_create_url($path);
       $item['slide']['#slick_popup_url'] = $uri;
     }
   }

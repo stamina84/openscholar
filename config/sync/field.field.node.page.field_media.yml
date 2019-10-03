@@ -6,9 +6,10 @@ dependencies:
     - field.storage.node.field_media
     - media.type.audio
     - media.type.document
+    - media.type.html
     - media.type.image
+    - media.type.oembed
     - media.type.presentation_materials
-    - media.type.video
     - node.type.page
 id: node.page.field_media
 field_name: field_media
@@ -24,11 +25,12 @@ settings:
   handler: 'default:media'
   handler_settings:
     target_bundles:
+      audio: audio
       document: document
+      oembed: oembed
+      html: html
       image: image
       presentation_materials: presentation_materials
-      video: video
-      audio: audio
     sort:
       field: _none
     auto_create: false

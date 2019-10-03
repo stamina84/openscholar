@@ -7,9 +7,10 @@ dependencies:
     - media.type.audio
     - media.type.document
     - media.type.executable
+    - media.type.html
     - media.type.image
+    - media.type.oembed
     - media.type.presentation_materials
-    - media.type.video
     - node.type.blog
 _core:
   default_config_hash: UeQMqkOhcTakJLbgyQiQ25gHGzZXY6YzrqIDqKLALmk
@@ -27,12 +28,13 @@ settings:
   handler: 'default:media'
   handler_settings:
     target_bundles:
+      audio: audio
       document: document
+      oembed: oembed
       executable: executable
+      html: html
       image: image
       presentation_materials: presentation_materials
-      video: video
-      audio: audio
     sort:
       field: _none
     auto_create: false
