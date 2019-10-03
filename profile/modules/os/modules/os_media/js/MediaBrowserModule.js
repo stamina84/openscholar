@@ -211,12 +211,12 @@
     $scope.$on('EntityService.media.delete', function (event, id) {
       // Don't want to worry about what happens when you modify an array you're
       // looping over.
-      if ($scope.selected_file && $scope.selected_file.id == id) {
+      if ($scope.selected_file && $scope.selected_file.mid === id) {
         $scope.selected_file = null;
       }
       var deleteMe = false;
       for (var i=0; i<$scope.files.length; i++) {
-        if ($scope.files[i].id == id) {
+        if ($scope.files[i].mid === id) {
           deleteMe = i;
           break;
         }
@@ -360,9 +360,17 @@
           }
         }
 
+        // If file is not of allowed type do not upload and show the error message.
+        var extn = $files[i].name.split(".").pop();
+        if ($scope.extensions.indexOf(extn) === -1) {
+          $files[i].doNotUpload = true;
+          $scope.extensionFailure = true;
+          continue;
+        }
+
         // replace # in filenames cause they will break filename detection
         var newName = $files[i].name.replace(/[#|\?]/g, '_').replace(/__/g, '_').replace(/_\./g, '.').replace(/[(|)]/g, "").replace(/ /g, '_').toLowerCase();
-        var hadHashtag = (newName !== $files[i].name);
+        var hadHashtag = (newName !== $files[i].name.toLowerCase());
         $files[i].sanitized = newName;
 
         var url = urlGenerator.generate(settings.fetchSetting('paths.api') + '/media/filename/' + $files[i].sanitized + '?_format=json', true);
@@ -370,12 +378,14 @@
         var config = {
           originalFile: $files[i]
         };
+
+
         promises.push($http.get(url, config).then(function (response) {
             var file = response.config.originalFile;
             var data = response.data;
             file.filename = file.sanitized;
-            if (data.collision) {
-              file.newName = data.expectedFileName;
+            if (data.collision && !$scope.extensionFailure) {
+              file.sanitized = data.expectedFileName;
               $scope.dupes.push(file);
             }
             else {
@@ -577,7 +587,7 @@
           var found = false;
           // check to see if this file exists
           for (var j = 0; j < $scope.files.length; j++) {
-            if ($scope.files[j].mid == file.mid) {
+            if ($scope.files[j].mid === file.mid) {
               // we just replaced an existing file.
               file.replaced = true;
               $scope.files[j] = file;
@@ -815,7 +825,7 @@
           onSelect: angular.noop,
           types: {
             image: 'image',
-            video: 'video',
+            oembed: 'oembed',
             audio: 'audio',
             executable: 'executable',
             document: 'document',
