@@ -7,12 +7,15 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 
 /**
  * Checks access for add slideshow to given slideshow block content.
  */
 class AddSlideshowAccessCheck implements AccessInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Vsite Context Manager.
@@ -48,10 +51,13 @@ class AddSlideshowAccessCheck implements AccessInterface {
    */
   public function access(AccountInterface $account, BlockContentInterface $block_content) {
     if ($block_content->bundle() != 'slideshow') {
-      return AccessResult::forbidden([$this->t('Given block content is not a slideshow.')]);
+      return AccessResult::forbidden($this->t('Given block content is not a slideshow.')->render());
     }
     $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($block_content);
     $group_content = array_shift($group_contents);
+    if (empty($group_content)) {
+      return AccessResult::forbidden($this->t('Given block content has no group.')->render());
+    }
     $block_content_group = $group_content->getGroup();
     $group = $this->vsiteContextManager->getActiveVsite();
     if ($group && $group->id() != $block_content_group->id()) {
