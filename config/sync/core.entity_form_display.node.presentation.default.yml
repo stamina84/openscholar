@@ -65,12 +65,9 @@ content:
     region: content
   field_presentation_slides:
     weight: 12
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: media_browser_widget
     region: content
   field_taxonomy_terms:
     weight: 14
