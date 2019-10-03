@@ -59,5 +59,8 @@ function os_base_preprocess_block(&$variables) {
     $variables['label'] = $content['#block_content']->get('field_widget_title')->value;
     $blockType = str_replace('_', '-', $variables['content']['#block_content']->bundle());
     $variables['attributes']['class'][] = 'block--type-' . $blockType;
+    if ($variables['content']['#block_content']->bundle() == 'media_gallery') {
+      $variables['#attached']['library'][] = 'os_base/slick';
+    }
   }
 }
