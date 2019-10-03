@@ -308,3 +308,30 @@ function os_pages_module_implements_alter(&$implementations, $hook) {
     $implementations['os_pages'] = $group;
   }
 }
+
+/**
+ * Implements hook_contextual_links_view_alter().
+ */
+function os_pages_contextual_links_view_alter(&$element, $items) {
+  if (isset($element['#contextual_links']['node'])) {
+    $entity = entity_load('node', $element['#contextual_links']['node']['route_parameters']['node']);
+
+    // Checking content type page.
+    if ($entity->get('type')->getString() == 'page') {
+      $element['#links']['outlone'] = [
+        'title' => t('Outline'),
+        'url' => Url::fromRoute('entity.node.book_outline_form', [
+          'node' => $entity->id(),
+        ]),
+      ];
+
+      $element['#links']['add_subpage'] = [
+        'title' => t('Add Subpage'),
+        'url' => Url::fromRoute('node.add', [
+          'node_type' => 'page',
+          'parent' => $entity->id(),
+        ]),
+      ];
+    }
+  }
+}
