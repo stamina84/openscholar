@@ -45,4 +45,4 @@ os_widgets.add_slideshow:
       block_content:
         type: entity:block_content
   requirements:
-    _custom_access: 'Drupal\os_widgets\Form\AddSlideshowForm::access'
+    _add_slideshow_access_check: 'TRUE'
