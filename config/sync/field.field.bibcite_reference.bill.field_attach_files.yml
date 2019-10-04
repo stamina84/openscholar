@@ -9,7 +9,6 @@ dependencies:
     - media.type.document
     - media.type.executable
     - media.type.html
-    - media.type.icon
     - media.type.image
     - media.type.oembed
 id: bibcite_reference.bill.field_attach_files
@@ -31,7 +30,6 @@ settings:
       oembed: oembed
       executable: executable
       html: html
-      icon: icon
       image: image
     sort:
       field: _none
