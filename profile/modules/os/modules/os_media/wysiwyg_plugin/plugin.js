@@ -23,7 +23,7 @@
                   editor.insertHtml('<img src="' + media.thumbnail +'" data-mid="' + media.mid + '">');
                 }
               },
-              types: ['image', 'audio', 'html', 'video']
+              types: ['image', 'audio', 'html', 'oembed']
             })
           }
         },

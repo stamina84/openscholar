@@ -15,11 +15,17 @@
 .node-preview-form-select {
   padding: ($grid-gutter-width / 2);
 }
+/**** uploaded image ****/
 .field--name-body {
-  img[style*="left"] {
-    padding-right: 15px;
-  }
-  img[style*="right"] {
-    padding-left: 15px;
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    &[style*="left"] {
+      padding-right: 15px;
+    }
+    &[style*="right"] {
+      padding-left: 15px;
+    }
   }
 }
