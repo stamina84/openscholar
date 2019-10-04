@@ -10,7 +10,6 @@ dependencies:
     - media.type.html
     - media.type.image
     - media.type.oembed
-    - media.type.presentation_materials
     - node.type.blog
 _core:
   default_config_hash: UeQMqkOhcTakJLbgyQiQ25gHGzZXY6YzrqIDqKLALmk
@@ -34,7 +33,6 @@ settings:
       executable: executable
       html: html
       image: image
-      presentation_materials: presentation_materials
     sort:
       field: _none
     auto_create: false

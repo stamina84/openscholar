@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.presentation.body
-    - field.field.node.presentation.field_additional_media
     - field.field.node.presentation.field_presentation_date
     - field.field.node.presentation.field_presentation_location
     - field.field.node.presentation.field_presentation_slides
@@ -29,15 +28,6 @@ content:
     type: text_default
     weight: 3
     settings: {  }
-    third_party_settings: {  }
-    region: content
-  field_additional_media:
-    type: entity_reference_entity_view
-    weight: 4
-    label: above
-    settings:
-      view_mode: default
-      link: false
     third_party_settings: {  }
     region: content
   field_presentation_date:

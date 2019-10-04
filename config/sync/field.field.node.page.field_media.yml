@@ -9,7 +9,6 @@ dependencies:
     - media.type.html
     - media.type.image
     - media.type.oembed
-    - media.type.presentation_materials
     - node.type.page
 id: node.page.field_media
 field_name: field_media
@@ -30,7 +29,6 @@ settings:
       oembed: oembed
       html: html
       image: image
-      presentation_materials: presentation_materials
     sort:
       field: _none
     auto_create: false

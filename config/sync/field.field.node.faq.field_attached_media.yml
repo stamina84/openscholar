@@ -10,7 +10,6 @@ dependencies:
     - media.type.html
     - media.type.image
     - media.type.oembed
-    - media.type.presentation_materials
     - node.type.faq
 id: node.faq.field_attached_media
 field_name: field_attached_media
@@ -32,7 +31,6 @@ settings:
       executable: executable
       html: html
       image: image
-      presentation_materials: presentation_materials
     sort:
       field: _none
     auto_create: false

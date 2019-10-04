@@ -7,11 +7,10 @@ dependencies:
     - media.type.audio
     - media.type.document
     - media.type.executable
+    - media.type.html
     - media.type.icon
     - media.type.image
-    - media.type.presentation_materials
-    - media.type.remote
-    - media.type.video
+    - media.type.oembed
   module:
     - file
     - group
@@ -1142,15 +1141,13 @@ display:
           admin_label: ''
           operator: in
           value:
-            all: all
             audio: audio
             document: document
+            oembed: oembed
             executable: executable
+            html: html
             icon: icon
             image: image
-            presentation_materials: presentation_materials
-            remote: remote
-            video: video
           group: 1
           exposed: true
           expose:

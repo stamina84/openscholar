@@ -12,7 +12,6 @@ dependencies:
     - media.type.icon
     - media.type.image
     - media.type.oembed
-    - media.type.presentation_materials
 id: bibcite_reference.legal_ruling.field_attach_files
 field_name: field_attach_files
 entity_type: bibcite_reference
@@ -34,7 +33,6 @@ settings:
       html: html
       icon: icon
       image: image
-      presentation_materials: presentation_materials
     sort:
       field: _none
     auto_create: false
