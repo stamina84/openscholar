@@ -51,3 +51,4 @@ permissions:
   113: 'view group_node:blog entity'
   120: 'view group_node:blog content'
   121: 'access private apps'
+description: '<em>Viewer</em> may have read-only access to private sites and private apps.'
