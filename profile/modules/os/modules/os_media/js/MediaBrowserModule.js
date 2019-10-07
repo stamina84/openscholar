@@ -814,6 +814,7 @@
             zIndex: 10000,
             close: function (event, ui) {
               $(event.target).remove();
+              $('#upmedia').focus();
             }
           },
           browser: {
@@ -867,6 +868,7 @@
         }).then(function (modal) {
           modal.element.dialog(nparams.dialog);
           modal.close.then(function (result) {
+            $('#upmedia').focus();
             // run the function passed to us
             if (Array.isArray(result)) {
               if (result.length) {
