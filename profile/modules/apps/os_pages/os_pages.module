@@ -318,13 +318,17 @@ function os_pages_contextual_links_view_alter(&$element, $items) {
     $entity = entity_load('node', $element['#contextual_links']['node']['route_parameters']['node']);
 
     // Checking content type page.
-    if ($entity->get('type')->getString() == 'page') {
-      $element['#links']['outlone'] = [
-        'title' => t('Outline'),
-        'url' => Url::fromRoute('entity.node.book_outline_form', [
-          'node' => $entity->id(),
-        ]),
-      ];
+    if ($entity->bundle() == 'page') {
+
+      // Checking current page is a child of another page or has a child.
+      if ($entity->book['has_children'] || $entity->book['pid']) {
+        $element['#links']['outline'] = [
+          'title' => t('Outline'),
+          'url' => Url::fromRoute('entity.node.book_outline_form', [
+            'node' => $entity->id(),
+          ]),
+        ];
+      }
 
       $element['#links']['add_subpage'] = [
         'title' => t('Add Subpage'),
