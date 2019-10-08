@@ -646,8 +646,19 @@
         }
       }
       $scope.changePanes('library');
+      $timeout(function () {
+        $('#file-search-input').focus();
+      }, 10);
     };
 
+    $scope.deleteCancle = function () {
+      $scope.changePanes('library');
+      var id = $scope.selection;
+      $timeout(function () {
+        console.log(id);
+        $('#file-' + id).focus();
+      }, 10);
+    };
 
     $scope.embed = '';
     $scope.embedSubmit = function () {
@@ -702,6 +713,10 @@
         return;
       }
       $scope.changePanes('library', result);
+      var id = $scope.selection;
+      $timeout(function () {
+        $('#file-' + id).focus();
+      }, 10);
     }
 
     $scope.insert = function () {
