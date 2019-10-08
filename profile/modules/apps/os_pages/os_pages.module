@@ -11,6 +11,7 @@ use Drupal\node\Entity\Node;
 use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_entity_insert().
@@ -306,5 +307,36 @@ function os_pages_module_implements_alter(&$implementations, $hook) {
     $group = $implementations['os_pages'];
     unset($implementations['os_pages']);
     $implementations['os_pages'] = $group;
+  }
+}
+
+/**
+ * Implements hook_contextual_links_view_alter().
+ */
+function os_pages_contextual_links_view_alter(&$element, $items) {
+  if (isset($element['#contextual_links']['node'])) {
+    $entity = entity_load('node', $element['#contextual_links']['node']['route_parameters']['node']);
+
+    // Checking content type page.
+    if ($entity->bundle() == 'page') {
+
+      // Checking current page is a child of another page or has a child.
+      if ($entity->book['has_children'] || $entity->book['pid']) {
+        $element['#links']['outline'] = [
+          'title' => t('Outline'),
+          'url' => Url::fromRoute('entity.node.book_outline_form', [
+            'node' => $entity->id(),
+          ]),
+        ];
+      }
+
+      $element['#links']['add_subpage'] = [
+        'title' => t('Add Subpage'),
+        'url' => Url::fromRoute('node.add', [
+          'node_type' => 'page',
+          'parent' => $entity->id(),
+        ]),
+      ];
+    }
   }
 }
