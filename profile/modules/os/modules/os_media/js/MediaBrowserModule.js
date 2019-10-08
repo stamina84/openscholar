@@ -198,7 +198,7 @@
       }
 
       for (i=0; i<$scope.toInsert.length; i++) {
-        if ($scope.toInsert[i].id == file.id) {
+        if ($scope.toInsert[i].mid === file.mid) {
           $scope.toInsert[i] = file;
         }
       }
@@ -485,7 +485,7 @@
     // (just performs a swap on the hard drive)
     $scope.replace = function ($index, $last) {
       $scope.dupes[$index].processed = true;
-      delete $scope.dupes[$index].newName;
+      delete $scope.dupes[$index].sanitized;
 
       if ($last) {
         finalizeDupes();
