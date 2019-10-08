@@ -714,17 +714,18 @@
       else {
         results.push($scope.selected_file);
       }
+      $('.modal-backdrop').slice(1).remove();
       // Quick implementation to show warning message on /cp/settings/apps-settings/profiles page.
       if (changed === false) {
         // HTML element is rendered in Drupal\os_profiles\Plugin\CpSetting\ProfilesSetting.php
         $(Drupal.theme('fileChangedWarning')).insertBefore('#edit-default-image').hide().fadeIn('slow');
         changed = true;
       }
-
       close(results);
     }
 
     $scope.cancel = function () {
+      $('.modal-backdrop').slice(1).remove();
       close([]);
     }
 
@@ -813,6 +814,7 @@
             zIndex: 10000,
             close: function (event, ui) {
               $(event.target).remove();
+              $('#upmedia').focus();
             }
           },
           browser: {
@@ -866,6 +868,7 @@
         }).then(function (modal) {
           modal.element.dialog(nparams.dialog);
           modal.close.then(function (result) {
+            $('#upmedia').focus();
             // run the function passed to us
             if (Array.isArray(result)) {
               if (result.length) {
