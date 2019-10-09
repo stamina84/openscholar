@@ -64,4 +64,26 @@ class FormDeleteDestinationTest extends VsiteExistingSiteTestBase {
     $this->assertSession()->linkByHrefExists($this->groupAlias . '/bibcite/reference/' . $publication->id() . '/delete?destination=' . $this->groupAlias . '/publications');
   }
 
+  /**
+   * Test block delete page with destination.
+   */
+  public function testBlockDeleteWithDestination() {
+    $node = $this->createNode();
+
+    $block_content = $this->createBlockContent([
+      'type' => 'featured_posts',
+      'field_featured_posts' => [
+        $node,
+      ],
+      'field_display_style' => [
+        'title',
+      ],
+    ]);
+
+    $this->group->addContent($block_content, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($block_content, 'sidebar_second');
+
+    $this->visitViaVsite("blog", $this->group);
+    $this->assertSession()->linkByHrefExists($this->groupAlias . '/block/' . $block_content->id() . '/delete?destination=' . $this->groupAlias . '/blog');
+  }
 }
