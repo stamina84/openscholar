@@ -18,8 +18,13 @@
 /**** uploaded image ****/
 .field--name-body {
   img {
-    display: block;
     max-width: 100%;
     height: auto;
+    &[style*="left"] {
+      padding-right: 15px;
+    }
+    &[style*="right"] {
+      padding-left: 15px;
+    }
   }
 }
