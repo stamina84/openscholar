@@ -70,6 +70,7 @@ nav.ui-sortable-helper ul.menu {
   background-color: #444;
   color: #ddd;
   padding: 5px;
+  z-index: 10000 !important;
 }
 
 #block-list h2.sr-only,

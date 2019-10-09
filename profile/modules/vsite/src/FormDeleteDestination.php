@@ -52,19 +52,24 @@ class FormDeleteDestination implements FormDeleteDestinationInterface {
       return;
     }
     $delete_link_options = $form['actions']['delete']['#url']->getOptions();
-    if (empty($delete_link_options['query']['destination'])) {
-      // Init destination.
-      $delete_link_options['query']['destination'] = '';
-    }
+
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
     $bundle = $entity->bundle();
     if ($entity->getEntityTypeId() == 'bibcite_reference') {
       $bundle = '*';
     }
+
+    // If the entity delete is not in our mapping do not alter it.
     if (empty(self::REDIRECT_MAPPING[$entity->getEntityTypeId()][$bundle])) {
       return;
     }
+    // Default to the homepage for the vsite
+    if (empty($delete_link_options['query']['destination'])) {
+      // Init destination.
+      $delete_link_options['query']['destination'] = '';
+    }
+
     $newOptionQuery = $delete_link_options['query'];
     $redirectPath = self::REDIRECT_MAPPING[$entity->getEntityTypeId()][$bundle];
     $new_destination = '/' . $redirectPath;

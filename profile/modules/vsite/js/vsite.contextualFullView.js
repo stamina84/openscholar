@@ -24,12 +24,12 @@
   }
 
   /**
-   * Makes sure that after edit, user is redirected to full-view.
+   * Makes sure that afterwards, user is redirected back to the current page.
    *
    * @param $el
    *   The edit contextual link element.
    */
-  function alterEditDestination($el) {
+  function alterDestinationToCurrent($el) {
     let $link = $el.find('a');
     let url = new URL($link.attr('href'), window.location.origin);
     let currentPath = window.location.pathname;
@@ -62,15 +62,21 @@
         if (drupalSettings.entitySetting.type === 'bibcite_reference') {
           bundle = '*';
         }
-        let redirectLocation = entityMapping[bundle];
+        let redirectLocation = window.location.pathname;
 
         alterDeleteDestination($deleteOption, redirectLocation);
+      }
+
+      let $blockDeleteOption = data.$el.find('li.block-contentblock-delete');
+      if ($blockDeleteOption.length) {
+        // Current page.
+        alterDestinationToCurrent($blockDeleteOption);
       }
 
       let $editOption = data.$el.find('li.entitynodeedit-form, li.entitybibcite-referenceedit-form');
 
       if ($editOption.length) {
-        alterEditDestination($editOption);
+        alterDestinationToCurrent($editOption);
       }
     });
   }
