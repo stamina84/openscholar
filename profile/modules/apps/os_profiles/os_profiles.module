@@ -89,8 +89,8 @@ function os_profiles_preprocess_node(&$variables) {
     && empty($content['field_photo_person']['#items'])
     && !$config->get('disable_default_image')) {
 
-    if ($default_image_fid = $config->get('default_image_fid')) {
-      $file = File::load($default_image_fid);
+    $default_image_fid = $config->get('default_image_fid');
+    if ($default_image_fid && $file = File::load($default_image_fid)) {
       $image_style_name = 'crop_photo_person';
       if ($variables['view_mode'] == 'full') {
         $image_style_name = 'crop_photo_person_full';
