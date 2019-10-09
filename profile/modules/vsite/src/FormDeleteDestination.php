@@ -64,7 +64,7 @@ class FormDeleteDestination implements FormDeleteDestinationInterface {
     if (empty(self::REDIRECT_MAPPING[$entity->getEntityTypeId()][$bundle])) {
       return;
     }
-    // Default to the homepage for the vsite
+    // Default to the homepage for the vsite.
     if (empty($delete_link_options['query']['destination'])) {
       // Init destination.
       $delete_link_options['query']['destination'] = '';
