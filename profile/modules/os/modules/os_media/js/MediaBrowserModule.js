@@ -651,7 +651,7 @@
       }, 10);
     };
 
-    $scope.deleteCancle = function () {
+    $scope.deleteCancel = function () {
       $scope.changePanes('library');
       var id = $scope.selection;
       $timeout(function () {
