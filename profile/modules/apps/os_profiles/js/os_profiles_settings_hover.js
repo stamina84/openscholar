@@ -23,18 +23,16 @@
       $('a.profile-pop').hover(function(e) {
 
         var target = '#' + ($(this).attr('data-popbox'));
-        console.log('i');
         $(target).show();
         moveLeft = $(this).outerWidth();
         moveDown = ($(target).outerHeight());
       }, function() {
-        console.log('e');
         var target = '#' + ($(this).attr('data-popbox'));
         $(target).hide();
       });
 
 
-      $('a.profile-pop').on('mousemove keyup',function(e) {
+      $('a.profile-pop').mousemove(function (e) {
         var target = '#' + ($(this).attr('data-popbox'));
 
         leftD = e.pageX + parseInt(moveLeft);
