@@ -114,3 +114,11 @@ p {
 address {
   font-style: italic;
 }
+.cke_widget_image {
+  &[style*="float: left"] {
+    padding-right: 15px;
+  }
+  &[style*="float: right"] {
+    padding-left: 15px;
+  }
+}

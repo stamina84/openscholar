@@ -25,7 +25,9 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_image_caption: true
   field_media_image: true
+  field_taxonomy_terms: true
   langcode: true
   name: true
   uid: true

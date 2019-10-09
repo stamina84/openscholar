@@ -1,0 +1,16 @@
+.morecontent span {
+  display: none;
+}
+.morecontent span span {
+  display: inline;
+}
+.morelink {
+  display: inline;
+  text-decoration: underline;
+}
+.morelink span {
+  font-size: .8em;
+}
+.morelink:hover {
+  cursor: pointer;
+}

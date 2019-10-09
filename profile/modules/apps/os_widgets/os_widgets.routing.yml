@@ -6,7 +6,6 @@ os_widgets.save_layout:
   method: [ POST ]
   requirements:
     _group_permission: 'manage layout'
-    _group_member: 'TRUE'
 os_widgets.reset_layout:
   path: '/cp/layout/reset'
   defaults:
@@ -15,7 +14,6 @@ os_widgets.reset_layout:
   method: [ POST ]
   requirements:
     _group_permission: 'manage layout'
-    _group_member: 'TRUE'
 os_widgets.create_widget:
   path: '/cp/layout/create/{block_content_type}'
   defaults:
@@ -23,7 +21,6 @@ os_widgets.create_widget:
     _title_callback: 'Drupal\block_content\Controller\BlockContentController::getAddFormTitle'
   requirements:
     _group_permission: 'manage layout'
-    _group_member: 'TRUE'
 os_widgets.edit_widget:
   path: '/cp/layout/edit/{block}'
   defaults:
@@ -38,4 +35,3 @@ os_widgets.delete_widget:
     _title: 'Delete block'
   requirements:
     _group_permission: 'manage layout'
-    _group_member: 'TRUE'

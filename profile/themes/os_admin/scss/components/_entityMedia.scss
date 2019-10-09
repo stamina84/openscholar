@@ -14,11 +14,11 @@
   }
   .seven-details {
     @extend .entity-meta__header;
-    &:focus-within {
-      outline: 1px solid;
-    }
   }
 }
 .seven-details {
   border: 1px solid $color-light-gray2;
+  &:focus-within, &:focus {
+    outline: 1px solid;
+  }
 }

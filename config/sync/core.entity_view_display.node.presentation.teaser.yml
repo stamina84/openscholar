@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.presentation.field_taxonomy_terms
     - node.type.presentation
   module:
+    - cp_taxonomy
     - datetime
     - layout_builder
     - text
@@ -50,12 +51,13 @@ content:
       link_to_entity: false
     third_party_settings: {  }
   field_taxonomy_terms:
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     weight: 3
     region: content
     label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
   links:
     weight: 4

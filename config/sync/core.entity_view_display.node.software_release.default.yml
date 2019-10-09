@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.software_release.field_taxonomy_terms
     - node.type.software_release
   module:
+    - cp_taxonomy
     - layout_builder
     - text
     - user
@@ -58,9 +59,10 @@ content:
     weight: 4
     label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     region: content
   links:
     weight: 5

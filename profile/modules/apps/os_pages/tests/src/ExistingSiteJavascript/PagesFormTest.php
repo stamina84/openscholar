@@ -23,7 +23,7 @@ class PagesFormTest extends TestBase {
    */
   public function testPageAddForm(): void {
     $group_member = $this->createUser();
-    $this->group->addMember($group_member);
+    $this->addGroupEnhancedMember($group_member, $this->group);
     $this->drupalLogin($group_member);
 
     // Test top-page creation.

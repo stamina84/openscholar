@@ -3,7 +3,25 @@
   border: 1px solid $color-gray3;
   color: $color-white;
 }
-.btn-success {
+.btn.btn-success {
   background: $color-green;
   border-color: $color-green;
+  color: $color-white;
+}
+.btn.btn-danger {
+  background: $color-danger;
+  border-color: $color-danger;
+  color: $color-white;
+}
+.btn.btn-warning {
+  color: $color-black;
+  &:hover,&:active,&:focus {
+    color: $color-black;
+  }
+}
+.btn.btn-info {
+  color: $color-black;
+  &:hover,&:active,&:focus {
+    color: $color-black;
+  }
 }

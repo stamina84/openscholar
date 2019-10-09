@@ -12,3 +12,10 @@ modal:
   dependencies:
     - core/jquery
     - core/drupal.dialog.ajax
+
+slick:
+  css:
+    base:
+      /libraries/slick/slick/slick.css: {}
+    theme:
+      /libraries/slick/slick/slick-theme.css: {}

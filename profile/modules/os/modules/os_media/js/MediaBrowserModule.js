@@ -104,7 +104,8 @@
       {label: 'HTML', value: 'html'},
       {label: 'Executable', value: 'executable'},
       {label: 'Audio', value: 'audio'},
-      {label: 'Icon', value: 'icon'}
+      {label: 'Icon', value: 'icon'},
+      {label: 'Embeds', value: 'oembed'},
     ];
 
     let defaultFilteredTypes = params.types;
@@ -112,7 +113,7 @@
     $scope.availFilter = [];
     for (let j in defaultFilteredTypes) {
       for (let k=0; k<allTypes.length; k++) {
-        if (defaultFilteredTypes[j] == allTypes[k].value) {
+        if (defaultFilteredTypes[j] === allTypes[k].value) {
           $scope.availTypes.push(allTypes[k]);
           $scope.availFilter.push(allTypes[k].value);
         }
@@ -169,7 +170,13 @@
 
     // Watch for changes in file list
     $scope.$on('EntityService.media.add', function (event, file) {
-      if (file.changed == file.timestamp) {
+
+      for (var i=0; i < $scope.files.length; i++) {
+        if ($scope.files[i].mid === file.mid) {
+           $scope.existing = true;
+        }
+      }
+      if (!$scope.existing) {
         $scope.files.push(file);
       }
     });
@@ -190,7 +197,7 @@
       }
 
       for (i=0; i<$scope.toInsert.length; i++) {
-        if ($scope.toInsert[i].id == file.id) {
+        if ($scope.toInsert[i].mid === file.mid) {
           $scope.toInsert[i] = file;
         }
       }
@@ -203,12 +210,12 @@
     $scope.$on('EntityService.media.delete', function (event, id) {
       // Don't want to worry about what happens when you modify an array you're
       // looping over.
-      if ($scope.selected_file && $scope.selected_file.id == id) {
+      if ($scope.selected_file && $scope.selected_file.mid === id) {
         $scope.selected_file = null;
       }
       var deleteMe = false;
       for (var i=0; i<$scope.files.length; i++) {
-        if ($scope.files[i].id == id) {
+        if ($scope.files[i].mid === id) {
           deleteMe = i;
           break;
         }
@@ -352,9 +359,17 @@
           }
         }
 
+        // If file is not of allowed type do not upload and show the error message.
+        var extn = $files[i].name.split(".").pop();
+        if ($scope.extensions.indexOf(extn) === -1) {
+          $files[i].doNotUpload = true;
+          $scope.extensionFailure = true;
+          continue;
+        }
+
         // replace # in filenames cause they will break filename detection
         var newName = $files[i].name.replace(/[#|\?]/g, '_').replace(/__/g, '_').replace(/_\./g, '.').replace(/[(|)]/g, "").replace(/ /g, '_').toLowerCase();
-        var hadHashtag = (newName !== $files[i].name);
+        var hadHashtag = (newName !== $files[i].name.toLowerCase());
         $files[i].sanitized = newName;
 
         var url = urlGenerator.generate(settings.fetchSetting('paths.api') + '/media/filename/' + $files[i].sanitized + '?_format=json', true);
@@ -362,12 +377,14 @@
         var config = {
           originalFile: $files[i]
         };
+
+
         promises.push($http.get(url, config).then(function (response) {
             var file = response.config.originalFile;
             var data = response.data;
             file.filename = file.sanitized;
-            if (data.collision) {
-              file.newName = data.expectedFileName;
+            if (data.collision && !$scope.extensionFailure) {
+              file.sanitized = data.expectedFileName;
               $scope.dupes.push(file);
             }
             else {
@@ -467,7 +484,7 @@
     // (just performs a swap on the hard drive)
     $scope.replace = function ($index, $last) {
       $scope.dupes[$index].processed = true;
-      delete $scope.dupes[$index].newName;
+      delete $scope.dupes[$index].sanitized;
 
       if ($last) {
         finalizeDupes();
@@ -569,7 +586,7 @@
           var found = false;
           // check to see if this file exists
           for (var j = 0; j < $scope.files.length; j++) {
-            if ($scope.files[j].mid == file.mid) {
+            if ($scope.files[j].mid === file.mid) {
               // we just replaced an existing file.
               file.replaced = true;
               $scope.files[j] = file;
@@ -635,31 +652,32 @@
     $scope.embedSubmit = function () {
       // construct the entity
       var data = {
-        embed: this.embed,
+        name: 'embed',
+        embed: this.embed
       };
 
-      service.add(data).success(function (e) {
-        if (e.data.length) {
+      service.add(data).then(function (file){
+        if (file) {
+          file.embed = $scope.embed;
           $scope.embed = '';
-          e.data[0].new = e.data[0].changed == e.data[0].timestamp;
-          $scope.setSelection(e.data[0].id);
-          service.register(e.data[0]);
+          file.new = file.changed == file.created;
+          $scope.setSelection(file.mid);
+          service.register(file);
 
-          $scope.changePanes('edit')
-        }
-      })
-      .error(function (e) {
-        if ($location.protocol() == 'https') {
-          $scope.embedFailureHttps = true;
-          $timeout(function () {
-            $scope.embedFailureHttps = false;
-          }, 5000);
-        } else {
-          $scope.embedFailure = true;
-          $timeout(function () {
-            $scope.embedFailure = false;
-          }, 5000);
-        }
+          $scope.changePanes('edit');
+          }
+      },function (error){
+          if ($location.protocol() == 'https') {
+            $scope.embedFailureHttps = true;
+            $timeout(function () {
+                $scope.embedFailureHttps = false;
+            }, 5000);
+          } else {
+            $scope.embedFailure = true;
+            $timeout(function () {
+                $scope.embedFailure = false;
+            }, 5000);
+          }
       });
     }
 
@@ -696,10 +714,13 @@
         results.push($scope.selected_file);
       }
 
+      $('.modal-backdrop').slice(1).remove();
+      
       close(results);
     }
 
     $scope.cancel = function () {
+      $('.modal-backdrop').slice(1).remove();
       close([]);
     }
 
@@ -788,6 +809,7 @@
             zIndex: 10000,
             close: function (event, ui) {
               $(event.target).remove();
+              $('#upmedia').focus();
             }
           },
           browser: {
@@ -800,7 +822,7 @@
           onSelect: angular.noop,
           types: {
             image: 'image',
-            video: 'video',
+            oembed: 'oembed',
             audio: 'audio',
             executable: 'executable',
             document: 'document',
@@ -841,6 +863,7 @@
         }).then(function (modal) {
           modal.element.dialog(nparams.dialog);
           modal.close.then(function (result) {
+            $('#upmedia').focus();
             // run the function passed to us
             if (Array.isArray(result)) {
               if (result.length) {

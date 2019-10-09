@@ -15,6 +15,7 @@ blacklist:
   - 'block.block.booknavigation*'
   - 'block.block.entityviewcontent*'
 graylist:
+  - os_media.settings
   - os_publications.settings
 graylist_dependents: true
 graylist_skip_equal: true

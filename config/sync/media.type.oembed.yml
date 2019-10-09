@@ -1,0 +1,23 @@
+uuid: c9a9f2fe-01ca-4893-80ea-5c06bc9591f0
+langcode: en
+status: true
+dependencies:
+  module:
+    - os_media
+    - crop
+third_party_settings:
+  crop:
+    image_field: null
+id: oembed
+label: Embeds
+description: 'For all oEmbed supported content such as videos, images, links and rich type.'
+source: oembed_content
+queue_thumbnail_downloads: false
+new_revision: false
+source_configuration:
+  thumbnails_directory: 'public://oembed_thumbnails'
+  providers: {  }
+  source_field: field_media_oembed_content
+field_map:
+  title: name
+  default_name: name

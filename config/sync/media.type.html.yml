@@ -1,0 +1,20 @@
+uuid: f9f42035-a743-452e-9c4a-729744f83bf2
+langcode: en
+status: true
+dependencies:
+  module:
+    - os_media
+third_party_settings:
+  crop:
+    image_field: null
+id: html
+label: HTML
+description: ''
+source: html
+queue_thumbnail_downloads: false
+new_revision: false
+source_configuration:
+  thumbnails_directory: 'public://oembed_thumbnails'
+  providers: {  }
+  source_field: field_media_html
+field_map: {  }

@@ -42,8 +42,24 @@
   }
   .slick-arrow {
     &:before {
-      color: #555;
+      color: $color-gray6;
       opacity: 1;
+    }
+  }
+}
+.slick-arrow {
+  z-index: 9;
+}
+/**** slick lightbox arrow ****/
+.slick-lightbox {
+  .slick-arrow {
+    z-index: 9;
+    color: $color-white;
+    background: $color-black;
+    &:hover {
+      &:before {
+        color: $color-white;
+      }
     }
   }
 }

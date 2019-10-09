@@ -108,6 +108,11 @@ class PlaceBlockPageVariant extends OriginalVariant {
         'id' => 'block-place-widget-selector-wrapper',
       ],
       'markup' => $this->buildWidgetLibrary(),
+      '#attached' => [
+        'library' => [
+          'os_media/mediaBrowserField',
+        ],
+      ],
     ];
 
     $build['footer_bottom']['context_selector'] = [

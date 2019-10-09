@@ -35,10 +35,11 @@ class CpRolesHelperTest extends CpUsersExistingSiteTestBase {
     $cp_roles_helper = $this->container->get('cp_users.cp_roles_helper');
     $roles = $cp_roles_helper->getDefaultGroupRoles($this->group);
 
-    $this->assertCount(3, $roles);
+    $this->assertCount(4, $roles);
     $this->assertContains('personal-administrator', $roles);
     $this->assertContains('personal-member', $roles);
     $this->assertContains('personal-content_editor', $roles);
+    $this->assertContains('personal-enhanced_basic_member', $roles);
   }
 
   /**

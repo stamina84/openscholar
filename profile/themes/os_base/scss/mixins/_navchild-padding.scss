@@ -10,3 +10,13 @@
     }
   }
 }
+@mixin taxonomychildpadding() {
+  @for $i from 1 through 10 {
+    $sel: if($i == 1, ".os-widgets-taxonomy-display-type-menu-item", selector-nest($sel, ".item-list"));
+    #{$sel} {
+        a, .term-description {
+          padding-left: 10px * $i;
+        }
+    }
+  }
+}

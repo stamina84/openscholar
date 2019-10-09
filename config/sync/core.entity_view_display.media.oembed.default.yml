@@ -1,0 +1,42 @@
+uuid: ac0dd9a4-bfb7-42d8-985f-0c2c1f871077
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.oembed.field_media_oembed_content
+    - field.field.media.oembed.field_taxonomy_terms
+    - media.type.oembed
+  module:
+    - layout_builder
+    - os_media
+third_party_settings:
+  layout_builder:
+    sections: {  }
+id: media.oembed.default
+targetEntityType: media
+bundle: oembed
+mode: default
+content:
+  field_media_oembed_content:
+    type: 'media:embed'
+    weight: 0
+    label: visually_hidden
+    settings:
+      max_width: 100%
+      max_height: '701'
+    third_party_settings: {  }
+    region: content
+  field_taxonomy_terms:
+    weight: 2
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  thumbnail: true
+  uid: true

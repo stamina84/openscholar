@@ -81,8 +81,16 @@ nav.ui-sortable-helper ul.menu {
   width: auto;
 }
 
+#block-list h2.block-title {
+  display: none;
+}
+
 .block-place-region .block-title {
   display: none;
+}
+
+.block-place-region section .block-title {
+  display: block;
 }
 
 #block-place-widget-selector-wrapper .block-title {

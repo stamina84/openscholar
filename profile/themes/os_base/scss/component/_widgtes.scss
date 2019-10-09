@@ -204,6 +204,21 @@
           float: left;
           width: 50%;
         }
+        .description.full {
+          clear: both;
+        }
+      }
+    }
+  }
+}
+/**** widget dropbutton ****/
+.layout {
+  .paragraphs-dropbutton-wrapper {
+    .dropbutton {
+      display: flex;
+      li {
+        list-style-type: none;
+        margin-left: 5px;
       }
     }
   }

@@ -20,6 +20,7 @@ dependencies:
     - field.field.node.person.field_website
     - node.type.person
   module:
+    - cp_taxonomy
     - layout_builder
     - user
 third_party_settings:
@@ -34,11 +35,12 @@ mode: title
 content:
   field_taxonomy_terms:
     weight: 0
-    label: above
+    label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     region: content
   links:
     weight: 1

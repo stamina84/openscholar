@@ -45,4 +45,63 @@ class MediaHelperTest extends ExistingSiteBase {
     $this->assertNotEmpty($this->mediaHelper::ALLOWED_TYPES, 'Returns allowed media types.');
   }
 
+  /**
+   * Test Embed type return.
+   */
+  public function testEmbedType(): void {
+    // Test oEmbed return.
+    $actual = $this->mediaHelper->getEmbedType('https://www.youtube.com/watch?v=WadTyp3FcgU');
+    $this->assertEquals('oembed', $actual);
+
+    // Test Html return.
+    $actual = $this->mediaHelper->getEmbedType('<iframe width="560" height="315" src="https://www.youtube.com/embed/WadTyp3FcgU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+    $this->assertEquals('html', $actual);
+  }
+
+  /**
+   * Test Dimensions function.
+   */
+  public function testDimensions(): void {
+    $html = '<iframe width="560" height="315" src="https://www.youtube.com/embed/WadTyp3FcgU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+    $max['width'] = '100%';
+    $max['height'] = '400';
+    $data = $this->mediaHelper->getDimensions($html, $max);
+    $this->assertEquals('100%', $data['width']);
+    $this->assertEquals('315', $data['height']);
+  }
+
+  /**
+   * Tests Iframe data.
+   */
+  public function testIframeData(): void {
+    $value = 'https://www.youtube.com/watch?v=WadTyp3FcgU';
+    $max['width'] = '100%';
+    $max['height'] = '400';
+    $resource['width'] = '500';
+    $resource['height'] = '500';
+    $data = $this->mediaHelper->iFrameData($value, $max, $resource, NULL);
+    $this->assertNotEmpty($data['#type']);
+    $this->assertNotEmpty($data['#tag']);
+    $this->assertEquals('100%', $data['#attributes']['width']);
+    $this->assertEquals('400', $data['#attributes']['height']);
+    $this->assertContains('/media/embed?url=https%3A//www.youtube.com/watch%3Fv%3DWadTyp3FcgU&max_width=100%25&max_height=400&hash=', $data['#attributes']['src']);
+  }
+
+  /**
+   * We can only test error catching as of now due to api key limitation.
+   *
+   * @throws \Drupal\media\OEmbed\ResourceException
+   */
+  public function testEmbedlyFetch() : void {
+    $response = $this->mediaHelper->fetchEmbedlyResource('https://www.youtube.com/watch?v=WadTyp3FcgU');
+    $this->assertFalse($response, 'Test Negative case due to missing api.');
+  }
+
+  /**
+   * Tests getting thumbnail uri.
+   */
+  public function testGetThumbail(): void {
+    $this->assertNotEmpty($this->mediaHelper->getThumbnail(), 'thumbnail path is returned.');
+  }
+
 }

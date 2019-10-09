@@ -20,3 +20,14 @@ cp_taxonomy.settings:
       label: 'Under these content types when displayed in a list'
       sequence:
         type: string
+
+field.formatter.settings.cp_taxonomy_comma_separator:
+  type: mapping
+  label: Comma Separator formatter settings
+  mapping:
+    label:
+      type: string
+      label: Field label
+    number_of_characters:
+      type: integer
+      label: Number of characters

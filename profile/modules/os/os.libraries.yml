@@ -149,7 +149,7 @@ fileHandler:
 
 
 entityService:
-  version: 1.0
+  version: 1.1
   js:
     js/EntityService/EntityService.module.js: { }
   drupalSettings:
@@ -186,7 +186,7 @@ taxonomyWidget:
     - os/treeSelector
 
 fileEditor:
-  version: 1.0.3
+  version: 1.0.4
   js:
     js/FileEditor/FileEditor.module.js: { }
   css:

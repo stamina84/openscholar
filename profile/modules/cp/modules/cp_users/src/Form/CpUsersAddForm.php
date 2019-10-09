@@ -14,6 +14,7 @@ use Drupal\Core\Mail\MailManager;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Url;
 use Drupal\cp_users\CpRolesHelperInterface;
+use Drupal\cp_users\CpUsersHelper;
 use Drupal\group\Entity\GroupRoleInterface;
 use Drupal\user\Entity\User;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
@@ -113,7 +114,7 @@ class CpUsersAddForm extends FormBase {
       return !\in_array($role->id(), $non_configurable_roles, TRUE) && !$role->isInternal();
     });
     foreach ($allowed_roles as $role) {
-      $options[$role->id()] = $role->label();
+      $options[$role->id()] = cp_users_render_cp_role_label($role);
     }
 
     $form['#prefix'] = '<div id="cp-user-add-form">';
@@ -141,7 +142,7 @@ class CpUsersAddForm extends FormBase {
         '#type' => 'radios',
         '#title' => $this->t('Role'),
         '#options' => $options,
-        '#default_value' => "{$group->getGroupType()->id()}-member",
+        '#default_value' => $group->getGroupType()->getMemberRoleId(),
       ],
     ];
 
@@ -180,7 +181,7 @@ class CpUsersAddForm extends FormBase {
         '#type' => 'radios',
         '#title' => $this->t('Role'),
         '#options' => $options,
-        '#default_value' => "{$group->getGroupType()->id()}-member",
+        '#default_value' => $group->getGroupType()->getMemberRoleId(),
       ],
     ];
 
@@ -266,27 +267,31 @@ class CpUsersAddForm extends FormBase {
       else {
         $response->addCommand(new CloseModalDialogCommand());
         $response->addCommand(new RedirectCommand(Url::fromRoute('cp.users')->toString()));
+        /** @var array $form_state_values */
+        $form_state_values = $form_state->getValues();
+        $role = NULL;
 
-        /** @var string $entity */
-        if ($entity = $form_state->getValue('member-entity')) {
+        /** @var string|null $existing_member_id */
+        $existing_member_id = $form_state_values['member-entity'];
+        if ($existing_member_id) {
           /** @var \Drupal\user\UserInterface $account */
-          $account = $this->entityTypeManager->getStorage('user')->load($entity);
-          $email_key = CP_USERS_ADD_TO_GROUP;
+          $account = $this->entityTypeManager->getStorage('user')->load($existing_member_id);
+          $email_key = CpUsersHelper::CP_USERS_ADD_TO_GROUP;
+          $role = $form_state_values['role_existing'];
         }
         else {
           $account = User::create([
-            'field_first_name' => $form_state->getValue('first_name'),
-            'field_last_name' => $form_state->getValue('last_name'),
-            'name' => $form_state->getValue('username'),
-            'mail' => $form_state->getValue('email'),
+            'field_first_name' => $form_state_values['first_name'],
+            'field_last_name' => $form_state_values['last_name'],
+            'name' => $form_state_values['username'],
+            'mail' => $form_state_values['email'],
             'status' => TRUE,
           ]);
           $account->save();
-          $email_key = CP_USERS_NEW_USER;
+          $email_key = CpUsersHelper::CP_USERS_NEW_USER;
+          $role = $form_state_values['role_new'];
         }
 
-        /** @var string $role */
-        $role = $form_state->getValue('role');
         if (!$role) {
           $role = $group->getGroupType()->getMemberRoleId();
         }
@@ -304,7 +309,7 @@ class CpUsersAddForm extends FormBase {
           'creator' => $this->currentUser,
           'group' => $group,
         ];
-        $this->mailManager->mail('cp_users', $email_key, $form_state->getValue('email'), LanguageInterface::LANGCODE_DEFAULT, $params);
+        $this->mailManager->mail('cp_users', $email_key, $form_state_values['email'], LanguageInterface::LANGCODE_DEFAULT, $params);
       }
     }
     return $response;
