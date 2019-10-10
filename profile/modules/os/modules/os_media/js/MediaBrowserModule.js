@@ -242,7 +242,7 @@
       });
 
 
-    $scope.changePanes = function (pane, result) {
+    $scope.changePanes = function (pane, result, callback) {
       if ($scope.activePanes[pane]) {
         if (pane === 'library') {
           // Need this logic to fix oversized thumbnail previews.
@@ -257,6 +257,9 @@
           }
         }
         $scope.pane = pane;
+        if (callback != null) {
+          callback();
+        }
         return true;
       }
       else {
@@ -645,19 +648,20 @@
           $scope.files[j].status = 'deleting';
         }
       }
-      $scope.changePanes('library');
-      $timeout(function () {
-        $('#file-search-input').focus();
-      }, 10);
+      $scope.changePanes('library', null, function () {
+        angular.element(function () {
+          angular.element('#file-search-input').focus();
+        });
+      });
     };
 
     $scope.deleteCancel = function () {
-      $scope.changePanes('library');
       var id = $scope.selection;
-      $timeout(function () {
-        console.log(id);
-        $('#file-' + id).focus();
-      }, 10);
+      $scope.changePanes('library', null, function() {
+        angular.element(function () {
+          angular.element('#file-' + id).focus();
+        });
+      });
     };
 
     $scope.embed = '';
@@ -712,11 +716,12 @@
         }
         return;
       }
-      $scope.changePanes('library', result);
-      var id = $scope.selection;
-      $timeout(function () {
-        $('#file-' + id).focus();
-      }, 10);
+      $scope.changePanes('library', result, function () {
+        var id = $scope.selection;
+        angular.element(function () {
+          angular.element('#file-' + id).focus();
+        });
+      });
     }
 
     $scope.insert = function () {
