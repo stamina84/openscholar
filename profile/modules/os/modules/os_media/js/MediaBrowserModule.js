@@ -474,7 +474,7 @@
     // renames the file before uploading
     $scope.rename = function ($index, $last) {
       $scope.dupes[$index].processed = true;
-      $scope.dupes[$index].filename = $scope.dupes[$index].newName;
+      $scope.dupes[$index].filename = $scope.dupes[$index].sanitized;
 
       if ($last) {
         finalizeDupes();
@@ -485,7 +485,7 @@
     // (just performs a swap on the hard drive)
     $scope.replace = function ($index, $last) {
       $scope.dupes[$index].processed = true;
-      delete $scope.dupes[$index].sanitized;
+      $scope.dupes[$index].sanitized = $scope.dupes[$index].filename;
 
       if ($last) {
         finalizeDupes();
@@ -579,7 +579,7 @@
           headers: {'Content-Type': $file.type},
           method: 'POST',
           fields: fields,
-          fileName: $file.newName || null
+          fileName: $file.sanitized || null
         }).progress(function (e) {
           progress = e;
         }).success(function (file) {
