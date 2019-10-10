@@ -12,3 +12,4 @@ audience: member
 group_type: personal
 permissions_ui: true
 permissions: {  }
+description: "<em>Content editors</em> may add and edit posts, and also edit others' posts."

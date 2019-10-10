@@ -16,19 +16,13 @@
 {% endif %}
   <strong>{{ title }}</strong>
   {% for item in items %}
-    {{ item|render }}
-    {% if not loop.last %}
-      {{ ', ' }}
-    {% endif %}
+    {{ item|render }}{% if not loop.last %}{{ ', ' }}{% endif %}
   {% endfor %}
   {% if show_more_less %}
     <span class="morecontent"><span class="morechildren">
         {{ ', ' }}
         {% for item in items_hidden %}
-          {{ item|render }}
-          {% if not loop.last %}
-            {{ ', ' }}
-          {% endif %}
+          {{ item|render }}{% if not loop.last %}{{ ', ' }}{% endif %}
         {% endfor %}
     </span></span>
   {% endif %}

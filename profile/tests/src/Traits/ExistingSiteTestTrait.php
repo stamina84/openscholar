@@ -9,6 +9,7 @@ use Drupal\bibcite_entity\Entity\ReferenceInterface;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -135,6 +136,22 @@ trait ExistingSiteTestTrait {
     $group->addMember($admin, [
       'group_roles' => [
         'personal-administrator',
+      ],
+    ]);
+  }
+
+  /**
+   * Adds an account as enhanced member to the group.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group.
+   */
+  protected function addGroupEnhancedMember(AccountInterface $account, GroupInterface $group): void {
+    $group->addMember($account, [
+      'group_roles' => [
+        'personal-enhanced_basic_member',
       ],
     ]);
   }

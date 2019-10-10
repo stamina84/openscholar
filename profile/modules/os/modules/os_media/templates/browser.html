@@ -5,7 +5,7 @@
         <div tabindex="0" class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePanes('library')" ng-keydown="$event.keyCode === 13 && changePanes('library')">Previously uploaded files</div>
     </div>
     <div class="media-browser-panes">
-        <div class="media-browser-pane" ng-switch-when="upload">
+        <div class="media-browser-pane" ng-switch-when="upload" ng-click="$parent.extensionFailure = false">
             <div ngf-drop ngf-change="$parent.checkForDupes($files, $event)" class="media-browser-drop-box"
                  ngf-drag-over-class="media-browser-drag-over" ngf-multiple="true" allow-dir="true"
                  ngf-hide-on-drop-not-available="true" ngf-accept="$parent.validate($file)">
@@ -18,12 +18,12 @@
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">
                 <div class="media-browser-dupe" ng-repeat="dupe in $parent.dupes" ng-show="!dupe.processed" style="z-index: {{1000-$index}}">
-                    <div ng-show="dupe.name != dupe.filename">
+                    <div ng-show="dupe.name.toLowerCase() != dupe.filename.toLowerCase()">
                         This file was renamed from '{{dupe.name}}' due to having invalid characters in its name.
                     </div>
                     A file with the name '{{dupe.filename}}' already exists.
                     <div class="actions">
-                        <div><button value="rename" ng-click="$parent.rename($index, $last)">Rename</button> The new name will be {{dupe.newName}}</div>
+                        <div><button value="rename" ng-click="$parent.rename($index, $last)">Rename</button> The new name will be {{dupe.sanitized}}</div>
                         <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> Warning: replacing the existing file cannot be undone.</div>
                         <div><button value="cancel" ng-click="$parent.cancelUpload($index, $last)">Cancel</button></div>
                     </div>
@@ -43,6 +43,10 @@
                 <div id="media-browser-rejected">
                     <div ng-repeat="m in messages" class="message" ng-bind-html="m.text">
                     </div>
+                </div>
+                <div class="embed-failure" ng-show="extensionFailure" ng-click="$parent.extensionFailure = false">
+                    <span class="error-icon"></span>
+                    The Specified file could not be uploaded as the files with this extension are not allowed.
                 </div>
             </div>
             <div class="actions">

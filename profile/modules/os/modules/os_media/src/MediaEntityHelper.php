@@ -83,12 +83,11 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   const ALLOWED_TYPES = [
     'Image' => 'image',
     'Document' => 'document',
-    'Video' => 'video',
     'HTML' => 'html',
     'Executable' => 'executable',
     'Audio' => 'audio',
     'Icon' => 'icon',
-    'oEmbed' => 'oembed',
+    'Embeds' => 'oembed',
   ];
 
   /**

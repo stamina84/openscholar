@@ -95,7 +95,7 @@ class NodeMetadataAccessTest extends OsExistingSiteJavascriptTestBase {
   public function testGroupMember(): void {
     // Setup.
     $group_member = $this->createUser();
-    $this->group->addMember($group_member);
+    $this->addGroupEnhancedMember($group_member, $this->group);
     $news_title = $this->randomMachineName();
     $news_alias = $this->randomMachineName();
 

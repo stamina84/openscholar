@@ -2,3 +2,13 @@ thead th {
   background: $color-light-gray3;
   border: solid $color-light-gray2;
 }
+/**** ckeditor table cell ****/
+.cke_dialog_contents {
+  a.cke_dialog_ui_button.colorChooser {
+    width: auto;
+    &:focus,
+    &:active {
+      padding: 4px 1.5em;
+    }
+  }
+}

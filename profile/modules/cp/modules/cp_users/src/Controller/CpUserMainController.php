@@ -15,6 +15,7 @@ use Drupal\user\UserInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Controller for the cp_users page.
@@ -113,6 +114,7 @@ class CpUserMainController extends ControllerBase {
           'attributes' => [
             'class' => ['use-ajax'],
             'data-dialog-type' => 'modal',
+            'data-dialog-options' => Json::encode(['width' => 800]),
           ],
         ])->toString();
       }

@@ -6,10 +6,23 @@
     attach: function (ctx) {
       var moveLeft = 0;
       var moveDown = 0;
+
+      //on tabbing popup
+      $('#edit-display-type--wrapper').focusout(function () {
+        $('.stylebox').hide();
+      });
+      $('a.profile-pop').on('keyup', function (e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode == 9) {
+          var target = '#' + ($(this).attr('data-popbox'));
+          $('.stylebox').hide();
+          $(target).show();
+        }
+      });
+
       $('a.profile-pop').hover(function(e) {
 
         var target = '#' + ($(this).attr('data-popbox'));
-
         $(target).show();
         moveLeft = $(this).outerWidth();
         moveDown = ($(target).outerHeight());
@@ -19,7 +32,7 @@
       });
 
 
-      $('a.profile-pop').mousemove(function(e) {
+      $('a.profile-pop').mousemove(function (e) {
         var target = '#' + ($(this).attr('data-popbox'));
 
         leftD = e.pageX + parseInt(moveLeft);
@@ -52,9 +65,11 @@
 
       // When clicking on the name of the display mode we need to check the
       // radio button.
-      $('a.profile-pop').click(function() {
-        var target = "#" + $(this).parent().attr('for');
-        $(target).click();
+      $('a.profile-pop').on('keydown click', function (e) {
+        if (e.which === 13 || e.type === 'click') {
+          var target = "#" + $(this).parent().attr('for');
+          $(target).click();
+        }
       });
     }
   }

@@ -19,7 +19,7 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
     parent::setUp();
 
     $member = $this->createUser();
-    $this->group->addMember($member);
+    $this->addGroupEnhancedMember($member, $this->group);
 
     $this->drupalLogin($member);
   }
@@ -138,7 +138,7 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
   public function testMediaDelete(): void {
     // Setup.
     $member = $this->createUser();
-    $this->group->addMember($member);
+    $this->addGroupEnhancedMember($member, $this->group);
     $media = $this->createMedia([
       'name' => [
         'value' => 'Media meant to be deleted',
@@ -217,7 +217,7 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
   public function testBibciteReferenceUpdate(): void {
     // Setup.
     $member = $this->createUser();
-    $this->group->addMember($member);
+    $this->addGroupEnhancedMember($member, $this->group);
     $reference = $this->createReference();
     $reference->setOwner($member)->save();
     $this->group->addContent($reference, 'group_entity:bibcite_reference');
@@ -258,7 +258,7 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
   public function testBibciteReferenceDelete(): void {
     // Setup.
     $member = $this->createUser();
-    $this->group->addMember($member);
+    $this->addGroupEnhancedMember($member, $this->group);
     $reference = $this->createReference([
       'html_title' => [
         'value' => 'Artwork meant to be deleted',

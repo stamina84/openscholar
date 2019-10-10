@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\os_wysiwyg\PurifyHtmlHelper;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\File\FileSystem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -36,7 +37,14 @@ class PurifyHtml extends FilterBase implements ContainerFactoryPluginInterface {
   protected $purifyHtmlHelper;
 
   /**
-   * OsLinkFilter constructor.
+   * Drupal File System.
+   *
+   * @var \Drupal\Core\File\FileSystem
+   */
+  protected $fileSystem;
+
+  /**
+   * PurifyHtml constructor.
    *
    * @param array $configuration
    *   Configuration.
@@ -46,10 +54,13 @@ class PurifyHtml extends FilterBase implements ContainerFactoryPluginInterface {
    *   Plugin definition.
    * @param \Drupal\os_wysiwyg\PurifyHtmlHelper $purify_html_helper
    *   Purify Html Helper.
+   * @param \Drupal\Core\File\FileSystem $file_system
+   *   Drupal File System.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PurifyHtmlHelper $purify_html_helper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PurifyHtmlHelper $purify_html_helper, FileSystem $file_system) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->purifyHtmlHelper = $purify_html_helper;
+    $this->fileSystem = $file_system;
 
     if (!empty($this->settings['purifyhtml_configuration'])) {
       $this->purifierConfig = $this->applyPurifierConfig($this->settings['purifyhtml_configuration']);
@@ -57,6 +68,11 @@ class PurifyHtml extends FilterBase implements ContainerFactoryPluginInterface {
     else {
       $this->purifierConfig = \HTMLPurifier_Config::createDefault();
     }
+
+    // Set temp directory for definition cache.
+    $serializer_path = $this->fileSystem
+      ->realpath(file_default_scheme() . "://");
+    $this->purifierConfig->set('Cache.SerializerPath', $serializer_path);
 
     // Set data-entity properties.
     $this->purifierConfig->set('HTML.DefinitionID', 'dataentity-definitions');
@@ -88,7 +104,8 @@ class PurifyHtml extends FilterBase implements ContainerFactoryPluginInterface {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get("os_wysiwyg.os_purifyhtml")
+      $container->get("os_wysiwyg.os_purifyhtml"),
+      $container->get('file_system')
     );
   }
 
