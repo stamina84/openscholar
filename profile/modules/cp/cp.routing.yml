@@ -88,5 +88,5 @@ cp.content.browse.collection:
     _controller: '\Drupal\cp\Controller\CpController::overview'
     _title: 'Browse Site Content'
   requirements:
-    _group_permission: 'Manage vsite content'
+    _group_permission: 'manage vsite content'
     _group_member: 'TRUE'
