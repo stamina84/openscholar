@@ -134,6 +134,35 @@ class VsiteContextualLinksTest extends OsExistingSiteJavascriptTestBase {
   }
 
   /**
+   * Tests whether the destination parameter is valid for blocks.
+   */
+  public function testBlockDeleteDestinationParameter(): void {
+    // Setup.
+    $node = $this->createNode();
+
+    $block_content = $this->createBlockContent([
+      'type' => 'featured_posts',
+      'field_featured_posts' => [
+        $node,
+      ],
+      'field_display_style' => [
+        'title',
+      ],
+    ]);
+
+    $this->group->addContent($block_content, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($block_content, 'sidebar_second');
+
+    $this->visitViaVsite("blog", $this->group);
+    $this->assertSession()->waitForElement('css', '.contextual button');
+
+    /** @var \Behat\Mink\Element\NodeElement|null $delete_contextual_link */
+    $delete_contextual_link = $this->getSession()->getPage()->find('css', '.contextual-links .block-contentblock-delete a');
+    $this->assertNotNull($delete_contextual_link);
+    $this->assertEquals("{$this->groupAlias}/blog", $this->getDestinationParameterValue($delete_contextual_link));
+  }
+
+  /**
    * Retrieves the destination parameter value from a link.
    *
    * @param \Behat\Mink\Element\NodeElement $element
