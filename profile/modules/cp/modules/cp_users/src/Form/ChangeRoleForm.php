@@ -80,6 +80,7 @@ final class ChangeRoleForm extends FormBase {
     // It is a requirement that a member can have only one role, therefore we
     // can safely retrieve the first role.
     $existing_role = \reset($existing_roles);
+    $options = [];
 
     $form_state->addBuildInfo('account', $user);
 
@@ -91,7 +92,7 @@ final class ChangeRoleForm extends FormBase {
       return !\in_array($role->id(), $non_configurable_roles, TRUE) && !$role->isInternal();
     });
     foreach ($allowed_roles as $role) {
-      $options[$role->id()] = $role->label();
+      $options[$role->id()] = cp_users_render_cp_role_label($role);
     }
 
     $form['roles'] = [

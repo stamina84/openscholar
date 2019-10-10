@@ -5,7 +5,11 @@
       minHeight: 650,
       modal: true,
       position: 'center',
-      dialogClass: 'file-editor'
+      dialogClass: 'file-editor',
+      position: { my: "center", at: "center", of: window },
+      close: function (event, ui) {
+        document.getElementById('upmedia').focus();
+      }
     },
     loading,
     fetchPromise;
@@ -35,6 +39,7 @@
           .then (function (modal) {
             modal.element.dialog(dialogParams);
             modal.close.then(function(result) {
+              document.getElementById('upmedia').focus();
               if (angular.isFunction(close)) {
                 close({result: result});
               }

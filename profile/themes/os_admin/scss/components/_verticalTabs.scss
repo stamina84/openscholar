@@ -1,6 +1,11 @@
 .vertical-tabs {
   border: 1px solid $color-light-gray2;
   background: $color-light-gray3;
+  .seven-details {
+    &:focus-within {
+      outline: 0;
+    }
+  }
 }
 .vertical-tabs__menu {
   border-bottom: 1px solid $color-light-gray2;
