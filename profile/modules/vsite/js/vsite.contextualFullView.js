@@ -62,7 +62,7 @@
         if (drupalSettings.entitySetting.type === 'bibcite_reference') {
           bundle = '*';
         }
-        let redirectLocation = window.location.pathname;
+        let redirectLocation = entityMapping[bundle];
 
         alterDeleteDestination($deleteOption, redirectLocation);
       }
