@@ -143,6 +143,22 @@ $color-black: #000;
         text-decoration: none;
       }
     }
+    &.toolbar-tray-vertical {
+      .toolbar-icon.toolbar-handle {
+        &:before {
+          height: 20px;
+          top: 10px;
+        }
+        &:focus {
+          &:before {
+            outline: 2px solid;
+          }
+        }
+        span {
+          color: $color-black;
+        }
+      }
+    }
   }
   .toolbar-icon.toolbar-handle {
     &:focus{
