@@ -11,6 +11,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\cp_users\Access\ChangeOwnershipAccessCheck;
 use Drupal\cp_users\CpUsersHelperInterface;
+use Drupal\cp_users\Form\CpUsersAddExistingUserMemberForm;
 use Drupal\user\UserInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -196,25 +197,21 @@ class CpUserMainController extends ControllerBase {
    *   The response returned to the client.
    */
   public function addUserForm() {
-    $group = $this->vsiteContextManager->getActiveVsite();
     $dialogOptions = [
       'dialogClass' => 'add-user-dialog',
       'width' => 800,
       'modal' => TRUE,
       'position' => [
-        'my' => "center top",
-        'at' => "center top",
+        'my' => 'center top',
+        'at' => 'center top',
       ],
     ];
-    if (!$group) {
-      throw new AccessDeniedHttpException();
-    }
 
     $response = new AjaxResponse();
 
-    $modal_form = $this->formBuilder()->getForm('Drupal\cp_users\Form\CpUsersAddForm');
+    $modal_form = $this->formBuilder()->getForm(CpUsersAddExistingUserMemberForm::class);
 
-    $response->addCommand(new OpenModalDialogCommand('Add Member', $modal_form, $dialogOptions));
+    $response->addCommand(new OpenModalDialogCommand($this->t('Add an existing member'), $modal_form, $dialogOptions));
 
     return $response;
   }
