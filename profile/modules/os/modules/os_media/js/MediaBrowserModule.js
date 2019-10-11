@@ -242,7 +242,7 @@
       });
 
 
-    $scope.changePanes = function (pane, result, callback) {
+    $scope.changePanes = function (pane, result, callback = null) {
       if ($scope.activePanes[pane]) {
         if (pane === 'library') {
           // Need this logic to fix oversized thumbnail previews.
