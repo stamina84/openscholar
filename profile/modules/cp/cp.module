@@ -5,8 +5,6 @@
  * Hooks Implementations.
  */
 
-use Drupal\group\Entity\GroupContentInterface;
-
 /**
  * Implements hook_toolbar_alter().
  *
@@ -24,27 +22,5 @@ function cp_toolbar_alter(&$toolbar) {
     }
 
     unset($toolbar['administration']);
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update() for making sure cp items are in sync with the member role.
- */
-function cp_group_content_update(GroupContentInterface $group_content) {
-  /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $content_plugin */
-  $content_plugin = $group_content->getContentPlugin();
-
-  if ($content_plugin->getPluginId() === 'group_membership') {
-    /** @var \Drupal\group\Entity\GroupContentInterface $original_content */
-    $original_content = $group_content->original;
-
-    $original_role = array_column($original_content->get('group_roles')->getValue(), 'target_id');
-    $updated_role = array_column($group_content->get('group_roles')->getValue(), 'target_id');
-
-    if ($original_role !== $updated_role) {
-      /** @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator */
-      $cache_tags_invalidator = \Drupal::service('cache_tags.invalidator');
-      $cache_tags_invalidator->invalidateTags(['config:system.menu.control-panel']);
-    }
   }
 }
