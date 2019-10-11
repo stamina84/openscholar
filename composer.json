@@ -235,6 +235,7 @@
         "drupal/search_api": "^1.9",
         "drupal/shorten": "2.x-dev",
         "drupal/slick": "^1.0",
+        "drupal/slick_media": "^2.0",
         "drupal/styleguide": "^1.0@alpha",
         "drupal/term_reference_tree": "1.x-dev",
         "drupal/toolbar_menu": "^2.1",

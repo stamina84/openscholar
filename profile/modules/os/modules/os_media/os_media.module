@@ -116,3 +116,34 @@ function os_media_media_insert(EntityInterface $entity) {
     $entity->save();
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function os_media_theme() {
+  return [
+    'os_slick_wrapper' => [
+      'variables' => [
+        'items' => [],
+        'settings' => [],
+        'others' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function os_media_gallery_preprocess_node(&$variables) {
+  foreach ($variables['content']['field_attached_media']['#build']['items'] as &$item) {
+    $item['slide']['#theme'] = 'os_media_gallery_blazy';
+    /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $imageItem */
+    $imageItem = $item['item'];
+    $imageId = $imageItem->get('target_id')->getValue();
+    $file = File::load($imageId);
+    $path = $file->getFileUri();
+    $uri = file_create_url($path);
+    $item['slide']['#slick_popup_url'] = $uri;
+  }
+}
