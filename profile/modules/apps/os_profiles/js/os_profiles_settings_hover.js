@@ -8,10 +8,10 @@
       var moveDown = 0;
 
       //on tabbing popup
-      $('#edit-display-type--wrapper').focusout(function () {
+      $('#edit-display-type--wrapper').once('focusBehavior').focusout(function () {
         $('.stylebox').hide();
       });
-      $('a.profile-pop').on('keyup', function (e) {
+      $('a.profile-pop').once('keyupBehavior').on('keyup', function (e) {
         var keyCode = e.keyCode || e.which;
         if (keyCode == 9) {
           var target = '#' + ($(this).attr('data-popbox'));
@@ -65,7 +65,7 @@
 
       // When clicking on the name of the display mode we need to check the
       // radio button.
-      $('a.profile-pop').on('keydown click', function (e) {
+      $('a.profile-pop').once('customBehavior').on('keydown click', function (e) {
         if (e.which === 13 || e.type === 'click') {
           var target = "#" + $(this).parent().attr('for');
           $(target).click();
