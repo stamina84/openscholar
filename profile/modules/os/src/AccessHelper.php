@@ -62,7 +62,7 @@ final class AccessHelper implements AccessHelperInterface {
     }
 
     // Pass the judgement here.
-    if ($vsite->hasPermission("create $plugin_id entity", $account) && $vsite->hasPermission("create $plugin_id content", $account)) {
+    if ($vsite->hasPermission("create $plugin_id entity", $account)) {
       return AccessResult::allowed();
     }
 

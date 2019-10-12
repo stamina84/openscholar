@@ -1,8 +1,8 @@
 <div class="container-fluid" ng-switch="pane">
-    <div class="media-browser-buttons" ng-show="pane != 'edit' && pane != 'delete'">
-        <div tabindex="0" class="media-browser-button" ng-class="{active:pane=='upload'}" ng-show="activePanes.upload" ng-click="changePanes('upload')" ng-keydown="$event.keyCode === 13 && changePanes('upload')">Upload from your computer</div>
-        <div tabindex="0" class="media-browser-button" ng-class="{active:pane=='web'}" ng-show="activePanes.web" ng-click="changePanes('web')" ng-keydown="$event.keyCode === 13 && changePanes('web')">Embed from the web</div>
-        <div tabindex="0" class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePanes('library')" ng-keydown="$event.keyCode === 13 && changePanes('library')">Previously uploaded files</div>
+    <div class="media-browser-buttons" ng-show="pane != 'edit' && pane != 'delete'" role="tablist" aria-label="Media Tabs">
+        <div role="tab" tabindex="0" class="media-browser-button" ng-class="{active:pane=='upload'}" ng-show="activePanes.upload" ng-click="changePanes('upload')" ng-keydown="$event.keyCode === 13 && changePanes('upload')">Upload from your computer</div>
+        <div role="tab" tabindex="0" class="media-browser-button" ng-class="{active:pane=='web'}" ng-show="activePanes.web" ng-click="changePanes('web')" ng-keydown="$event.keyCode === 13 && changePanes('web')">Embed from the web</div>
+        <div role="tab" tabindex="0" class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePanes('library')" ng-keydown="$event.keyCode === 13 && changePanes('library')">Previously uploaded files</div>
     </div>
     <div class="media-browser-panes">
         <div class="media-browser-pane" ng-switch-when="upload" ng-click="$parent.extensionFailure = false">
@@ -110,14 +110,14 @@
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
             <div js-pager="file in files | mbFilename:$parent.search | mbType:availFilter | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:sortType:sortReverse track by file.id" page-size="5">
-                <div class="media-row" data-fid="{{file.mid}}" ng-click="setSelection(file.mid)" ng-class="{selected : selection == file.mid, new : file.new}">
-                    <span class="mb-preview"><img ng-src="{{file.thumbnail}}"></span>
+                <div class="media-row" tabindex="0" data-fid="{{file.mid}}" id="file-{{file.mid}}" ng-keydown="$event.keyCode === 13 && setSelection(file.mid)" ng-click="setSelection(file.mid)" ng-class="{selected : selection == file.mid, new : file.new}">
+                    <span class="mb-preview"><img ng-src="{{file.thumbnail}}" alt="{{file.alt}}"></span>
                     <span class="mb-title">{{file.name}}</span>
                     <span class="mb-filename">{{file.filename}}</span>
                     <span class="mb-created">{{(file.created + '000') | date:'short'}}</span>
                     <span class="mb-file-actions">
-                        <span class="mb-actions-edit" ng-click="setSelection(file.mid); selected_file.new = false; selected_file.replaced = false; changePanes('edit')">Edit</span>
-                        <span class="mb-actions-delete" ng-click="setSelection(file.mid); changePanes('delete')">Delete</span>
+                        <span class="mb-actions-edit" tabindex="0" ng-keyPress="$event.keyCode === 13 && setSelection(file.mid);changePanes('edit');" ng-click="setSelection(file.mid); selected_file.new = false; selected_file.replaced = false; changePanes('edit')">Edit</span>
+                        <span class="mb-actions-delete" tabindex="0" ng-keyPress="$event.keyCode === 13 && setSelection(file.mid);changePanes('delete')" ng-click="setSelection(file.mid); changePanes('delete')">Delete</span>
                     </span>
                 </div>
             </div>
@@ -138,7 +138,7 @@
 
             <div class="actions">
                 <button ng-click="$parent.deleteConfirmed()">Delete</button>
-                <button ng-click="$parent.changePanes('library')">Cancel</button>
+                <button ng-click="$parent.deleteCancel()">Cancel</button>
             </div>
         </div>
     </div>
