@@ -1,0 +1,6 @@
+administer bibcite_reference:
+  title: 'Administer Reference entities'
+  description: 'Allow to access the administration form to configure Reference entities.'
+  restrict access: true
+  section: 'Permission'
+

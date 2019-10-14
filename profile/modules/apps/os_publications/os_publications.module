@@ -466,8 +466,6 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
   ];
   $form['created']['#group'] = 'authoring_info';
   $form['uid']['#group'] = 'authoring_info';
-  $form['created']['#access'] = TRUE;
-  $form['uid']['#access'] = TRUE;
 
   // Revision information group.
   if ($reference->id()) {
@@ -649,6 +647,9 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
   os_publications_hide_empty_tab($form, 'identifiers');
 
   os_publications_bibcite_reference_form_add_menu_option($form, $form_state);
+
+  os_publications_bibcite_reference_form_alter_metadata_access($form, $form_state);
+  os_publications_hide_empty_tab($form, 'authoring_info');
 }
 
 /**
@@ -1155,4 +1156,31 @@ function os_publications_bibcite_reference_form_add_menu_option(array &$form, Fo
       'class' => ['menu-parent-select'],
     ],
   ];
+}
+
+/**
+ * Alters access to metadata in reference form.
+ *
+ * @param array $form
+ *   The form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Form state.
+ */
+function os_publications_bibcite_reference_form_alter_metadata_access(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+  $vsite_context_manager = \Drupal::service('vsite.context_manager');
+  /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
+  $active_vsite = $vsite_context_manager->getActiveVsite();
+
+  if (!$active_vsite) {
+    return;
+  }
+
+  /** @var \Drupal\Core\Session\AccountInterface $current_user */
+  $current_user = \Drupal::currentUser();
+  /** @var bool $has_administer_reference_access */
+  $has_administer_reference_access = $active_vsite->hasPermission('administer bibcite_reference', $current_user);
+
+  $form['created']['#access'] = $has_administer_reference_access;
+  $form['uid']['#access'] = $has_administer_reference_access;
 }
