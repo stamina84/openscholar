@@ -1,0 +1,64 @@
+uuid: 4796aea6-b579-45d2-9806-2cc882b7741b
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.follow_me
+    - field.field.block_content.follow_me.field_add_link_to_rss_feed_page
+    - field.field.block_content.follow_me.field_display_social
+    - field.field.block_content.follow_me.field_follow_me_widget_title
+    - field.field.block_content.follow_me.field_make_embeddable
+    - field.field.block_content.follow_me.field_profile_url
+id: block_content.follow_me.default
+targetEntityType: block_content
+bundle: follow_me
+mode: default
+content:
+  field_add_link_to_rss_feed_page:
+    weight: 4
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_display_social:
+    weight: 3
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_follow_me_widget_title:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_make_embeddable:
+    weight: 5
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_profile_url:
+    weight: 6
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true

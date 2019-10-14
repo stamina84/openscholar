@@ -1,0 +1,23 @@
+uuid: 1cec8469-39b1-4f40-9ff6-6d3c7ef09292
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.follow_me
+    - field.storage.block_content.field_display_social
+id: block_content.follow_me.field_display_social
+field_name: field_display_social
+entity_type: block_content
+bundle: follow_me
+label: 'Display Social Media Service Name?'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean
