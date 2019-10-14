@@ -2,10 +2,17 @@
 
 namespace Drupal\os_media\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Url;
+use Drupal\slick\SlickFormatterInterface;
+use Drupal\slick\SlickManagerInterface;
 use Drupal\slick_media\Plugin\Field\FieldFormatter\SlickMediaFormatter;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'slick media entity' formatter.
@@ -23,6 +30,41 @@ use Drupal\slick_media\Plugin\Field\FieldFormatter\SlickMediaFormatter;
  * )
  */
 class OsSlickMediaFormatter extends SlickMediaFormatter {
+
+  /**
+   * Entity Type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $configuration['third_party_settings'],
+      $container->get('logger.factory'),
+      $container->get('entity.manager')->getStorage('image_style'),
+      $container->get('slick.formatter'),
+      $container->get('slick.manager'),
+      $container->get('entity_type.manager')
+    );
+  }
+
+  /**
+   * Constructor to get this object.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, EntityStorageInterface $image_style_storage, SlickFormatterInterface $formatter, SlickManagerInterface $manager, EntityTypeManager $entity_manager) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $logger_factory, $image_style_storage, $formatter, $manager);
+    $this->entityTypeManager = $entity_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -44,7 +86,7 @@ class OsSlickMediaFormatter extends SlickMediaFormatter {
         $videos[] = Link::fromTextAndUrl($entity->name->value, Url::fromUri($entity->field_media_oembed_content->value, ['attributes' => ['target' => '_blank']]))->toRenderable();
       }
       else {
-        $others[] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($entity, 'default');
+        $others[] = $this->entityTypeManager->getViewBuilder('media')->view($entity, 'default');
       }
     }
     // Collects specific settings to this formatter.
