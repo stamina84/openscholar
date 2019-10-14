@@ -445,8 +445,6 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
   // Url group.
   $form['path']['widget']['0']['#group'] = 'advanced';
   $form['path']['widget']['0']['#weight'] = 2;
-  $form['path']['widget']['0']['#access'] = TRUE;
-  $form['path']['#access'] = TRUE;
 
   // Distribute to repos group.
   $form['distribute_to_repos'] = [
@@ -1185,7 +1183,11 @@ function os_publications_bibcite_reference_form_alter_metadata_access(array &$fo
   $current_user = \Drupal::currentUser();
   /** @var bool $has_administer_reference_access */
   $has_administer_reference_access = $active_vsite->hasPermission('administer bibcite_reference', $current_user);
+  /** @var bool $has_create_alias_access */
+  $has_create_alias_access = $active_vsite->hasPermission('create url aliases', $current_user);
 
   $form['created']['#access'] = $has_administer_reference_access;
   $form['uid']['#access'] = $has_administer_reference_access;
+  $form['path']['widget']['0']['#access'] = $has_create_alias_access;
+  $form['path']['#access'] = $has_create_alias_access;
 }
