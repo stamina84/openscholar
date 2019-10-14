@@ -35,3 +35,10 @@ accordionWidget:
 randomWidget:
   js:
     js/os_widgets.random.js: {}
+followMe:
+  js:
+    js/os_widgets.follow_me.js: {}
+  css:
+    base:
+      /libraries/rrssb-plus/css/rrssb.css: {}
+      /libraries/rrssb-plus/css/rrssb.buttons.css: {}

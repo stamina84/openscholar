@@ -296,6 +296,81 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
     case 'block_content_addthis_edit_form':
       $form['addthis_description']['#markup'] = \Drupal::token()->replace('[os_widgets:addthis_display_style_description]');
       break;
+
+    case 'block_content_follow_me_form':
+      $domains = os_follow_default_networks();
+      $domain_list = [];
+      foreach ($domains as $d) {
+        $domain_list[] = $d['title'];
+      }
+
+      $form['#attributes'] = ['class' => ['os-follow-me-form']];
+      $form['add'] = [
+        '#type' => 'fieldset',
+        '#title' => t('Add New Profile'),
+        'field_profile_url' => [
+          '#type' => 'textfield',
+          '#title' => t('Profile URL'),
+          '#description' => t('Enter the URL of your profile on a social media site. Accepted sites are: @domains', ['@domains' => implode(', ', $domain_list)]),
+          '#suffix' => t('<input type="button" class="add_new" value=" Add " />'),
+          '#attributes' => ['id' => 'edit-link-to-add'],
+          '#weight' => 4,
+        ],
+        '#weight' => 4,
+      ];
+
+      // Build a normal form.
+      $form['links'] = [
+        '#type' => 'markup',
+        '#tree' => TRUE,
+        '#pre_render' => ['os_boxes_follow_table'],
+      ];
+      $links = &$form['links'];
+
+      // Blank element for copying purposes.
+      $form['options']['links']['blank'] =
+        [
+          'title' => '__blank__',
+          'domain' => '',
+          'weight' => 2000000,
+        ];
+      foreach ($form['options']['links'] as $k => $v) {
+
+        $n = [
+          '#weight' => $v['weight'],
+          'text' => [
+            '#type' => 'markup',
+            '#markup' => '<span class="follow"></span> <a href="#" class="remove" title="Remove Link">Remove</a>',
+          ],
+          'domain' => [
+            '#type' => 'hidden',
+            '#default_value' => $v['domain'],
+          ],
+          'title' => [
+            '#type' => 'hidden',
+            '#default_value' => $v['title'],
+          ],
+          'weight' => [
+            '#type' => 'textfield',
+            '#default_value' => $v['weight'],
+            '#size' => 3,
+            '#attributes' => [
+              'class' => [(string) $k != 'blank' ? 'field-weight' : ''],
+            ],
+          ],
+        ];
+        $links[$k] = $n;
+      }
+
+      $form['count'] = [
+        '#type' => 'hidden',
+        '#default_value' => count($form['options']['links']) - 1,
+        '#process' => ['os_boxes_follow_add_new_fields'],
+      ];
+
+      $form['#attached']['library'][] = 'os_widgets/followMe';
+      $form['#attached']['drupalSettings']['follow_networks'] = $domains;
+      break;
   }
 }
 
@@ -527,4 +602,163 @@ function os_widgets_toolbar_alter(&$items) {
       $items['block_place']['tab']['#access'] = ((\Drupal::currentUser()->hasPermission('administer blocks') || $membership->hasPermission('manage layout')) && !$admin_demo && !$admin_route);
     }
   }
+}
+
+/**
+ * Renders the list of links as a table.
+ */
+function os_boxes_follow_table($element) {
+  // Render the form as a table.
+  $rows = [];
+  uasort($element, 'element_sort');
+  foreach (Element::children($element) as $c) {
+    $rows[] = [
+      'data' => [
+        \Drupal::service('renderer')->render($element[$c]),
+        \Drupal::service('renderer')->render($element[$c]['weight']),
+      ],
+      'class' => [(string) $c != 'blank' ? 'draggable' : ''],
+    ];
+
+  }
+
+  $element['#headers'] = [];
+  $element['#attributes'] = ['id' => 'follow-links-list'];
+  $element['#rows'] = $rows;
+  $element['#sticky'] = FALSE;
+  $element['#empty'] = TRUE;
+  $element['#theme'] = 'table';
+
+  drupal_attach_tabledrag($element, [
+    'table_id' => 'follow-links-list',
+    'action' => 'order',
+    'relationship' => 'sibling',
+    'group' => 'field-weight',
+  ]);
+  return $element;
+}
+
+/**
+ * Adds new elements to the form array so their values appear in form_state.
+ *
+ * When we get this form back, it will have some fields added through js
+ * that weren't there before. In here, we rebuild that section of the form array
+ * and pass it through form builder so form_state[values] is populated
+ * with our new fields.
+ */
+function os_boxes_follow_add_new_fields(&$element, &$form_state, &$form) {
+  for ($i = $element['#default_value']; $i < $element['#value']; $i++) {
+    $form['options']['links'][$i] = [
+      '#attributes' => ['id' => $i],
+      '#parents' => ['links', $i],
+      '#array_parents' => ['options', 'links', $i],
+      '#tree' => TRUE,
+    ];
+    $form['options']['links'][$i] += $form['options']['links']['blank'];
+    foreach ($form['options']['links'][$i] as $key => &$child) {
+      if (strpos($key, '#') !== 0) {
+        unset($child['#parents']);
+        unset($child['#name']);
+        unset($child['#value']);
+      }
+    }
+    form_builder($form['form_id']['#value'], $form['options']['links'][$i], $form_state);
+  }
+
+  return $element;
+}
+
+/**
+ * Retrieves the default networks available.
+ *
+ * @return array
+ *   An associative array, keyed by the machine name. The values are an array
+ *   including title of the network, along with the domain to be used for
+ *   input validation of the network.
+ */
+function os_follow_default_networks() {
+  $networks = [
+    'facebook'  => [
+      'title' => t('Facebook'),
+      'domain' => 'facebook.com',
+      'offset' => 531,
+    ],
+    'virb' => [
+      'title' => t('Virb'),
+      'domain' => 'virb.com',
+      'offset' => 142,
+    ],
+    'myspace' => [
+      'title' => t('MySpace'),
+      'domain' => 'myspace.com',
+      'offset' => 290,
+    ],
+    'twitter' => [
+      'title' => t('Twitter'),
+      'domain' => 'twitter.com',
+      'offset' => 189,
+    ],
+    'google_photos' => [
+      'title' => t('Google Photos'),
+      'domain' => 'photos.google.com',
+      'offset' => 676,
+    ],
+    'flickr' => [
+      'title' => t('Flickr'),
+      'domain' => 'flickr.com',
+      'offset' => 483,
+    ],
+    'youtube' => [
+      'title' => t('YouTube'),
+      'domain' => 'youtube.com',
+      'offset' => 94,
+    ],
+    'vimeo' => [
+      'title' => t('Vimeo'),
+      'domain' => 'vimeo.com',
+      'offset' => 47,
+    ],
+    'lastfm' => [
+      'title' => t('last.fm'),
+      'domain' => 'last.fm',
+      'offset' => 389,
+    ],
+    'linkedin' => [
+      'title' => t('LinkedIn'),
+      'domain' => 'linkedin.com',
+      'offset' => 340,
+    ],
+    'delicious' => [
+      'title' => t('Delicious'),
+      'domain' => 'del.icio.us',
+      'offset' => 579,
+    ],
+    'tumblr' => [
+      'title' => t('Tumblr'),
+      'domain' => 'tumblr.com',
+      'offset' => 241,
+    ],
+    'pinterest' => [
+      'title' => t('Pinterest'),
+      'domain' => 'pinterest.com',
+      'offset' => 0,
+    ],
+    'instagram' => [
+      'title' => t('Instagram'),
+      'domain' => 'instagram.com',
+      'offset' => 630,
+    ],
+    'soundcloud' => [
+      'title' => t('soundcloud'),
+      'domain' => 'soundcloud.com',
+      'offset' => 436,
+    ],
+    'Google+' => [
+      'title' => t('Google+'),
+      'domain' => 'plus.google.com',
+      'offset' => 722,
+    ],
+  ];
+  return $networks;
+
 }
