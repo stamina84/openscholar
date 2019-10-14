@@ -129,6 +129,9 @@ class ProfilesSetting extends CpSettingBase {
         'style_name' => $element['#preview_image_style'],
         'uri' => $file->getFileUri(),
       ];
+      $storage = $form_state->getStorage();
+      $storage['uploaded_fid'] = $file->id();
+      $form_state->setStorage($storage);
 
       // Determine image dimensions.
       if (isset($element['#value']['width']) && isset($element['#value']['height'])) {
@@ -256,7 +259,7 @@ class ProfilesSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $form_state, ConfigFactoryInterface $configFactory) {
     $form['#attached']['library'][] = 'os_profiles/settings_hover';
     $config = $configFactory->get('os_profiles.settings');
     $default_fid = $config->get('default_image_fid');
@@ -348,7 +351,7 @@ class ProfilesSetting extends CpSettingBase {
       '#process' => [
         [ManagedFile::class, 'processManagedFile'],
         [get_class($this), 'processImageFile'],
-        [get_class($this), 'processImageCropFile'],
+        // [get_class($this), 'processImageCropFile'],.
       ],
       '#theme' => 'image_widget',
       '#crop_list' => $settings['crop_list'],
@@ -368,6 +371,24 @@ class ProfilesSetting extends CpSettingBase {
         '#theme' => 'image',
         '#uri' => file_create_url(drupal_get_path('theme', 'os_base') . '/images/person-default-image-big.png'),
       ];
+    }
+
+    $form['default_image']['image_crop'] = [
+      '#type' => 'image_crop',
+      '#crop_type_list' => $form['default_image']['default_image_fid']['#crop_list'],
+      '#crop_preview_image_style' => $form['default_image']['default_image_fid']['#crop_preview_image_style'],
+      '#show_default_crop' => $form['default_image']['default_image_fid']['#show_default_crop'],
+      '#show_crop_area' => $form['default_image']['default_image_fid']['#show_crop_area'],
+      '#warn_multiple_usages' => $form['default_image']['default_image_fid']['#warn_multiple_usages'],
+      '#crop_types_required' => $form['default_image']['default_image_fid']['#crop_types_required'],
+    ];
+    $storage = $form_state->getStorage();
+    if (!empty($storage['uploaded_fid'])) {
+      $default_fid = $storage['uploaded_fid'];
+    }
+    if ($default_fid) {
+      $file = File::load($default_fid);
+      $form['default_image']['image_crop']['#file'] = $file;
     }
   }
 
