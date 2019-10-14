@@ -636,18 +636,18 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
     $form['bibcite_type_of_work']['widget'][0]['value']['#description'] = '';
   }
 
-  // Hide empty publication details tab.
-  os_publications_hide_empty_tab($form, 'publication');
-
   // Hide pmid field and identifier details tab if no other field exists in the
   // identifier group.
   $form['bibcite_pmid']['#access'] = FALSE;
-  os_publications_hide_empty_tab($form, 'identifiers');
 
   os_publications_bibcite_reference_form_add_menu_option($form, $form_state);
 
   os_publications_bibcite_reference_form_alter_metadata_access($form, $form_state);
-  os_publications_hide_empty_tab($form, 'authoring_info');
+  os_publications_hide_empty_tabs($form, [
+    'publication',
+    'identifiers',
+    'authoring_info',
+  ]);
 }
 
 /**
@@ -1052,22 +1052,25 @@ function os_publications_preprocess_field(&$variables) {
 }
 
 /**
- * Unset empty details tab from bibcite forms.
+ * Unset empty details tabs in bibcite reference form.
  *
  * @param array $form
- *   Form itself.
- * @param string $group_name
- *   The form tab to check and unset.
+ *   The form.
+ * @param array $group_names
+ *   The tab names to check.
  */
-function os_publications_hide_empty_tab(array &$form, $group_name) {
-  $keep_group = FALSE;
-  foreach ($form as $element) {
-    if (is_array($element) && isset($element['#group']) && $element['#group'] === $group_name && $element['#access'] !== FALSE) {
-      $keep_group = TRUE;
+function os_publications_hide_empty_tabs(array &$form, array $group_names) {
+  foreach ($group_names as $group_name) {
+    $keep_group = FALSE;
+
+    foreach ($form as $element) {
+      if (is_array($element) && isset($element['#group']) && $element['#group'] === $group_name && $element['#access'] !== FALSE) {
+        $keep_group = TRUE;
+      }
     }
-  }
-  if (!$keep_group) {
-    $form[$group_name]['#access'] = FALSE;
+    if (!$keep_group) {
+      $form[$group_name]['#access'] = FALSE;
+    }
   }
 }
 
