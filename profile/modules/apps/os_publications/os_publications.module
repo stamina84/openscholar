@@ -1095,6 +1095,10 @@ function os_publications_bibcite_reference_form_add_menu_option(array &$form, Fo
   $menu_helper = \Drupal::service('cp_menu.menu_helper');
   /** @var \Drupal\bibcite_entity\Entity\ReferenceInterface $reference */
   $reference = $form_state->getFormObject()->getEntity();
+  /** @var \Drupal\Core\Session\AccountInterface $current_user */
+  $current_user = \Drupal::currentUser();
+  /** @var bool $has_manage_menu_access */
+  $has_manage_menu_access = $active_vsite->hasPermission('manage_menu', $current_user);
 
   $defaults = $menu_helper->getMenuLinkDefaults($reference, $active_vsite);
   $vsite_menus = $menu_helper->getVsiteMenuOptions($active_vsite);
@@ -1109,6 +1113,7 @@ function os_publications_bibcite_reference_form_add_menu_option(array &$form, Fo
     '#tree' => TRUE,
     '#weight' => 3,
     '#attributes' => ['class' => ['menu-link-form']],
+    '#access' => $has_manage_menu_access,
   ];
 
   $form['menu']['enabled'] = [
