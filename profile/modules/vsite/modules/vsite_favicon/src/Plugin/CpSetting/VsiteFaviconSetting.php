@@ -32,7 +32,7 @@ class VsiteFaviconSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $config = $configFactory->get('vsite.settings');
     $upload_location = 'public://' . $this->activeVsite->id() . '/favicon';
     $form['favicon_fid'] = [
