@@ -1,8 +1,7 @@
 (function () {
-
+  
   CKEDITOR.plugins.add('media_browser', {
     requires: 'image2',
-    lang: 'en,en-au,en-ca,en-gb',
     icons: 'mediabrowser',
     hidpi: false, // If set to true, there must be files in the icons/hidpi directory,
     init: function (editor) {
@@ -23,7 +22,7 @@
                   editor.insertHtml('<img src="' + media.thumbnail +'" data-mid="' + media.mid + '">');
                 }
               },
-              types: ['image', 'audio', 'html', 'video']
+              types: ['image', 'audio', 'html', 'oembed']
             })
           }
         },

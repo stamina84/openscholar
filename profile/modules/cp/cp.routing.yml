@@ -29,7 +29,6 @@ cp.settings.appearance_settings:
     _title: 'Appearance Settings'
   requirements:
     _group_permission: 'manage cp appearance'
-    _group_member: 'TRUE'
 
 cp.settings.collection:
   path: '/cp/settings'
@@ -38,7 +37,6 @@ cp.settings.collection:
     _title: 'Manage Cp Settings'
   requirements:
     _group_permission: 'administer cp settings'
-    _group_member: 'TRUE'
 
 cp.settings.apps_settings:
   path: '/cp/settings/apps-settings'
@@ -47,7 +45,6 @@ cp.settings.apps_settings:
     _title: 'Manage Apps Settings'
   requirements:
     _group_permission: 'administer apps settings'
-    _group_member: 'TRUE'
 
 cp.settings.global_settings:
   path: '/cp/settings/global-settings'
@@ -56,7 +53,6 @@ cp.settings.global_settings:
     _title: 'Manage Global Settings'
   requirements:
     _group_permission: 'administer cp settings'
-    _group_member: 'TRUE'
 
 cp.content.collection:
   path: '/cp/content'
@@ -65,7 +61,6 @@ cp.content.collection:
     _title: 'Site Content'
   requirements:
     _group_permission: 'access group_node overview'
-    _group_member: 'TRUE'
 
 cp.content.add.collection:
   path: '/cp/content/add'
@@ -74,7 +69,6 @@ cp.content.add.collection:
     _title: 'Add Site Content'
   requirements:
     _group_permission: 'access control panel'
-    _group_member: 'TRUE'
     _node_add_access: 'node:{node_type}'
   options:
     _node_operation_route: TRUE
@@ -88,5 +82,4 @@ cp.content.browse.collection:
     _controller: '\Drupal\cp\Controller\CpController::overview'
     _title: 'Browse Site Content'
   requirements:
-    _group_permission: 'Manage vsite content'
-    _group_member: 'TRUE'
+    _group_permission: 'manage vsite content'

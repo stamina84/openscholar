@@ -14,6 +14,7 @@ use Drupal\Core\Mail\MailManager;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Url;
 use Drupal\cp_users\CpRolesHelperInterface;
+use Drupal\cp_users\CpUsersHelper;
 use Drupal\group\Entity\GroupRoleInterface;
 use Drupal\user\Entity\User;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
@@ -113,7 +114,7 @@ class CpUsersAddForm extends FormBase {
       return !\in_array($role->id(), $non_configurable_roles, TRUE) && !$role->isInternal();
     });
     foreach ($allowed_roles as $role) {
-      $options[$role->id()] = $role->label();
+      $options[$role->id()] = cp_users_render_cp_role_label($role);
     }
 
     $form['#prefix'] = '<div id="cp-user-add-form">';
@@ -275,7 +276,7 @@ class CpUsersAddForm extends FormBase {
         if ($existing_member_id) {
           /** @var \Drupal\user\UserInterface $account */
           $account = $this->entityTypeManager->getStorage('user')->load($existing_member_id);
-          $email_key = CP_USERS_ADD_TO_GROUP;
+          $email_key = CpUsersHelper::CP_USERS_ADD_TO_GROUP;
           $role = $form_state_values['role_existing'];
         }
         else {
@@ -287,7 +288,7 @@ class CpUsersAddForm extends FormBase {
             'status' => TRUE,
           ]);
           $account->save();
-          $email_key = CP_USERS_NEW_USER;
+          $email_key = CpUsersHelper::CP_USERS_NEW_USER;
           $role = $form_state_values['role_new'];
         }
 
