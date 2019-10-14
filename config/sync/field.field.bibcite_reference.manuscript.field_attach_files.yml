@@ -8,7 +8,6 @@ dependencies:
     - media.type.audio
     - media.type.document
     - media.type.executable
-    - media.type.html
     - media.type.image
     - media.type.oembed
 id: bibcite_reference.manuscript.field_attach_files
@@ -29,7 +28,6 @@ settings:
       document: document
       oembed: oembed
       executable: executable
-      html: html
       image: image
     sort:
       field: _none

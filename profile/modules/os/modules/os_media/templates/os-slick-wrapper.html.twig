@@ -41,8 +41,19 @@
         {{ content }}
     {% endif %}
 {% endspaceless %}
-<span class = "others">
-    {% for med in others %}
-        {{ med }}
+
+{% if videos %}
+  <span class = "videos">
+    {% for video in videos %}
+      {{ video }}
     {% endfor %}
 </span>
+{% endif %}
+
+{% if others %}
+<span class = "others">
+    {% for other in others %}
+        {{ other }}
+    {% endfor %}
+</span>
+{% endif %}

@@ -126,6 +126,7 @@ function os_media_theme() {
       'variables' => [
         'items' => [],
         'settings' => [],
+        'videos' => [],
         'others' => [],
       ],
     ],
@@ -135,7 +136,8 @@ function os_media_theme() {
 /**
  * Implements hook_preprocess_node().
  */
-function os_media_gallery_preprocess_node(&$variables) {
+function os_media_preprocess_node(&$variables) {
+  $variables['#attached']['library'][] = 'os_media_gallery/os_slick_lightbox';
   foreach ($variables['content']['field_attached_media']['#build']['items'] as &$item) {
     $item['slide']['#theme'] = 'os_media_gallery_blazy';
     /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $imageItem */

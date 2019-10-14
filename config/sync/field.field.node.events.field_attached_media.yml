@@ -1,23 +1,25 @@
-uuid: d7262374-6d1d-486f-a499-49ec2c189567
+uuid: fed8fec3-1e5b-4bc8-8b9a-b18c8bf0a0c9
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_media
+    - field.storage.node.field_attached_media
     - media.type.audio
     - media.type.document
-    - media.type.html
+    - media.type.executable
     - media.type.image
     - media.type.oembed
-    - node.type.page
-id: node.page.field_media
-field_name: field_media
+    - node.type.events
+_core:
+  default_config_hash: UeQMqkOhcTakJLbgyQiQ25gHGzZXY6YzrqIDqKLALmk
+id: node.events.field_attached_media
+field_name: field_attached_media
 entity_type: node
-bundle: page
-label: 'Attach Files'
+bundle: events
+label: 'Attached Media'
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -27,7 +29,7 @@ settings:
       audio: audio
       document: document
       oembed: oembed
-      html: html
+      executable: executable
       image: image
     sort:
       field: _none
