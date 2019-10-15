@@ -52,7 +52,7 @@ Drupal.behaviors.os_boxes_follow = {
   				}
 					// set all the form elements in the new row
           $('span', new_row).addClass('follow-icon '+domain).text(val);
-          $('p', new_row).addClass('rrssb-facebook').text(val);
+          $('div', new_row).addClass('rrssb-'+domain);
   				$('input[name="links['+id+'][title]"]', new_row).val(val);
   				$('input[name="links['+id+'][domain]"]', new_row).val(domain);
   				$('#edit-links-'+id+'-weight', new_row).addClass('field-weight').val(weight+1);

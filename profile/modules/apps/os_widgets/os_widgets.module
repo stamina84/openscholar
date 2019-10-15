@@ -323,6 +323,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['links'] = [
         '#type' => 'markup',
         '#tree' => TRUE,
+        '#weight' => 4,
         '#pre_render' => ['os_boxes_follow_table'],
       ];
       $links = &$form['links'];
@@ -340,7 +341,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
           '#weight' => $v['weight'],
           'text' => [
             '#type' => 'markup',
-            '#markup' => '<span class="follow"></span> <a href="#" class="remove" title="Remove Link">Remove</a>',
+            '#markup' => '<div><span class="follow-icon rrssb-icon"></span></div> <p class="follow"></p><a href="#" class="remove" title="Remove Link">Remove</a>',
           ],
           'domain' => [
             '#type' => 'hidden',
