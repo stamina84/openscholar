@@ -138,7 +138,31 @@ function os_media_theme() {
  */
 function os_media_preprocess_node(&$variables) {
   $variables['#attached']['library'][] = 'os_media_gallery/os_slick_lightbox';
+  if (!isset($variables['content']['field_attached_media']['#build'])) {
+    return;
+  }
   foreach ($variables['content']['field_attached_media']['#build']['items'] as &$item) {
+    $item['slide']['#theme'] = 'os_media_gallery_blazy';
+    $item['slide']['#delta'] = 0;
+    /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $imageItem */
+    $imageItem = $item['item'];
+    $imageId = $imageItem->get('target_id')->getValue();
+    $file = File::load($imageId);
+    $path = $file->getFileUri();
+    $uri = file_create_url($path);
+    $item['slide']['#slick_popup_url'] = $uri;
+  }
+}
+
+/**
+ * Implements hook_preprocess_bibcite_reference().
+ */
+function os_media_preprocess_bibcite_reference(&$variables) {
+  if (!isset($variables['content']['field_attach_files']['#build'])) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'os_media_gallery/os_slick_lightbox';
+  foreach ($variables['elements']['field_attach_files']['#build']['items'] as &$item) {
     $item['slide']['#theme'] = 'os_media_gallery_blazy';
     /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $imageItem */
     $imageItem = $item['item'];
