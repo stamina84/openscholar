@@ -220,7 +220,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
           '#markup' => '<h3>' . $this->t('Select Widget Type') . '</h3>',
         ],
         'close' => [
-          '#markup' => '<div class="close">X</div>',
+          '#markup' => '<div class="close" tabindex="0">X</div>',
         ],
         'links' => [
           '#theme' => 'links',
