@@ -86,7 +86,6 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
       ],
       '#title' => $this->t('Member'),
       '#weight' => 1,
-      '#required' => TRUE,
     ];
 
     $form['actions'] = [
@@ -103,6 +102,7 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
           'callback' => [$this, 'submitForm'],
           'event' => 'click',
         ],
+        '#name' => 'submit',
       ],
       'cancel' => [
         '#type' => 'button',
@@ -116,6 +116,7 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
           'callback' => [$this, 'closeModal'],
           'event' => 'click',
         ],
+        '#name' => 'cancel',
       ],
     ];
 
@@ -170,6 +171,22 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
     }
 
     return $response;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $parent_validation_response = parent::validateForm($form, $form_state);
+    /** @var array $triggering_element */
+    $triggering_element = $form_state->getTriggeringElement();
+
+    if ($triggering_element['#name'] === 'submit' && !$form_state->getValue('user')) {
+      $form_state->setError($form['user'], $this->t('Please select a member.'));
+      return FALSE;
+    }
+
+    return $parent_validation_response;
   }
 
   /**

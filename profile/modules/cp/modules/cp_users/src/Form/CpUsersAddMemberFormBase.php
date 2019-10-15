@@ -140,6 +140,20 @@ abstract class CpUsersAddMemberFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+
+    if (!$form_state->getValue('role')) {
+      $form_state->setError($form['role'], $this->t('Please select a role'));
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
 
