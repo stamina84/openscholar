@@ -5,4 +5,3 @@ cp.settings.app_access:
     _title: 'App Access'
   requirements:
     _group_permission: 'administer apps'
-    _group_member: 'TRUE'
