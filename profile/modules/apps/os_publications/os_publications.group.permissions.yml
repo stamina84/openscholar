@@ -3,4 +3,3 @@ administer bibcite_reference:
   description: 'Allow to access the administration form to configure Reference entities.'
   restrict access: true
   section: 'Permission'
-
