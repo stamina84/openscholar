@@ -1,21 +1,20 @@
-uuid: d7262374-6d1d-486f-a499-49ec2c189567
+uuid: 72598415-a3e3-40f4-ab42-4334c1ab596a
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_media
+    - field.storage.node.field_attached_media
     - media.type.audio
     - media.type.document
-    - media.type.html
+    - media.type.executable
     - media.type.image
     - media.type.oembed
-    - media.type.presentation_materials
     - node.type.page
-id: node.page.field_media
-field_name: field_media
+id: node.page.field_attached_media
+field_name: field_attached_media
 entity_type: node
 bundle: page
-label: 'Attach Files'
+label: 'Attached Media'
 description: ''
 required: false
 translatable: true
@@ -28,9 +27,8 @@ settings:
       audio: audio
       document: document
       oembed: oembed
-      html: html
+      executable: executable
       image: image
-      presentation_materials: presentation_materials
     sort:
       field: _none
     auto_create: false
