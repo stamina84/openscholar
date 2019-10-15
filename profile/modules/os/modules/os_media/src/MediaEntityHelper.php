@@ -91,6 +91,13 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   ];
 
   /**
+   * The directory where thumbnails are stored.
+   *
+   * @var string
+   */
+  protected $thumbsDirectory = 'public://video_thumbnails';
+
+  /**
    * MediaEntityHelper constructor.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -246,13 +253,25 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getThumbnail() : ?string {
-    $icon_base = $this->configFactory->get('media.settings')->get('icon_base_uri');
-    $thumbnail = $icon_base . '/generic.png';
-    if (is_file($thumbnail)) {
-      return $thumbnail;
+  public function downloadThumbnail(array $resource): void {
+    $local_uri = $this->getLocalThumbnailUri($resource);
+    if (!file_exists($local_uri)) {
+      file_prepare_directory($this->thumbsDirectory, FILE_CREATE_DIRECTORY);
+      try {
+        $thumbnail = $this->httpClient->request('GET', $resource['thumbnail_url']);
+        file_unmanaged_save_data((string) $thumbnail->getBody(), $local_uri);
+      }
+      catch (\Exception $e) {
+      }
     }
-    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLocalThumbnailUri(array $resource) : string {
+    $name = preg_replace('/\s+/', '', $resource['title']);
+    return $this->thumbsDirectory . '/' . $name . '.jpg';
   }
 
 }

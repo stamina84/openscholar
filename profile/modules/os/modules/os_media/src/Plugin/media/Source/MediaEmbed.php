@@ -112,13 +112,20 @@ class MediaEmbed extends OEmbed {
    * {@inheritdoc}
    */
   public function getMetadata(MediaInterface $media, $attribute_name) {
+    $media_url = $this->getSourceFieldValue($media);
+    $resource = $this->mediaHelper->fetchEmbedlyResource($media_url);
     switch ($attribute_name) {
       case 'name':
       case 'default_name':
         return $media->getName();
 
       case 'thumbnail_uri':
-        return $this->mediaHelper->getThumbnail();
+        $this->mediaHelper->downloadThumbnail($resource);
+        $thumbnail_uri = $this->mediaHelper->getLocalThumbnailUri($resource);
+        if (!empty($thumbnail_uri)) {
+          return $thumbnail_uri;
+        }
+        return NULL;
     }
     return NULL;
   }

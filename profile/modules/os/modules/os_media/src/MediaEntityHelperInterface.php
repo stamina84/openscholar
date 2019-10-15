@@ -71,11 +71,22 @@ interface MediaEntityHelperInterface {
   public function iFrameData($value, array $max, array $resource, $domain) : array;
 
   /**
-   * Gets the thumbnail image URI for Media embeds.
+   * Downloads remote thumbnail uri.
+   *
+   * @param array $resource
+   *   Embedly resource.
+   */
+  public function downloadThumbnail(array $resource): void;
+
+  /**
+   * Returns local thumbnail uri.
+   *
+   * @param array $resource
+   *   Embedly resource.
    *
    * @return string
-   *   URI of the thumbnail image or NULL if there is no specific icon.
+   *   Thumbnail uri.
    */
-  public function getThumbnail() : ?string;
+  public function getLocalThumbnailUri(array $resource) : string;
 
 }

@@ -97,26 +97,24 @@ class OsSlickMediaFormatter extends SlickMediaFormatter {
     $settings['plugin_id'] = $this->getPluginId();
 
     // Sets dimensions once to reduce method ::transformDimensions() calls.
-    $images = array_values($images);
-    if (!empty($settings['image_style'])) {
-      $fields = $images[0]->getFields();
+    if ($images) {
+      $images = array_values($images);
+      if (!empty($settings['image_style'])) {
+        $fields = $images[0]->getFields();
 
-      if (isset($fields['thumbnail'])) {
-        $item = $fields['thumbnail']->get(0);
+        if (isset($fields['thumbnail'])) {
+          $item = $fields['thumbnail']->get(0);
 
-        $settings['item'] = $item;
-        $settings['uri'] = $item->entity->getFileUri();
+          $settings['item'] = $item;
+          $settings['uri'] = $item->entity->getFileUri();
+        }
       }
+      $build = ['settings' => $settings];
+      $this->formatter->buildSettings($build, $items);
+      // Build the elements.
+      $this->buildElements($build, $images, $langcode);
+      $build = $this->manager()->build($build);
     }
-
-    $build = ['settings' => $settings];
-
-    $this->formatter->buildSettings($build, $items);
-
-    // Build the elements.
-    $this->buildElements($build, $images, $langcode);
-
-    $build = $this->manager()->build($build);
 
     $build['#theme'] = 'os_slick_wrapper';
     $build['#videos'] = $videos ?? [];
