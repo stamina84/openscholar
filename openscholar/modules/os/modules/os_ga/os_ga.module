@@ -253,6 +253,8 @@ function _os_ga_build_script($accounts = array()) {
     elseif (variable_get('os_ga_search', 0) && module_exists('search') && arg(0) == 'search' && $keys = _os_ga_search_get_keys()) {
       $url_custom = '(window.os_ga_search_results) ? ' . drupal_json_encode(url('search/' . arg(1), array('query' => array('search' => $keys)))) . ' : ' . drupal_json_encode(url('search/' . arg(1), array('query' => array('search' => 'no-results:' . $keys, 'cat' => 'no-results'))));
     }
+    // Setup IP anonymization for google analytics.
+    $output .= '_gaq.push(["_gat._anonymizeIp"]);';
     // Adds any custom rewritten URL from above.
     if (!empty($url_custom)) {
       $output .= '_gaq.push([\'_trackPageview\',' . $url_custom . ']);';
