@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "341c757e8efc7ab078a628484350f6fd",
+    "content-hash": "91640de4b509246d50730154ee5ded28",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -1717,19 +1717,6 @@
                 "resolver"
             ],
             "time": "2012-10-28T21:08:28+00:00"
-        },
-        {
-            "name": "dinbror/blazy",
-            "version": "1.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dinbror/blazy",
-                "reference": "1.8.2"
-            },
-            "type": "drupal-library",
-            "extra": {
-                "installer-name": "blazy"
-            }
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -8632,6 +8619,20 @@
             "time": "2019-02-16T20:54:15+00:00"
         },
         {
+            "name": "npm-asset/blazy",
+            "version": "1.8.2",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/blazy/-/blazy-1.8.2.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
             "name": "npm-asset/chosen-js",
             "version": "1.8.7",
             "dist": {
@@ -12026,7 +12027,7 @@
             "version": "1.2.0",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/devel",
+                "url": "https://git.drupalcode.org/project/devel.git",
                 "reference": "8.x-1.2"
             },
             "dist": {
