@@ -7,12 +7,13 @@ dependencies:
     - field.field.block_content.follow_me.field_add_link_to_rss_feed_page
     - field.field.block_content.follow_me.field_display_social
     - field.field.block_content.follow_me.field_follow_me_widget_title
+    - field.field.block_content.follow_me.field_links
     - field.field.block_content.follow_me.field_make_embeddable
-    - field.field.block_content.follow_me.field_profile_url
   module:
     - content_moderation
     - field_layout
     - layout_discovery
+    - paragraphs
 third_party_settings:
   field_layout:
     id: layout_onecol
@@ -43,20 +44,24 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
+  field_links:
+    type: entity_reference_paragraphs
+    weight: 26
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
   field_make_embeddable:
     weight: 7
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
-    region: content
-  field_profile_url:
-    weight: 4
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
     region: content
   info:
     type: string_textfield

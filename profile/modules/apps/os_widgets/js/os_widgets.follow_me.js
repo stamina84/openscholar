@@ -11,8 +11,9 @@ Drupal.behaviors.os_boxes_follow = {
   	var $form = $('.os-follow-me-form'),
   		template = '<tr class="draggable">'+$('input[name="links[blank][title]"]').parents('tr').hide().html()+'</tr>',
   		tableDrag = Drupal.tableDrag['follow-links-list'],
-  		count = $('input[type="hidden"][name="count"]'),
-      new_id = parseInt(count.val());
+			count = $('input[type="hidden"][name="count"]'),
+			new_id = parseInt(count.val());
+
   	// add a new row to the table, set all its form elements to the right values and make it draggable
   	$('.add_new', $form).click(function (e) {
   		var val = $('#edit-link-to-add', $form).val(),
@@ -49,14 +50,17 @@ Drupal.behaviors.os_boxes_follow = {
   				// there are no existing form elements, start at 0.
   				if (weight == -Infinity) {
   					weight = 0;
-  				}
+					}
+
 					// set all the form elements in the new row
-          $('span', new_row).addClass('follow-icon '+domain).text(val);
-          $('div', new_row).addClass('rrssb-'+domain);
+          $('span.rrssb-text', new_row).text(val);
+          $('li', new_row).addClass('rrssb-'+domain);
   				$('input[name="links['+id+'][title]"]', new_row).val(val);
   				$('input[name="links['+id+'][domain]"]', new_row).val(domain);
-  				$('#edit-links-'+id+'-weight', new_row).addClass('field-weight').val(weight+1);
-  				$('.follow-icon', new_row).css('background-position', '-'+fd.offset+'px 0px');
+					$('.default-weight', new_row).addClass('field-weight').val(weight+1);
+					$('.default-weight', new_row).parents('div').css('display', 'none');
+					$('#edit-links-'+id+'-weight', new_row).addClass('field-weight').val(weight+1);
+  				$('#edit-links-'+id+'-weight', new_row).parents('div').css('display', 'none');
   				$('table tbody', $form).append(new_row);
   				new_row = $('input[name="links['+id+'][title]"]', $form).parents('tr');
 
