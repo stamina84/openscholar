@@ -376,7 +376,7 @@ function follow_me_submit_form($form, FormStateInterface &$form_state) {
   unset($profile_links['links']['blank']);
   foreach ($form_state->getFormObject()->getEntity()->get('field_links')->getValue() as $value) {
     if ($value['target_id']) {
-      $entity = \Drupal::entityTypeManager()->getStorage('paragraph')->load($value['target_id']);
+      $entity = Paragraph::load($value['target_id']);
       $entity->delete();
     }
   }
