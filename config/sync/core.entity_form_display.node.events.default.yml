@@ -4,9 +4,9 @@ status: true
 dependencies:
   config:
     - field.field.node.events.body
+    - field.field.node.events.field_attached_media
     - field.field.node.events.field_close_
     - field.field.node.events.field_location
-    - field.field.node.events.field_media
     - field.field.node.events.field_open_date
     - field.field.node.events.field_recurring_date
     - field.field.node.events.field_send_reminder
@@ -56,6 +56,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_attached_media:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: media_browser_widget
+    region: content
   field_location:
     weight: 2
     settings:
@@ -63,12 +69,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
-  field_media:
-    weight: 4
-    settings: {  }
-    third_party_settings: {  }
-    type: media_browser_widget
     region: content
   field_recurring_date:
     weight: 1
@@ -108,6 +108,13 @@ content:
     weight: 13
     settings: {  }
     region: content
+    third_party_settings: {  }
+  noindex:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    region: content
+    weight: 16
     third_party_settings: {  }
   path:
     type: path

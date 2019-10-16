@@ -116,3 +116,60 @@ function os_media_media_insert(EntityInterface $entity) {
     $entity->save();
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function os_media_theme() {
+  return [
+    'os_slick_wrapper' => [
+      'variables' => [
+        'items' => [],
+        'settings' => [],
+        'videos' => [],
+        'others' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function os_media_preprocess_node(&$variables) {
+  $field = 'field_attached_media';
+  if (!isset($variables['content'][$field]['#build'])) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'os_media_gallery/os_slick_lightbox';
+  os_media_build_popup_url($variables, $field);
+}
+
+/**
+ * Implements hook_preprocess_bibcite_reference().
+ */
+function os_media_preprocess_bibcite_reference(&$variables) {
+  $field = 'field_attach_files';
+  if (!isset($variables['content'][$field]['#build'])) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'os_media_gallery/os_slick_lightbox';
+  os_media_build_popup_url($variables, $field);
+}
+
+/**
+ * Builds slick image popup url.
+ */
+function os_media_build_popup_url(&$variables, $field) : void {
+  foreach ($variables['content'][$field]['#build']['items'] as &$item) {
+    $item['slide']['#theme'] = 'os_media_gallery_blazy';
+    $item['slide']['#delta'] = 0;
+    /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $imageItem */
+    $imageItem = $item['item'];
+    $imageId = $imageItem->get('target_id')->getValue();
+    $file = File::load($imageId);
+    $path = $file->getFileUri();
+    $uri = file_create_url($path);
+    $item['slide']['#slick_popup_url'] = $uri;
+  }
+}

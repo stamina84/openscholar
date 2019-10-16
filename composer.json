@@ -153,6 +153,22 @@
             }
         },
         {
+            "type": "package",
+            "package": {
+                "name": "dinbror/blazy",
+                "version": "1.8.2",
+                "type": "drupal-library",
+                "extra": {
+                    "installer-name": "blazy"
+                },
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/dinbror/blazy",
+                    "reference": "1.8.2"
+                }
+            }
+        },
+        {
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
@@ -169,6 +185,7 @@
         "ckeditor/panelbutton": "4.11.3",
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6",
+        "dinbror/blazy": "^1.8",
         "doctrine/lexer": "dev-master",
         "drupal-composer/drupal-scaffold": "^2.6",
         "drupal/admin_toolbar": "^1.25",
@@ -218,6 +235,7 @@
         "drupal/search_api": "^1.9",
         "drupal/shorten": "2.x-dev",
         "drupal/slick": "^1.0",
+        "drupal/slick_media": "^2.0",
         "drupal/styleguide": "^1.0@alpha",
         "drupal/term_reference_tree": "1.x-dev",
         "drupal/toolbar_menu": "^2.1",
