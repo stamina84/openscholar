@@ -1,5 +1,5 @@
 (function () {
-
+  
   CKEDITOR.plugins.add('media_browser', {
     requires: 'image2',
     icons: 'mediabrowser',
@@ -22,7 +22,7 @@
                   editor.insertHtml('<img src="' + media.thumbnail +'" data-mid="' + media.mid + '">');
                 }
               },
-              types: ['image', 'audio', 'html', 'oembed', 'document', 'executable']
+              types: ['image', 'audio', 'html', 'oembed']
             })
           }
         },
