@@ -121,15 +121,22 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
     ];
 
     $form['new_member_option'] = [
-      '#type' => 'button',
+      '#type' => 'fieldgroup',
       '#weight' => 100,
-      '#value' => $this->t('Create a new member'),
-      '#ajax' => [
-        'callback' => [$this, 'showAddNewMemberForm'],
+      'message' => [
+        '#type' => 'inline_template',
+        '#template' => "<span>{% trans %} Can't find their account above? {% endtrans %}</span>",
       ],
-      '#attributes' => [
-        'class' => [
-          'use-ajax',
+      'option' => [
+        '#type' => 'button',
+        '#value' => $this->t('Create a new member'),
+        '#ajax' => [
+          'callback' => [$this, 'showAddNewMemberForm'],
+        ],
+        '#attributes' => [
+          'class' => [
+            'use-ajax',
+          ],
         ],
       ],
     ];
