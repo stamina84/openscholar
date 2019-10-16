@@ -93,6 +93,9 @@ class PublicationMenusTest extends OsExistingSiteTestBase {
 
   /**
    * Tests publication entity link creation edit form service.
+   *
+   * @covers ::os_publications_form_bibcite_reference_form_alter
+   * @covers ::os_publications_bibcite_reference_form_add_menu_option
    */
   public function testPublicationMenuService(): void {
     $values['menu']['menu_parent'] = 'main';
