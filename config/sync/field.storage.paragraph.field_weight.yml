@@ -1,16 +1,16 @@
-uuid: f9ef9eb8-2eb4-4acd-93c8-5fbb1d874c5d
+uuid: 6b85fde7-0fc7-4380-8c2e-c18c8a2ff31f
 langcode: en
 status: true
 dependencies:
   module:
-    - media
-    - node
-id: node.field_media
-field_name: field_media
-entity_type: node
-type: entity_reference
+    - paragraphs
+id: paragraph.field_weight
+field_name: field_weight
+entity_type: paragraph
+type: integer
 settings:
-  target_type: media
+  unsigned: false
+  size: normal
 module: core
 locked: false
 cardinality: 1

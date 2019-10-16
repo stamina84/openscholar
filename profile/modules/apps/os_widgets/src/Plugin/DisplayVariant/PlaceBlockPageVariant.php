@@ -68,7 +68,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
           $block_obj = $build[$region][$block]['#block'];
           $build[$region][$block] = [
             '#type' => 'inline_template',
-            '#template' => '<div class="block" data-block-id="{{ id }}"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
+            '#template' => '<div class="block" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
             '#context' => [
               'id' => $block_obj->id(),
               'title' => $block_obj->label(),
@@ -89,7 +89,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
           $block_obj = $new_elements['#block'];
           $build[$region][$block] = [
             '#type' => 'inline_template',
-            '#template' => '<div class="block" data-block-id="{{ id }}"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
+            '#template' => '<div class="block" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
             '#context' => [
               'id' => $block_obj->id(),
               'title' => $block_obj->label(),
@@ -220,7 +220,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
           '#markup' => '<h3>' . $this->t('Select Widget Type') . '</h3>',
         ],
         'close' => [
-          '#markup' => '<div class="close">X</div>',
+          '#markup' => '<div class="close" tabindex="0">X</div>',
         ],
         'links' => [
           '#theme' => 'links',
@@ -232,7 +232,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
     foreach ($blocks as $b) {
       $block_build = [
         '#type' => 'inline_template',
-        '#template' => '<div class="block" data-block-id="{{ id }}"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
+        '#template' => '<div class="block" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
         '#context' => [
           'id' => $b->id(),
           'title' => '',

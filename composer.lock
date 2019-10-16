@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "9cc22f10f4fddd50cb75dff5b9562123",
+=======
+    "content-hash": "91640de4b509246d50730154ee5ded28",
+>>>>>>> e53dc12a6736926c3c6a268ea13770a4f11c42aa
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -6750,6 +6754,62 @@
             }
         },
         {
+            "name": "drupal/slick_media",
+            "version": "2.0.0-alpha3",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/slick_media.git",
+                "reference": "8.x-2.0-alpha3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/slick_media-8.x-2.0-alpha3.zip",
+                "reference": "8.x-2.0-alpha3",
+                "shasum": "977a8a38c83c3fcd701230953747c2b7b6118ec4"
+            },
+            "require": {
+                "drupal/core": "^8.4",
+                "drupal/slick": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-2.0-alpha3",
+                    "datestamp": "1545238380",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "axel.rutz",
+                    "homepage": "https://www.drupal.org/user/229048"
+                },
+                {
+                    "name": "chr.fritsch",
+                    "homepage": "https://www.drupal.org/user/2103716"
+                },
+                {
+                    "name": "gausarts",
+                    "homepage": "https://www.drupal.org/user/159062"
+                }
+            ],
+            "description": "Provides Slick carousel integration with Media entity.",
+            "homepage": "https://www.drupal.org/project/slick_media",
+            "support": {
+                "source": "https://git.drupalcode.org/project/slick_media"
+            }
+        },
+        {
             "name": "drupal/styleguide",
             "version": "1.0.0-alpha3",
             "source": {
@@ -8577,6 +8637,20 @@
                 "php"
             ],
             "time": "2019-02-16T20:54:15+00:00"
+        },
+        {
+            "name": "npm-asset/blazy",
+            "version": "1.8.2",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/blazy/-/blazy-1.8.2.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
         },
         {
             "name": "npm-asset/chosen-js",

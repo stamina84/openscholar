@@ -1,22 +1,22 @@
-uuid: 4d37e3c3-5822-4b69-b341-9853bb2d4f45
+uuid: fed8fec3-1e5b-4bc8-8b9a-b18c8bf0a0c9
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_additional_media
+    - field.storage.node.field_attached_media
     - media.type.audio
     - media.type.document
     - media.type.executable
-    - media.type.html
     - media.type.image
     - media.type.oembed
-    - media.type.presentation_materials
-    - node.type.presentation
-id: node.presentation.field_additional_media
-field_name: field_additional_media
+    - node.type.events
+_core:
+  default_config_hash: UeQMqkOhcTakJLbgyQiQ25gHGzZXY6YzrqIDqKLALmk
+id: node.events.field_attached_media
+field_name: field_attached_media
 entity_type: node
-bundle: presentation
-label: 'Additional Media'
+bundle: events
+label: 'Attached Media'
 description: ''
 required: false
 translatable: false
@@ -30,9 +30,7 @@ settings:
       document: document
       oembed: oembed
       executable: executable
-      html: html
       image: image
-      presentation_materials: presentation_materials
     sort:
       field: _none
     auto_create: false
