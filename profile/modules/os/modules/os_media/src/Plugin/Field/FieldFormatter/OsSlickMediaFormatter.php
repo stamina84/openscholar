@@ -70,6 +70,7 @@ class OsSlickMediaFormatter extends SlickMediaFormatter {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
+    $images = [];
     $entities = $this->getEntitiesToView($items, $langcode);
 
     // Early opt-out if the field is empty.
