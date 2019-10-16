@@ -3,8 +3,6 @@
 namespace Drupal\os_profiles\Plugin\CpSetting;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
@@ -17,7 +15,6 @@ use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\image_widget_crop\ImageWidgetCropInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * OS Profiles Setting.
@@ -121,6 +118,8 @@ class ProfilesSetting extends CpSettingBase {
    */
   public static function processImageFile(array &$element, FormStateInterface $form_state, array &$complete_form) {
     $element['#theme'] = 'image_widget';
+    $storage = $form_state->getStorage();
+    $storage['uploaded_fid'] = NULL;
 
     // Add the image preview.
     if (!empty($element['#files']) && $element['#preview_image_style']) {
@@ -129,7 +128,6 @@ class ProfilesSetting extends CpSettingBase {
         'style_name' => $element['#preview_image_style'],
         'uri' => $file->getFileUri(),
       ];
-      $storage = $form_state->getStorage();
       $storage['uploaded_fid'] = $file->id();
       $form_state->setStorage($storage);
 
@@ -187,66 +185,10 @@ class ProfilesSetting extends CpSettingBase {
   }
 
   /**
-   * Form API callback: Processes a crop_image field element.
-   *
-   * Expands the image_image type to include the alt and title fields.
-   */
-  public static function processImageCropFile(array &$element, FormStateInterface $form_state, &$complete_form) {
-    // This is used sometimes so let's implode it just once.
-    $parents_prefix = implode('_', $element['#parents']);
-
-    // Generate a unique wrapper HTML ID.
-    $ajax_wrapper_id = Html::getUniqueId('ajax-crop-wrapper');
-
-    // Set up the buttons first since we need to check if they were clicked.
-    $element['set_crop_button'] = [
-      '#name' => $parents_prefix . '_set_crop_button',
-      '#type' => 'button',
-      '#value' => t('Set crop'),
-      // '#attributes' => ['class' => ['js-hide']],.
-      '#validate' => [],
-      // '#limit_validation_errors' => [$element['#parents']],.
-      '#ajax' => [
-        'callback' => [get_called_class(), 'ajaxImageCropFile'],
-        'wrapper' => $ajax_wrapper_id,
-      ],
-    ];
-    $element['crop_wrapper'] = [
-      '#type' => 'item',
-      '#markup' => '<div id="' . $ajax_wrapper_id . '"></div>',
-    ];
-    return $element;
-  }
-
-  /**
    * Render image crop element into form.
    */
-  public static function ajaxImageCropFile(&$form, FormStateInterface &$form_state, Request $request) {
-    $fids = $form_state->getValue('default_image_fid');
-    if (empty($fids)) {
-      return;
-    }
-    $file = File::load($fids[0]);
-    $elements = [
-      '#type' => 'image_crop',
-      '#file' => $file,
-      '#crop_type_list' => $form['default_image']['default_image_fid']['#crop_list'],
-      '#crop_preview_image_style' => $form['default_image']['default_image_fid']['#crop_preview_image_style'],
-      '#show_default_crop' => $form['default_image']['default_image_fid']['#show_default_crop'],
-      '#show_crop_area' => $form['default_image']['default_image_fid']['#show_crop_area'],
-      '#warn_multiple_usages' => $form['default_image']['default_image_fid']['#warn_multiple_usages'],
-      '#crop_types_required' => $form['default_image']['default_image_fid']['#crop_types_required'],
-    ];
-
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = \Drupal::service('renderer');
-
-    $output = $renderer->renderRoot($elements);
-
-    $response = new AjaxResponse();
-    $response->setAttachments($elements['#attached']);
-
-    return $response->addCommand(new ReplaceCommand(NULL, $output));
+  public static function ajaxRenderImageCrop(&$form, FormStateInterface &$form_state) {
+    return $form['default_image']['image_crop'];
   }
 
   /**
@@ -351,7 +293,6 @@ class ProfilesSetting extends CpSettingBase {
       '#process' => [
         [ManagedFile::class, 'processManagedFile'],
         [get_class($this), 'processImageFile'],
-        // [get_class($this), 'processImageCropFile'],.
       ],
       '#theme' => 'image_widget',
       '#crop_list' => $settings['crop_list'],
@@ -373,7 +314,10 @@ class ProfilesSetting extends CpSettingBase {
       ];
     }
 
+    $ajax_wrapper_id = 'crop-ajax-wrapper';
     $form['default_image']['image_crop'] = [
+      '#prefix' => '<div id="' . $ajax_wrapper_id . '">',
+      '#suffix' => '</div>',
       '#type' => 'image_crop',
       '#crop_type_list' => $form['default_image']['default_image_fid']['#crop_list'],
       '#crop_preview_image_style' => $form['default_image']['default_image_fid']['#crop_preview_image_style'],
@@ -381,6 +325,18 @@ class ProfilesSetting extends CpSettingBase {
       '#show_crop_area' => $form['default_image']['default_image_fid']['#show_crop_area'],
       '#warn_multiple_usages' => $form['default_image']['default_image_fid']['#warn_multiple_usages'],
       '#crop_types_required' => $form['default_image']['default_image_fid']['#crop_types_required'],
+    ];
+    $form['default_image']['crop_button'] = [
+      '#name' => 'default_image_crop_button',
+      '#type' => 'button',
+      '#value' => t('Refresh crop widget'),
+      // '#attributes' => ['class' => ['js-hide']],.
+      '#validate' => [],
+      '#submit' => [],
+      '#ajax' => [
+        'callback' => [get_called_class(), 'ajaxRenderImageCrop'],
+        'wrapper' => $ajax_wrapper_id,
+      ],
     ];
     $storage = $form_state->getStorage();
     if (!empty($storage['uploaded_fid'])) {
