@@ -73,10 +73,14 @@
       // Open the new widget panel
       $('#create-new-widget-btn', context).click(function (e) {
         $('#factory-wrapper').show();
+        $('#factory-wrapper').find('li').find('a').first().focus();
       });
 
-      $('#factory-wrapper .close', context).click(function (e) {
-        $('#factory-wrapper').hide();
+      $('#factory-wrapper .close', context).once('customBehavior').on('keyup click', function (e) {
+        if (e.which === 13 || e.type === 'click') {
+          $('#factory-wrapper').hide();
+          $('#create-new-widget-btn').focus();
+        }
       });
 
       // Submit the layout to the server.
