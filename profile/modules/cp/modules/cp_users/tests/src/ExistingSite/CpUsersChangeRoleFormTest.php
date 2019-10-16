@@ -9,7 +9,6 @@ use Drupal\group\Entity\GroupRole;
  *
  * @group functional
  * @group cp
- * @coversDefaultClass \Drupal\cp_users\Form\ChangeRoleForm
  */
 class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
 
@@ -28,6 +27,13 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
   protected $member;
 
   /**
+   * Group administrator.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $groupAdmin;
+
+  /**
    * {@inheritdoc}
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -35,15 +41,15 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
   public function setUp() {
     parent::setUp();
 
-    $group_admin = $this->createUser();
-    $this->addGroupAdmin($group_admin, $this->group);
+    $this->groupAdmin = $this->createUser();
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
     $this->createRoleForGroup($this->group, [
       'id' => 'cprolechange',
     ]);
     $this->member = $this->createUser();
     $this->group->addMember($this->member);
 
-    $this->drupalLogin($group_admin);
+    $this->drupalLogin($this->groupAdmin);
 
     $this->cpRolesHelper = $this->container->get('cp_users.cp_roles_helper');
 
@@ -51,6 +57,8 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
 
   /**
    * Tests change role functionality.
+   *
+   * @covers \Drupal\cp_users\Form\ChangeRoleForm
    *
    * @throws \Behat\Mink\Exception\ResponseTextException
    */
@@ -76,6 +84,36 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
     $group_membership = $this->group->getMember($this->member);
     $updated_roles = $group_membership->getRoles();
     $this->assertInstanceOf(GroupRole::class, $updated_roles["personal-{$this->group->id()}_cprolechange"]);
+  }
+
+  /**
+   * Tests whether the cp items are in sync with group role.
+   *
+   * @covers ::cp_users_preprocess_menu
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function testCpItemsSync(): void {
+    // Negative test.
+    $this->drupalLogin($this->member);
+
+    $this->visitViaVsite('', $this->group);
+    $this->assertSession()->responseNotContains("{$this->groupAlias}/cp/appearance");
+
+    $this->drupalLogout();
+
+    // Do changes.
+    $this->drupalLogin($this->groupAdmin);
+    $this->visitViaVsite("cp/users/change-role/{$this->member->id()}", $this->group);
+    $this->drupalPostForm(NULL, [
+      'roles' => 'personal-administrator',
+    ], 'Save');
+
+    // Positive test.
+    $this->drupalLogin($this->member);
+
+    $this->visitViaVsite('', $this->group);
+    $this->assertSession()->responseContains("{$this->groupAlias}/cp/appearance");
   }
 
 }
