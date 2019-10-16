@@ -167,7 +167,7 @@ abstract class CpUsersAddMemberFormBase extends FormBase {
   /**
    * Closes the modal.
    */
-  protected function closeModal(): AjaxResponse {
+  public function closeModal(): AjaxResponse {
     $response = new AjaxResponse();
     $response->addCommand(new CloseModalDialogCommand());
     return $response;
