@@ -88,36 +88,19 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
       '#weight' => 1,
     ];
 
-    $form['actions'] = [
-      '#type' => 'actions',
-      'submit' => [
-        '#type' => 'submit',
-        '#value' => $this->t('Save'),
-        '#attributes' => [
-          'class' => [
-            'use-ajax',
-          ],
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+      '#attributes' => [
+        'class' => [
+          'use-ajax',
         ],
-        '#ajax' => [
-          'callback' => [$this, 'submitForm'],
-          'event' => 'click',
-        ],
-        '#name' => 'submit',
       ],
-      'cancel' => [
-        '#type' => 'button',
-        '#value' => $this->t('Cancel'),
-        '#attributes' => [
-          'class' => [
-            'use-ajax',
-          ],
-        ],
-        '#ajax' => [
-          'callback' => [$this, 'closeModal'],
-          'event' => 'click',
-        ],
-        '#name' => 'cancel',
+      '#ajax' => [
+        'callback' => [$this, 'submitForm'],
+        'event' => 'click',
       ],
+      '#name' => 'submit',
     ];
 
     $form['new_member_option'] = [

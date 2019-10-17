@@ -59,36 +59,19 @@ class CpUsersAddNewMemberForm extends CpUsersAddMemberFormBase {
       ],
     ];
 
-    $form['actions'] = [
-      '#type' => 'actions',
-      'submit' => [
-        '#type' => 'submit',
-        '#value' => $this->t('Save'),
-        '#attributes' => [
-          'class' => [
-            'use-ajax',
-          ],
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+      '#attributes' => [
+        'class' => [
+          'use-ajax',
         ],
-        '#ajax' => [
-          'callback' => [$this, 'addNewMember'],
-          'event' => 'click',
-        ],
-        '#name' => 'submit',
       ],
-      'cancel' => [
-        '#type' => 'submit',
-        '#value' => $this->t('Cancel'),
-        '#attributes' => [
-          'class' => [
-            'use-ajax',
-          ],
-        ],
-        '#ajax' => [
-          'callback' => [$this, 'closeModal'],
-          'event' => 'click',
-        ],
-        '#name' => 'cancel',
+      '#ajax' => [
+        'callback' => [$this, 'addNewMember'],
+        'event' => 'click',
       ],
+      '#name' => 'submit',
     ];
 
     return $form;

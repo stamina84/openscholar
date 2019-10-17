@@ -134,6 +134,25 @@ abstract class CpUsersAddMemberFormBase extends FormBase {
       '#required' => TRUE,
     ];
 
+    $form['actions'] = [
+      '#type' => 'actions',
+      'cancel' => [
+        '#type' => 'submit',
+        '#value' => $this->t('Cancel'),
+        '#attributes' => [
+          'class' => [
+            'use-ajax',
+          ],
+        ],
+        '#ajax' => [
+          'callback' => [$this, 'closeModal'],
+          'event' => 'click',
+        ],
+        '#name' => 'cancel',
+        '#weight' => 1,
+      ],
+    ];
+
     return $form;
   }
 
