@@ -88,41 +88,6 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
       '#weight' => 1,
     ];
 
-    $form['new_user_wrapper'] = [
-      '#type' => 'fieldgroup',
-      '#access' => !$this->config('cp_users.settings')->get('disable_user_creation'),
-      '#attributes' => [
-        'class' => [
-          'add-new-user-wrapper',
-          'visually-hidden',
-        ],
-      ],
-      'first_name' => [
-        '#type' => 'textfield',
-        '#title' => $this->t('First Name'),
-        '#maxlength' => 255,
-        '#size' => 60,
-      ],
-      'last_name' => [
-        '#type' => 'textfield',
-        '#title' => $this->t('Last Name'),
-        '#maxlength' => 255,
-        '#size' => 60,
-      ],
-      'username' => [
-        '#type' => 'textfield',
-        '#title' => $this->t('Username'),
-        '#maxlength' => 255,
-        '#size' => 60,
-      ],
-      'email' => [
-        '#type' => 'textfield',
-        '#title' => $this->t('E-mail Address'),
-        '#maxlength' => 255,
-        '#size' => 60,
-      ],
-    ];
-
     $form['actions'] = [
       '#type' => 'actions',
       'submit' => [
