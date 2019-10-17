@@ -145,4 +145,6 @@ permissions:
   221: 'update any group_entity:block_content entity'
   222: 'update own group_entity:block_content entity'
   223: 'view group_entity:block_content entity'
+  224: 'publish nodes'
+  225: 'administer bibcite_reference'
 description: '<em>Administrators</em> may add, edit or delete any post, and change site settings.'
