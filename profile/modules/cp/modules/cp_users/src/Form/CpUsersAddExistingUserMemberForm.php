@@ -2,7 +2,9 @@
 
 namespace Drupal\cp_users\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -165,7 +167,6 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
         '#value' => $this->t('Create a new member'),
         '#ajax' => [
           'callback' => [$this, 'showAddNewMemberForm'],
-          'wrapper' => 'cp-user-add-member-form',
         ],
         '#attributes' => [
           'class' => [
@@ -233,23 +234,16 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
   /**
    * Shows the options for adding new member.
    *
-   * @param array $form
-   *   The current form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Current form state.
-   *
-   * @return array
-   *   The updated form.
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The response containing the updates.
    */
-  public function showAddNewMemberForm(array $form, FormStateInterface $form_state): array {
-    $form['user']['#attributes']['class'][] = 'visually-hidden';
-    array_splice($form['new_user_wrapper']['#attributes']['class'], array_search('visually-hidden', $form['new_user_wrapper']['#attributes']['class'], TRUE));
+  public function showAddNewMemberForm(): AjaxResponse {
+    $response = new AjaxResponse();
 
-    $form_state->setStorage([
-      'opt_in_add_new_member' => 1,
-    ]);
-    $form_state->set('opt_in_add_new_member', 1);
-    return $form;
+    $response->addCommand(new CloseModalDialogCommand());
+    $response->addCommand(new InvokeCommand('#add-new-member-option-opener', 'click'));
+
+    return $response;
   }
 
 }
