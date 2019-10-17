@@ -37,7 +37,7 @@ function template_preprocess_os_media_gallery_blazy(&$variables) {
         'class' => [
           'slick-lightbox-item',
         ],
-        'data-caption' => $imageArray['#attributes']['title'],
+        'data-caption' => $imageArray['#attributes']['title'] ?? [],
       ],
     ];
   }

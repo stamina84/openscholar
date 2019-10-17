@@ -6,9 +6,9 @@ dependencies:
     - core.date_format.medium
     - core.entity_view_mode.node.rss
     - field.field.node.events.body
+    - field.field.node.events.field_attached_media
     - field.field.node.events.field_close_
     - field.field.node.events.field_location
-    - field.field.node.events.field_media
     - field.field.node.events.field_open_date
     - field.field.node.events.field_recurring_date
     - field.field.node.events.field_send_reminder
@@ -77,8 +77,8 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_attached_media: true
   field_close_: true
-  field_media: true
   field_open_date: true
   field_send_reminder: true
   field_should_send_reminder: true

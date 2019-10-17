@@ -8,7 +8,6 @@ dependencies:
     - media.type.document
     - media.type.executable
     - media.type.image
-    - media.type.presentation_materials
     - media.type.video
     - paragraphs.paragraphs_type.class_material
 id: paragraph.class_material.field_attached_files
@@ -28,7 +27,6 @@ settings:
       document: document
       executable: executable
       image: image
-      presentation_materials: presentation_materials
       video: video
       audio: audio
     sort:

@@ -253,12 +253,15 @@ function os_form_node_form_alter(&$form, FormStateInterface $form_state, $form_i
   $has_create_alias_access = $active_vsite->hasPermission('create url aliases', $current_user);
   /** @var bool $has_promote_content_access */
   $has_promote_content_access = $active_vsite->hasPermission('promote nodes', $current_user);
+  /** @var bool $has_publish_content_access */
+  $has_publish_content_access = $active_vsite->hasPermission('publish nodes', $current_user);
 
   $form['path']['#access'] = $has_create_alias_access;
   $form['path']['widget'][0]['#access'] = $has_create_alias_access;
   $form['uid']['#access'] = $has_administer_content_access;
   $form['sticky']['#access'] = $has_promote_content_access;
   $form['created']['#access'] = $has_administer_content_access;
+  $form['status']['#access'] = $has_publish_content_access;
   $form['noindex']['#group'] = 'options';
 }
 

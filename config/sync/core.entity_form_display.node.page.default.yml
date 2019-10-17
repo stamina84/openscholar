@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.page.body
-    - field.field.node.page.field_media
+    - field.field.node.page.field_attached_media
     - field.field.node.page.field_taxonomy_terms
     - node.type.page
   module:
@@ -38,7 +38,7 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_media:
+  field_attached_media:
     weight: 10
     settings: {  }
     third_party_settings: {  }
@@ -63,6 +63,13 @@ content:
       display_label: true
     region: content
     weight: 26
+    third_party_settings: {  }
+  noindex:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    region: content
+    weight: 12
     third_party_settings: {  }
   path:
     type: path

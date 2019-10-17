@@ -91,6 +91,13 @@ content:
     region: content
     weight: 26
     third_party_settings: {  }
+  noindex:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    region: content
+    weight: 26
+    third_party_settings: {  }
   path:
     type: path
     weight: 6

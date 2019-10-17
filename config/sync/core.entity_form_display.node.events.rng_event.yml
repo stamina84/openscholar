@@ -5,9 +5,9 @@ dependencies:
   config:
     - core.entity_form_mode.node.rng_event
     - field.field.node.events.body
+    - field.field.node.events.field_attached_media
     - field.field.node.events.field_close_
     - field.field.node.events.field_location
-    - field.field.node.events.field_media
     - field.field.node.events.field_open_date
     - field.field.node.events.field_recurring_date
     - field.field.node.events.field_send_reminder
@@ -98,8 +98,8 @@ content:
 hidden:
   body: true
   created: true
+  field_attached_media: true
   field_location: true
-  field_media: true
   field_recurring_date: true
   field_signup: true
   field_singup_multiple: true

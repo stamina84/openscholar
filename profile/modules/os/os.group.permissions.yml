@@ -12,3 +12,8 @@ promote nodes:
   title: 'Promote content'
   description: 'Promote content across all content types.'
   section: 'Permission'
+
+publish nodes:
+  title: 'Publish content'
+  description: 'Publish content across all content types.'
+  section: 'Permission'

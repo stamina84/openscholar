@@ -58,6 +58,7 @@ class NodeMetadataAccessTest extends OsExistingSiteJavascriptTestBase {
       'created[0][value][date]' => '2019-08-15',
       'created[0][value][time]' => '00:00:00',
       'sticky[value]' => 1,
+      'status[value]' => 0,
     ], 'Save');
 
     // Assert alias.
@@ -75,7 +76,8 @@ class NodeMetadataAccessTest extends OsExistingSiteJavascriptTestBase {
 
     $this->assertEquals($group_member->id(), $node->get('uid')->first()->getValue()['target_id']);
     $this->assertEquals('15/08/2019', date('d/m/Y', $node->get('created')->first()->getValue()['value']));
-    $this->assertEquals(1, $node->get('status')->first()->getValue()['value']);
+    $this->assertEquals(1, $node->get('sticky')->first()->getValue()['value']);
+    $this->assertEquals(0, $node->get('status')->first()->getValue()['value']);
 
     // Cleanup.
     $node->delete();
@@ -118,6 +120,7 @@ class NodeMetadataAccessTest extends OsExistingSiteJavascriptTestBase {
       'path[0][pathauto]' => 0,
       'path[0][alias]' => "/$news_alias",
       'sticky[value]' => 1,
+      'status[value]' => 1,
     ], 'Save');
 
     // Assert alias.

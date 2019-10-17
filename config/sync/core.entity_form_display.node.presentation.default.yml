@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.presentation.body
-    - field.field.node.presentation.field_additional_media
     - field.field.node.presentation.field_presentation_date
     - field.field.node.presentation.field_presentation_location
     - field.field.node.presentation.field_presentation_slides
@@ -42,12 +41,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_additional_media:
-    weight: 13
-    settings: {  }
-    third_party_settings: {  }
-    type: media_browser_widget
-    region: content
   field_presentation_date:
     weight: 10
     settings: {  }
@@ -80,6 +73,13 @@ content:
     region: content
     settings:
       include_locked: true
+    third_party_settings: {  }
+  noindex:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    region: content
+    weight: 26
     third_party_settings: {  }
   noindex:
     type: boolean_checkbox
