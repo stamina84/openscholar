@@ -162,6 +162,14 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'render_style' => '',
       ],
     ],
+    'os_widgets_follow_me' => [
+      'variables' => [
+       'profile_links' => [],
+       'display_social' => NULL,
+       'rss_feed' => NULL,
+       'embeddable' => NULL,
+      ],
+    ],
   ];
 }
 
@@ -336,7 +344,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
         $n = [
           'text' => [
             '#type' => 'markup',
-            '#markup' => '<div class="rrssb no-label"><ul class="rrssb-buttons"><li class="rrssb-' . $v['domain'] . '"><a><span class="rrssb-icon"></span><span class="rrssb-text"></span></a></li></ul></div> <p class="follow"></p><a href="#" class="remove" title="Remove Link">Remove</a>',
+            '#markup' => '<div class="rrssb no-label"><ul class="rrssb-buttons"><li class="rrssb-' . $v['domain'] . '"><a><span class="rrssb-icon"></span><span class="rrssb-text"></span></a></li></ul></div><a href="#" class="remove" title="Remove Link">Remove</a>',
           ],
           'domain' => [
             '#type' => 'hidden',
@@ -766,6 +774,8 @@ function os_follow_default_networks() {
  *
  * @return array
  *   Links array.
+ *  @param mixed $entity
+ *   Block entity.
  */
 function get_profile_url_links($entity) {
   $links = [];

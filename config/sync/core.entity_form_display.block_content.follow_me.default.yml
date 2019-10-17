@@ -6,9 +6,9 @@ dependencies:
     - block_content.type.follow_me
     - field.field.block_content.follow_me.field_add_link_to_rss_feed_page
     - field.field.block_content.follow_me.field_display_social
-    - field.field.block_content.follow_me.field_follow_me_widget_title
     - field.field.block_content.follow_me.field_links
     - field.field.block_content.follow_me.field_make_embeddable
+    - field.field.block_content.follow_me.field_widget_title
   module:
     - content_moderation
     - field_layout
@@ -24,29 +24,21 @@ bundle: follow_me
 mode: default
 content:
   field_add_link_to_rss_feed_page:
-    weight: 6
+    weight: 5
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_display_social:
-    weight: 5
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
-  field_follow_me_widget_title:
-    weight: 3
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_links:
     type: entity_reference_paragraphs
-    weight: 26
+    weight: 7
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -57,11 +49,19 @@ content:
     third_party_settings: {  }
     region: content
   field_make_embeddable:
-    weight: 7
+    weight: 6
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
+    region: content
+  field_widget_title:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
   info:
     type: string_textfield
@@ -73,14 +73,14 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 1
+    weight: 2
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 2
+    weight: 3
     settings: {  }
     region: content
     third_party_settings: {  }
