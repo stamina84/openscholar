@@ -47,7 +47,8 @@ class ProfilesSettingsFormBuildTest extends OsExistingSiteTestBase {
    */
   public function testFormRender() {
     $form = [];
-    $this->profileSettings->getForm($form, $this->config);
+    $form_state = new FormState();
+    $this->profileSettings->getForm($form, $form_state, $this->config);
     $this->assertArrayHasKey('display_type', $form);
     $this->assertArrayHasKey('default_image', $form);
     // Check display_type options.
@@ -72,7 +73,8 @@ class ProfilesSettingsFormBuildTest extends OsExistingSiteTestBase {
     $profiles_config->set('default_image_fid', $file->id());
     $profiles_config->save();
     $form = [];
-    $this->profileSettings->getForm($form, $this->config);
+    $form_state = new FormState();
+    $this->profileSettings->getForm($form, $form_state, $this->config);
     $this->assertArrayHasKey('default_image', $form);
     $this->assertEquals($file->id(), $form['default_image']['default_image_fid']['#default_value'][0]);
     $this->assertNotEmpty($form['default_image']['image_crop']);
