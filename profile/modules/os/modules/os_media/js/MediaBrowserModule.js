@@ -241,7 +241,7 @@
       });
 
 
-    $scope.changePanes = function (pane, result) {
+    $scope.changePanes = function (pane, result, callback = null) {
       if ($scope.activePanes[pane]) {
         if (pane === 'library') {
           // Need this logic to fix oversized thumbnail previews.
@@ -256,6 +256,9 @@
           }
         }
         $scope.pane = pane;
+        if (callback != null) {
+          callback();
+        }
         return true;
       }
       else {
@@ -473,7 +476,7 @@
     // renames the file before uploading
     $scope.rename = function ($index, $last) {
       $scope.dupes[$index].processed = true;
-      $scope.dupes[$index].filename = $scope.dupes[$index].newName;
+      $scope.dupes[$index].filename = $scope.dupes[$index].sanitized;
 
       if ($last) {
         finalizeDupes();
@@ -484,7 +487,7 @@
     // (just performs a swap on the hard drive)
     $scope.replace = function ($index, $last) {
       $scope.dupes[$index].processed = true;
-      delete $scope.dupes[$index].sanitized;
+      $scope.dupes[$index].sanitized = $scope.dupes[$index].filename;
 
       if ($last) {
         finalizeDupes();
@@ -578,7 +581,7 @@
           headers: {'Content-Type': $file.type},
           method: 'POST',
           fields: fields,
-          fileName: $file.newName || null
+          fileName: $file.sanitized || null
         }).progress(function (e) {
           progress = e;
         }).success(function (file) {
@@ -644,9 +647,21 @@
           $scope.files[j].status = 'deleting';
         }
       }
-      $scope.changePanes('library');
+      $scope.changePanes('library', null, function () {
+        angular.element(function () {
+          angular.element('#file-search-input').focus();
+        });
+      });
     };
 
+    $scope.deleteCancel = function () {
+      var id = $scope.selection;
+      $scope.changePanes('library', null, function() {
+        angular.element(function () {
+          angular.element('#file-' + id).focus();
+        });
+      });
+    };
 
     $scope.embed = '';
     $scope.embedSubmit = function () {
@@ -700,7 +715,12 @@
         }
         return;
       }
-      $scope.changePanes('library', result);
+      $scope.changePanes('library', result, function () {
+        var id = $scope.selection;
+        angular.element(function () {
+          angular.element('#file-' + id).focus();
+        });
+      });
     }
 
     $scope.insert = function () {

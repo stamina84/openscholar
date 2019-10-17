@@ -6,9 +6,9 @@ dependencies:
     - core.date_format.medium
     - core.entity_view_mode.node.teaser
     - field.field.node.events.body
+    - field.field.node.events.field_attached_media
     - field.field.node.events.field_close_
     - field.field.node.events.field_location
-    - field.field.node.events.field_media
     - field.field.node.events.field_open_date
     - field.field.node.events.field_recurring_date
     - field.field.node.events.field_send_reminder
@@ -47,6 +47,14 @@ content:
       trim_length: 600
     third_party_settings: {  }
     region: content
+  field_attached_media:
+    type: entity_reference_label
+    weight: 1
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
   field_location:
     type: string
     weight: 1
@@ -82,7 +90,6 @@ content:
 hidden:
   field_close_: true
   field_groups: true
-  field_media: true
   field_open_date: true
   field_send_reminder: true
   field_should_send_reminder: true
