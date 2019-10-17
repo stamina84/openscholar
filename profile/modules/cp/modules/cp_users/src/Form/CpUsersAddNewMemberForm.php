@@ -96,6 +96,28 @@ class CpUsersAddNewMemberForm extends CpUsersAddMemberFormBase {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $parent_validation_response = parent::validateForm($form, $form_state);
+    $form_state_values = $form_state->getValues();
+
+    $account = (bool) user_load_by_mail($form_state_values['email']);
+    if ($account) {
+      $form_state->setError($form['new_user_wrapper']['email'], $this->t('User with this email already exists. Please choose a different email.'));
+      return FALSE;
+    }
+
+    $account = user_load_by_name($form_state_values['username']);
+    if ($account) {
+      $form_state->setError($form['new_user_wrapper']['username'], $this->t('User with this username already exists. Please choose a different username.'));
+      return FALSE;
+    }
+
+    return $parent_validation_response;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $response = parent::submitForm($form, $form_state);
 
