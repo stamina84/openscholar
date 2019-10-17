@@ -2,6 +2,7 @@
 
 namespace Drupal\cp_users\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Form\FormStateInterface;
@@ -69,7 +70,7 @@ class CpUsersAddNewMemberForm extends CpUsersAddMemberFormBase {
           ],
         ],
         '#ajax' => [
-          'callback' => [$this, 'submitForm'],
+          'callback' => [$this, 'addNewMember'],
           'event' => 'click',
         ],
         '#name' => 'submit',
@@ -116,10 +117,22 @@ class CpUsersAddNewMemberForm extends CpUsersAddMemberFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Adds a new vsite member.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The response containing the updates.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $response = parent::submitForm($form, $form_state);
+  public function addNewMember(array &$form, FormStateInterface $form_state): AjaxResponse {
+    $response = $this->submitForm($form, $form_state);
 
     if (!$form_state->getErrors()) {
       /** @var array $form_state_values */
