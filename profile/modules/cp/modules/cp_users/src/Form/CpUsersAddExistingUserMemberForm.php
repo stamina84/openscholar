@@ -2,9 +2,7 @@
 
 namespace Drupal\cp_users\Form;
 
-use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
-use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -88,6 +86,41 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
       '#weight' => 1,
     ];
 
+    $form['new_user_wrapper'] = [
+      '#type' => 'fieldgroup',
+      '#access' => !$this->config('cp_users.settings')->get('disable_user_creation'),
+      '#attributes' => [
+        'class' => [
+          'add-new-user-wrapper',
+          'visually-hidden',
+        ],
+      ],
+      'first_name' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('First Name'),
+        '#maxlength' => 255,
+        '#size' => 60,
+      ],
+      'last_name' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Last Name'),
+        '#maxlength' => 255,
+        '#size' => 60,
+      ],
+      'username' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Username'),
+        '#maxlength' => 255,
+        '#size' => 60,
+      ],
+      'email' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('E-mail Address'),
+        '#maxlength' => 255,
+        '#size' => 60,
+      ],
+    ];
+
     $form['actions'] = [
       '#type' => 'actions',
       'submit' => [
@@ -132,6 +165,7 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
         '#value' => $this->t('Create a new member'),
         '#ajax' => [
           'callback' => [$this, 'showAddNewMemberForm'],
+          'wrapper' => 'cp-user-add-member-form',
         ],
         '#attributes' => [
           'class' => [
@@ -204,25 +238,18 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Current form state.
    *
-   * @return \Drupal\Core\Ajax\AjaxResponse
-   *   The response.
+   * @return array
+   *   The updated form.
    */
-  public function showAddNewMemberForm(array &$form, FormStateInterface $form_state): AjaxResponse {
-    $new_member_form = $this->formBuilder->getForm(CpUsersAddNewMemberForm::class);
+  public function showAddNewMemberForm(array $form, FormStateInterface $form_state): array {
+    $form['user']['#attributes']['class'][] = 'visually-hidden';
+    array_splice($form['new_user_wrapper']['#attributes']['class'], array_search('visually-hidden', $form['new_user_wrapper']['#attributes']['class'], TRUE));
 
-    $response = new AjaxResponse();
-    $response->addCommand(new CloseModalDialogCommand());
-    $response->addCommand(new OpenModalDialogCommand($this->t('Add Member'), $new_member_form, [
-      'dialogClass' => 'add-user-dialog',
-      'width' => 800,
-      'modal' => TRUE,
-      'position' => [
-        'my' => 'center top',
-        'at' => 'center top',
-      ],
-    ]));
-
-    return $response;
+    $form_state->setStorage([
+      'opt_in_add_new_member' => 1,
+    ]);
+    $form_state->set('opt_in_add_new_member', 1);
+    return $form;
   }
 
 }

@@ -4,8 +4,10 @@ namespace Drupal\cp_users\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\SetDialogTitleCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -125,8 +127,7 @@ class CpUsersAddForm extends FormBase {
     ];
 
     $form['existing-member'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Add an Existing User'),
+      '#type' => 'fieldgroup',
       '#attributes' => [
         'id' => 'existing-member-fieldset',
       ],
@@ -138,19 +139,15 @@ class CpUsersAddForm extends FormBase {
         ],
         '#title' => $this->t('Member'),
       ],
-      'role_existing' => [
-        '#type' => 'radios',
-        '#title' => $this->t('Role'),
-        '#options' => $options,
-        '#default_value' => $group->getGroupType()->getMemberRoleId(),
-      ],
     ];
 
     $form['new-user'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Add New User'),
+      '#type' => 'fieldgroup',
       '#attributes' => [
         'id' => 'new-user-fieldset',
+        'class' => [
+          'visually-hidden',
+        ],
       ],
       '#access' => !$this->config('cp_users.settings')->get('disable_user_creation'),
       'first_name' => [
@@ -177,11 +174,37 @@ class CpUsersAddForm extends FormBase {
         '#maxlength' => 255,
         '#size' => 60,
       ],
-      'role_new' => [
-        '#type' => 'radios',
-        '#title' => $this->t('Role'),
-        '#options' => $options,
-        '#default_value' => $group->getGroupType()->getMemberRoleId(),
+    ];
+
+    $form['role'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Role'),
+      '#options' => $options,
+      '#default_value' => $group->getGroupType()->getMemberRoleId(),
+    ];
+
+    $form['new_member_option'] = [
+      '#type' => 'fieldgroup',
+      '#attributes' => [
+        'class' => [
+          'new-member-option-wrapper',
+        ],
+      ],
+      'message' => [
+        '#type' => 'inline_template',
+        '#template' => "<span>{% trans %} Can't find their account above? {% endtrans %}</span>",
+      ],
+      'option' => [
+        '#type' => 'button',
+        '#value' => $this->t('Create a new member'),
+        '#ajax' => [
+          'callback' => [$this, 'showAddNewMemberForm'],
+        ],
+        '#attributes' => [
+          'class' => [
+            'use-ajax',
+          ],
+        ],
       ],
     ];
 
@@ -317,10 +340,36 @@ class CpUsersAddForm extends FormBase {
 
   /**
    * Closes the modal.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The ajax response containing the updates.
    */
-  public function closeModal() {
+  public function closeModal(): AjaxResponse {
     $response = new AjaxResponse();
     $response->addCommand(new CloseModalDialogCommand());
+    return $response;
+  }
+
+  /**
+   * Shows the options for adding new member.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The ajax response containing form updates.
+   */
+  public function showAddNewMemberForm(): AjaxResponse {
+    $response = new AjaxResponse();
+
+    $response->addCommand(new InvokeCommand('#existing-member-fieldset', 'addClass', [
+      'visually-hidden',
+    ]));
+    $response->addCommand(new InvokeCommand('#new-user-fieldset', 'removeClass', [
+      'visually-hidden',
+    ]));
+    $response->addCommand(new SetDialogTitleCommand('#drupal-modal', $this->t('Add new member')));
+    $response->addCommand(new InvokeCommand('.new-member-option-wrapper', 'addClass', [
+      'visually-hidden',
+    ]));
+
     return $response;
   }
 

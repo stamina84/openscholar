@@ -11,7 +11,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\cp_users\Access\ChangeOwnershipAccessCheck;
 use Drupal\cp_users\CpUsersHelperInterface;
-use Drupal\cp_users\Form\CpUsersAddExistingUserMemberForm;
+use Drupal\cp_users\Form\CpUsersAddForm;
 use Drupal\user\UserInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -209,7 +209,7 @@ class CpUserMainController extends ControllerBase {
 
     $response = new AjaxResponse();
 
-    $modal_form = $this->formBuilder()->getForm(CpUsersAddExistingUserMemberForm::class);
+    $modal_form = $this->formBuilder()->getForm(CpUsersAddForm::class);
 
     $response->addCommand(new OpenModalDialogCommand($this->t('Add an existing member'), $modal_form, $dialogOptions));
 
