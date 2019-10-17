@@ -122,7 +122,6 @@ class CpUsersAddNewMemberForm extends CpUsersAddMemberFormBase {
       $form_state_values = $form_state->getValues();
       /** @var \Drupal\user\UserStorageInterface $user_storage */
       $user_storage = $this->entityTypeManager->getStorage('user');
-      $email_key = CpUsersHelper::CP_USERS_NEW_USER;
       $role = $form_state_values['role'];
 
       /** @var \Drupal\user\UserInterface $account */
@@ -142,7 +141,7 @@ class CpUsersAddNewMemberForm extends CpUsersAddMemberFormBase {
         ],
       ]);
 
-      $this->mailManager->mail('cp_users', $email_key, $account->getEmail(), LanguageInterface::LANGCODE_DEFAULT, [
+      $this->mailManager->mail('cp_users', CpUsersHelper::CP_USERS_NEW_USER, $account->getEmail(), LanguageInterface::LANGCODE_DEFAULT, [
         'user' => $account,
         'role' => $role,
         'creator' => $this->currentUser,

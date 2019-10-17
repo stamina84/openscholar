@@ -138,23 +138,20 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
       $form_state_values = $form_state->getValues();
       /** @var \Drupal\user\UserInterface $account */
       $account = $this->entityTypeManager->getStorage('user')->load($form_state_values['user']);
-      $email_key = CpUsersHelper::CP_USERS_ADD_TO_GROUP;
       $role = $form_state_values['role'];
 
-      $values = [
+      $this->activeVsite->addMember($account, [
         'group_roles' => [
           $role,
         ],
-      ];
-      $this->activeVsite->addMember($account, $values);
+      ]);
 
-      $params = [
+      $this->mailManager->mail('cp_users', CpUsersHelper::CP_USERS_ADD_TO_GROUP, $account->getEmail(), LanguageInterface::LANGCODE_DEFAULT, [
         'user' => $account,
         'role' => $role,
         'creator' => $this->currentUser,
         'group' => $this->activeVsite,
-      ];
-      $this->mailManager->mail('cp_users', $email_key, $account->getEmail(), LanguageInterface::LANGCODE_DEFAULT, $params);
+      ]);
 
       $response->addCommand(new CloseModalDialogCommand());
       $response->addCommand(new RedirectCommand(Url::fromRoute('cp.users')->toString()));
