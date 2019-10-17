@@ -137,7 +137,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
    * Tests for adding a user new to the site.
    *
    * @covers \Drupal\cp_users\Controller\CpUserMainController::main
-   * @covers \Drupal\cp_users\Form\CpUsersAddForm
+   * @covers \Drupal\cp_users\Form\CpUsersAddNewMemberForm
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    * @throws \Behat\Mink\Exception\ExpectationException
@@ -145,7 +145,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
    * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
    * @throws \Behat\Mink\Exception\DriverException
    */
-  public function disabledTestNewUser(): void {
+  public function testNewUser(): void {
     $settings = $this->configFactory->getEditable('cp_users.settings');
 
     $existing_mail = $this->randomMachineName() . '@mail.com';
@@ -154,28 +154,29 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $existing_mail_account->setEmail($existing_mail)->save();
     $this->createUser([], $existing_username);
 
-    $this->assertFalse($settings->get('disable_user_creation'), "User creation setting is wrong.");
+    $this->assertFalse($settings->get('disable_user_creation'), 'User creation setting is wrong.');
 
     $this->drupalLogin($this->groupAdmin);
 
-    $this->visit('/' . $this->modifier . '/cp/users');
+    $this->visitViaVsite('cp/users', $this->group);
     $this->assertContains('/' . $this->modifier . '/cp/users', $this->getSession()->getCurrentUrl());
     $page = $this->getCurrentPage();
     $page->clickLink('Add a member');
     $this->assertSession()->waitForElement('css', '#drupal-modal--content');
-    $page->find('css', '#new-user-fieldset summary.seven-details__summary')->click();
+    $page->pressButton('Create a new member');
+    $this->waitForAjaxToFinish();
 
     // Negative tests.
     $page->fillField('Username', $existing_username);
     $page->fillField('E-mail Address', $this->randomMachineName() . '@mail.com');
-    $page->selectFieldOption('role_new', 'personal-member');
+    $page->selectFieldOption('role', 'personal-member');
     $page->pressButton('Save');
     $this->waitForAjaxToFinish();
     $this->assertNotNull($this->getSession()->getPage()->find('css', '.form-item-username.form-item--error'));
 
     $page->fillField('Username', $this->randomMachineName());
     $page->fillField('E-mail Address', $existing_mail);
-    $page->selectFieldOption('role_new', 'personal-member');
+    $page->selectFieldOption('role', 'personal-member');
     $page->pressButton('Save');
     $this->waitForAjaxToFinish();
     $this->assertNotNull($this->getSession()->getPage()->find('css', '.form-item-email.form-item--error'));
@@ -185,11 +186,11 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $page->fillField('Last Name', 'user');
     $page->fillField('Username', 'test-user');
     $page->fillField('E-mail Address', 'test-user@localhost.com');
-    $page->selectFieldOption('role_new', 'personal-content_editor');
+    $page->selectFieldOption('role', 'personal-content_editor');
     $page->pressButton('Save');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertContains('/' . $this->modifier . '/cp/users', $this->getSession()->getCurrentUrl(), "Not on correct page after redirect.");
-    $this->assertTrue($page->hasContent('test-user'), "Test-user not added to site.");
+    $this->assertContains('/' . $this->modifier . '/cp/users', $this->getSession()->getCurrentUrl(), 'Not on correct page after redirect.');
+    $this->assertTrue($page->hasContent('test-user'), 'Test-user not added to site.');
     $this->assertTrue($page->hasContent('Content editor'), 'Expected role not set.');
 
     $settings->set('disable_user_creation', 1);
@@ -197,11 +198,12 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
 
     $page->clickLink('Add a member');
     $this->assertSession()->waitForElement('css', '#drupal-modal--content');
-    $this->assertSession()->linkNotExists('Add New User', "Add New User is still on page.");
+    $this->assertSession()->linkNotExists('Add New User', 'Add New User is still on page.');
     $page->find('css', '#drupal-modal')->click();
 
     // Cleanup.
-    $user = \user_load_by_name('test-user');
+    /** @var \Drupal\user\UserInterface $user */
+    $user = user_load_by_name('test-user');
     $this->markEntityForCleanup($user);
 
     $settings->set('disable_user_creation', 0);
