@@ -112,6 +112,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $this->assertContains('/' . $this->modifier . '/cp/users/add', $link->getAttribute('href'), 'Add link is not in the vsite.');
     $page->clickLink('Add a member');
     $this->assertSession()->waitForElement('css', '#drupal-modal--content');
+    $this->assertSession()->elementContains('css', '.ui-dialog-title', 'Add an existing member');
     $page->fillField('user', substr($username, 0, 3));
     $this->assertSession()->waitOnAutocomplete();
     $this->assertSession()->responseContains($username);
@@ -134,7 +135,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
   }
 
   /**
-   * Tests for adding a user new to the site.
+   * Tests for adding a new user as vsite member.
    *
    * @covers \Drupal\cp_users\Controller\CpUserMainController::main
    * @covers \Drupal\cp_users\Form\CpUsersAddNewMemberForm
@@ -165,6 +166,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $this->assertSession()->waitForElement('css', '#drupal-modal--content');
     $page->pressButton('Create a new member');
     $this->waitForAjaxToFinish();
+    $this->assertSession()->elementContains('css', '.ui-dialog-title', 'Add new member');
 
     // Negative tests.
     $page->fillField('Username', $existing_username);
