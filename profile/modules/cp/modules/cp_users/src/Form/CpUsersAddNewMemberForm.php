@@ -48,14 +48,12 @@ class CpUsersAddNewMemberForm extends CpUsersAddMemberFormBase {
         '#title' => $this->t('Username'),
         '#maxlength' => 255,
         '#size' => 60,
-        '#required' => TRUE,
       ],
       'email' => [
         '#type' => 'textfield',
         '#title' => $this->t('E-mail Address'),
         '#maxlength' => 255,
         '#size' => 60,
-        '#required' => TRUE,
       ],
     ];
 
@@ -83,17 +81,31 @@ class CpUsersAddNewMemberForm extends CpUsersAddMemberFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $parent_validation_response = parent::validateForm($form, $form_state);
     $form_state_values = $form_state->getValues();
+    /** @var array $triggering_element */
+    $triggering_element = $form_state->getTriggeringElement();
 
-    $account = (bool) user_load_by_mail($form_state_values['email']);
-    if ($account) {
-      $form_state->setError($form['new_user_wrapper']['email'], $this->t('User with this email already exists. Please choose a different email.'));
-      return FALSE;
-    }
+    if ($triggering_element['#name'] === 'submit') {
+      if (!$form_state_values['username']) {
+        $form_state->setError($form['new_user_wrapper']['username'], $this->t('Please enter a username.'));
+        return FALSE;
+      }
 
-    $account = user_load_by_name($form_state_values['username']);
-    if ($account) {
-      $form_state->setError($form['new_user_wrapper']['username'], $this->t('User with this username already exists. Please choose a different username.'));
-      return FALSE;
+      if (!$form_state_values['email']) {
+        $form_state->setError($form['new_user_wrapper']['email'], $this->t('Please enter an email.'));
+        return FALSE;
+      }
+
+      $account = (bool) user_load_by_mail($form_state_values['email']);
+      if ($account) {
+        $form_state->setError($form['new_user_wrapper']['email'], $this->t('User with this email already exists. Please choose a different email.'));
+        return FALSE;
+      }
+
+      $account = user_load_by_name($form_state_values['username']);
+      if ($account) {
+        $form_state->setError($form['new_user_wrapper']['username'], $this->t('User with this username already exists. Please choose a different username.'));
+        return FALSE;
+      }
     }
 
     return $parent_validation_response;
