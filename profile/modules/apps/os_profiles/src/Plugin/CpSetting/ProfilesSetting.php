@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\cp_settings\CpSettingBase;
@@ -59,6 +60,8 @@ class ProfilesSetting extends CpSettingBase {
    */
   protected $imageWidgetCropManager;
 
+  protected $entityTypeManager;
+
   /**
    * ProfilesSetting constructor.
    *
@@ -78,13 +81,16 @@ class ProfilesSetting extends CpSettingBase {
    *   File usage service.
    * @param \Drupal\image_widget_crop\ImageWidgetCropInterface $iwc_manager
    *   The ImageWidgetCrop manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The EntityTypeManagerInterface manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, VsiteContextManagerInterface $vsite_context_manager, EntityDisplayRepositoryInterface $entity_display_repository, RendererInterface $renderer, FileUsageInterface $file_usage, ImageWidgetCropInterface $iwc_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, VsiteContextManagerInterface $vsite_context_manager, EntityDisplayRepositoryInterface $entity_display_repository, RendererInterface $renderer, FileUsageInterface $file_usage, ImageWidgetCropInterface $iwc_manager, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $vsite_context_manager);
     $this->entityDisplayRepository = $entity_display_repository;
     $this->renderer = $renderer;
     $this->fileUsage = $file_usage;
     $this->imageWidgetCropManager = $iwc_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -99,7 +105,8 @@ class ProfilesSetting extends CpSettingBase {
       $container->get('entity_display.repository'),
       $container->get('renderer'),
       $container->get('file.usage'),
-      $container->get('image_widget_crop.manager')
+      $container->get('image_widget_crop.manager'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -276,7 +283,7 @@ class ProfilesSetting extends CpSettingBase {
     $suffix = $this->t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed media types: <strong>image</strong>');
     $upload_location = 'public://' . $this->activeVsite->id() . '/files';
     $allowed_file_types = 'gif png jpg jpeg';
-    $field_layout = \Drupal::entityTypeManager()
+    $field_layout = $this->entityTypeManager
       ->getStorage('entity_form_display')
       ->load('node.person.default');
     $content = $field_layout->get('content');
