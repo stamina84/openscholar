@@ -164,10 +164,10 @@ function os_widgets_theme($existing, $type, $theme, $path) {
     ],
     'os_widgets_follow_me' => [
       'variables' => [
-       'profile_links' => [],
-       'display_social' => NULL,
-       'rss_feed' => NULL,
-       'embeddable' => NULL,
+        'profile_links' => [],
+        'display_social' => NULL,
+        'rss_feed' => NULL,
+        'embeddable' => NULL,
       ],
     ],
   ];
@@ -772,10 +772,11 @@ function os_follow_default_networks() {
 /**
  * Get all profile url links.
  *
+ * @param mixed $entity
+ *   Block entity.
+ *
  * @return array
  *   Links array.
- *  @param mixed $entity
- *   Block entity.
  */
 function get_profile_url_links($entity) {
   $links = [];
