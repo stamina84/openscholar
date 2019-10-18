@@ -640,6 +640,9 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
   // identifier group.
   $form['bibcite_pmid']['#access'] = FALSE;
 
+  // Adding class to form.
+  $form['#attributes']['class'][] = 'node-form';
+
   os_publications_bibcite_reference_form_add_menu_option($form, $form_state);
 
   os_publications_bibcite_reference_form_alter_metadata_access($form, $form_state);
