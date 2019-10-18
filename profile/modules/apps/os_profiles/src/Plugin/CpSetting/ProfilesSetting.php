@@ -136,7 +136,6 @@ class ProfilesSetting extends CpSettingBase {
         'uri' => $file->getFileUri(),
       ];
       $storage['uploaded_fid'] = $file->id();
-      $form_state->setStorage($storage);
 
       // Determine image dimensions.
       if (isset($element['#value']['width']) && isset($element['#value']['height'])) {
@@ -188,6 +187,7 @@ class ProfilesSetting extends CpSettingBase {
         ];
       }
     }
+    $form_state->setStorage($storage);
     return $element;
   }
 
@@ -345,6 +345,7 @@ class ProfilesSetting extends CpSettingBase {
       ],
     ];
     $storage = $form_state->getStorage();
+    // Check is there any uploaded file with processImage.
     if (!empty($storage['uploaded_fid'])) {
       $default_fid = $storage['uploaded_fid'];
     }
@@ -413,6 +414,9 @@ class ProfilesSetting extends CpSettingBase {
     // Use custom default image if available.
     if (!empty($default_image_fid)) {
       $image_file = File::load($default_image_fid);
+      if (empty($image_file)) {
+        return $this->t('File not found.');
+      }
       $path = $image_file->getFileUri();
       $build = [
         '#theme' => 'image_style',
