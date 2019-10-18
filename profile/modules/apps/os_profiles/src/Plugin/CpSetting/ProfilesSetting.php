@@ -281,7 +281,7 @@ class ProfilesSetting extends CpSettingBase {
     ];
 
     $suffix = $this->t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed media types: <strong>image</strong>');
-    $upload_location = 'public://' . $this->activeVsite->id() . '/files';
+    $upload_location = file_default_scheme() . '://' . $this->activeVsite->id() . '/files';
     $allowed_file_types = 'gif png jpg jpeg';
     $field_layout = $this->entityTypeManager
       ->getStorage('entity_form_display')
