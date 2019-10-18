@@ -7,12 +7,11 @@ dependencies:
     - field.field.media.image.field_image_caption
     - field.field.media.image.field_media_image
     - field.field.media.image.field_taxonomy_terms
-    - image.style.thumbnail
+    - image.style.os_slideshow_standard
     - media.type.image
   module:
     - image
     - layout_builder
-    - user
 third_party_settings:
   layout_builder:
     sections: {  }
@@ -23,48 +22,20 @@ targetEntityType: media
 bundle: image
 mode: slideshow_standard
 content:
-  created:
-    label: hidden
-    type: timestamp
-    weight: 0
-    region: content
-    settings:
-      date_format: medium
-      custom_date_format: ''
-      timezone: ''
-    third_party_settings: {  }
-  field_image_caption:
-    weight: 7
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: basic_string
-    region: content
-  field_taxonomy_terms:
-    weight: 6
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  thumbnail:
+  field_media_image:
     type: image
-    weight: 5
-    label: hidden
-    settings:
-      image_style: thumbnail
-      image_link: ''
-    region: content
-    third_party_settings: {  }
-  uid:
-    label: hidden
-    type: author
     weight: 0
     region: content
-    settings: {  }
+    label: hidden
+    settings:
+      image_style: os_slideshow_standard
+      image_link: ''
     third_party_settings: {  }
 hidden:
-  field_media_image: true
+  created: true
+  field_image_caption: true
+  field_taxonomy_terms: true
   langcode: true
   name: true
+  thumbnail: true
+  uid: true
