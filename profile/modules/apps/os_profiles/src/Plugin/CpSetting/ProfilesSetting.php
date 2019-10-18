@@ -337,7 +337,6 @@ class ProfilesSetting extends CpSettingBase {
       '#name' => 'default_image_crop_button',
       '#type' => 'button',
       '#value' => t('Refresh crop widget'),
-      // '#attributes' => ['class' => ['js-hide']],.
       '#validate' => [],
       '#submit' => [],
       '#ajax' => [
