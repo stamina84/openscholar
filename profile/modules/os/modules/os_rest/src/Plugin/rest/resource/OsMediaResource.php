@@ -5,7 +5,6 @@ namespace Drupal\os_rest\Plugin\rest\resource;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\rest\ResourceResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -17,7 +16,17 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class OsMediaResource extends OsEntityResource {
 
   /**
-   * {@inheritdoc}
+   * Switch between paths based on argument type.
+   *
+   * Every GET call to this resource goes through this method,
+   * and PHP doesn't support method overloading, so this kind of thing is
+   * necessary.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface|string $arg1
+   *   The argument from the path.
+   *
+   * @return \Drupal\rest\ResourceResponse
+   *   The response to the client.
    */
   public function get($arg1) {
     if ($arg1 instanceof EntityInterface) {
@@ -148,13 +157,8 @@ class OsMediaResource extends OsEntityResource {
   public function routes() {
     $routeCollection = parent::routes();
 
-    $path = '/api/media/filename/{file}';
+    $path = '/api/media/filename/{filename}';
     $route = $this->getBaseRoute($path, 'get');
-    $route->setOption('parameters', [
-      'file' => [
-        'type' => 'entity:file',
-      ],
-    ]);
 
     $route_name = strtr($this->pluginId, ':', '.');
     $routeCollection->add("$route_name.get.filename", $route);
