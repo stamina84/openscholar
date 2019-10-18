@@ -83,6 +83,29 @@ class ProfilesSettingsFormBuildTest extends OsExistingSiteTestBase {
   }
 
   /**
+   * Test form render image_crop #file element after upload.
+   */
+  public function testFormRenderImageCropFileAfterUpload() {
+    $file = $this->createFile('image');
+    $file->setPermanent();
+    $file->save();
+    $form = [];
+    $form_state = new FormState();
+    $this->profileSettings->getForm($form, $form_state, $this->config);
+    // On first form generate there should not #file exists.
+    $this->assertArrayNotHasKey('#file', $form['default_image']['image_crop']);
+    // Imitate that file is uploaded through upload field.
+    $form['default_image']['default_image_fid']['#files'][$file->id()] = $file;
+    $element = $this->profileSettings::processImageFile($form['default_image']['default_image_fid'], $form_state, $form);
+    $this->assertArrayHasKey('width', $element);
+    $this->assertArrayHasKey('height', $element);
+    $this->profileSettings->getForm($form, $form_state, $this->config);
+    // On second form generation there should be a #file.
+    $this->assertArrayHasKey('#file', $form['default_image']['image_crop']);
+    $this->assertSame($file->id(), $form['default_image']['image_crop']['#file']->id());
+  }
+
+  /**
    * Test form submit file.
    */
   public function testFormSubmitFile() {
