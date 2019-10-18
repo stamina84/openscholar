@@ -313,7 +313,10 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
         $domain_list[] = $d['title'];
       }
 
+      $form['#tree'] = TRUE;
       $form['#attributes'] = ['class' => ['os-follow-me-form']];
+
+      // Add profile url.
       $form['add'] = [
         '#type' => 'fieldset',
         '#title' => t('Add New Profile'),
@@ -323,21 +326,22 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
           '#description' => t('Enter the URL of your profile on a social media site. Accepted sites are: @domains', ['@domains' => implode(', ', $domain_list)]),
           '#suffix' => t('<input type="button" class="add_new" value=" Add " />'),
           '#attributes' => ['id' => 'edit-link-to-add'],
-          '#weight' => 4,
         ],
-        '#weight' => 4,
+        '#weight' => 3,
       ];
 
-      // Build a normal form.
+      // URL links.
       $form['links'] = [
         '#type' => 'markup',
         '#tree' => TRUE,
-        '#weight' => 4,
+        '#weight' => 3,
         '#pre_render' => ['os_follow_me_table'],
       ];
 
       $form['field_links']['#access'] = FALSE;
       $links = &$form['links'];
+
+      // Get all links.
       $all_links = get_profile_url_links($form_object->getEntity());
       foreach ($all_links['links'] as $k => $v) {
         $n = [
