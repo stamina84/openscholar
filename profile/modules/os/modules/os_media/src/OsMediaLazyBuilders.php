@@ -40,14 +40,27 @@ class OsMediaLazyBuilders implements ContainerInjectionInterface {
    * @param int $id
    *   The id of the media entity to render.
    * @param string $width
-   *   The width of the final media entity render, or 'default' if no width is set.
+   *   The width of the final media entity render,
+   *   or 'default' if no width is set.
+   * @param string $height
+   *   The width of the final media entity render.
+   *
+   * @return array
+   *   Actual media entity render array.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function renderMedia($id, $width) {
+  public function renderMedia($id, $width, $height) {
     if ($entity = $this->entityTypeManager->getStorage('media')->load($id)) {
+      if ($entity->bundle() === 'oembed') {
+        $entity->field_media_oembed_content->width = $width;
+        $entity->field_media_oembed_content->height = $height;
+      }
       if ($width != 'default') {
         $entity->dimensions['width'] = $width;
       }
-      $output = $this->entityTypeManager->getViewBuilder('media')->view($entity);
+      $output = $this->entityTypeManager->getViewBuilder('media')->view($entity, 'default');
       return $output;
     }
 

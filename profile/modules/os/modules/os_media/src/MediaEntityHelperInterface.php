@@ -47,11 +47,15 @@ interface MediaEntityHelperInterface {
    *
    * @param string $url
    *   Resource url to fetch.
+   * @param string $width
+   *   Max width of the resource to emebed.
+   * @param string $height
+   *   Max height of the resource to emebed.
    *
    * @return mixed
    *   Data representation of embedly resource
    */
-  public function fetchEmbedlyResource($url);
+  public function fetchEmbedlyResource($url, $width, $height);
 
   /**
    * Returns Iframe data.

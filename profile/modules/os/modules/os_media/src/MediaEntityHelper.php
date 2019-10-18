@@ -174,7 +174,7 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchEmbedlyResource($url) {
+  public function fetchEmbedlyResource($url, $width = NULL, $height = NULL) {
 
     $cache_id = "media:embedly_resource:$url";
 
@@ -187,6 +187,8 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
       'query' => [
         "url" => $url,
         "key" => $this->config->get('embedly_key'),
+        "width" => $width,
+        "height" => $height,
       ],
     ];
 
@@ -242,7 +244,7 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
       '#attributes' => [
         'src' => $url->toString(),
         'frameborder' => 0,
-        'scrolling' => FALSE,
+        'scrolling' => "no",
         'allowtransparency' => TRUE,
         'width' => $max['width'] ?: $resource['width'],
         'height' => $max['height'] ?: $resource['height'],

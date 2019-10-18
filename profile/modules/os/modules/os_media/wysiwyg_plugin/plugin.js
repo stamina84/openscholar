@@ -1,5 +1,5 @@
 (function () {
-  
+
   CKEDITOR.plugins.add('media_browser', {
     requires: 'image2',
     icons: 'mediabrowser',
