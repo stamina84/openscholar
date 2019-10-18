@@ -2,7 +2,7 @@
  * Allows users to add posts to their manual lists without an additional
  * page load on top of the ajax call
  */
-Drupal.behaviors.os_boxes_follow = {
+Drupal.behaviors.os_follow_me = {
   attach: function (ctx, settings) {
 
     var $ = jQuery;

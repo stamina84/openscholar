@@ -22,7 +22,6 @@ class FollowMeWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $profile_links = get_profile_url_links($block_content);
     unset($profile_links['links']['blank']);
     $display_social = $block_content->get('field_display_social')->getString();
-    $make_embeddable = $block_content->get('field_make_embeddable')->getString();
     $rss_feed = $block_content->get('field_add_link_to_rss_feed_page')->getString();
 
     $build['follow_me'] = [
@@ -30,7 +29,6 @@ class FollowMeWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#profile_links' => $profile_links['links'],
       '#display_social' => $display_social,
       '#rss_feed' => $rss_feed,
-      '#embeddable' => $make_embeddable,
     ];
     $build['follow_me']['#attached']['library'][] = 'os_widgets/followMe';
   }

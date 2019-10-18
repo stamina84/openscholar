@@ -167,7 +167,6 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'profile_links' => [],
         'display_social' => NULL,
         'rss_feed' => NULL,
-        'embeddable' => NULL,
       ],
     ],
   ];

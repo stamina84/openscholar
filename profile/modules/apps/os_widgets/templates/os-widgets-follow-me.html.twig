@@ -1,11 +1,19 @@
-{% set class = display_social ? '': 'no-label' %}
+{% set class = display_social ? '' : 'no-label' %}
 
-<div class="rrssb {{ class}}">
+<div class="rrssb {{ class }}">
   {% if profile_links %}
     <ul class="rrssb-buttons">
+      {% if rss_feed %}
+        <li class="rss-follow-icon">
+          <a href ="#" target="_blank">
+           <img src="/profiles/contrib/openscholar/themes/os_base/images/rss.png" width="24" height="28" alt="RSS Feed" title="Syndicate content"></a>
+            <span class="rrssb-text">RSS</span>
+          </a>
+        </li>
+      {% endif %}
       {% for link in profile_links %}
         <li class="rrssb-{{ link.domain }}">
-          <a href ="{{link.title}}" target="_blank">
+          <a href ="{{ link.title }}" target="_blank">
             <span class="rrssb-icon"></span>
             <span class="rrssb-text">{{ link.domain }}</span>
           </a>
