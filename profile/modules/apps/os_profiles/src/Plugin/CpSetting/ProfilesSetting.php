@@ -310,7 +310,7 @@ class ProfilesSetting extends CpSettingBase {
       '#warn_multiple_usages' => $settings['warn_multiple_usages'],
       '#crop_types_required' => [],
     ];
-    if ($default_fid = $config->get('default_image_fid')) {
+    if ($default_fid) {
       $form['default_image']['default_image_fid']['#default_value'] = [$default_fid];
     }
     else {
