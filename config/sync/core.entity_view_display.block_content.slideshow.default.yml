@@ -33,7 +33,7 @@ content:
     settings:
       optionset: default
       skin: ''
-      view_mode: default
+      view_mode: slideshow_standard
       cache: 0
       current_view_mode: default
       override: false

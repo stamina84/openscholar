@@ -20,6 +20,15 @@ class SlideshowWidget extends OsWidgetsBase implements OsWidgetsInterface {
    * {@inheritdoc}
    */
   public function buildBlock(&$build, $block_content) {
+    $slideshow_layout = $block_content->get('field_slideshow_layout')->getValue();
+    if ($slideshow_layout[0]['value'] == '3_1_overlay') {
+      $build['field_slideshow']['#build']['settings']['view_mode'] = 'slideshow_wide';
+      if (!empty($build['field_slideshow']['#build']['items'])) {
+        foreach ($build['field_slideshow']['#build']['items'] as &$item) {
+          $item['#view_mode'] = 'slideshow_wide';
+        }
+      }
+    }
     $build['add_slideshow_button'] = [
       '#type' => 'link',
       '#prefix' => '<p>',
