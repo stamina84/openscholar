@@ -38,6 +38,10 @@ class ScriptHandler {
         $fs->touch($drupalRoot . '/' . $dir . '/.gitkeep');
       }
     }
+    // FIX: The split storage has to be set and exist for write operations.
+    if (!$fs->exists('local_config')) {
+      $fs->mkdir('local_config');
+    }
 
     // Prepare the settings file for installation.
     if (!$fs->exists($drupalRoot . '/sites/default/settings.php') and $fs->exists($drupalRoot . '/sites/default/default.settings.php')) {
