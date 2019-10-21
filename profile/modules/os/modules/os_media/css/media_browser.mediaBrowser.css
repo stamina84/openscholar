@@ -12,7 +12,7 @@
   border-top: 1px solid lightgray;
   margin: 3px;
   margin-top: 0;
-  padding: 20px 5px 0;
+  padding: 20px 0px 0;
 }
 
 .media-browser-panes .loading {
@@ -244,7 +244,11 @@ div.file-filters {
 }
 
 .mb-created {
-  width: 100px;
+  width: 120px;
+}
+
+.ui-dialog .mb-created {
+  font-size: 13px;
 }
 
 /**
@@ -679,7 +683,11 @@ div[file-edit] .control button,
 
 .ui-dialog.media-wrapper {
   position: fixed;
-  top: 10% !important;
+  top: 5% !important;
+}
+
+.ui-dialog.media-wrapper .ui-widget-content.ui-dialog-content {
+  padding: .3em;
 }
 
 #media-browser-file-select {
@@ -688,6 +696,12 @@ div[file-edit] .control button,
 
 .ui-dialog .container-fluid {
   height: auto !important;
+}
+
+@media screen and (max-width: 1366px) and (min-width: 1200px) {
+  .ui-dialog .container-fluid {
+    height: 600px !important;
+  }
 }
 
 .media-actions li {

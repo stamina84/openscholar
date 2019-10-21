@@ -219,6 +219,7 @@
         "drupal/search_api": "^1.9",
         "drupal/shorten": "2.x-dev",
         "drupal/slick": "^2.0",
+        "drupal/slick_media": "^1.1",
         "drupal/slick_paragraphs": "^2.0",
         "drupal/styleguide": "^1.0@alpha",
         "drupal/term_reference_tree": "1.x-dev",
@@ -234,6 +235,7 @@
         "fullcalendar/fullcalendar": "^3.3",
         "j7mbo/twitter-api-php": "^1.0",
         "mreq/slick-lightbox": "master",
+        "npm-asset/blazy": "^1.8",
         "npm-asset/chosen-js": "^1.8",
         "npm-asset/slick-carousel": "^1.8",
         "oomphinc/composer-installers-extender": "^1.1",
@@ -322,6 +324,9 @@
             ],
             "web/libraries/slick": [
                 "npm-asset/slick-carousel"
+            ],
+            "web/libraries/blazy": [
+                "npm-asset/blazy"
             ],
             "web/core": ["type:drupal-core"],
             "web/libraries/{$name}": ["type:drupal-library"],

@@ -5,7 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.page.body
-    - field.field.node.page.field_media
+    - field.field.node.page.field_attached_media
     - field.field.node.page.field_taxonomy_terms
     - node.type.page
   module:
@@ -42,5 +42,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_media: true
+  field_attached_media: true
   langcode: true

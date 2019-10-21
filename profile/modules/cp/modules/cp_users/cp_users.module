@@ -37,10 +37,11 @@ function cp_users_mail($key, &$message, $params) {
   $roles = $group->getMember($user)->getRoles();
   /** @var string|\Drupal\Component\Render\MarkupInterface $creator_display_name */
   $creator_display_name = $creator->getDisplayName();
+  $user_display_name = $user->getDisplayName();
   $variables = [
     '@user-role' => \reset($roles)->label(),
     '@site-url' => Url::fromRoute('entity.group.canonical', ['group' => $group->id()], ['absolute' => TRUE])->toString(),
-    '@user-firstname' => $user->get('field_first_name')->count() ? $user->get('field_first_name')->first()->getValue()['value'] : render($user->getDisplayName()),
+    '@user-firstname' => $user->get('field_first_name')->count() ? $user->get('field_first_name')->first()->getValue()['value'] : render($user_display_name),
     '@account-modifier' => render($creator_display_name),
     '@account-modifier-email' => $creator->getEmail(),
     '@sitewide-name' => $config->get('sitewide_name'),
@@ -228,4 +229,35 @@ function cp_users_render_cp_role_label(GroupRoleInterface $group_role): string {
   ];
 
   return $renderer->render($renderable_label);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for making sure cp items are in sync with the member role.
+ */
+function cp_users_preprocess_menu(&$variables) {
+  /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+  $vsite_context_manager = \Drupal::service('vsite.context_manager');
+  /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
+  $active_vsite = $vsite_context_manager->getActiveVsite();
+
+  // Couldn't find a definitive machine name for `control-panel` menu, and
+  // therefore using theme hook inside the condition.
+  if ($active_vsite && strpos($variables['theme_hook_original'], 'control_panel') !== FALSE) {
+    /** @var \Drupal\Core\Session\AccountInterface $current_user */
+    $current_user = \Drupal::currentUser();
+    /** @var \Drupal\group\GroupMembership|false $group_membership */
+    $group_membership = $active_vsite->getMember($current_user);
+
+    if ($group_membership) {
+      /** @var \Drupal\Core\Render\RendererInterface $renderer */
+      $renderer = \Drupal::service('renderer');
+
+      // A more ideal way to sync the items is to use cache context
+      // `group_membership.roles.permissions`. But that didn't work.
+      // Because `group` module was unable to find the vsite entity in route.
+      // See \Drupal\group\Context\GroupRouteContextTrait::getGroupFromRoute
+      // More details: https://github.com/openscholar/openscholar/pull/12416#discussion_r333882790
+      $renderer->addCacheableDependency($variables, $group_membership->getRoles());
+    }
+  }
 }

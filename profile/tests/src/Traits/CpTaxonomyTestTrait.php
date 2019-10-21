@@ -38,6 +38,8 @@ trait CpTaxonomyTestTrait {
       $config_vocab
         ->set('allowed_vocabulary_reference_types', $allowed_types)
         ->set('widget_type', $widget_type)
+        ->set('is_required', FALSE)
+        ->set('widget_type_autocomplete', CpTaxonomyHelper::TYPE_AUTOCOMPLETE)
         ->save(TRUE);
     }
 

@@ -35,9 +35,9 @@ angular.module('mediaBrowser.filters', [])
   .filter('mbExtensions', function () {
     function testFile(file, extensions) {
       var filename = file.filename,
-        ext = 'jpg';
+        ext = filename.split(".").pop();
 
-      return !(file.schema == 'public' || file.schema == 'private') || (extensions.indexOf(ext) !== -1);
+      return !(file.schema === 'public' || file.schema === 'private') || (extensions.indexOf(ext) !== -1);
     }
     return function (input, extensions) {
       if (!extensions.length) {

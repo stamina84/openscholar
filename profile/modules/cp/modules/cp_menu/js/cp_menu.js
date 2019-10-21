@@ -99,7 +99,7 @@
                     }
                 });
                 if (show) {
-                    $('#cp-menu-build').prepend('<div class="messages error">' + Drupal.t('Our themes do not support more than four menu levels') + '</div>');
+                    $('#cp-menu-build').prepend('<div class="messages messages--error">' + Drupal.t('Our themes do not support more than four menu levels') + '</div>');
                 }
             });
         }

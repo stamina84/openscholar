@@ -114,6 +114,7 @@ class TaxonomyTermsWidget extends WidgetBase implements WidgetInterface, Contain
       $filtered_items = $this->removeUnrelatedItems($items, $vid);
       /** @var \Drupal\taxonomy\Entity\Vocabulary $vocabulary */
       $vocabulary = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->load($vid);
+      $vocabulary_settings = $this->taxonomyHelper->getVocabularySettings($vid);
       $this->saveVocabularyToFormState($form_state, $vocabulary);
       if ($fieldWidget->handlesMultipleValues()) {
         $main_element[$vid] = $fieldWidget->formElement($filtered_items, $delta, $element, $form, $form_state);
@@ -131,17 +132,35 @@ class TaxonomyTermsWidget extends WidgetBase implements WidgetInterface, Contain
         $multiple_elements['add_more']['#name'] .= '_vid_' . $vid;
         foreach (Element::children($multiple_elements) as $delta) {
           $multiple_element = &$multiple_elements[$delta];
-          if (empty($multiple_element['target_id']['#selection_settings']['view']['arguments'][0])) {
-            continue;
+          self::addVocabularyToSelectionSettingsArguments($multiple_element, $vid);
+          if (!empty($vocabulary_settings)) {
+            $multiple_element['target_id']['#required'] = !empty($vocabulary_settings['is_required']);
           }
-          $multiple_element['target_id']['#selection_settings']['view']['arguments'][0] .= '|' . $vid;
         }
         $main_element[$vid] = $multiple_elements;
       }
       $main_element[$vid]['#title'] = $vocabulary->label();
+      if (!empty($vocabulary_settings)) {
+        $main_element[$vid]['#required'] = !empty($vocabulary_settings['is_required']);
+      }
     }
     $main_element['#attached']['library'][] = 'cp_taxonomy/cp_taxonomy.tree_collapsible';
     return $main_element;
+  }
+
+  /**
+   * Add vocabulary id to views selection settings arguments.
+   *
+   * @param array $element
+   *   Form element.
+   * @param string $vid
+   *   Vocabulary id.
+   */
+  public static function addVocabularyToSelectionSettingsArguments(array &$element, string $vid) {
+    if (empty($element['target_id']['#selection_settings']['view']['arguments'][0])) {
+      return;
+    }
+    $element['target_id']['#selection_settings']['view']['arguments'][0] .= '|' . $vid;
   }
 
   /**
@@ -239,6 +258,9 @@ class TaxonomyTermsWidget extends WidgetBase implements WidgetInterface, Contain
     $widgetTypes = $this->taxonomyHelper->getWidgetTypes($this->fieldDefinition->getTargetEntityTypeId() . ':' . $bundle);
     foreach ($widgetTypes as $vid => $widgetInfo) {
       $this->fieldWidgets[$vid] = $this->pluginManager->createInstance($widgetInfo['widget_type'], $this->widgetConfiguration);
+      if (method_exists($this->fieldWidgets[$vid], 'setAutocreateBundle')) {
+        $this->fieldWidgets[$vid]->setAutocreateBundle($vid);
+      }
     }
   }
 
