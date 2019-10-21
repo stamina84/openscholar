@@ -11,6 +11,8 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\cp_users\Access\ChangeOwnershipAccessCheck;
 use Drupal\cp_users\CpUsersHelperInterface;
+use Drupal\cp_users\Form\CpUsersAddExistingUserMemberForm;
+use Drupal\cp_users\Form\CpUsersAddNewMemberForm;
 use Drupal\user\UserInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -167,6 +169,30 @@ class CpUserMainController extends ControllerBase {
             ],
           ],
         ],
+        'add-new-member' => [
+          '#type' => 'link',
+          '#title' => $this->t('Add a new member'),
+          '#url' => Url::fromRoute('cp.users.add_new'),
+          '#attributes' => [
+            'class' => [
+              'os-green-button',
+              'cp-user-float-right',
+              'use-ajax',
+              'button',
+              'button--primary',
+              'button-action',
+              'action-links',
+              'visually-hidden',
+            ],
+            'data-dialog-type' => 'modal',
+            'id' => 'add-new-member-option-opener',
+          ],
+          '#attached' => [
+            'library' => [
+              'core/drupal.dialog.ajax',
+            ],
+          ],
+        ],
       ],
       'cp_user_table' => [
         '#type' => 'table',
@@ -196,25 +222,45 @@ class CpUserMainController extends ControllerBase {
    *   The response returned to the client.
    */
   public function addUserForm() {
-    $group = $this->vsiteContextManager->getActiveVsite();
     $dialogOptions = [
       'dialogClass' => 'add-user-dialog',
       'width' => 800,
       'modal' => TRUE,
       'position' => [
-        'my' => "center top",
-        'at' => "center top",
+        'my' => 'center top',
+        'at' => 'center top',
       ],
     ];
-    if (!$group) {
-      throw new AccessDeniedHttpException();
-    }
 
     $response = new AjaxResponse();
 
-    $modal_form = $this->formBuilder()->getForm('Drupal\cp_users\Form\CpUsersAddForm');
+    $modal_form = $this->formBuilder()->getForm(CpUsersAddExistingUserMemberForm::class);
 
-    $response->addCommand(new OpenModalDialogCommand('Add Member', $modal_form, $dialogOptions));
+    $response->addCommand(new OpenModalDialogCommand($this->t('Add an existing member'), $modal_form, $dialogOptions));
+
+    return $response;
+  }
+
+  /**
+   * Opens the modal for adding a new member.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The response containing the updates.
+   */
+  public function addNewUserForm(): AjaxResponse {
+    $response = new AjaxResponse();
+
+    $modal_form = $this->formBuilder()->getForm(CpUsersAddNewMemberForm::class);
+
+    $response->addCommand(new OpenModalDialogCommand($this->t('Add new member'), $modal_form, [
+      'dialogClass' => 'add-user-dialog',
+      'width' => 800,
+      'modal' => TRUE,
+      'position' => [
+        'my' => 'center top',
+        'at' => 'center top',
+      ],
+    ]));
 
     return $response;
   }

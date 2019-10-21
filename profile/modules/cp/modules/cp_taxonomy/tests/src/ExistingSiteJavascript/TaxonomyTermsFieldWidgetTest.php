@@ -4,6 +4,7 @@ namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 
 use Behat\Mink\Element\DocumentElement;
 use Drupal\cp_taxonomy\CpTaxonomyHelper;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests taxonomy_terms fields functionality with settings.
@@ -75,6 +76,91 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
   }
 
   /**
+   * Test node taxonomy terms field settings: autocomplete (required true).
+   */
+  public function testNodeTaxonomyTermsFieldSettingsAutocompleteRequired() {
+    $this->setTestVocabularyWidget(CpTaxonomyHelper::WIDGET_TYPE_AUTOCOMPLETE, TRUE);
+
+    // Test add new node page.
+    $this->visitViaVsite('node/add/taxonomy_test_1', $this->group);
+    $page = $this->getCurrentPage();
+    $page->fillField('title[0][value]', $this->randomMachineName());
+    $page->findButton('URL alias')->press();
+    $page->fillField('path[0][alias]', '/' . $this->randomMachineName());
+    $page->pressButton('Save');
+    $form_element = $page->findField('field_taxonomy_terms[' . $this->testVid . '][0][target_id]');
+    $this->assertNotEmpty($form_element, 'Form is submitted, required field is ignored.');
+  }
+
+  /**
+   * Test node taxonomy terms field settings: autocomplete tags style.
+   */
+  public function testNodeTaxonomyTermsFieldSettingsAutocompleteTagsStyle() {
+    $this->setTestVocabularyWidget(CpTaxonomyHelper::WIDGET_TYPE_AUTOCOMPLETE, FALSE, CpTaxonomyHelper::TYPE_AUTOCOMPLETE_TAGS);
+    $this->assertTaxonomyTermsFieldVisible('data-autocomplete-path');
+
+    // Test add new node page.
+    $this->visitViaVsite('node/add/taxonomy_test_1', $this->group);
+    $web_assert = $this->assertSession();
+    $web_assert->statusCodeEquals(200);
+
+    $page = $this->getCurrentPage();
+    $web_assert->pageTextContains($this->testVid);
+    $terms = $page->findField('field_taxonomy_terms[' . $this->testVid . ']');
+    $terms->setValue('Term1');
+    $result = $web_assert->waitForElementVisible('css', '.ui-autocomplete li');
+    $this->assertNotNull($result);
+    // Click the autocomplete option.
+    $result->click();
+    $web_assert->pageTextContains('Term1 (' . $this->term1->id() . ')');
+    $terms->setValue('Term1 (' . $this->term1->id() . '), ' . $this->term2->label());
+    $this->saveNodeAndAssertTerms($page);
+  }
+
+  /**
+   * Test node taxonomy terms field settings: tags style with autocreate.
+   */
+  public function testNodeTaxonomyTermsFieldSettingsAutocompleteTagsStyleAutoCreate() {
+    $this->setTestVocabularyWidget(CpTaxonomyHelper::WIDGET_TYPE_AUTOCOMPLETE, FALSE, CpTaxonomyHelper::TYPE_AUTOCOMPLETE_TAGS);
+
+    // Test add new node page.
+    $this->visitViaVsite('node/add/taxonomy_test_1', $this->group);
+    $web_assert = $this->assertSession();
+    $web_assert->statusCodeEquals(200);
+
+    $page = $this->getCurrentPage();
+    $terms = $page->findField('field_taxonomy_terms[' . $this->testVid . ']');
+    // Create 2 new tags and add exist one.
+    $terms->setValue('my new tag 1, my new tag 2, ' . $this->term1->label());
+    $node = $this->fillNodeFormAndSubmit($page);
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $terms_values */
+    $terms_values = $node->get('field_taxonomy_terms');
+    $this->assertCount(3, $terms_values);
+    $terms = $terms_values->referencedEntities();
+    $this->assertEquals('my new tag 1', $terms[0]->label());
+    $this->assertEquals('my new tag 2', $terms[1]->label());
+    $this->assertEquals($this->term1->label(), $terms[2]->label());
+    $this->markEntityForCleanup($node);
+  }
+
+  /**
+   * Test node taxonomy terms field settings: autocomplete (required true).
+   */
+  public function testNodeTaxonomyTermsFieldSettingsAutocompleteTagsStyleRequired() {
+    $this->setTestVocabularyWidget(CpTaxonomyHelper::WIDGET_TYPE_AUTOCOMPLETE, TRUE, CpTaxonomyHelper::TYPE_AUTOCOMPLETE_TAGS);
+
+    // Test add new node page.
+    $this->visitViaVsite('node/add/taxonomy_test_1', $this->group);
+    $page = $this->getCurrentPage();
+    $page->fillField('title[0][value]', $this->randomMachineName());
+    $page->findButton('URL alias')->press();
+    $page->fillField('path[0][alias]', '/' . $this->randomMachineName());
+    $page->pressButton('Save');
+    $form_element = $page->findField('field_taxonomy_terms[' . $this->testVid . ']');
+    $this->assertNotEmpty($form_element, 'Form is submitted, required field is ignored.');
+  }
+
+  /**
    * Test node taxonomy terms field settings: select list.
    */
   public function testNodeTaxonomyTermsFieldSettingsSelectList() {
@@ -103,6 +189,23 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
   }
 
   /**
+   * Test node taxonomy terms field settings: select list (required true).
+   */
+  public function testNodeTaxonomyTermsFieldSettingsSelectListRequired() {
+    $this->setTestVocabularyWidget(CpTaxonomyHelper::WIDGET_TYPE_OPTIONS_SELECT, TRUE);
+
+    // Test add new node page with required taxonomy.
+    $this->visitViaVsite('node/add/taxonomy_test_1', $this->group);
+    $page = $this->getCurrentPage();
+    $page->fillField('title[0][value]', $this->randomMachineName());
+    $page->findButton('URL alias')->press();
+    $page->fillField('path[0][alias]', '/' . $this->randomMachineName());
+    $page->pressButton('Save');
+    $form_element = $page->findById('edit_field_taxonomy_terms_' . strtolower($this->testVid) . '_chosen');
+    $this->assertNotEmpty($form_element, 'Form is submitted, required field is ignored.');
+  }
+
+  /**
    * Test node taxonomy terms field settings: checkboxes / radio buttons.
    */
   public function testNodeTaxonomyTermsFieldSettingsCheckboxesRadio() {
@@ -121,6 +224,23 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
   }
 
   /**
+   * Test node taxonomy terms field settings: checkboxes (required true).
+   */
+  public function testNodeTaxonomyTermsFieldSettingsCheckboxesRadioRequired() {
+    $this->setTestVocabularyWidget(CpTaxonomyHelper::WIDGET_TYPE_OPTIONS_BUTTONS, TRUE);
+
+    // Test add new node page with required taxonomy.
+    $this->visitViaVsite('node/add/taxonomy_test_1', $this->group);
+    $page = $this->getCurrentPage();
+    $page->fillField('title[0][value]', $this->randomMachineName());
+    $page->findButton('URL alias')->press();
+    $page->fillField('path[0][alias]', '/' . $this->randomMachineName());
+    $page->pressButton('Save');
+    $form_element = $page->findField('field_taxonomy_terms[' . $this->testVid . '][' . $this->term1->id() . ']');
+    $this->assertNotEmpty($form_element, 'Form is submitted, required field is ignored.');
+  }
+
+  /**
    * Test node taxonomy terms field settings: tree.
    */
   public function testNodeTaxonomyTermsFieldSettingsTree() {
@@ -136,6 +256,23 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
     $page->findField('field_taxonomy_terms[' . $this->testVid . '][0][' . $this->term1->id() . '][' . $this->term1->id() . ']')->check();
     $page->findField('field_taxonomy_terms[' . $this->testVid . '][0][' . $this->term2->id() . '][' . $this->term2->id() . ']')->check();
     $this->saveNodeAndAssertTerms($page);
+  }
+
+  /**
+   * Test node taxonomy terms field settings: tree (required true).
+   */
+  public function testNodeTaxonomyTermsFieldSettingsTreeRequired() {
+    $this->setTestVocabularyWidget(CpTaxonomyHelper::WIDGET_TYPE_TREE, TRUE);
+
+    // Test add new node page.
+    $this->visitViaVsite('node/add/taxonomy_test_1', $this->group);
+    $page = $this->getCurrentPage();
+    $page->fillField('title[0][value]', $this->randomMachineName());
+    $page->findButton('URL alias')->press();
+    $page->fillField('path[0][alias]', '/' . $this->randomMachineName());
+    $page->pressButton('Save');
+    $form_element = $page->findField('field_taxonomy_terms[' . $this->testVid . '][0][' . $this->term1->id() . '][' . $this->term1->id() . ']');
+    $this->assertNotEmpty($form_element, 'Form is submitted, required field is ignored.');
   }
 
   /**
@@ -270,6 +407,31 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function saveNodeAndAssertTerms(DocumentElement $page): void {
+    $node = $this->fillNodeFormAndSubmit($page);
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $terms_values */
+    $terms_values = $node->get('field_taxonomy_terms');
+    $this->assertCount(2, $terms_values);
+    $item_value = $terms_values[0]->getValue();
+    $this->assertEquals($this->term1->id(), $item_value['target_id']);
+    $item_value = $terms_values[1]->getValue();
+    $this->assertEquals($this->term2->id(), $item_value['target_id']);
+    $this->markEntityForCleanup($node);
+  }
+
+  /**
+   * Fill the rest of node form elements and submit and assert submitted node.
+   *
+   * @param \Behat\Mink\Element\DocumentElement $page
+   *   Document Element.
+   *
+   * @return \Drupal\node\Entity\Node
+   *   Created node.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function fillNodeFormAndSubmit(DocumentElement $page): Node {
     $title = $this->randomMachineName();
     $page->fillField('title[0][value]', $title);
     $page->findButton('URL alias')->press();
@@ -278,16 +440,7 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
     $nodes = $this->entityTypeManager->getStorage('node')
       ->loadByProperties(['title' => $title]);
     $this->assertNotEmpty($nodes, 'Test node is not created.');
-    foreach ($nodes as $node) {
-      /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $terms_values */
-      $terms_values = $node->get('field_taxonomy_terms');
-      $this->assertCount(2, $terms_values);
-      $item_value = $terms_values[0]->getValue();
-      $this->assertEquals($this->term1->id(), $item_value['target_id']);
-      $item_value = $terms_values[1]->getValue();
-      $this->assertEquals($this->term2->id(), $item_value['target_id']);
-      $this->markEntityForCleanup($node);
-    }
+    return reset($nodes);
   }
 
   /**
@@ -295,11 +448,17 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
    *
    * @param string $widget_type
    *   Widget type.
+   * @param bool $is_required
+   *   Field widget required or not.
+   * @param string $autocomplete_type
+   *   Autocomplete style.
    */
-  protected function setTestVocabularyWidget(string $widget_type): void {
+  protected function setTestVocabularyWidget(string $widget_type, bool $is_required = FALSE, $autocomplete_type = CpTaxonomyHelper::TYPE_AUTOCOMPLETE): void {
     $config_vocab = $this->configFactory->getEditable('taxonomy.vocabulary.' . $this->testVid);
     $config_vocab
       ->set('widget_type', $widget_type)
+      ->set('is_required', $is_required)
+      ->set('widget_type_autocomplete', $autocomplete_type)
       ->save(TRUE);
   }
 

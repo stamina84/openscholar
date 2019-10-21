@@ -115,10 +115,31 @@ function cp_taxonomy_form_taxonomy_vocabulary_form_alter(array &$form, FormState
     '#title' => t('Allowed entity types'),
   ];
 
+  $form['is_required'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Required'),
+    '#description' => t('If checked, the post must be tagged / categorized with at least one term from this vocabulary.'),
+  ];
+
+  $form['widget_type_autocomplete'] = [
+    '#type' => 'radios',
+    '#title' => t('Type'),
+    '#options' => [
+      CpTaxonomyHelper::TYPE_AUTOCOMPLETE => t('Managed'),
+      CpTaxonomyHelper::TYPE_AUTOCOMPLETE_TAGS => t('Tags style'),
+    ],
+    '#description' => t('Terms may be created in advance or on the fly, when adding / editing a post.'),
+  ];
+
   $form['widget_type'] = [
     '#title' => t('Form element type'),
     '#type' => 'radios',
     '#options' => TaxonomyTermsWidget::getWidgetTypes(),
+    '#states' => [
+      'invisible' => [
+        ':input[name="widget_type_autocomplete"]' => ['value' => CpTaxonomyHelper::TYPE_AUTOCOMPLETE_TAGS],
+      ],
+    ],
   ];
   if (!empty($form['vid']['#default_value'])) {
     $vocabulary_settings = $taxonomy_helper->getVocabularySettings($form['vid']['#default_value']);
@@ -126,9 +147,12 @@ function cp_taxonomy_form_taxonomy_vocabulary_form_alter(array &$form, FormState
   if (!empty($vocabulary_settings)) {
     $form['allowed_entity_types']['#default_value'] = $vocabulary_settings['allowed_vocabulary_reference_types'];
     $form['widget_type']['#default_value'] = $vocabulary_settings['widget_type'];
+    $form['is_required']['#default_value'] = $vocabulary_settings['is_required'];
+    $form['widget_type_autocomplete']['#default_value'] = $vocabulary_settings['widget_type_autocomplete'];
   }
   else {
     $form['widget_type']['#default_value'] = CpTaxonomyHelper::WIDGET_TYPE_OPTIONS_SELECT;
+    $form['widget_type_autocomplete']['#default_value'] = CpTaxonomyHelper::TYPE_AUTOCOMPLETE;
   }
   $form['actions']['submit']['#submit'][] = 'cp_taxonomy_form_save_vocabulary_settings_submit';
 }
@@ -210,6 +234,8 @@ function cp_taxonomy_form_save_vocabulary_settings_submit(array &$form, FormStat
   $vid = $form_state->getValue('vid');
   $settings['allowed_entity_types'] = $form_state->getValue('allowed_entity_types');
   $settings['widget_type'] = $form_state->getValue('widget_type');
+  $settings['is_required'] = !empty($form_state->getValue('is_required'));
+  $settings['widget_type_autocomplete'] = $form_state->getValue('widget_type_autocomplete');
   Drupal::service('cp.taxonomy.helper')->saveVocabularySettings($vid, $settings);
 }
 
