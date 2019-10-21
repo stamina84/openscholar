@@ -195,6 +195,16 @@ class ProfilesSetting extends CpSettingBase {
    * Render image crop element into form.
    */
   public static function ajaxRenderImageCrop(&$form, FormStateInterface &$form_state) {
+    // Container is a helper markup for testing ajax re-rendering
+    // in test (testCpSettingsReRenderImageCrop).
+    $form['default_image']['image_crop']['ajax_container'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'ajax-content',
+        ],
+      ],
+    ];
     return $form['default_image']['image_crop'];
   }
 
