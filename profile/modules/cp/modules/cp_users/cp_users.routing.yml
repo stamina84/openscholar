@@ -12,6 +12,13 @@ cp.users.add:
     _title: 'Add User'
   requirements:
     _group_permission: 'manage cp users'
+cp.users.add_new:
+  path: '/cp/users/add-new'
+  defaults:
+    _controller: '\Drupal\cp_users\Controller\CpUserMainController::addNewUserForm'
+    _title: 'Add User'
+  requirements:
+    _group_permission: 'manage cp users'
 cp.users.remove:
   path: '/cp/users/remove/{user}'
   defaults:

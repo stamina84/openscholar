@@ -44,6 +44,8 @@ class CpTaxonomyHelperTest extends TestBase {
       'node:taxonomy_test_2' => 'node:taxonomy_test_2',
     ];
     $settings['widget_type'] = '';
+    $settings['is_required'] = FALSE;
+    $settings['widget_type_autocomplete'] = CpTaxonomyHelper::TYPE_AUTOCOMPLETE;
     $this->helper->saveVocabularySettings($vid, $settings);
     $settings = $this->helper->getVocabularySettings($vid);
     $this->assertCount(2, $settings['allowed_vocabulary_reference_types']);
