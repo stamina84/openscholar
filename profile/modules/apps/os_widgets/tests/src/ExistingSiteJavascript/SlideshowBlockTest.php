@@ -17,8 +17,8 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $group_admin = $this->createAdminUser();
-    $this->addGroupEnhancedMember($group_admin, $this->group);
+    $group_admin = $this->createUser();
+    $this->addGroupAdmin($group_admin, $this->group);
     $this->drupalLogin($group_admin);
   }
 
