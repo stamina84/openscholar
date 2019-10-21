@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3bb4f66b169477d7e5aa0dc787b4cc56",
+    "content-hash": "671b97f31a70221b695fa9f25779c99e",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -4852,7 +4852,8 @@
                     "Getlabel() on null layout builder.": "https://www.drupal.org/files/issues/2018-07-16/2985882-entityfield-2.patch",
                     "'view_path' is set to /views/ajax after second ajax request": "https://www.drupal.org/files/issues/2018-03-14/drupal-views_path_ajax-2866386-10.patch",
                     "Image styles fails with absolute path": "https://www.drupal.org/files/issues/image_styles-2754273-7.patch",
-                    "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch"
+                    "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch",
+                    "Cannot add a context in Drupal 8.7 with layout builder installed": "https://www.drupal.org/files/issues/2019-06-11/context-config-schema-for-lb-support-3043383-12.patch"
                 }
             },
             "autoload": {
