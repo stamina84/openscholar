@@ -18,9 +18,13 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
   use StringTranslationTrait;
 
   const WIDGET_TYPE_AUTOCOMPLETE = 'cp_entity_reference_autocomplete';
+  const WIDGET_TYPE_AUTOCOMPLETE_TAGS = 'cp_entity_reference_autocomplete_tags';
   const WIDGET_TYPE_OPTIONS_SELECT = 'cp_options_select';
   const WIDGET_TYPE_OPTIONS_BUTTONS = 'cp_options_buttons';
   const WIDGET_TYPE_TREE = 'cp_term_reference_tree';
+
+  const TYPE_AUTOCOMPLETE = 'entityreference_autocomplete';
+  const TYPE_AUTOCOMPLETE_TAGS = 'entityreference_autocomplete_tags';
 
   private $configFactory;
   private $entityTypeManager;
@@ -73,6 +77,8 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
     $config_vocab = $this->configFactory->getEditable('taxonomy.vocabulary.' . $vid);
     if (!empty($config_vocab)) {
       $settings['allowed_vocabulary_reference_types'] = $config_vocab->get('allowed_vocabulary_reference_types');
+      $settings['is_required'] = $config_vocab->get('is_required');
+      $settings['widget_type_autocomplete'] = $config_vocab->get('widget_type_autocomplete');
       $widget_type = $config_vocab->get('widget_type');
       $settings['widget_type'] = is_null($widget_type) ? self::WIDGET_TYPE_AUTOCOMPLETE : $widget_type;
     }
@@ -104,6 +110,8 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
       $config_vocab->set('allowed_vocabulary_reference_types', $filtered_entity_types);
     }
     $config_vocab->set('widget_type', $settings['widget_type']);
+    $config_vocab->set('is_required', $settings['is_required']);
+    $config_vocab->set('widget_type_autocomplete', $settings['widget_type_autocomplete']);
     $config_vocab->save(TRUE);
   }
 
@@ -188,6 +196,9 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
           'label' => $config_vocab->get('name'),
         ];
         continue;
+      }
+      if ($config_vocab->get('widget_type_autocomplete') == self::TYPE_AUTOCOMPLETE_TAGS) {
+        $widget_type = self::WIDGET_TYPE_AUTOCOMPLETE_TAGS;
       }
       $widgets[$vid] = [
         'widget_type' => $widget_type,

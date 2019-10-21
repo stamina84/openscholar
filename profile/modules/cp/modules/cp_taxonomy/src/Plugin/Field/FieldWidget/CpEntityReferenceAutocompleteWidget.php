@@ -12,7 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @FieldWidget(
  *   id = "cp_entity_reference_autocomplete",
  *   label = @Translation("CP Autocomplete"),
- *   description = @Translation("CP An autocomplete text field."),
+ *   description = @Translation("CP autocomplete field widget."),
  *   field_types = {
  *     "entity_reference"
  *   }
