@@ -26,3 +26,4 @@ permissions:
   16: 'view group_node:presentation entity'
   17: 'view group_node:software_project entity'
   18: 'view group_node:software_release entity'
+description: null
