@@ -4,12 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.media.field_media_file
-    - media.type.audio
-    - media.type.document
-    - media.type.executable
-    - media.type.html
-    - media.type.image
-    - media.type.oembed
   module:
     - file
     - group
@@ -1139,13 +1133,7 @@ display:
           group_type: group
           admin_label: ''
           operator: in
-          value:
-            audio: audio
-            document: document
-            oembed: oembed
-            executable: executable
-            html: html
-            image: image
+          value: {  }
           group: 1
           exposed: true
           expose:
