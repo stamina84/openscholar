@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\os_widgets\ExistingSite;
 
-use Drupal\os_widgets\Access\AddSlideshowAccessCheck;
-
 /**
  * Class AddSlideshowAccessCheckTest.
  *
@@ -31,8 +29,9 @@ class AddSlideshowAccessCheckTest extends OsWidgetsExistingSiteTestBase {
     ]);
     $this->group->addContent($block_content, 'group_entity:block_content');
     $account = $this->createUser();
-    $access = new AddSlideshowAccessCheck($account, $this->container->get('entity_type.manager'), $this->container->get('vsite.context_manager'));
-    $access_result = $access->access($account, $block_content);
+    /** @var \Drupal\os_widgets\Access\AddSlideshowAccessCheck $add_slideshow_access_checker */
+    $add_slideshow_access_checker = $this->container->get('os.add_slideshow_access');
+    $access_result = $add_slideshow_access_checker->access($account, $block_content);
     $this->assertTrue($access_result->isAllowed());
   }
 
@@ -47,8 +46,9 @@ class AddSlideshowAccessCheckTest extends OsWidgetsExistingSiteTestBase {
     ]);
     $this->group->addContent($block_content, 'group_entity:block_content');
     $account = $this->createUser();
-    $access = new AddSlideshowAccessCheck($account, $this->container->get('entity_type.manager'), $this->container->get('vsite.context_manager'));
-    $access_result = $access->access($account, $block_content);
+    /** @var \Drupal\os_widgets\Access\AddSlideshowAccessCheck $add_slideshow_access_checker */
+    $add_slideshow_access_checker = $this->container->get('os.add_slideshow_access');
+    $access_result = $add_slideshow_access_checker->access($account, $block_content);
     $this->assertTrue($access_result->isForbidden());
   }
 
@@ -60,8 +60,9 @@ class AddSlideshowAccessCheckTest extends OsWidgetsExistingSiteTestBase {
       'type' => 'slideshow',
     ]);
     $account = $this->createUser();
-    $access = new AddSlideshowAccessCheck($account, $this->container->get('entity_type.manager'), $this->container->get('vsite.context_manager'));
-    $access_result = $access->access($account, $block_content);
+    /** @var \Drupal\os_widgets\Access\AddSlideshowAccessCheck $add_slideshow_access_checker */
+    $add_slideshow_access_checker = $this->container->get('os.add_slideshow_access');
+    $access_result = $add_slideshow_access_checker->access($account, $block_content);
     $this->assertTrue($access_result->isForbidden());
   }
 
@@ -73,8 +74,9 @@ class AddSlideshowAccessCheckTest extends OsWidgetsExistingSiteTestBase {
       'type' => 'not_slideshow',
     ]);
     $account = $this->createUser();
-    $access = new AddSlideshowAccessCheck($account, $this->container->get('entity_type.manager'), $this->container->get('vsite.context_manager'));
-    $access_result = $access->access($account, $block_content);
+    /** @var \Drupal\os_widgets\Access\AddSlideshowAccessCheck $add_slideshow_access_checker */
+    $add_slideshow_access_checker = $this->container->get('os.add_slideshow_access');
+    $access_result = $add_slideshow_access_checker->access($account, $block_content);
     $this->assertTrue($access_result->isForbidden());
   }
 
