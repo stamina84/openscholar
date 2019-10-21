@@ -248,10 +248,11 @@
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
-        "drupal/features": "^3.7",
+        "dmore/chrome-mink-driver": "^2.6",
         "drupal/devel": "^1.2",
-        "weitzman/drupal-test-traits": "dev-pass-chrome-driver-options",
-        "dmore/chrome-mink-driver": "^2.6"
+        "drupal/features": "^3.7",
+        "drupal/restui": "^1.17",
+        "weitzman/drupal-test-traits": "dev-pass-chrome-driver-options"
     },
     "conflict": {
         "drupal/drupal": "*"
