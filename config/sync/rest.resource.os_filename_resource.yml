@@ -1,0 +1,22 @@
+uuid: f4c22b1d-a778-43e9-aae4-d72e3dc06b1b
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - hal
+    - os_rest
+    - serialization
+    - user
+id: os_filename_resource
+plugin_id: os_filename_resource
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - hal_json
+    - json
+  authentication:
+    - basic_auth
+    - cookie

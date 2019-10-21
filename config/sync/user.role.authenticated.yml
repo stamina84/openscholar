@@ -51,6 +51,7 @@ permissions:
   - 'delete bibcite_reference website revisions'
   - 'opt-in or out of google analytics tracking'
   - 'restful get group:extras'
+  - 'restful get os_filename_resource'
   - 'revert bibcite_reference audiovisual revisions'
   - 'revert bibcite_reference bill revisions'
   - 'revert bibcite_reference book revisions'
