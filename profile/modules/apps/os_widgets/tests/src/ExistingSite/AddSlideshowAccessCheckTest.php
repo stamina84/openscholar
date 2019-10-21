@@ -36,7 +36,7 @@ class AddSlideshowAccessCheckTest extends OsWidgetsExistingSiteTestBase {
   }
 
   /**
-   * Test add slideshow checker with block with group.
+   * Test add slideshow checker with block with different group.
    */
   public function testAddSlideshowBlockContentDifferentVsite() {
     $group = $this->createGroup();
