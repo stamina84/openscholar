@@ -37,10 +37,11 @@ function cp_users_mail($key, &$message, $params) {
   $roles = $group->getMember($user)->getRoles();
   /** @var string|\Drupal\Component\Render\MarkupInterface $creator_display_name */
   $creator_display_name = $creator->getDisplayName();
+  $user_display_name = $user->getDisplayName();
   $variables = [
     '@user-role' => \reset($roles)->label(),
     '@site-url' => Url::fromRoute('entity.group.canonical', ['group' => $group->id()], ['absolute' => TRUE])->toString(),
-    '@user-firstname' => $user->get('field_first_name')->count() ? $user->get('field_first_name')->first()->getValue()['value'] : render($user->getDisplayName()),
+    '@user-firstname' => $user->get('field_first_name')->count() ? $user->get('field_first_name')->first()->getValue()['value'] : render($user_display_name),
     '@account-modifier' => render($creator_display_name),
     '@account-modifier-email' => $creator->getEmail(),
     '@sitewide-name' => $config->get('sitewide_name'),

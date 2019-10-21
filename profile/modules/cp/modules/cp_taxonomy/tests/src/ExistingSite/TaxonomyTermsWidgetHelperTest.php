@@ -45,6 +45,27 @@ class TaxonomyTermsWidgetHelperTest extends TestBase {
   }
 
   /**
+   * Test widget tags style on node form.
+   */
+  public function testTaxonomyTermWidgetTagsStyleForm() {
+    $vid = $this->randomMachineName();
+    $this->createGroupVocabulary($this->group, $vid, ['node:class'], CpTaxonomyHelper::WIDGET_TYPE_AUTOCOMPLETE);
+    $this->taxonomyHelper->saveVocabularySettings($vid, [
+      'allowed_entity_types' => ['node:class'],
+      'widget_type' => CpTaxonomyHelper::WIDGET_TYPE_AUTOCOMPLETE,
+      'is_required' => FALSE,
+      'widget_type_autocomplete' => CpTaxonomyHelper::TYPE_AUTOCOMPLETE_TAGS,
+    ]);
+
+    $form = $this->buildNodeForm($this->unSavedNode);
+    $this->assertNotEmpty($form['field_taxonomy_terms']['widget'][$vid], 'Autocomplete widget is not exists.');
+    $widget_element = $form['field_taxonomy_terms']['widget'][$vid];
+    $this->assertNotEmpty($widget_element, 'Elements are not exist.');
+    $this->assertEquals('entity_autocomplete', $widget_element['#type']);
+    $this->assertEquals('node:class|' . $vid, $widget_element['#selection_settings']['view']['arguments'][0]);
+  }
+
+  /**
    * Test widget select on node form.
    */
   public function testTaxonomyTermWidgetSelectForm() {

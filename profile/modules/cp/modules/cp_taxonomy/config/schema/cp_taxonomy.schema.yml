@@ -5,6 +5,12 @@ taxonomy.vocabulary.*:
       label: 'List of entity type and bundle concat string'
       sequence:
         type: string
+    is_required:
+      type: integer
+      label: 'Flag for widget is required'
+    widget_type_autocomplete:
+      type: string
+      label: 'Tags or managed widget selection'
     widget_type:
       type: string
       label: 'Entity field taxonomy terms widget type'
