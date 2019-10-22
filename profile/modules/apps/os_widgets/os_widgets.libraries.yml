@@ -42,4 +42,4 @@ followMe:
     base:
       /libraries/rrssb-plus/css/rrssb.css: {}
       /libraries/rrssb-plus/css/rrssb.buttons.css: {}
-      css/followme.css: {}
+      css/os_widgets.followme.css: {}
