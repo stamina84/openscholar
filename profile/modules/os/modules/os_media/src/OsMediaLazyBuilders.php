@@ -54,14 +54,15 @@ class OsMediaLazyBuilders implements ContainerInjectionInterface {
   public function renderMedia($id, $width, $height) {
     if ($entity = $this->entityTypeManager->getStorage('media')->load($id)) {
       if ($entity->bundle() === 'oembed') {
+        // To control width and height of the rendered video.
         $entity->field_media_oembed_content->width = $width;
         $entity->field_media_oembed_content->height = $height;
+        $field = $entity->field_media_oembed_content->view('wysiwyg');
       }
-      if ($width != 'default') {
-        $entity->dimensions['width'] = $width;
+      if ($entity->bundle() === 'image') {
+        $field = $entity->field_media_image->get(0)->view('wysiwyg');
       }
-      $output = $this->entityTypeManager->getViewBuilder('media')->view($entity, 'default');
-      return $output;
+      return $field;
     }
 
     // No media entity of $id found.

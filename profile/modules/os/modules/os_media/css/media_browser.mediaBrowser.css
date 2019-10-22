@@ -760,3 +760,8 @@ div[file-edit] .control button,
   height: 20px !important;
   width: 20px !important;
 }
+
+.field--name-body .img-responsive,
+.field--name-body .field--name-field-media-oembed-content.field--mode-wysiwyg {
+  display: inline-block;
+}

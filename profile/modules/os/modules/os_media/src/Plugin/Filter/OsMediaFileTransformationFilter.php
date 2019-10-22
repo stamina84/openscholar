@@ -40,6 +40,9 @@ class OsMediaFileTransformationFilter extends FilterBase {
       if (empty($width)) {
         $args[] = 'default';
       }
+      if (empty($height)) {
+        $args[] = 'default';
+      }
       else {
         $args[] = $width[1];
         $args[] = $height[1];
