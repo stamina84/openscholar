@@ -14,10 +14,12 @@
 {% if show_more_less %}
 <div class="more-tags">
 {% endif %}
-  <strong>{{ title }}</strong>
-  {% for item in items %}
-    {{ item|render }}{% if not loop.last %}{{ ', ' }}{% endif %}
-  {% endfor %}
+  <div class="see-more-tag">
+    <strong>{{ title }}</strong>
+    {% for item in items %}
+      {{ item|render }}{% if not loop.last %}{{ ', ' }}{% endif %}
+    {% endfor %}
+  </div>
   {% if show_more_less %}
     <span class="morecontent"><span class="morechildren">
         {{ ', ' }}
