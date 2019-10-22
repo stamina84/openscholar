@@ -118,6 +118,7 @@ class CpSettingsOsProfilesTest extends OsExistingSiteJavascriptTestBase {
     $file = $this->createFile('image');
     $file->setPermanent();
     $file->save();
+    $this->container->get('vsite.context_manager')->activateVsite($this->group);
     $profiles_config = $this->configFactory->getEditable('os_profiles.settings');
     $profiles_config->set('default_image_fid', $file->id());
     $profiles_config->save();
