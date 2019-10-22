@@ -32,3 +32,7 @@ h2.block-title {
   font-family: arial;
   margin-bottom: 8px;
 }
+.field--name-body .img-responsive,
+.field--name-body .field--name-field-media-oembed-content.field--mode-wysiwyg {
+  display: inline-block;
+}
