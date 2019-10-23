@@ -91,6 +91,13 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   ];
 
   /**
+   * The directory where thumbnails are stored.
+   *
+   * @var string
+   */
+  protected $thumbsDirectory = 'public://video_thumbnails';
+
+  /**
    * MediaEntityHelper constructor.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -139,7 +146,7 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDimensions($html, $max) : array {
+  public function getHtmlDimensions($html, $max) : array {
     preg_match('/height="([^\"]*)"/', $html, $fetchHeight);
     preg_match('/width="([^\"]*)"/', $html, $fetchWidth);
 
@@ -148,18 +155,32 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
       $width = $fetchWidth[1];
     }
 
-    $target['width'] = NULL;
-    if ($max['width'] != 0) {
-      if (isset($width)) {
-        $target['width'] = $width < $max['width'] ? $width : $max['width'];
-      }
+    $target['width'] = $max['width'];
+    $target['height'] = $max['height'];
+
+    if ($max['width'] === 'default') {
+      $target['width'] = $width ?? '100%';
     }
 
-    $target['height'] = NULL;
-    if ($max['height'] != 0) {
-      if (isset($height)) {
-        $target['height'] = $height < $max['height'] ? $height : $max['height'];
-      }
+    if ($max['height'] === 'default') {
+      $target['height'] = $height ?? '100%';
+    }
+
+    return $target;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOembedDimensions($resource, $max): array {
+    $target['width'] = $max['width'];
+    $target['height'] = $max['height'];
+
+    if ($max['width'] === 'default') {
+      $target['width'] = $resource['width'];
+    }
+    if ($max['height'] === 'default') {
+      $target['height'] = $resource['height'];
     }
     return $target;
   }
@@ -167,7 +188,7 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchEmbedlyResource($url) {
+  public function fetchEmbedlyResource($url, $width = NULL, $height = NULL) {
 
     $cache_id = "media:embedly_resource:$url";
 
@@ -180,6 +201,8 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
       'query' => [
         "url" => $url,
         "key" => $this->config->get('embedly_key'),
+        "width" => $width,
+        "height" => $height,
       ],
     ];
 
@@ -215,7 +238,7 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function iFrameData($value, $max, $resource, $domain) : array {
+  public function iFrameData($value, $max, $domain) : array {
 
     $url = Url::fromRoute('os_media.embed_iframe', [], [
       'query' => [
@@ -235,10 +258,10 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
       '#attributes' => [
         'src' => $url->toString(),
         'frameborder' => 0,
-        'scrolling' => FALSE,
+        'scrolling' => "no",
         'allowtransparency' => TRUE,
-        'width' => $max['width'] ?: $resource['width'],
-        'height' => $max['height'] ?: $resource['height'],
+        'width' => $max['width'],
+        'height' => $max['height'],
       ],
     ];
   }
@@ -246,13 +269,25 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getThumbnail() : ?string {
-    $icon_base = $this->configFactory->get('media.settings')->get('icon_base_uri');
-    $thumbnail = $icon_base . '/generic.png';
-    if (is_file($thumbnail)) {
-      return $thumbnail;
+  public function downloadThumbnail(array $resource): void {
+    $local_uri = $this->getLocalThumbnailUri($resource);
+    if (!file_exists($local_uri)) {
+      file_prepare_directory($this->thumbsDirectory, FILE_CREATE_DIRECTORY);
+      try {
+        $thumbnail = $this->httpClient->request('GET', $resource['thumbnail_url']);
+        file_unmanaged_save_data((string) $thumbnail->getBody(), $local_uri);
+      }
+      catch (\Exception $e) {
+      }
     }
-    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLocalThumbnailUri(array $resource) : string {
+    $name = preg_replace('/\s+/', '', $resource['title']);
+    return $this->thumbsDirectory . '/' . $name . '.jpg';
   }
 
 }

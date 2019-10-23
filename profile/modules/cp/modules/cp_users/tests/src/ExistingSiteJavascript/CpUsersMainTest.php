@@ -95,6 +95,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
    *
    * @covers \Drupal\cp_users\Controller\CpUserMainController::main
    * @covers \Drupal\cp_users\Form\CpUsersAddExistingUserMemberForm
+   * @covers \Drupal\cp_users\Controller\CpUserMainController::existingUserAutocomplete
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    * @throws \Behat\Mink\Exception\ExpectationException
@@ -104,6 +105,8 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $this->drupalLogin($this->groupAdmin);
     $username = $this->randomMachineName();
     $this->createUser([], $username);
+    $existing_member = $this->createUser();
+    $this->group->addMember($existing_member);
 
     $this->visitViaVsite('cp/users', $this->group);
     $this->assertContains('/' . $this->modifier . '/cp/users', $this->getSession()->getCurrentUrl(), 'First url check, on ' . $this->getSession()->getCurrentUrl());
@@ -113,6 +116,12 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $page->clickLink('Add a member');
     $this->assertSession()->waitForElement('css', '#drupal-modal--content');
     $this->assertSession()->elementContains('css', '.ui-dialog-title', 'Add an existing member');
+
+    // Assert that existing member is not shown in options.
+    $page->fillField('user', substr($existing_member->label(), 0, 3));
+    $this->assertSession()->waitOnAutocomplete();
+    $this->assertSession()->elementNotExists('css', 'ul.ui-autocomplete li.ui-menu-item');
+
     $page->fillField('user', substr($username, 0, 3));
     $this->assertSession()->waitOnAutocomplete();
     $this->assertSession()->responseContains($username);
