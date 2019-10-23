@@ -49,6 +49,9 @@
 }
 .slick-arrow {
   z-index: 9;
+  &:focus {
+    @include focus();
+  }
 }
 /**** slick lightbox arrow ****/
 .slick-lightbox {
