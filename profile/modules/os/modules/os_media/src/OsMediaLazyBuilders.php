@@ -50,6 +50,7 @@ class OsMediaLazyBuilders implements ContainerInjectionInterface {
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function renderMedia($id, $width, $height) {
     if ($entity = $this->entityTypeManager->getStorage('media')->load($id)) {
@@ -59,10 +60,21 @@ class OsMediaLazyBuilders implements ContainerInjectionInterface {
         $entity->field_media_oembed_content->height = $height;
         $field = $entity->field_media_oembed_content->view('wysiwyg');
       }
-      if ($entity->bundle() === 'image') {
+      elseif ($entity->bundle() === 'image') {
         $field = $entity->field_media_image->get(0)->view('wysiwyg');
         $field['#item']->width = $width;
         $field['#item']->height = $height;
+      }
+      elseif ($entity->bundle() === 'html') {
+        $entity->field_media_html->width = $width;
+        $entity->field_media_html->height = $height;
+        $field = $entity->field_media_html->view('wysiwyg');
+      }
+      else {
+        $field = $entity->toLink()->toString();
+        $field = [
+          '#markup' => $field,
+        ];
       }
       return $field;
     }

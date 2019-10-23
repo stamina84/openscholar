@@ -157,36 +157,41 @@ class MediaEmbedFormatter extends OEmbedFormatter implements ContainerFactoryPlu
             else {
               $max['width'] = $item->width;
               $max['height'] = $item->height;
+              $max = $this->mediaHelper->getOEmbedDimensions($resource, $max);
               // Display rich content and videos inside an Iframe.
-              $element[$delta] = $this->mediaHelper->iFrameData($value, $max, $resource, $domain);
+              $element[$delta] = $this->mediaHelper->iFrameData($value, $max, $domain);
             }
             CacheableMetadata::createFromObject($resource)->addCacheTags($this->config->getCacheTags())->applyTo($element[$delta]);
           }
           break;
 
         case 'html':
+          $hasIframe = preg_match('/(?:<iframe[^>]*)(?:(?:\/>)|(?:>.*?<\/iframe>))/', $value);
+          $hasScript = preg_match('/<script[\s\S]*?>[\s\S]*?<\/script>/', $value);
+
+          $max['width'] = $item->width;
+          $max['height'] = $item->height;
           // To handle <iframe> content.
-          if (preg_match('/(?:<iframe[^>]*)(?:(?:\/>)|(?:>.*?<\/iframe>))/', $value)) {
+          if ($hasIframe && !$hasScript) {
             // Get the source url.
             preg_match('/src="([^"]+)"/', $value, $match);
             $url = $match[1];
-            $target = $this->mediaHelper->getDimensions($value, $max);
-            $element[$delta] = $this->mediaHelper->iFrameData($url, $max, $target, $domain);
+            $max = $this->mediaHelper->getHtmlDimensions($value, $max);
+            $element[$delta] = $this->mediaHelper->iFrameData($url, $max, $domain);
           }
 
           // To handle <scripts>.
           elseif (preg_match('/<script[\s\S]*?>[\s\S]*?<\/script>/', $value, $scripts)) {
             $default_tags = Xss::getHtmlTagList();
-            array_push($default_tags, 'script', 'img', 'style');
+            array_push($default_tags, 'script', 'img', 'style', 'iframe');
 
-            $target = $this->mediaHelper->getDimensions($value, $max);
-
+            $max = $this->mediaHelper->getHtmlDimensions($value, $max);
             // Replace height and width with our maximums.
             $patterns[0] = '/height="([^\"]*)"/';
             // Catch width="100%" as well.
             $patterns[1] = '/width="([^\"]*)"/';
-            $replacements[1] = 'height="' . $target['height'] . '"';
-            $replacements[0] = 'width="' . $target['width'] . '"';
+            $replacements[1] = 'height="' . $max['height'] . '"';
+            $replacements[0] = 'width="' . $max['width'] . '"';
 
             $value = preg_replace($patterns, $replacements, $value);
 

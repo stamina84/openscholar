@@ -146,7 +146,7 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDimensions($html, $max) : array {
+  public function getHtmlDimensions($html, $max) : array {
     preg_match('/height="([^\"]*)"/', $html, $fetchHeight);
     preg_match('/width="([^\"]*)"/', $html, $fetchWidth);
 
@@ -155,18 +155,32 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
       $width = $fetchWidth[1];
     }
 
-    $target['width'] = NULL;
-    if ($max['width'] != 0) {
-      if (isset($width)) {
-        $target['width'] = $width < $max['width'] ? $width : $max['width'];
-      }
+    $target['width'] = $max['width'];
+    $target['height'] = $max['height'];
+
+    if ($max['width'] === 'default') {
+      $target['width'] = $width ?? '100%';
     }
 
-    $target['height'] = NULL;
-    if ($max['height'] != 0) {
-      if (isset($height)) {
-        $target['height'] = $height < $max['height'] ? $height : $max['height'];
-      }
+    if ($max['height'] === 'default') {
+      $target['height'] = $height ?? '100%';
+    }
+
+    return $target;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOembedDimensions($resource, $max): array {
+    $target['width'] = $max['width'];
+    $target['height'] = $max['height'];
+
+    if ($max['width'] === 'default') {
+      $target['width'] = $resource['width'];
+    }
+    if ($max['height'] === 'default') {
+      $target['height'] = $resource['height'];
     }
     return $target;
   }
@@ -224,7 +238,7 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function iFrameData($value, $max, $resource, $domain) : array {
+  public function iFrameData($value, $max, $domain) : array {
 
     $url = Url::fromRoute('os_media.embed_iframe', [], [
       'query' => [
@@ -246,8 +260,8 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
         'frameborder' => 0,
         'scrolling' => "no",
         'allowtransparency' => TRUE,
-        'width' => $max['width'] ?: $resource['width'],
-        'height' => $max['height'] ?: $resource['height'],
+        'width' => $max['width'],
+        'height' => $max['height'],
       ],
     ];
   }

@@ -40,7 +40,20 @@ interface MediaEntityHelperInterface {
    * @return array
    *   Optimal height/width settings.
    */
-  public function getDimensions($html, array $max) : array;
+  public function getHtmlDimensions($html, array $max) : array;
+
+  /**
+   * Get height and width for the content.
+   *
+   * @param array $resource
+   *   Resource to get height and width.
+   * @param array $max
+   *   Max height and width.
+   *
+   * @return array
+   *   Height and with for the embed.
+   */
+  public function getOembedDimensions(array $resource, array $max) : array;
 
   /**
    * Fetches Embedly resource.
@@ -64,15 +77,13 @@ interface MediaEntityHelperInterface {
    *   Field value.
    * @param array $max
    *   Max dimensions.
-   * @param array $resource
-   *   Resource data.
    * @param string $domain
    *   Domain to set.
    *
    * @return array
    *   Iframe data.
    */
-  public function iFrameData($value, array $max, array $resource, $domain) : array;
+  public function iFrameData($value, array $max, $domain) : array;
 
   /**
    * Downloads remote thumbnail uri.
