@@ -124,3 +124,10 @@ cp_users.role.delete_form:
     parameters:
       group_type:
         type: entity:group_type
+
+cp_users.existing_user_autocomplete:
+  path: '/cp-users/existing-user-autocomplete'
+  defaults:
+    _controller: '\Drupal\cp_users\Controller\CpUserMainController::existingUserAutocomplete'
+  requirements:
+    _group_permission: 'manage cp users'

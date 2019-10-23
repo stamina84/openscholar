@@ -13,9 +13,13 @@ use Drupal\cp_users\Access\ChangeOwnershipAccessCheck;
 use Drupal\cp_users\CpUsersHelperInterface;
 use Drupal\cp_users\Form\CpUsersAddExistingUserMemberForm;
 use Drupal\cp_users\Form\CpUsersAddNewMemberForm;
+use Drupal\group\GroupMembership;
+use Drupal\group\GroupMembershipLoaderInterface;
 use Drupal\user\UserInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Component\Serialization\Json;
 
@@ -55,6 +59,13 @@ class CpUserMainController extends ControllerBase {
   protected $cpUsersHelper;
 
   /**
+   * Group membership loader.
+   *
+   * @var \Drupal\group\GroupMembershipLoaderInterface
+   */
+  protected $groupMembershipLoader;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -62,7 +73,8 @@ class CpUserMainController extends ControllerBase {
       $container->get('vsite.context_manager'),
       $container->get('entity_type.manager'),
       $container->get('cp_users.change_ownership_access_check'),
-      $container->get('cp_users.cp_users_helper')
+      $container->get('cp_users.cp_users_helper'),
+      $container->get('group.membership_loader')
     );
   }
 
@@ -77,12 +89,15 @@ class CpUserMainController extends ControllerBase {
    *   ChangeOwnershipAccessCheck service.
    * @param \Drupal\cp_users\CpUsersHelperInterface $cp_users_helper
    *   CpUsers helper service.
+   * @param \Drupal\group\GroupMembershipLoaderInterface $group_membership_loader
+   *   Group membership loader.
    */
-  public function __construct(VsiteContextManagerInterface $vsiteContextManager, EntityTypeManagerInterface $entityTypeManager, ChangeOwnershipAccessCheck $change_ownership_access_check, CpUsersHelperInterface $cp_users_helper) {
+  public function __construct(VsiteContextManagerInterface $vsiteContextManager, EntityTypeManagerInterface $entityTypeManager, ChangeOwnershipAccessCheck $change_ownership_access_check, CpUsersHelperInterface $cp_users_helper, GroupMembershipLoaderInterface $group_membership_loader) {
     $this->vsiteContextManager = $vsiteContextManager;
     $this->entityTypeManager = $entityTypeManager;
     $this->changeOwnershipAccessChecker = $change_ownership_access_check;
     $this->cpUsersHelper = $cp_users_helper;
+    $this->groupMembershipLoader = $group_membership_loader;
   }
 
   /**
@@ -321,6 +336,59 @@ class CpUserMainController extends ControllerBase {
     $response->addCommand(new OpenModalDialogCommand('Change Site Ownership', $modal_form, ['width' => '800']));
 
     return $response;
+  }
+
+  /**
+   * Autocomplete handler for adding existing user as vsite member.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   Response containing the matched users.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function existingUserAutocomplete(Request $request): JsonResponse {
+    $results = [];
+    $query = $request->query->get('q');
+    /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
+    $active_vsite = $this->vsiteContextManager->getActiveVsite();
+
+    if ($query && $active_vsite) {
+      /** @var \Drupal\user\UserStorageInterface $user_storage */
+      $user_storage = $this->entityTypeManager()->getStorage('user');
+      /** @var \Drupal\Core\Entity\Query\QueryInterface $user_query */
+      $user_query = $user_storage->getQuery();
+
+      // Get existing members of the active vsite.
+      /** @var \Drupal\group\GroupMembership[] $memberships */
+      $memberships = $this->groupMembershipLoader->loadByGroup($active_vsite);
+      /** @var int[] $member_ids */
+      $member_ids = array_map(static function (GroupMembership $membership) {
+        return $membership->getUser()->id();
+      }, $memberships);
+
+      // Find users who are no members of existing vsite.
+      /** @var array $query_result */
+      $query_result = $user_query->condition('name', "%$query%", 'LIKE')
+        ->condition('status', 1)
+        ->condition('uid', $member_ids, 'NOT IN')
+        ->execute();
+
+      /** @var \Drupal\user\UserInterface[] $non_members */
+      $non_members = $user_storage->loadMultiple(array_keys($query_result));
+
+      foreach ($non_members as $account) {
+        $results[] = [
+          'value' => "{$account->label()} ({$account->id()})",
+          'label' => $account->label(),
+        ];
+      }
+    }
+
+    return new JsonResponse($results);
   }
 
 }
