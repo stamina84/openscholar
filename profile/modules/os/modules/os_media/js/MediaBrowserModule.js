@@ -1,7 +1,6 @@
 (function ($) {
   var rootPath,
-    open = angular.noop,
-    changed = false;
+    open = angular.noop;
 
   angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'ngFileUpload', 'angularModalService', 'FileEditor', 'mediaBrowser.filters', 'locationFix', 'angularSlideables', 'DrupalSettings', 'UrlGenerator'])
     .run(['mbModal', 'FileEditorOpenModal', function (mbModal, feom) {
@@ -734,13 +733,9 @@
       else {
         results.push($scope.selected_file);
       }
+
       $('.modal-backdrop').slice(1).remove();
-      // Quick implementation to show warning message on /cp/settings/apps-settings/profiles page.
-      if (changed === false) {
-        // HTML element is rendered in Drupal\os_profiles\Plugin\CpSetting\ProfilesSetting.php
-        $(Drupal.theme('fileChangedWarning')).insertBefore('#edit-default-image').hide().fadeIn('slow');
-        changed = true;
-      }
+      
       close(results);
     }
 
@@ -902,12 +897,4 @@
         });
       }
   }]);
-  $.extend(Drupal.theme, {
-    fileChangedMarker: function fileChangedMarker() {
-      return '<abbr class="warning file-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
-    },
-    fileChangedWarning: function fileChangedWarning() {
-      return '<div class="file-changed-warning messages messages--warning" role="alert">' + Drupal.theme('fileChangedMarker') + ' ' + Drupal.t('You have unsaved changes.') + '</div>';
-    }
-  });
 })(jQuery);

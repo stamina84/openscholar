@@ -108,7 +108,7 @@ class CpSettingsForm extends ConfigFormBase {
     /** @var \Drupal\cp_settings\CpSettingInterface[] $plugins */
     $plugins = $this->getPlugins();
     foreach ($plugins as $p) {
-      $p->getForm($form, $this->configFactory);
+      $p->getForm($form, $form_state, $this->configFactory);
     }
 
     return $form;

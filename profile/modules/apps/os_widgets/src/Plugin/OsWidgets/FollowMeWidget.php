@@ -19,7 +19,7 @@ class FollowMeWidget extends OsWidgetsBase implements OsWidgetsInterface {
    * {@inheritdoc}
    */
   public function buildBlock(&$build, $block_content) {
-    $profile_links = get_profile_url_links($block_content);
+    $profile_links = os_widgets_get_profile_url_links($block_content);
     unset($profile_links['links']['blank']);
     $display_social = $block_content->get('field_display_social')->getString();
     $rss_feed = $block_content->get('field_add_link_to_rss_feed_page')->getString();

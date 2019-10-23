@@ -8,6 +8,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\os_mailchimp\OsMailchimpLists;
 
 /**
  * Provides a block with mailchimp subscribe.
@@ -17,7 +21,55 @@ use Drupal\Core\Url;
  *   admin_label = @Translation("Mailchimp subscribe"),
  * )
  */
-class OsMailChimpBlock extends BlockBase {
+class OsMailChimpBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The mailchimp Lists service.
+   *
+   * @var \Drupal\os_mailchimp\OsMailchimpLists
+   */
+  protected $osMailchimpLists;
+
+  /**
+   * Constructs OsMailChimpBlock.
+   *
+   * @param array $configuration
+   *   Configuration array.
+   * @param string $plugin_id
+   *   Plugin id.
+   * @param mixed $plugin_definition
+   *   Plugin definition.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\os_mailchimp\OsMailchimpLists $osMailchimpLists
+   *   Service to get mailchimp Lists.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, OsMailchimpLists $osMailchimpLists) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->configFactory = $config_factory;
+    $this->osMailchimpLists = $osMailchimpLists;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    // Instantiates this block class.
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('config.factory'),
+      $container->get('os_mailchimp.lists')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -64,14 +116,44 @@ class OsMailChimpBlock extends BlockBase {
   public function blockForm($form, FormStateInterface $form_state) {
     $form = parent::blockForm($form, $form_state);
     $config = $this->getConfiguration();
-    $lists = mailchimp_get_lists();
+    $lists = [];
+
+    $mailchimp_config = $this->configFactory->get('mailchimp.settings');
+    $api_key = $mailchimp_config->get('api_key');
+    if (!empty($api_key)) {
+      $lists = $this->osMailchimpLists->osMailchimpGetLists($api_key);
+    }
+    else {
+      $form['empty_list_markup'] = [
+        '#markup' => '<h3>' . $this->t('Please configure Mailchimp API key to configure this block.') . '</h3>',
+      ];
+    }
 
     $form['list_id'] = [
       '#type' => 'select',
-      '#title' => 'List to subscribe',
-      '#options' => $this->mailChimpListsToOptions($lists),
-      '#default_value' => $config['list_id'],
+      '#title' => $this->t('List to subscribe'),
+      '#options' => $this->osMailchimpLists->mailChimpListsToOptions($lists),
+      '#default_value' => $config['list_id'] ?? '',
       '#required' => TRUE,
+    ];
+
+    $form['subscribe_text'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Subscribe Text'),
+      '#description' => $this->t('Text for subscribe link. Default: Subscribe to our mailing list.'),
+      '#default_value' => $config['subscribe_text'] ?? $this->t('Subscribe to our mailing list'),
+    ];
+
+    $form['display'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Display'),
+      '#options' => [
+        'link' => $this->t('Link'),
+        'basic_form' => $this->t('Basic form'),
+        'mailchimp_form' => $this->t('Mailchimp form'),
+      ],
+      '#description' => $this->t('Show a link to subscription popup, simple form, or an advanced form customizable at mailchimp.com'),
+      '#default_value' => $config['display'] ?? 'link',
     ];
 
     return $form;
@@ -81,24 +163,11 @@ class OsMailChimpBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['list_id'] = $form_state->getValue('list_id');
-  }
+    $configuration['list_id'] = $form_state->getValue('list_id');
+    $configuration['subscribe_text'] = $form_state->getValue('subscribe_text');
+    $configuration['display'] = $form_state->getValue('display');
 
-  /**
-   * Convert mailchimp lists to form options.
-   *
-   * @param array $lists
-   *   Generated array by mailchimp_get_lists().
-   *
-   * @return array
-   *   Converted form options.
-   */
-  protected function mailChimpListsToOptions(array $lists) : array {
-    $options = [];
-    foreach ($lists as $list_id => $list) {
-      $options[$list_id] = $list->name;
-    }
-    return $options;
+    $this->setConfiguration($configuration);
   }
 
 }

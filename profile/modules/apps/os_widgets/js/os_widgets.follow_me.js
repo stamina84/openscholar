@@ -53,9 +53,9 @@
             }
 
             // set all the form elements in the new row
-            $('span.rrssb-text', new_row).text(val);
+            $('span.rrssb-text', new_row).text(edit_link_to_add.val());
             $('li', new_row).addClass('rrssb-'+domain);
-            $('input[name="links['+id+'][title]"]', new_row).val(val);
+            $('input[name="links['+id+'][title]"]', new_row).val(edit_link_to_add.val());
             $('input[name="links['+id+'][domain]"]', new_row).val(domain);
             $('.default-weight', new_row).addClass('field-weight').val(weight+1);
             $('.default-weight', new_row).parents('div').css('display', 'none');

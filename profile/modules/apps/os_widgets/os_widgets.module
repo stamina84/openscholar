@@ -169,6 +169,13 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'rss_feed' => NULL,
       ],
     ],
+    'os_widgets_mailchimp_link' => [
+      'variables' => [
+        'widget_title' => '',
+        'subscribe_text' => '',
+        'link_url' => '',
+      ],
+    ],
   ];
 }
 
@@ -232,6 +239,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['info']['widget'][0]['value']['#description'] = t('A brief description of the widget. Only displayed in the Layout section.');
     }
   }
+
   switch ($form_id) {
     case 'block_content_twitter_feed_form':
     case 'block_content_twitter_feed_edit_form':
@@ -552,7 +560,12 @@ function os_widgets_form_block_content_follow_me_edit_form_alter(&$form, FormSta
 }
 
 /**
- * Implementing os_widgets_alter_follow_me_block_form().
+ * Performs form alterations in follow_me block content type forms.
+ *
+ * @param mixed $form
+ *   The form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
  */
 function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_state) {
   $domains = os_follow_default_networks();
@@ -590,7 +603,7 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
   $links = &$form['links'];
 
   // Get all links.
-  $all_links = get_profile_url_links($form_state->getFormObject()->getEntity());
+  $all_links = os_widgets_get_profile_url_links($form_state->getFormObject()->getEntity());
   foreach ($all_links['links'] as $k => $v) {
     $n = [
       'text' => [
@@ -802,7 +815,7 @@ function os_follow_default_networks() {
  * @return array
  *   Links array.
  */
-function get_profile_url_links($entity) {
+function os_widgets_get_profile_url_links($entity) {
   $links = [];
   $block = $entity->get('field_links')->getValue();
 
@@ -827,4 +840,24 @@ function get_profile_url_links($entity) {
     }
   }
   return $links;
+}
+
+/**
+ * Alter field mailing_list options - Mailchimp subscription block type.
+ *
+ * Setting field options if mailchimp apikey exists for a Vsite, this function
+ * is called from field_storage YAML settings.
+ */
+function os_widgets_field_mailing_list_options() {
+  $options = [];
+  $mailchimp_config = \Drupal::config('mailchimp.settings');
+  $mailchimpService = \Drupal::service('os_mailchimp.lists');
+  $api_key = $mailchimp_config->get('api_key');
+
+  if (!empty($api_key)) {
+    $lists = $mailchimpService->osMailchimpGetLists($api_key);
+    $options = $mailchimpService->mailChimpListsToOptions($lists);
+  }
+
+  return $options;
 }

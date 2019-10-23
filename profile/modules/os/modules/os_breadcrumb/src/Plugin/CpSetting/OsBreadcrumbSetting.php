@@ -31,7 +31,7 @@ class OsBreadcrumbSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $config = $configFactory->get('os_breadcrumb.settings');
     $form['#theme'] = 'os_breadcrumb_settings_form';
     $form['show_breadcrumbs'] = [

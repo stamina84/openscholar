@@ -1,0 +1,19 @@
+uuid: d4e7dfa7-e866-485d-bbb5-6b5d1cf0d4c5
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.mailchimp_subscription
+    - field.storage.block_content.field_widget_title
+id: block_content.mailchimp_subscription.field_widget_title
+field_name: field_widget_title
+entity_type: block_content
+bundle: mailchimp_subscription
+label: 'Widget Title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

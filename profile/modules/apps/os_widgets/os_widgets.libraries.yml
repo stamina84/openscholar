@@ -44,4 +44,4 @@ followMe:
       /libraries/rrssb-plus/css/rrssb.buttons.css: {}
       css/os_widgets.followme.css: {}
   dependencies:
-  - core/drupal
+    - core/drupal

@@ -35,7 +35,7 @@ class OsSearchSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory): void {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory): void {
     $form['label'] = [
       '#markup' => $this->t('Re-index this site'),
     ];

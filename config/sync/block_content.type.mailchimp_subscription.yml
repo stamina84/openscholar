@@ -1,0 +1,8 @@
+uuid: f99ca362-9be4-490f-916f-ba153065038f
+langcode: en
+status: true
+dependencies: {  }
+id: mailchimp_subscription
+label: 'Mailchimp subscription'
+revision: 1
+description: 'Use this block type to add mailchimp subscription blocks on pages'
