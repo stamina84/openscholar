@@ -63,11 +63,17 @@ class MediaHelperTest extends ExistingSiteBase {
    */
   public function testDimensions(): void {
     $html = '<iframe width="560" height="315" src="https://www.youtube.com/embed/WadTyp3FcgU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-    $max['width'] = '100%';
-    $max['height'] = '400';
-    $data = $this->mediaHelper->getDimensions($html, $max);
-    $this->assertEquals('100%', $data['width']);
+    $max['width'] = 'default';
+    $max['height'] = 'default';
+    $data = $this->mediaHelper->getHtmlDimensions($html, $max);
+    $this->assertEquals('560', $data['width']);
     $this->assertEquals('315', $data['height']);
+
+    $resource['width'] = '854';
+    $resource['height'] = '640';
+    $data = $this->mediaHelper->getOembedDimensions($resource, $max);
+    $this->assertEquals('854', $data['width']);
+    $this->assertEquals('640', $data['height']);
   }
 
   /**
@@ -77,9 +83,7 @@ class MediaHelperTest extends ExistingSiteBase {
     $value = 'https://www.youtube.com/watch?v=WadTyp3FcgU';
     $max['width'] = '100%';
     $max['height'] = '400';
-    $resource['width'] = '500';
-    $resource['height'] = '500';
-    $data = $this->mediaHelper->iFrameData($value, $max, $resource, NULL);
+    $data = $this->mediaHelper->iFrameData($value, $max, NULL);
     $this->assertNotEmpty($data['#type']);
     $this->assertNotEmpty($data['#tag']);
     $this->assertEquals('100%', $data['#attributes']['width']);
@@ -101,7 +105,8 @@ class MediaHelperTest extends ExistingSiteBase {
    * Tests getting thumbnail uri.
    */
   public function testGetThumbail(): void {
-    $this->assertNotEmpty($this->mediaHelper->getThumbnail(), 'thumbnail path is returned.');
+    $resource['title'] = $this->randomString();
+    $this->assertNotEmpty($this->mediaHelper->getLocalThumbnailUri($resource), 'thumbnail path is returned.');
   }
 
 }
