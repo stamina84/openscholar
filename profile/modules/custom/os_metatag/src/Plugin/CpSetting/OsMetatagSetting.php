@@ -31,7 +31,7 @@ class OsMetatagSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $config = $configFactory->get('os_metatag.settings');
     $form['site_title'] = [
       '#type' => 'textfield',

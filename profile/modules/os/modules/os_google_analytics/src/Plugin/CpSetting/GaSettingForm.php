@@ -37,7 +37,7 @@ class GaSettingForm extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $config_ga = $configFactory->get('os_ga.settings');
 
     $description = $this->t('This ID is unique to each site you want 

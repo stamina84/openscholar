@@ -46,7 +46,8 @@ class PrivacyPolicySettingsFormTest extends OsExistingSiteTestBase {
    */
   public function testFormRender() {
     $form = [];
-    $this->settingPlugin->getForm($form, $this->config);
+    $form_state = new FormState();
+    $this->settingPlugin->getForm($form, $form_state, $this->config);
     $this->assertArrayHasKey('os_privacy_policy_text', $form);
     $this->assertArrayHasKey('os_privacy_policy_url', $form);
     // Check default values.

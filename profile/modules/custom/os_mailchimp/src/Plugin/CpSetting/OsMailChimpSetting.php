@@ -32,7 +32,7 @@ class OsMailChimpSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $config = $configFactory->get('mailchimp.settings');
     $form['api_key'] = [
       '#type' => 'textfield',

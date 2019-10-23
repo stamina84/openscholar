@@ -32,7 +32,7 @@ class OsPrivacyPolicy extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $config = $configFactory->get('os_privacy_policy.settings');
     $form['os_privacy_policy_text'] = [
       '#type' => 'textfield',

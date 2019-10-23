@@ -25,10 +25,12 @@ interface CpSettingInterface {
    *
    * @param array $form
    *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $formState
+   *   The form state.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory);
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory);
 
   /**
    * Validates the form.
