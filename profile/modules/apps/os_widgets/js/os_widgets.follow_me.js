@@ -4,7 +4,7 @@
  */
 (function ($) {
   Drupal.behaviors.os_follow_me = {
-    attach: function (ctx, settings) {
+    attach: function (ctx) {
 
       if ($('#follow-links-list', ctx).length == 0) return;	// do nothing if our table doesn't exist
 
