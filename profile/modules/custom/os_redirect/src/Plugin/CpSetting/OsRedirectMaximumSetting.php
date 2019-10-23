@@ -34,7 +34,7 @@ class OsRedirectMaximumSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $config = $configFactory->get('os_redirect.settings');
     $form['maximum_number'] = [
       '#type' => 'textfield',

@@ -66,14 +66,8 @@ class ProfilesNodeViewBuildTest extends OsExistingSiteTestBase {
    */
   public function testNodeViewTeaserCustomDefaultImage() {
     $file = $this->createFile('image');
-    $media = $this->createMedia([
-      'bundle' => 'image',
-      'field_media_image' => [
-        $file->id(),
-      ],
-    ]);
     $profiles_config = $this->config->getEditable('os_profiles.settings');
-    $profiles_config->set('default_image_mid', $media->id());
+    $profiles_config->set('default_image_fid', $file->id());
     $profiles_config->save();
 
     $markup = $this->renderNode('teaser');
@@ -89,14 +83,8 @@ class ProfilesNodeViewBuildTest extends OsExistingSiteTestBase {
    */
   public function testNodeViewFullCustomDefaultImage() {
     $file = $this->createFile('image');
-    $media = $this->createMedia([
-      'bundle' => 'image',
-      'field_media_image' => [
-        $file->id(),
-      ],
-    ]);
     $profiles_config = $this->config->getEditable('os_profiles.settings');
-    $profiles_config->set('default_image_mid', $media->id());
+    $profiles_config->set('default_image_fid', $file->id());
     $profiles_config->save();
 
     $markup = $this->renderNode('full');

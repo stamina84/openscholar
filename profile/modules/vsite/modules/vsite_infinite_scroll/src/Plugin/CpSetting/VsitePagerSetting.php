@@ -32,7 +32,7 @@ class VsitePagerSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $config = $configFactory->get('vsite_infinite_scroll.settings');
 
     $form['long_list_content_pagination'] = [

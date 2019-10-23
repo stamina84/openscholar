@@ -16,9 +16,14 @@ dependencies:
       - bibcite_entity.bibcite_reference_type.book
   module:
     - bibcite_entity
+    - cp_taxonomy
     - image
     - key_value_field
+    - layout_builder
     - text
+third_party_settings:
+  layout_builder:
+    sections: {  }
 _core:
   default_config_hash: 0t5_K9tZycjTU1WTLgvV9AwFgBud_j4hwOvDCPXS55A
 id: bibcite_reference.book.default
@@ -435,11 +440,12 @@ content:
     region: content
   field_taxonomy_terms:
     weight: 103
-    label: above
+    label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
     third_party_settings: {  }
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     region: content
   full_text:
     type: text_default

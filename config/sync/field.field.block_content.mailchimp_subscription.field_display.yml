@@ -1,0 +1,21 @@
+uuid: 2d1e964c-b588-42be-8c2f-81ae7c904ad2
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.mailchimp_subscription
+    - field.storage.block_content.field_display
+  module:
+    - options
+id: block_content.mailchimp_subscription.field_display
+field_name: field_display
+entity_type: block_content
+bundle: mailchimp_subscription
+label: Display
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

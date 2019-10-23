@@ -35,7 +35,7 @@ class VsiteDomainSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $form['todo'] = [
       '#markup' => 'this is not yet implemented',
     ];

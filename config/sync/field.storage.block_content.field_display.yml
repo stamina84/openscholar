@@ -1,0 +1,30 @@
+uuid: 0ecfbda2-cb39-48cb-87a6-a90dddea2e6c
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - options
+id: block_content.field_display
+field_name: field_display
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: link
+      label: Link
+    -
+      value: basic_form
+      label: 'Basic form'
+    -
+      value: mailchimp_form
+      label: 'Mailchimp form'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
