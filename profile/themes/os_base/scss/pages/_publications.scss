@@ -31,10 +31,33 @@
   }
   .bibcite-reference {
     > div {
-    display: inline-block;
+      display: inline-block;
+    }
+    .bibcite-citation {
+      display: inline;
+      * {
+        display: inline;
+      }
     }
     .abstract--content {
       display: block;
+    }
+    .see-more-tag {
+      display: block;
+    }
+    .more-tags {
+      .see-more-tag {
+        display: inline-block;
+      }
+    }
+    .field--name-field-taxonomy-terms {
+      display: block;
+      .field--items {
+        float: none;
+        .field--item {
+          display: inline-block;
+        }
+      }
     }
   }
   /**** css for abstract ****/
