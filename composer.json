@@ -24,6 +24,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/openscholar/drupal-test-traits"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/openscholar/groupmenu"
         },
         {
@@ -248,7 +252,7 @@
         "drupal/devel": "^1.2",
         "drupal/features": "^3.7",
         "drupal/restui": "^1.17",
-        "weitzman/drupal-test-traits": "^1.3"
+        "weitzman/drupal-test-traits": "dev-pass-chrome-driver-options"
     },
     "conflict": {
         "drupal/drupal": "*"
