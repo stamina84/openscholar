@@ -1,0 +1,3 @@
+services:
+  os_mailchimp.lists:
+    class: Drupal\os_mailchimp\OsMailchimpLists

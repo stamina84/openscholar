@@ -1,5 +1,5 @@
 cp_menu.drag:
-  version: 1.0
+  version: 2.0
   css:
     base:
       css/cp_menu.css: {}

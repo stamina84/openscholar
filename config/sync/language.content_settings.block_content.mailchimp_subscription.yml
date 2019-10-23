@@ -1,0 +1,11 @@
+uuid: c925cbd7-0a12-4e2c-a12e-d6e18db5ae0e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.mailchimp_subscription
+id: block_content.mailchimp_subscription
+target_entity_type_id: block_content
+target_bundle: mailchimp_subscription
+default_langcode: site_default
+language_alterable: false

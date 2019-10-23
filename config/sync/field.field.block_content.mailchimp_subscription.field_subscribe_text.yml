@@ -1,0 +1,21 @@
+uuid: c44b6980-9770-42bb-8bd8-32d978ad9a51
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.mailchimp_subscription
+    - field.storage.block_content.field_subscribe_text
+id: block_content.mailchimp_subscription.field_subscribe_text
+field_name: field_subscribe_text
+entity_type: block_content
+bundle: mailchimp_subscription
+label: 'Subscribe Text'
+description: 'Text for subscribe link. Default: Subscribe to our mailing list.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 'Subscribe to our mailing list'
+default_value_callback: ''
+settings: {  }
+field_type: string

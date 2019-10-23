@@ -8,3 +8,4 @@ dependencies:
   - "drupal:os_twitter_pull"
   - "drupal:cp_taxonomy"
   - "drupal:os_pager"
+  - "drupal:os_mailchimp"

@@ -1,0 +1,12 @@
+{#
+/**
+ * @file
+ * Template for Mailchimp subscription link type widget.
+ *
+ * - link_url: Subscription link to open subscription form in a modal.This link
+ * is a dynamically generated link. It contains the mailling list_id and it
+ * passes that list_id to the subscription form.
+ *
+ */
+#}
+<a class="use-ajax button button--small" data-dialog-type= 'modal' href="{{ link_url }}">{{ 'Subscribe to list!'|t }}</a>

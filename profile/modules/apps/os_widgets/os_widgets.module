@@ -161,6 +161,13 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'render_style' => '',
       ],
     ],
+    'os_widgets_mailchimp_link' => [
+      'variables' => [
+        'widget_title' => '',
+        'subscribe_text' => '',
+        'link_url' => '',
+      ],
+    ],
   ];
 }
 
@@ -224,6 +231,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['info']['widget'][0]['value']['#description'] = t('A brief description of the widget. Only displayed in the Layout section.');
     }
   }
+
   switch ($form_id) {
     case 'block_content_twitter_feed_form':
     case 'block_content_twitter_feed_edit_form':
@@ -527,4 +535,24 @@ function os_widgets_toolbar_alter(&$items) {
       $items['block_place']['tab']['#access'] = ((\Drupal::currentUser()->hasPermission('administer blocks') || $membership->hasPermission('manage layout')) && !$admin_demo && !$admin_route);
     }
   }
+}
+
+/**
+ * Alter field mailing_list options - Mailchimp subscription block type.
+ *
+ * Setting field options if mailchimp apikey exists for a Vsite, this function
+ * is called from field_storage YAML settings.
+ */
+function os_widgets_field_mailing_list_options() {
+  $options = [];
+  $mailchimp_config = \Drupal::config('mailchimp.settings');
+  $mailchimpService = \Drupal::service('os_mailchimp.lists');
+  $api_key = $mailchimp_config->get('api_key');
+
+  if (!empty($api_key)) {
+    $lists = $mailchimpService->osMailchimpGetLists($api_key);
+    $options = $mailchimpService->mailChimpListsToOptions($lists);
+  }
+
+  return $options;
 }

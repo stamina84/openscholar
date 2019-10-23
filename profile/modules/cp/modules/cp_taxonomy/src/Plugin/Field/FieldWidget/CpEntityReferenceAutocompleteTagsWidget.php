@@ -109,6 +109,7 @@ class CpEntityReferenceAutocompleteTagsWidget extends CpEntityReferenceAutocompl
 
     $element['target_id']['#tags'] = TRUE;
     $element['target_id']['#default_value'] = $items->referencedEntities();
+    $element['target_id']['#description'] = $this->t('Add new term here, multiple terms separated by comma.');
 
     $element['target_id']['#autocreate'] = [
       'bundle' => $this->autoCreateBundle,
