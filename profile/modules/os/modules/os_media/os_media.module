@@ -8,7 +8,6 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\media\MediaInterface;
 use Drupal\file\Entity\File;
 
 /**
@@ -56,30 +55,6 @@ function os_media_form_views_exposed_form_alter(&$form, FormStateInterface $form
   if ($form['#id'] == 'views-exposed-form-os-media-page-1') {
     foreach ($hidden_bundles as $bundle) {
       unset($form['bundle']['#options'][$bundle]);
-    }
-  }
-}
-
-/**
- * Implements hook_media_view_alter().
- */
-function os_media_media_view_alter(array $build, MediaInterface $media, $display) {
-  if (isset($media->dimensions) && $media->dimensions != 'default') {
-    if ($build['thumbnail']['#field_type'] == 'image') {
-      /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $imageItem */
-      $imageItem = $build['thumbnail'][0]['#item'];
-      $width = $media->dimensions['width'];
-      if (!isset($media->dimensions['height'])) {
-        $orig_width = $imageItem->get('width')->getValue();
-        $orig_height = $imageItem->get('height')->getValue();
-        $ratio = $media->dimensions['width'] / $orig_width;
-        $height = $ratio * $orig_height;
-      }
-      else {
-        $height = $media->dimensions['height'];
-      }
-      $imageItem->set('width', $width);
-      $imageItem->set('height', $height);
     }
   }
 }

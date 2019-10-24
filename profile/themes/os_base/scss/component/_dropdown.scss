@@ -39,7 +39,5 @@ $grid-breakpoint: "screen and (min-width: #{$grid-float-breakpoint})";
 }
 // dropdown toggle
 .dropdown-toggle:focus {
-  outline: thin dotted; // FireFox
-  outline: 5px auto -webkit-focus-ring-color; // Chrome, Safari
-  outline-offset: -2px;
+  @include focus();
 }

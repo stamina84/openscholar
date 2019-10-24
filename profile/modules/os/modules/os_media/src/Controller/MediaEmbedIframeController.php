@@ -120,7 +120,7 @@ class MediaEmbedIframeController implements ContainerInjectionInterface {
     $response->addCacheableDependency(Url::createFromRequest($request));
 
     try {
-      $resource = $this->mediaHelper->fetchEmbedlyResource($url);
+      $resource = $this->mediaHelper->fetchEmbedlyResource($url, $max_width, $max_height);
       // Render the content in a new render context so that the cacheability
       // metadata of the rendered HTML will be captured correctly.
       $element = [

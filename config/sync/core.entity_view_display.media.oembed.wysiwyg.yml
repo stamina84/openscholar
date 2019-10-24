@@ -1,0 +1,45 @@
+uuid: dc3486b2-1f78-4ae4-af3d-eebd4be10ef6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.wysiwyg
+    - field.field.media.oembed.field_media_oembed_content
+    - field.field.media.oembed.field_taxonomy_terms
+    - media.type.oembed
+  module:
+    - layout_builder
+    - os_media
+third_party_settings:
+  layout_builder:
+    sections: {  }
+    allow_custom: false
+    enabled: false
+id: media.oembed.wysiwyg
+targetEntityType: media
+bundle: oembed
+mode: wysiwyg
+content:
+  field_media_oembed_content:
+    type: 'media:embed'
+    weight: 0
+    label: visually_hidden
+    settings:
+      max_width: 100%
+      max_height: '701'
+    third_party_settings: {  }
+    region: content
+  field_taxonomy_terms:
+    weight: 2
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  thumbnail: true
+  uid: true

@@ -73,7 +73,7 @@ class VsitePrivacyForm extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     /** @var array|null $default_privacy_level */
     $default_privacy_level = $this->activeVsite->get('field_privacy_level')->getValue();
     $form['privacy_levels'] = [

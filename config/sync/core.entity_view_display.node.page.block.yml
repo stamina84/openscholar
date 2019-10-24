@@ -34,5 +34,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_attached_media: true
   field_taxonomy_terms: true
   langcode: true

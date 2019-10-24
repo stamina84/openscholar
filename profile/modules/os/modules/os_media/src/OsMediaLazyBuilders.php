@@ -40,15 +40,43 @@ class OsMediaLazyBuilders implements ContainerInjectionInterface {
    * @param int $id
    *   The id of the media entity to render.
    * @param string $width
-   *   The width of the final media entity render, or 'default' if no width is set.
+   *   The width of the final media entity render,
+   *   or 'default' if no width is set.
+   * @param string $height
+   *   The width of the final media entity render.
+   *
+   * @return array
+   *   Actual media entity render array.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public function renderMedia($id, $width) {
+  public function renderMedia($id, $width, $height) {
     if ($entity = $this->entityTypeManager->getStorage('media')->load($id)) {
-      if ($width != 'default') {
-        $entity->dimensions['width'] = $width;
+      if ($entity->bundle() === 'oembed') {
+        // To control width and height of the rendered video.
+        $entity->field_media_oembed_content->width = $width;
+        $entity->field_media_oembed_content->height = $height;
+        $field = $entity->field_media_oembed_content->view('wysiwyg');
       }
-      $output = $this->entityTypeManager->getViewBuilder('media')->view($entity);
-      return $output;
+      elseif ($entity->bundle() === 'image') {
+        $field = $entity->field_media_image->get(0)->view('wysiwyg');
+        $field['#item']->width = $width;
+        $field['#item']->height = $height;
+      }
+      elseif ($entity->bundle() === 'html') {
+        $entity->field_media_html->width = $width;
+        $entity->field_media_html->height = $height;
+        $field = $entity->field_media_html->view('wysiwyg');
+      }
+      else {
+        $field = $entity->toLink()->toString();
+        $field = [
+          '#markup' => $field,
+        ];
+      }
+      return $field;
     }
 
     // No media entity of $id found.

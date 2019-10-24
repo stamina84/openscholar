@@ -1,0 +1,21 @@
+uuid: d8db1b6d-2959-4cab-8454-f79792625010
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.mailchimp_subscription
+    - field.storage.block_content.field_mailing_list
+  module:
+    - options
+id: block_content.mailchimp_subscription.field_mailing_list
+field_name: field_mailing_list
+entity_type: block_content
+bundle: mailchimp_subscription
+label: 'Mailing list'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

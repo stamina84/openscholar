@@ -1,0 +1,73 @@
+uuid: cd195393-fa9d-43a8-8c86-97165d217847
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.mailchimp_subscription
+    - field.field.block_content.mailchimp_subscription.field_display
+    - field.field.block_content.mailchimp_subscription.field_mailing_list
+    - field.field.block_content.mailchimp_subscription.field_subscribe_text
+    - field.field.block_content.mailchimp_subscription.field_widget_title
+  module:
+    - content_moderation
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.mailchimp_subscription.default
+targetEntityType: block_content
+bundle: mailchimp_subscription
+mode: default
+content:
+  field_display:
+    weight: 103
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_mailing_list:
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_subscribe_text:
+    weight: 102
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_widget_title:
+    weight: 104
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    settings: {  }
+    region: content
+    third_party_settings: {  }
+hidden: {  }
