@@ -92,6 +92,7 @@ class PurifyHtml extends FilterBase implements ContainerFactoryPluginInterface {
         'data-align' => 'Text',
         'class' => 'Text',
       ]);
+      $def->addAttribute('img', 'data-mid', 'Text');
     }
   }
 

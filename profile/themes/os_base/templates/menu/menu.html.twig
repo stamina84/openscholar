@@ -21,7 +21,11 @@
 #}
 {% macro menu_links(items, attributes, menu_level, classes, dropdown_classes) %}
   {% if items %}
-    <ul{{ attributes.addClass(menu_level == 0 ? classes : dropdown_classes) }}>
+  {% if menu_level == 0 %}
+    <ul{{ attributes.addClass(menu_level == 0 ? classes : dropdown_classes) }} role="menubar">
+  {% else %}
+    <ul{{ attributes.addClass(menu_level == 0 ? classes : dropdown_classes) }} role="menu">
+  {% endif %}
     {% for item in items %}
       {%
         set item_classes = item.url.getOption('container_attributes').class | split(" ")
@@ -36,7 +40,7 @@
       %}
       <li{{ item.attributes.addClass(item_classes) }}>
         {% set link_title = item.title %}
-        {% set link_attributes = item.link_attributes %}
+        {% set link_attributes = item.link_attributes.setAttribute('role','menuitem') %}
         {% if item.is_expanded and item.below %}
           {% set link_title %}{{ link_title }} <span class="caret"></span>{% endset %}
           {% set link_attributes = link_attributes.addClass('dropdown-toggle') %}
