@@ -6,12 +6,14 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\cp_settings\CpSettingBase;
+use Drupal\file\Element\ManagedFile;
+use Drupal\file\Entity\File;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\image_widget_crop\ImageWidgetCropInterface;
-use Drupal\media\Entity\Media;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -47,7 +49,7 @@ class ProfilesSetting extends CpSettingBase {
   /**
    * File usage interface to configurate an file object.
    *
-   * @var Drupal\file\FileUsage\FileUsageInterface
+   * @var \Drupal\file\Entity\FileUsageInterface
    */
   protected $fileUsage;
 
@@ -57,6 +59,8 @@ class ProfilesSetting extends CpSettingBase {
    * @var \Drupal\image_widget_crop\ImageWidgetCropInterface
    */
   protected $imageWidgetCropManager;
+
+  protected $entityTypeManager;
 
   /**
    * ProfilesSetting constructor.
@@ -77,13 +81,16 @@ class ProfilesSetting extends CpSettingBase {
    *   File usage service.
    * @param \Drupal\image_widget_crop\ImageWidgetCropInterface $iwc_manager
    *   The ImageWidgetCrop manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The EntityTypeManagerInterface manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, VsiteContextManagerInterface $vsite_context_manager, EntityDisplayRepositoryInterface $entity_display_repository, RendererInterface $renderer, FileUsageInterface $file_usage, ImageWidgetCropInterface $iwc_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, VsiteContextManagerInterface $vsite_context_manager, EntityDisplayRepositoryInterface $entity_display_repository, RendererInterface $renderer, FileUsageInterface $file_usage, ImageWidgetCropInterface $iwc_manager, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $vsite_context_manager);
     $this->entityDisplayRepository = $entity_display_repository;
     $this->renderer = $renderer;
     $this->fileUsage = $file_usage;
     $this->imageWidgetCropManager = $iwc_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -98,8 +105,107 @@ class ProfilesSetting extends CpSettingBase {
       $container->get('entity_display.repository'),
       $container->get('renderer'),
       $container->get('file.usage'),
-      $container->get('image_widget_crop.manager')
+      $container->get('image_widget_crop.manager'),
+      $container->get('entity_type.manager')
     );
+  }
+
+  /**
+   * ImageWidget process call without parent call.
+   *
+   * @param array $element
+   *   Form element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   * @param array $complete_form
+   *   Form array.
+   *
+   * @return array
+   *   Modified element.
+   */
+  public static function processImageFile(array &$element, FormStateInterface $form_state, array &$complete_form) {
+    $element['#theme'] = 'image_widget';
+    $storage = $form_state->getStorage();
+    $storage['uploaded_fid'] = NULL;
+
+    // Add the image preview.
+    if (!empty($element['#files']) && $element['#preview_image_style']) {
+      $file = reset($element['#files']);
+      $variables = [
+        'style_name' => $element['#preview_image_style'],
+        'uri' => $file->getFileUri(),
+      ];
+      $storage['uploaded_fid'] = $file->id();
+
+      // Determine image dimensions.
+      if (isset($element['#value']['width']) && isset($element['#value']['height'])) {
+        $variables['width'] = $element['#value']['width'];
+        $variables['height'] = $element['#value']['height'];
+      }
+      else {
+        $image = \Drupal::service('image.factory')->get($file->getFileUri());
+        if ($image->isValid()) {
+          $variables['width'] = $image->getWidth();
+          $variables['height'] = $image->getHeight();
+        }
+        else {
+          $variables['width'] = $variables['height'] = NULL;
+        }
+      }
+
+      $element['preview'] = [
+        '#weight' => -10,
+        '#theme' => 'image_style',
+        '#width' => $variables['width'],
+        '#height' => $variables['height'],
+        '#style_name' => $variables['style_name'],
+        '#uri' => $variables['uri'],
+      ];
+
+      // Store the dimensions in the form so the file doesn't have to be
+      // accessed again. This is important for remote files.
+      $element['width'] = [
+        '#type' => 'hidden',
+        '#value' => $variables['width'],
+      ];
+      $element['height'] = [
+        '#type' => 'hidden',
+        '#value' => $variables['height'],
+      ];
+    }
+    elseif (!empty($element['#default_image'])) {
+      $default_image = $element['#default_image'];
+      $file = File::load($default_image['fid']);
+      if (!empty($file)) {
+        $element['preview'] = [
+          '#weight' => -10,
+          '#theme' => 'image_style',
+          '#width' => $default_image['width'],
+          '#height' => $default_image['height'],
+          '#style_name' => $element['#preview_image_style'],
+          '#uri' => $file->getFileUri(),
+        ];
+      }
+    }
+    $form_state->setStorage($storage);
+    return $element;
+  }
+
+  /**
+   * Render image crop element into form.
+   */
+  public static function ajaxRenderImageCrop(&$form, FormStateInterface &$form_state) {
+    // Container is a helper markup for testing ajax re-rendering
+    // in test (testCpSettingsReRenderImageCrop).
+    $form['default_image']['image_crop']['ajax_container'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'ajax-content',
+        ],
+      ],
+    ];
+    return $form['default_image']['image_crop'];
   }
 
   /**
@@ -112,10 +218,10 @@ class ProfilesSetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $form_state, ConfigFactoryInterface $configFactory) {
     $form['#attached']['library'][] = 'os_profiles/settings_hover';
     $config = $configFactory->get('os_profiles.settings');
-    $default_mid = $config->get('default_image_mid');
+    $default_fid = $config->get('default_image_fid');
 
     $view_modes = $this->entityDisplayRepository->getViewModeOptionsByBundle('node', 'person');
 
@@ -125,13 +231,14 @@ class ProfilesSetting extends CpSettingBase {
         // Display only display modes the user turned on.
         continue;
       }
+
       $profile_styles[$name] = $label;
     }
 
     $profile_styles_hover = [];
     $counter = 0;
 
-    $hover_image = $this->getExampleImage($config->get('default_image_mid'));
+    $hover_image = $this->getExampleImage($default_fid);
     // Create markup for style examples when hovering over each style.
     foreach ($profile_styles as $name => $label) {
       $counter++;
@@ -183,71 +290,78 @@ class ProfilesSetting extends CpSettingBase {
       '#weight' => -1,
     ];
 
-    $suffix = '';
-    if (empty($default_mid)) {
-      $suffix .= $this->getDefaultImage() . '<br />';
+    $suffix = $this->t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed media types: <strong>image</strong>');
+    $upload_location = file_default_scheme() . '://' . $this->activeVsite->id() . '/files';
+    $allowed_file_types = 'gif png jpg jpeg';
+    $field_layout = $this->entityTypeManager
+      ->getStorage('entity_form_display')
+      ->load('node.person.default');
+    $content = $field_layout->get('content');
+    $settings = $content['field_photo_person']['settings'];
+    $form['default_image']['default_image_fid'] = [
+      '#type' => 'managed_file',
+      '#description' => $suffix,
+      '#upload_location' => $upload_location,
+      '#upload_validators' => [
+        'file_validate_extensions' => [$allowed_file_types],
+      ],
+      '#multiple' => FALSE,
+      '#progress_indicator' => 'throbber',
+      '#process' => [
+        [ManagedFile::class, 'processManagedFile'],
+        [get_class($this), 'processImageFile'],
+      ],
+      '#theme' => 'image_widget',
+      '#crop_list' => $settings['crop_list'],
+      '#preview_image_style' => $settings['preview_image_style'],
+      '#crop_preview_image_style' => $settings['crop_preview_image_style'],
+      '#show_default_crop' => $settings['show_default_crop'],
+      '#show_crop_area' => $settings['show_crop_area'],
+      '#warn_multiple_usages' => $settings['warn_multiple_usages'],
+      '#crop_types_required' => [],
+    ];
+    if ($default_fid) {
+      $form['default_image']['default_image_fid']['#default_value'] = [$default_fid];
     }
     else {
-      $suffix .= $this->getExampleImage($default_mid, 'crop_photo_person_full') . '<br />';
+      $form['default_image']['default_image_fid']['preview'] = [
+        '#weight' => -10,
+        '#theme' => 'image',
+        '#uri' => file_create_url(drupal_get_path('theme', 'os_base') . '/images/person-default-image-big.png'),
+      ];
     }
-    $suffix .= $this->t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed media types: <strong>image</strong>');
-    $suffix .= '<br>';
-    $suffix .= $this->t('<strong>IMPORTANT:</strong> You need to click Save configuration in order to display the uploaded profile image');
 
-    $form['default_image']['default_image_mid'] = [
-      '#type' => 'container',
-      '#input' => TRUE,
-      '#default_value' => [],
-      '#suffix' => $suffix,
-      'media-browser-field' => [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#attributes' => [
-          'media-browser-field' => '',
-          'types' => 'image',
-          'max-filesize' => '512 MB',
-          'upload_text' => 'Upload',
-          'droppable_text' => 'Drop here.',
-          'cardinality' => 1,
-          'files' => 'files',
-        ],
-        '#markup' => $this->t('Loading the Media Browser. Please wait a moment.'),
-        '#attached' => [
-          'library' => [
-            'os_media/mediaBrowserField',
-          ],
-        ],
+    $ajax_wrapper_id = 'crop-ajax-wrapper';
+    $form['default_image']['image_crop'] = [
+      '#prefix' => '<div id="' . $ajax_wrapper_id . '">',
+      '#suffix' => '</div>',
+      '#type' => 'image_crop',
+      '#crop_type_list' => $form['default_image']['default_image_fid']['#crop_list'],
+      '#crop_preview_image_style' => $form['default_image']['default_image_fid']['#crop_preview_image_style'],
+      '#show_default_crop' => $form['default_image']['default_image_fid']['#show_default_crop'],
+      '#show_crop_area' => $form['default_image']['default_image_fid']['#show_crop_area'],
+      '#warn_multiple_usages' => $form['default_image']['default_image_fid']['#warn_multiple_usages'],
+      '#crop_types_required' => $form['default_image']['default_image_fid']['#crop_types_required'],
+    ];
+    $form['default_image']['crop_button'] = [
+      '#name' => 'default_image_crop_button',
+      '#type' => 'button',
+      '#value' => t('Refresh crop widget'),
+      '#validate' => [],
+      '#submit' => [],
+      '#ajax' => [
+        'callback' => [get_called_class(), 'ajaxRenderImageCrop'],
+        'wrapper' => $ajax_wrapper_id,
       ],
     ];
-    if (!empty($default_mid)) {
-      $field_layout = \Drupal::entityTypeManager()
-        ->getStorage('entity_form_display')
-        ->load('node.person.default');
-      $content = $field_layout->get('content');
-      $settings = $content['field_photo_person']['settings'];
-      $form['default_image']['default_image_mid']['media-browser-field']['#attached']['drupalSettings'] = [
-        'mediaBrowserField' => [
-          'edit-default-image-mid' => [
-            'selectedFiles' => [$default_mid],
-          ],
-        ],
-      ];
-
-      $media = Media::load($default_mid);
-      $media_images = $media->get('field_media_image')->referencedEntities();
-      $file = array_shift($media_images);
-      // The key of element are hardcoded into buildCropToForm function,
-      // ATM that is mendatory but can change easily.
-      $form['default_image']['image_crop'] = [
-        '#type' => 'image_crop',
-        '#file' => $file,
-        '#crop_type_list' => $settings['crop_list'],
-        '#preview_image_style' => $settings['preview_image_style'],
-        '#crop_preview_image_style' => $settings['crop_preview_image_style'],
-        '#show_default_crop' => $settings['show_default_crop'],
-        '#show_crop_area' => $settings['show_crop_area'],
-        '#warn_mupltiple_usages' => $settings['warn_multiple_usages'],
-      ];
+    $storage = $form_state->getStorage();
+    // Check is there any uploaded file with processImage.
+    if (!empty($storage['uploaded_fid'])) {
+      $default_fid = $storage['uploaded_fid'];
+    }
+    if ($default_fid) {
+      $file = File::load($default_fid);
+      $form['default_image']['image_crop']['#file'] = $file;
     }
   }
 
@@ -261,17 +375,35 @@ class ProfilesSetting extends CpSettingBase {
     $config->set('disable_default_image', (bool) $form_state->getValue('disable_default_image'));
     $config->set('image_crop', $form_state->getValue('image_crop'));
 
-    $form_media = $form_state->getValue('default_image_mid', 0);
-    if (!empty($form_media[0]['target_id'])) {
-      $media = Media::load($form_media[0]['target_id']);
-      $media_images = $media->get('field_media_image')->referencedEntities();
-      $file = array_shift($media_images);
+    $deletable_fid = 0;
+    $form_file = $form_state->getValue('default_image_fid', 0);
+    if (!empty($form_file[0])) {
+      $file = File::load($form_file[0]);
+      $file_changed = $config->get('default_image_fid') != $form_file[0];
+      if ($file_changed) {
+        $this->fileUsage->add($file, 'os_profiles', 'form', $file->id());
+        // Checking is there any exists file and delete.
+        // Use case: remove exists file and upload immediately a new one.
+        if ($exists_fid = $config->get('default_image_fid')) {
+          $deletable_fid = $exists_fid;
+        }
+      }
+      $file->setPermanent();
+      $file->save();
       $form_state->getFormObject()->setEntity($file);
-      $config->set('default_image_mid', $media->id());
+      $config->set('default_image_fid', $file->id());
     }
     else {
-      $config->set('default_image_mid', NULL);
+      // Checking is there any exists file and delete.
+      if ($exists_fid = $config->get('default_image_fid')) {
+        $deletable_fid = $exists_fid;
+      }
+      $config->set('default_image_fid', NULL);
     }
+    if ($deletable_fid) {
+      File::load($deletable_fid)->delete();
+    }
+
     $config->save(TRUE);
     if (!empty($form_state->getValue('image_crop')) && !empty($file)) {
       // Call IWC manager to attach crop defined into image file.
@@ -288,19 +420,18 @@ class ProfilesSetting extends CpSettingBase {
   /**
    * Get image markup for example hover.
    */
-  public function getExampleImage($default_image_mid = NULL, $image_style = 'crop_photo_person') {
+  public function getExampleImage($default_image_fid = NULL, $image_style = 'crop_photo_person') {
     // Use custom default image if available.
-    if (!empty($default_image_mid)) {
-      $media = Media::load($default_image_mid);
-      $media_images = $media->get('field_media_image')->referencedEntities();
-      $image_file = array_shift($media_images);
+    if (!empty($default_image_fid)) {
+      $image_file = File::load($default_image_fid);
+      if (empty($image_file)) {
+        return $this->t('File not found.');
+      }
       $path = $image_file->getFileUri();
-      $alt = $media->get('field_media_image')->getValue()[0]['alt'];
       $build = [
         '#theme' => 'image_style',
         '#uri' => $path,
         '#style_name' => $image_style,
-        '#alt' => $alt,
       ];
       return $this->renderer->renderRoot($build);
     }
@@ -313,18 +444,6 @@ class ProfilesSetting extends CpSettingBase {
       ];
       return $this->renderer->renderRoot($build);
     }
-  }
-
-  /**
-   * Get default image.
-   */
-  public function getDefaultImage() {
-    $build = [
-      '#theme' => 'image',
-      '#uri' => file_create_url(drupal_get_path('theme', 'os_base') . '/images/person-default-image-big.png'),
-      '#alt' => t('default-image'),
-    ];
-    return $this->renderer->renderRoot($build);
   }
 
   /**

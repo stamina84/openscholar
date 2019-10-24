@@ -159,7 +159,7 @@ class PublicationSettingsForm extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $cite_example_output = $this->citations->citeExampleOutput();
     $publication_config = $configFactory->get('os_publications.settings');
     $csl_styles = $this->styler->getAvailableStyles();

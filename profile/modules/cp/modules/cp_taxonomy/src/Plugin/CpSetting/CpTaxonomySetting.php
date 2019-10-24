@@ -69,7 +69,7 @@ class CpTaxonomySetting extends CpSettingBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(array &$form, ConfigFactoryInterface $configFactory) {
+  public function getForm(array &$form, FormStateInterface $formState, ConfigFactoryInterface $configFactory) {
     $config = $configFactory->get('cp_taxonomy.settings');
     $form['display_term_under_content'] = [
       '#type' => 'checkbox',

@@ -34,12 +34,18 @@ class OsMediaFileTransformationFilter extends FilterBase {
       ];
       $width = [];
       preg_match_all('|width="([\d]+)"|', $imgTag, $width, PREG_SET_ORDER);
-      $width = $width[0];
+      preg_match_all('|height="([\d]+)"|', $imgTag, $height, PREG_SET_ORDER);
+      $width = $width[0] ?? '';
+      $height = $height[0] ?? '';
       if (empty($width)) {
+        $args[] = 'default';
+      }
+      if (empty($height)) {
         $args[] = 'default';
       }
       else {
         $args[] = $width[1];
+        $args[] = $height[1];
       }
       $placeholder = $result->createPlaceholder('os_media.lazy_builders:renderMedia', $args);
       $text = str_replace($imgTag, $placeholder, $text);
