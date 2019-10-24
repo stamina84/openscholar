@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91640de4b509246d50730154ee5ded28",
+    "content-hash": "b8efaf16ce8250d37ea51e33d32d7740",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -5340,16 +5340,16 @@
         },
         {
             "name": "drupal/group",
-            "version": "1.0.0-rc2",
+            "version": "1.0.0-rc4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/group.git",
-                "reference": "8.x-1.0-rc2"
+                "reference": "8.x-1.0-rc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/group-8.x-1.0-rc2.zip",
-                "reference": "8.x-1.0-rc2",
+                "url": "https://ftp.drupal.org/files/projects/group-8.x-1.0-rc4.zip",
+                "reference": "8.x-1.0-rc4",
                 "shasum": "d5d55167523a3ddccef7f66159b4c417d950d6f5"
             },
             "require": {
@@ -5362,7 +5362,7 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-rc2",
+                    "version": "8.x-1.0-rc4",
                     "datestamp": "1563460085",
                     "security-coverage": {
                         "status": "not-covered",
@@ -5374,7 +5374,7 @@
                     "Integrity constraint violation: Duplicate entry for key PRIMARY in node_access": "https://www.drupal.org/files/issues/2018-08-17/group-duplicate-node-access-entries-2892512-15.patch",
                     "New group content created when node edited": "https://www.drupal.org/files/issues/2019-06-04/3059300-3.patch",
                     "Prevent resaving of deleted entities": "https://raw.githubusercontent.com/openscholar/openscholar/ae879229e866cbc96d91d2b2a8273292fa26fd34/patches/group.fix_saving_deleted_entity.patch",
-                    "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-05-28/group-support_string_entity_ids-2797793-162.patch",
+                    "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-10-17/group-support_string_entity_ids-2797793-171.patch",
                     "Group creator must complete their membership Wizard duplicates membership": "https://www.drupal.org/files/issues/2019-07-09/group_membership_duplication-3016197-10.patch"
                 }
             },
@@ -6492,7 +6492,7 @@
             "description": "Improved Views integration for RNG.",
             "homepage": "https://www.drupal.org/project/rng",
             "support": {
-                "source": "http://cgit.drupalcode.org/rng"
+                "source": "https://git.drupalcode.org/project/rng"
             }
         },
         {
@@ -11136,19 +11136,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org"
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "role": "Project Founder",
-                    "email": "armin.ronacher@active-4.com"
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
                 },
                 {
                     "name": "Twig Team",
-                    "role": "Contributors",
-                    "homepage": "https://twig.symfony.com/contributors"
+                    "homepage": "https://twig.symfony.com/contributors",
+                    "role": "Contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -12362,7 +12362,7 @@
                 },
                 "drupal": {
                     "version": "8.x-2.0",
-                    "datestamp": "1550236984",
+                    "datestamp": "1536328684",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -12374,10 +12374,6 @@
                 "GPL-2.0-or-later"
             ],
             "authors": [
-                {
-                    "name": "Berdir",
-                    "homepage": "https://www.drupal.org/user/214652"
-                },
                 {
                     "name": "Dave Reid",
                     "homepage": "https://www.drupal.org/user/53892"
@@ -12399,10 +12395,6 @@
                     "homepage": "https://www.drupal.org/user/77320"
                 },
                 {
-                    "name": "oknate",
-                    "homepage": "https://www.drupal.org/user/471638"
-                },
-                {
                     "name": "samuel.mortenson",
                     "homepage": "https://www.drupal.org/user/2582268"
                 },
@@ -12414,7 +12406,7 @@
             "description": "Entity browser inline entity form integration.",
             "homepage": "https://www.drupal.org/project/entity_browser",
             "support": {
-                "source": "https://git.drupalcode.org/project/entity_browser"
+                "source": "http://cgit.drupalcode.org/entity_browser"
             }
         },
         {
@@ -13283,18 +13275,18 @@
             "authors": [
                 {
                     "name": "Greg Beaver",
-                    "role": "Helper",
-                    "email": "cellog@php.net"
+                    "email": "cellog@php.net",
+                    "role": "Helper"
                 },
                 {
                     "name": "Andrei Zmievski",
-                    "role": "Lead",
-                    "email": "andrei@php.net"
+                    "email": "andrei@php.net",
+                    "role": "Lead"
                 },
                 {
                     "name": "Stig Bakken",
-                    "role": "Developer",
-                    "email": "stig@php.net"
+                    "email": "stig@php.net",
+                    "role": "Developer"
                 }
             ],
             "description": "More info available on: http://pear.php.net/package/Console_Getopt",
