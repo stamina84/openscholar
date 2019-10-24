@@ -155,6 +155,13 @@ class LayoutContext extends ConfigEntityBase implements LayoutContextInterface {
   public function applies(): bool {
     $rules = $this->getActivationRules();
 
+    $route = \Drupal::routeMatch()->getRouteObject();
+    $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
+    // Do not activate in admin routes.
+    if ($is_admin) {
+      return FALSE;
+    }
+
     // Remove blank lines.
     $rule_lines = array_filter(preg_split('|[\r\n]|', $rules));
     $route_name = \Drupal::routeMatch()->getRouteName();
