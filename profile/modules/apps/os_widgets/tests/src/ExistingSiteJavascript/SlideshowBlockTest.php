@@ -48,60 +48,6 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
   }
 
   /**
-   * Tests os_widgets slideshow overlay on wide edit form.
-   */
-  public function testSlideshowOverlayWideEditForm() {
-    $web_assert = $this->assertSession();
-
-    /** @var \Drupal\block_content\Entity\BlockContent $block_content */
-    $block_content = $this->createBlockContent([
-      'type' => 'slideshow',
-      'field_slideshow_layout' => '3_1_overlay',
-    ]);
-
-    $this->visit("/block/" . $block_content->id());
-    $web_assert->statusCodeEquals(200);
-
-    $page = $this->getCurrentPage();
-    // Check form selection.
-    $default_value = $page->findField('field_slideshow_layout')->getValue();
-    $this->assertSame('3_1_overlay', $default_value);
-
-    // We should see only one option on widget edit.
-    $web_assert->pageTextContains('Wide Overlay');
-    $web_assert->pageTextNotContains('Standard Overlay');
-    $web_assert->pageTextNotContains('Standard Below');
-    $web_assert->pageTextNotContains('Standard Side');
-  }
-
-  /**
-   * Tests os_widgets slideshow overlay on standard edit form.
-   */
-  public function testSlideshowOverlayStandardEditForm() {
-    $web_assert = $this->assertSession();
-
-    /** @var \Drupal\block_content\Entity\BlockContent $block_content */
-    $block_content = $this->createBlockContent([
-      'type' => 'slideshow',
-      'field_slideshow_layout' => '16_9_overlay',
-    ]);
-
-    $this->visit("/block/" . $block_content->id());
-    $web_assert->statusCodeEquals(200);
-
-    $page = $this->getCurrentPage();
-    // Check form selection.
-    $default_value = $page->findField('field_slideshow_layout')->getValue();
-    $this->assertSame('16_9_overlay', $default_value);
-
-    // We should see three options on widget edit.
-    $web_assert->pageTextNotContains('Wide Overlay');
-    $web_assert->pageTextContains('Standard Overlay');
-    $web_assert->pageTextContains('Standard Below');
-    $web_assert->pageTextContains('Standard Side');
-  }
-
-  /**
    * Test add slideshow link modal form on page.
    */
   public function testAddSlideshowLinkVisibleAndShowModalForm() {
