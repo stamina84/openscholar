@@ -3,12 +3,12 @@
  * page load on top of the ajax call
  */
 (function ($) {
-  Drupal.behaviors.os_follow_me = {
+  Drupal.behaviors.os_widgets_follow_me = {
     attach: function (ctx) {
 
       if ($('#follow-links-list', ctx).length == 0) return;	// do nothing if our table doesn't exist
 
-      var $form = $('.os-follow-me-form'),
+      var $form = $('.os-widgets-follow-me-form'),
         template = '<tr class="draggable">'+$('input[name="links[blank][title]"]').parents('tr').hide().html()+'</tr>',
         tableDrag = Drupal.tableDrag['follow-links-list'],
         count = $('input[type="hidden"][name="count"]'),

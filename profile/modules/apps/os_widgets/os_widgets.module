@@ -575,7 +575,7 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
   }
 
   $form['#tree'] = TRUE;
-  $form['#attributes'] = ['class' => ['os-follow-me-form']];
+  $form['#attributes'] = ['class' => ['os-widgets-follow-me-form']];
 
   // Add profile url.
   $form['add'] = [
@@ -633,8 +633,10 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
     '#type' => 'hidden',
     '#default_value' => count($all_links['links']) - 1,
   ];
+
   $form['actions']['submit']['#submit'][] = 'os_widgets_follow_me_submit_form';
-  $form['#attached']['library'][] = 'os_widgets/followMe';
+  $form['#attached']['library'][] = 'os_widgets/followMeWidgetJs';
+  $form['#attached']['library'][] = 'os_widgets/followMeWidgetCss';
   $form['#attached']['drupalSettings']['follow_networks'] = $domains;
 }
 

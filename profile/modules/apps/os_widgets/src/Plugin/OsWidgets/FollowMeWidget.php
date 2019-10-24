@@ -30,7 +30,7 @@ class FollowMeWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#display_social' => $display_social,
       '#rss_feed' => $rss_feed,
     ];
-    $build['follow_me']['#attached']['library'][] = 'os_widgets/followMe';
+    $build['follow_me']['#attached']['library'][] = 'os_widgets/followMeWidgetCss';
   }
 
 }
