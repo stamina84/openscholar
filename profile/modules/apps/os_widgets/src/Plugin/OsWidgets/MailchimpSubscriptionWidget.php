@@ -94,6 +94,7 @@ class MailchimpSubscriptionWidget extends OsWidgetsBase implements OsWidgetsInte
           $builtForm = $this->formBuilder->getForm('\Drupal\os_mailchimp\Form\OsMailChimpSignupForm', $list);
         }
         $build['form'] = $builtForm;
+        $build['form']['#attached']['library'][] = 'os_widgets/mailchimpWidget';
         break;
 
       case 'mailchimp_form':

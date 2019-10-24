@@ -7,6 +7,7 @@
  * is a dynamically generated link. It contains the mailling list_id and it
  * passes that list_id to the subscription form.
  *
+ * - subscribe_text: Subscription text.
  */
 #}
-<a class="use-ajax button button--small" data-dialog-type= 'modal' href="{{ link_url }}">{{ 'Subscribe to list!'|t }}</a>
+<a class="use-ajax button button--small" data-dialog-type= 'modal' href="{{ link_url }}">{{ subscribe_text|default('Subscribe to list!')|t }}</a>
