@@ -568,7 +568,7 @@ function os_widgets_form_block_content_follow_me_edit_form_alter(&$form, FormSta
  *   The form state.
  */
 function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_state) {
-  $domains = os_follow_default_networks();
+  $domains = os_widgets_follow_default_networks();
   $domain_list = [];
   foreach ($domains as $d) {
     $domain_list[] = $d['title'];
@@ -596,7 +596,7 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
     '#type' => 'markup',
     '#tree' => TRUE,
     '#weight' => 3,
-    '#pre_render' => ['os_follow_me_table'],
+    '#pre_render' => ['os_widgets_follow_me_table'],
   ];
 
   $form['field_links']['#access'] = FALSE;
@@ -633,7 +633,7 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
     '#type' => 'hidden',
     '#default_value' => count($all_links['links']) - 1,
   ];
-  $form['actions']['submit']['#submit'][] = 'follow_me_submit_form';
+  $form['actions']['submit']['#submit'][] = 'os_widgets_follow_me_submit_form';
   $form['#attached']['library'][] = 'os_widgets/followMe';
   $form['#attached']['drupalSettings']['follow_networks'] = $domains;
 }
@@ -641,7 +641,7 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
 /**
  * Custom submit for follow me form.
  */
-function follow_me_submit_form($form, FormStateInterface &$form_state) {
+function os_widgets_follow_me_submit_form($form, FormStateInterface &$form_state) {
 
   $profile_links = $form_state->getUserInput();
   unset($profile_links['links']['blank']);
@@ -679,7 +679,7 @@ function follow_me_submit_form($form, FormStateInterface &$form_state) {
 /**
  * Renders the list of links as a table.
  */
-function os_follow_me_table($element) {
+function os_widgets_follow_me_table($element) {
   // Render the form as a table.
   $rows = [];
   foreach (Element::children($element) as $c) {
@@ -719,7 +719,7 @@ function os_follow_me_table($element) {
  *   including title of the network, along with the domain to be used for
  *   input validation of the network.
  */
-function os_follow_default_networks() {
+function os_widgets_follow_default_networks() {
   $networks = [
     'facebook'  => [
       'title' => t('Facebook'),
