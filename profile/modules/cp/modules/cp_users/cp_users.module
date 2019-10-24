@@ -253,7 +253,7 @@ function cp_users_preprocess_menu(&$variables) {
       $renderer = \Drupal::service('renderer');
 
       // A more ideal way to sync the items is to use cache context
-      // `group_membership.roles.permissions`. But that didn't work.
+      // `user.group_permissions`. But that didn't work.
       // Because `group` module was unable to find the vsite entity in route.
       // See \Drupal\group\Context\GroupRouteContextTrait::getGroupFromRoute
       // More details: https://github.com/openscholar/openscholar/pull/12416#discussion_r333882790

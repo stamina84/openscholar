@@ -523,7 +523,7 @@ function os_widgets_contextual_links_view_alter(&$element, $items) {
 function os_widgets_toolbar_alter(&$items) {
   /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsiteContextManager */
   $vsiteContextManager = \Drupal::service('vsite.context_manager');
-  $items['block_place']['#cache']['contexts'][] = 'group_membership.roles.permissions';
+  $items['block_place']['#cache']['contexts'][] = 'user.group_permissions';
 
   if ($vsite = $vsiteContextManager->getActiveVsite()) {
     // Remove on Admin routes.
