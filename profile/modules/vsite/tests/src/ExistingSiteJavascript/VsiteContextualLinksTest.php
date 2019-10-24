@@ -154,7 +154,7 @@ class VsiteContextualLinksTest extends OsExistingSiteJavascriptTestBase {
     $this->placeBlockContentToRegion($block_content, 'sidebar_second');
 
     $this->visitViaVsite("blog", $this->group);
-    $this->assertSession()->waitForElement('css', '.contextual button');
+    $this->assertSession()->waitForElement('css', '.contextual-links .block-contentblock-delete');
 
     /** @var \Behat\Mink\Element\NodeElement|null $delete_contextual_link */
     $delete_contextual_link = $this->getSession()->getPage()->find('css', '.contextual-links .block-contentblock-delete a');
