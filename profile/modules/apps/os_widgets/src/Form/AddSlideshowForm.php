@@ -4,6 +4,7 @@ namespace Drupal\os_widgets\Form;
 
 use Drupal\block_content\BlockContentInterface;
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -120,7 +121,7 @@ class AddSlideshowForm extends ContentEntityForm {
       $instances = $this->blockContent->getInstances();
       $block = reset($instances);
       $block_markup = $this->entityTypeManager->getViewBuilder('block')->view($block);
-      $response->addCommand(new ReplaceCommand('Section[data-quickedit-entity-id="block_content/' . $this->blockContent->id() . '"]', $block_markup));
+      $response->addCommand(new ReplaceCommand('Section[id="block-' . Html::getId($block->id()) . '"]', $block_markup));
       $response->addCommand(new CloseModalDialogCommand());
     }
 
