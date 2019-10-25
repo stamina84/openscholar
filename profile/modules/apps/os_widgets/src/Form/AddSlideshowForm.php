@@ -27,6 +27,12 @@ class AddSlideshowForm extends ContentEntityForm {
    * @var \Drupal\vsite\Plugin\VsiteContextManagerInterface
    */
   protected $vsiteContextManager;
+
+  /**
+   * Block content.
+   *
+   * @var \Drupal\block_content\BlockContentInterface
+   */
   protected $blockContent;
   protected $entityTypeManager;
 
@@ -108,7 +114,7 @@ class AddSlideshowForm extends ContentEntityForm {
     }
     else {
       $paragraph = $this->getEntity();
-      $this->blockContent->field_slideshow->appendItem($paragraph);
+      $this->blockContent->get('field_slideshow')->appendItem($paragraph);
       $this->blockContent->save();
 
       $instances = $this->blockContent->getInstances();
