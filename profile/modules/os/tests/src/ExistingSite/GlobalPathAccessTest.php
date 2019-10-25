@@ -9,7 +9,6 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  *
  * @group functional
  * @group os
- * @group unique
  */
 class GlobalPathAccessTest extends OsExistingSiteTestBase {
 

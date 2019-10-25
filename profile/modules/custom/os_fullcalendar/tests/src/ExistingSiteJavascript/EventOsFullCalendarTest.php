@@ -9,7 +9,6 @@ use Behat\Mink\Exception\ExpectationException;
  *
  * @group functional-javascript
  * @group events
- * @group unique
  */
 class EventOsFullCalendarTest extends EventExistingSiteJavascriptTestBase {
 
