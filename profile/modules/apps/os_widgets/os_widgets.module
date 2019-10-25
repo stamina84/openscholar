@@ -19,6 +19,7 @@ use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\os_widgets\Helper\FollowMeWidgetHelper;
 
 /**
  * Implements hook_library_info_alter().
@@ -167,6 +168,8 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'profile_links' => [],
         'display_social' => NULL,
         'rss_feed' => NULL,
+        'rss_image_url' => NULL,
+        'rss_page_url' => NULL,
       ],
     ],
     'os_widgets_mailchimp_link' => [
@@ -174,6 +177,11 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'widget_title' => '',
         'subscribe_text' => '',
         'link_url' => '',
+      ],
+    ],
+    'os_widgets_follow_me_link_text' => [
+      'variables' => [
+        'domain' => NULL,
       ],
     ],
   ];
@@ -562,13 +570,13 @@ function os_widgets_form_block_content_follow_me_edit_form_alter(&$form, FormSta
 /**
  * Performs form alterations in follow_me block content type forms.
  *
- * @param mixed $form
+ * @param array $form
  *   The form.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The form state.
  */
-function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_state) {
-  $domains = os_widgets_follow_default_networks();
+function os_widgets_alter_follow_me_block_form(array &$form, FormStateInterface $form_state) {
+  $domains = FollowMeWidgetHelper::osWidgetsFollowMeDefaultNetworks();
   $domain_list = [];
   foreach ($domains as $d) {
     $domain_list[] = $d['title'];
@@ -585,9 +593,15 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
       '#type' => 'textfield',
       '#title' => t('Profile URL'),
       '#description' => t('Enter the URL of your profile on a social media site. Accepted sites are: @domains', ['@domains' => implode(', ', $domain_list)]),
-      '#suffix' => t('<input type="button" class="add_new" value="@add" />', ['@add' => "Add"]),
       '#attributes' => ['id' => 'edit-link-to-add'],
     ],
+    'add_button' => [
+      '#type' => 'button',
+      '#value' => t('Add'),
+      '#limit_validation_errors' => [],
+      '#attributes' => ['class' => ['add_new']],
+    ],
+
     '#weight' => 3,
   ];
 
@@ -599,6 +613,7 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
     '#pre_render' => ['os_widgets_follow_me_table'],
   ];
 
+  // Disabled links field not required while adding form.
   $form['field_links']['#access'] = FALSE;
   $links = &$form['links'];
 
@@ -608,7 +623,8 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
     $n = [
       'text' => [
         '#type' => 'markup',
-        '#markup' => '<div class="rrssb no-label"><ul class="rrssb-buttons"><li class="rrssb-' . $v['domain'] . '"><a><span class="rrssb-icon"></span><span class="rrssb-text"></span></a></li></ul></div><a href="#" class="remove" title="Remove Link">Remove</a>',
+        '#theme' => 'os_widgets_follow_me_link_text',
+        '#domain' => $v['domain'],
       ],
       'domain' => [
         '#type' => 'hidden',
@@ -623,7 +639,7 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
         '#default_value' => $v['weight'],
         '#size' => 3,
         '#attributes' => [
-          'class' => [(string) $k != 'blank' ? 'field-weight' : 'default-weight'],
+          'class' => [$k != 'blank' ? 'field-weight' : 'default-weight'],
         ],
       ],
     ];
@@ -635,8 +651,7 @@ function os_widgets_alter_follow_me_block_form(&$form, FormStateInterface $form_
   ];
 
   $form['actions']['submit']['#submit'][] = 'os_widgets_follow_me_submit_form';
-  $form['#attached']['library'][] = 'os_widgets/followMeWidgetJs';
-  $form['#attached']['library'][] = 'os_widgets/followMeWidgetCss';
+  $form['#attached']['library'][] = 'os_widgets/followMeWidget';
   $form['#attached']['drupalSettings']['follow_networks'] = $domains;
 }
 
@@ -647,10 +662,12 @@ function os_widgets_follow_me_submit_form($form, FormStateInterface &$form_state
 
   $profile_links = $form_state->getUserInput();
   unset($profile_links['links']['blank']);
-  foreach ($form_state->getFormObject()->getEntity()->get('field_links')->getValue() as $value) {
+
+  $entity = $form_state->getFormObject()->getEntity();
+  foreach ($entity->get('field_links')->getValue() as $value) {
     if ($value['target_id']) {
-      $entity = Paragraph::load($value['target_id']);
-      $entity->delete();
+      $paragraph = Paragraph::load($value['target_id']);
+      $paragraph->delete();
     }
   }
   if ($profile_links['links']) {
@@ -671,7 +688,6 @@ function os_widgets_follow_me_submit_form($form, FormStateInterface &$form_state
       }
     }
 
-    $entity = $form_state->getFormObject()->getEntity();
     $entity->set('field_links', $paragraph_items);
     // Save the entire entity.
     $entity->save();
@@ -684,16 +700,17 @@ function os_widgets_follow_me_submit_form($form, FormStateInterface &$form_state
 function os_widgets_follow_me_table($element) {
   // Render the form as a table.
   $rows = [];
+  $render = \Drupal::service('renderer');
   foreach (Element::children($element) as $c) {
 
     $rows[] = [
       'data' => [
-        \Drupal::service('renderer')->render($element[$c]['text']),
-        \Drupal::service('renderer')->render($element[$c]['domain']),
-        \Drupal::service('renderer')->render($element[$c]['title']),
-        \Drupal::service('renderer')->render($element[$c]['weight']),
+        $render->render($element[$c]['text']),
+        $render->render($element[$c]['domain']),
+        $render->render($element[$c]['title']),
+        $render->render($element[$c]['weight']),
       ],
-      'class' => [(string) $c != 'blank' ? 'draggable' : ''],
+      'class' => [$c != 'blank' ? 'draggable' : ''],
     ];
   }
 
@@ -714,108 +731,13 @@ function os_widgets_follow_me_table($element) {
 }
 
 /**
- * Retrieves the default networks available.
- *
- * @return array
- *   An associative array, keyed by the machine name. The values are an array
- *   including title of the network, along with the domain to be used for
- *   input validation of the network.
- */
-function os_widgets_follow_default_networks() {
-  $networks = [
-    'facebook'  => [
-      'title' => t('Facebook'),
-      'domain' => 'facebook.com',
-      'offset' => 531,
-    ],
-    'virb' => [
-      'title' => t('Virb'),
-      'domain' => 'virb.com',
-      'offset' => 142,
-    ],
-    'myspace' => [
-      'title' => t('MySpace'),
-      'domain' => 'myspace.com',
-      'offset' => 290,
-    ],
-    'twitter' => [
-      'title' => t('Twitter'),
-      'domain' => 'twitter.com',
-      'offset' => 189,
-    ],
-    'google_photos' => [
-      'title' => t('Google Photos'),
-      'domain' => 'photos.google.com',
-      'offset' => 676,
-    ],
-    'flickr' => [
-      'title' => t('Flickr'),
-      'domain' => 'flickr.com',
-      'offset' => 483,
-    ],
-    'youtube' => [
-      'title' => t('YouTube'),
-      'domain' => 'youtube.com',
-      'offset' => 94,
-    ],
-    'vimeo' => [
-      'title' => t('Vimeo'),
-      'domain' => 'vimeo.com',
-      'offset' => 47,
-    ],
-    'lastfm' => [
-      'title' => t('last.fm'),
-      'domain' => 'last.fm',
-      'offset' => 389,
-    ],
-    'linkedin' => [
-      'title' => t('LinkedIn'),
-      'domain' => 'linkedin.com',
-      'offset' => 340,
-    ],
-    'delicious' => [
-      'title' => t('Delicious'),
-      'domain' => 'del.icio.us',
-      'offset' => 579,
-    ],
-    'tumblr' => [
-      'title' => t('Tumblr'),
-      'domain' => 'tumblr.com',
-      'offset' => 241,
-    ],
-    'pinterest' => [
-      'title' => t('Pinterest'),
-      'domain' => 'pinterest.com',
-      'offset' => 0,
-    ],
-    'instagram' => [
-      'title' => t('Instagram'),
-      'domain' => 'instagram.com',
-      'offset' => 630,
-    ],
-    'soundcloud' => [
-      'title' => t('soundcloud'),
-      'domain' => 'soundcloud.com',
-      'offset' => 436,
-    ],
-    'googleplus' => [
-      'title' => t('Google+'),
-      'domain' => 'plus.google.com',
-      'offset' => 722,
-    ],
-  ];
-  return $networks;
-
-}
-
-/**
  * Get all profile url links.
  *
  * @param mixed $entity
  *   Block entity.
  *
  * @return array
- *   Links array.
+ *   Profile links.
  */
 function os_widgets_get_profile_url_links($entity) {
   $links = [];

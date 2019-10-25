@@ -35,14 +35,13 @@ accordionWidget:
 randomWidget:
   js:
     js/os_widgets.random.js: {}
-followMeWidgetJs:
-  js:
-    js/os_widgets.follow_me.js: {}
-  dependencies:
-    - core/drupal
-followMeWidgetCss:
+followMeWidget:
   css:
     base:
       /libraries/rrssb-plus/css/rrssb.css: {}
       /libraries/rrssb-plus/css/rrssb.buttons.css: {}
       css/os_widgets.followme.css: {}
+  js:
+    js/os_widgets.follow_me.js: {}
+  dependencies:
+    - core/drupal

@@ -2,10 +2,9 @@
  * Allows users to add posts to their manual lists without an additional
  * page load on top of the ajax call
  */
-(function ($) {
+(function ($, Drupal) {
   Drupal.behaviors.os_widgets_follow_me = {
     attach: function (ctx) {
-
       if ($('#follow-links-list', ctx).length == 0) return;	// do nothing if our table doesn't exist
 
       var $form = $('.os-widgets-follow-me-form'),
@@ -14,14 +13,16 @@
         count = $('input[type="hidden"][name="count"]'),
         new_id = parseInt(count.val());
 
-      // add a new row to the table, set all its form elements to the right values and make it draggable
+      // add a new row to the table, set' all its form elements to the right values and make it draggable
       $('.add_new', $form).click(function (e) {
+        e.preventDefault();
         var edit_link_to_add = $('#edit-link-to-add', $form),
           patt = /^https?:\/\/([^\/]+)/,
           matches = patt.exec(edit_link_to_add.val()),
-          new_row, id, i, fd, weight = -Infinity;
-        // there should actually be something in the field
+          new_row, id, i, fd, weight = 0,
+          val = edit_link_to_add.val();
 
+        // Empty field check.
         if (matches != null) {
           var domain = matches[1],
             domains = drupalSettings.follow_networks;
@@ -47,38 +48,36 @@
                 weight = parseInt($(this).val());
               }
             });
-            // there are no existing form elements, start at 0.
-            if (weight == -Infinity) {
-              weight = 0;
-            }
 
             // set all the form elements in the new row
-            $('span.rrssb-text', new_row).text(edit_link_to_add.val());
+            var field_weight  = $('.default-weight', new_row);
+            var edit_link = $('#edit-links-'+id+'-weight', new_row);
+
+            $('span.rrssb-text', new_row).text(val);
             $('li', new_row).addClass('rrssb-'+domain);
-            $('input[name="links['+id+'][title]"]', new_row).val(edit_link_to_add.val());
+            $('input[name="links['+id+'][title]"]', new_row).val(val);
             $('input[name="links['+id+'][domain]"]', new_row).val(domain);
-            $('.default-weight', new_row).addClass('field-weight').val(weight+1);
-            $('.default-weight', new_row).parents('div').css('display', 'none');
-            $('#edit-links-'+id+'-weight', new_row).addClass('field-weight').val(weight+1);
-            $('#edit-links-'+id+'-weight', new_row).parents('div').css('display', 'none');
+            field_weight.addClass('field-weight').val(weight+1);
+            field_weight.parents('div').css('display', 'none');
+            edit_link.addClass('field-weight').val(weight+1);
+            edit_link.parents('div').css('display', 'none');
             $('table tbody', $form).append(new_row);
             new_row = $('input[name="links['+id+'][title]"]', $form).parents('tr');
 
-            setup_remove( );
-
+            setup_remove(new_row);
             tableDrag.makeDraggable(new_row[0]);
 
             // refreshes the variable
-            $form = $('.os-follow-me-form');
+            $form = $('.os-widgets-follow-me-form');
           }
           else {
             // alert the user that the domain was not invalid.
             // bein' lazy for now
-            alert(edit_link_to_add.val() +' is not from a valid social media domain.');
+            alert(Drupal.t(' @val is not from a valid social media domain.', {'@val': val}));
           }
         }
         else {
-          alert(edit_link_to_add.val() +' is not from a valid social media domain.');
+          alert(Drupal.t(' @val is not from a valid social media domain.', {'@val': val}));
         }
         edit_link_to_add.val('');
       });
@@ -95,7 +94,8 @@
           return false;
         });
       }
+      // call function on document load.
       setup_remove($form);
     }
   };
-})(jQuery);
+})(jQuery, Drupal);

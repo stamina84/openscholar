@@ -1,3 +1,16 @@
+{#
+/**
+ * @file
+ * Theme implementation for a follow me widget.
+ *
+ * Available variables:
+ * - profile_links: A list of links containing domain title and title
+ * - display_social : Boolean value 0 or 1
+ * - rss_feed : Boolean value 0 or 1
+ * - rss_page_url : page URL of rss page
+ * - rss_image_url : Rss image URL.
+#}
+
 {% set class = display_social ? '' : 'no-label' %}
 
 <div class="rrssb {{ class }}">
@@ -5,9 +18,9 @@
     <ul class="rrssb-buttons">
       {% if rss_feed %}
         <li class="rss-follow-icon">
-          <a href ="/rss" target="_blank">
-           <img src="/profiles/contrib/openscholar/themes/os_base/images/rss.png" width="24" height="24" alt="RSS Feed" title="Syndicate content">
-            <span class="rrssb-text">RSS</span>
+          <a href ="{{ rss_page_url }}" target="_blank">
+           <img src="{{ rss_image_url }}" width="24" height="24" alt="{{ 'RSS Feed' |t }}" title="{{ 'Syndicate content' |t }}">
+            <span class="rrssb-text"> {{ 'RSS' |t }} </span>
           </a>
         </li>
       {% endif %}
