@@ -8,7 +8,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Vsite favicon tests.
  *
  * @group vsite
- * @group kernel
+ * @group functional
  */
 class VsiteFaviconTest extends OsExistingSiteTestBase {
 
