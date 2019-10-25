@@ -9,9 +9,3 @@ os_metatag.settings:
     meta_description:
       type: string
       label: 'Meta Description'
-    publisher_url:
-      type: string
-      label: 'Publisher URL'
-    author_url:
-      type: string
-      label: 'Author URL'

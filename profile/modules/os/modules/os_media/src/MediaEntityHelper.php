@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -60,6 +61,13 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   protected $messenger;
 
   /**
+   * Logger service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $logger;
+
+  /**
    * File fields to be used.
    */
   const FILE_FIELDS = [
@@ -95,7 +103,7 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
    *
    * @var string
    */
-  protected $thumbsDirectory = 'public://video_thumbnails';
+  protected $thumbsDirectory = '://video_thumbnails';
 
   /**
    * MediaEntityHelper constructor.
@@ -108,13 +116,16 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
    *   Config Factory instance.
    * @param \Drupal\Core\Messenger\Messenger $messenger
    *   Messenger instance.
+   * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
+   *   Logger instance.
    */
-  public function __construct(ClientInterface $http_client, IFrameUrlHelper $iframe_url_helper, ConfigFactory $config_factory, Messenger $messenger) {
+  public function __construct(ClientInterface $http_client, IFrameUrlHelper $iframe_url_helper, ConfigFactory $config_factory, Messenger $messenger, LoggerChannelFactory $logger) {
     $this->httpClient = $http_client;
     $this->iFrameUrlHelper = $iframe_url_helper;
     $this->configFactory = $config_factory;
     $this->config = $this->configFactory->get('os_media.settings');
     $this->messenger = $messenger;
+    $this->logger = $logger;
   }
 
   /**
@@ -272,12 +283,14 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
   public function downloadThumbnail(array $resource): void {
     $local_uri = $this->getLocalThumbnailUri($resource);
     if (!file_exists($local_uri)) {
-      file_prepare_directory($this->thumbsDirectory, FILE_CREATE_DIRECTORY);
+      $dir = file_default_scheme() . $this->thumbsDirectory;
+      file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
       try {
         $thumbnail = $this->httpClient->request('GET', $resource['thumbnail_url']);
         file_unmanaged_save_data((string) $thumbnail->getBody(), $local_uri);
       }
-      catch (\Exception $e) {
+      catch (RequestException $e) {
+        $this->logger->error($e->getMessage());
       }
     }
   }
@@ -287,7 +300,8 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
    */
   public function getLocalThumbnailUri(array $resource) : string {
     $name = preg_replace('/\s+/', '', $resource['title']);
-    return $this->thumbsDirectory . '/' . $name . '.jpg';
+    $dir = file_default_scheme() . $this->thumbsDirectory;
+    return $dir . '/' . $name . '.jpg';
   }
 
 }
