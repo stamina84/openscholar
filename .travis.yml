@@ -50,5 +50,8 @@ before_script:
 script:
   - robo $JOB
 
+after_failure:
+  - artifacts upload
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
