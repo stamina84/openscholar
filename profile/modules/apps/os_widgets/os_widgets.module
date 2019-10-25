@@ -663,6 +663,7 @@ function os_widgets_follow_me_submit_form($form, FormStateInterface &$form_state
   $profile_links = $form_state->getUserInput();
   unset($profile_links['links']['blank']);
 
+  /** @var \Drupal\Core\Entity\EntityInterface $entity */
   $entity = $form_state->getFormObject()->getEntity();
   foreach ($entity->get('field_links')->getValue() as $value) {
     if ($value['target_id']) {
@@ -733,13 +734,13 @@ function os_widgets_follow_me_table($element) {
 /**
  * Get all profile url links.
  *
- * @param mixed $entity
- *   Block entity.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity.
  *
  * @return array
  *   Profile links.
  */
-function os_widgets_get_profile_url_links($entity) {
+function os_widgets_get_profile_url_links(EntityInterface $entity) {
   $links = [];
   $block = $entity->get('field_links')->getValue();
 
