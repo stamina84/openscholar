@@ -16,3 +16,8 @@ services:
   os_widgets.context:
     class: Drupal\os_widgets\OsWidgetsContext
     parent: default_plugin_manager
+  cache_context.os_widgets:
+    class: Drupal\os_widgets\Cache\Context\OsWidgetsCacheContext
+    arguments: ['@os_widgets.context']
+    tags:
+      - { name: cache.context }

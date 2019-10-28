@@ -3,6 +3,7 @@
 namespace Drupal\os_widgets\Entity;
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Cache\Cache;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 
 /**
@@ -44,6 +45,13 @@ class OsBlockContent extends BlockContent {
    */
   public function setVsiteContextManager(VsiteContextManagerInterface $vsite_context_manager) {
     $this->vsiteContextManager = $vsite_context_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return Cache::mergeContexts(parent::getCacheContexts(), ['os_widgets']);
   }
 
 }
