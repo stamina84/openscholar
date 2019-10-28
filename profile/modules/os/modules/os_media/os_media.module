@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\file\Entity\File;
 
@@ -39,6 +40,21 @@ function os_media_library_info_alter(&$libraries, $extension) {
         $thumbnail_uri[$id] = ImageStyle::load('media_thumbnail')->buildUrl($path);
       }
       $libraries['mediaBrowser']['drupalSettings']['filesPath'] = $thumbnail_uri;
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_media_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $hidden_bundles = [
+    'remote',
+    'video',
+  ];
+  if ($form['#id'] == 'views-exposed-form-os-media-page-1') {
+    foreach ($hidden_bundles as $bundle) {
+      unset($form['bundle']['#options'][$bundle]);
     }
   }
 }
