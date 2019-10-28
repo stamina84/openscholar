@@ -15,7 +15,7 @@
 <div class="more-tags">
 {% endif %}
   <div class="see-more-tag">
-    <strong>{{ title }}: </strong>
+    <strong>{{ title }}</strong>
     {% for item in items %}
       {{ item|render }}{% if not loop.last %}{{ ', ' }}{% endif %}
     {% endfor %}
