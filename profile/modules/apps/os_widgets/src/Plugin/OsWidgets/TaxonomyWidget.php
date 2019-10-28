@@ -17,6 +17,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\cp_taxonomy\CpTaxonomyHelperInterface;
 use Drupal\os_widgets\OsWidgetsBase;
+use Drupal\os_widgets\OsWidgetsContextInterface;
 use Drupal\os_widgets\OsWidgetsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -60,6 +61,13 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
   protected $time;
 
   /**
+   * Os Widget context interface.
+   *
+   * @var \Drupal\os_widgets\OsWidgetsContextInterface
+   */
+  protected $osWidgetsContext;
+
+  /**
    * Cp Taxonomy Helper.
    *
    * @var \Drupal\cp_taxonomy\CpTaxonomyHelperInterface
@@ -69,11 +77,12 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, RequestStack $request_stack, CpTaxonomyHelperInterface $taxonomy_helper, TimeInterface $time) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, RequestStack $request_stack, CpTaxonomyHelperInterface $taxonomy_helper, TimeInterface $time, OsWidgetsContextInterface $os_widgets_context) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $connection);
     $this->requestStack = $request_stack;
     $this->taxonomyHelper = $taxonomy_helper;
     $this->time = $time;
+    $this->osWidgetsContext = $os_widgets_context;
   }
 
   /**
@@ -88,7 +97,8 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $container->get('database'),
       $container->get('request_stack'),
       $container->get('cp.taxonomy.helper'),
-      $container->get('datetime.time')
+      $container->get('datetime.time'),
+      $container->get('os_widgets.context')
     );
   }
 
@@ -197,9 +207,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
         break;
 
       case 'contextual':
-        if ($node = $this->requestStack->getCurrentRequest()->attributes->get('node')) {
-          $bundles[] = 'node:' . $node->bundle();
-        }
+        $bundles = $this->osWidgetsContext->getBundles();
         break;
 
       case '--all--':
@@ -348,7 +356,9 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
       $query->condition($db_or);
     }
-    $query->condition($alias . '.bundle', $bundles, 'IN');
+    if (count($bundles) == 1 && $bundles[0] != '*') {
+      $query->condition($alias . '.bundle', $bundles, 'IN');
+    }
     $field_data_id = '';
     switch ($entity_name) {
       case 'node':

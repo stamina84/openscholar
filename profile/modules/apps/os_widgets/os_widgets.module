@@ -46,6 +46,43 @@ function os_widgets_preprocess_node(&$variables) {
   if (!empty($variables['elements']['os_widgets_hide_node_title'])) {
     $variables['label']['#access'] = FALSE;
   }
+  if ($variables['page']) {
+    Drupal::service('os_widgets.context')->addBundle('node:' . $variables['node']->bundle());
+  }
+}
+
+/**
+ * Implements hook_preprocess_bibcite_reference().
+ */
+function os_widgets_preprocess_bibcite_reference(&$variables) {
+  $entity = Drupal::requestStack()->getCurrentRequest()->attributes->get('bibcite_reference');
+  // Checking the current request and rendered reference id match.
+  if (!empty($entity) && $entity->id() == $variables['bibcite_reference']->id()) {
+    Drupal::service('os_widgets.context')->addBundle('bibcite_reference:*');
+  }
+}
+
+/**
+ * Implements hook_preprocess_media().
+ */
+function os_widgets_preprocess_media(&$variables) {
+  $entity = Drupal::requestStack()->getCurrentRequest()->attributes->get('media');
+  // Checking the current request and rendered reference id match.
+  if (!empty($entity) && $entity->id() == $variables['media']->id()) {
+    Drupal::service('os_widgets.context')->addBundle('media:*');
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function os_widgets_views_pre_render(ViewExecutable $view) {
+  if ($view->id() != 'publications') {
+    return;
+  }
+  if (in_array($view->current_display, ['page_1', 'page_2', 'page_3', 'page_4'])) {
+    Drupal::service('os_widgets.context')->addBundle('bibcite_reference:*');
+  }
 }
 
 /**
