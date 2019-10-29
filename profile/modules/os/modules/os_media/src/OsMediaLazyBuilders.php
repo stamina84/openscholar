@@ -62,7 +62,7 @@ class OsMediaLazyBuilders implements ContainerInjectionInterface {
       elseif ($entity->bundle() === 'image') {
         $field = $entity->field_media_image->get(0)->view('wysiwyg');
         $field['#item']->width = $width;
-        $field['#item']->height = $width == $height;
+        $field['#item']->height = $height;
       }
       elseif ($entity->bundle() === 'html') {
         $entity->field_media_html->width = $width;
