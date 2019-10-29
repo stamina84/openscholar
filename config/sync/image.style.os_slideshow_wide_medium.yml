@@ -1,0 +1,25 @@
+uuid: 1ca47485-7edc-4930-b0b6-69df78bc5cc1
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.crop_3_1
+  module:
+    - crop
+name: os_slideshow_wide_medium
+label: 'Os slideshow wide medium'
+effects:
+  2da3a4fd-05d5-4584-9365-cfa0e5df0dd9:
+    uuid: 2da3a4fd-05d5-4584-9365-cfa0e5df0dd9
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: crop_3_1
+  33fe832d-e55b-4cb7-8da8-edf3ebce71c1:
+    uuid: 33fe832d-e55b-4cb7-8da8-edf3ebce71c1
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 300
+      height: 200
+      anchor: center-center

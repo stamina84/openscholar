@@ -5,6 +5,8 @@
  * OS widgets.
  */
 
+use Drupal\slick\Entity\Slick;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\block_content\BlockContentForm;
 use Drupal\Core\Render\Element;
 use Drupal\os_widgets\Plugin\DisplayVariant\PlaceBlockPageVariant;
@@ -57,6 +59,63 @@ function os_widgets_preprocess_block(&$variables) {
       $variables['attributes']['class'][] = $class;
     }
   }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function os_widgets_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if ($entity->getEntityTypeId() != 'paragraph') {
+    return;
+  }
+
+  if ($build['#view_mode'] != 'slideshow_wide') {
+    return;
+  }
+  $build['#post_render'][] = 'os_widgets_slick_slideshow_post_render';
+}
+
+/**
+ * Slick slideshow pre-render to handle responsive slick image styles.
+ */
+function os_widgets_slick_slideshow_post_render($output, $element) {
+  $slideshow_breakpoints_image_styles['slideshow_wide'] = [
+    [
+      'slick_slide_class' => 'slick-small',
+      'image_style' => 'os_slideshow_wide_small',
+    ],
+    [
+      'slick_slide_class' => 'slick-medium',
+      'image_style' => 'os_slideshow_wide_medium',
+    ],
+    [
+      'slick_slide_class' => 'slick-large',
+      'image_style' => 'os_slideshow_wide_large',
+    ],
+  ];
+  unset($element['#post_render']);
+  unset($element['#pre_render']);
+  // Create all slide container, handled by slick breakpoints.
+  $element_responsive = [];
+  foreach ($slideshow_breakpoints_image_styles[$element['#view_mode']] as $container_info) {
+    $element_responsive[] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => $container_info['slick_slide_class'],
+      ],
+      'build' => $element,
+    ];
+  }
+  return Drupal::service('renderer')->render($element_responsive);
+}
+
+/**
+ * Implements hook_slick_attach_alter().
+ */
+function os_widgets_slick_attach_alter(&$load, $attach) {
+  $os_slick = Slick::load('os_slideshow');
+  $options = $os_slick->getOptions();
+  $load['drupalSettings']['slick']['responsive'] = $options['responsives']['responsive'];
 }
 
 /**

@@ -31,7 +31,7 @@ content:
     weight: 1
     label: above
     settings:
-      optionset: default
+      optionset: os_slideshow
       skin: ''
       view_mode: slideshow_standard
       cache: 0

@@ -1,0 +1,25 @@
+uuid: 9ccbcff1-925f-49b1-93f2-8d77ed3d7ce9
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.crop_3_1
+  module:
+    - crop
+name: os_slideshow_wide_small
+label: 'Os slideshow wide small'
+effects:
+  e1073349-3dc0-4a49-b627-fded6f0c7546:
+    uuid: e1073349-3dc0-4a49-b627-fded6f0c7546
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: crop_3_1
+  373a3b3d-2135-456f-b90a-527a67d4d59b:
+    uuid: 373a3b3d-2135-456f-b90a-527a67d4d59b
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 300
+      height: 300
+      anchor: center-center
