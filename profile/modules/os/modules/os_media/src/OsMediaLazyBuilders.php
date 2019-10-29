@@ -42,8 +42,6 @@ class OsMediaLazyBuilders implements ContainerInjectionInterface {
    * @param string $width
    *   The width of the final media entity render,
    *   or 'default' if no width is set.
-   * @param string $height
-   *   The width of the final media entity render.
    *
    * @return array
    *   Actual media entity render array.
@@ -52,8 +50,9 @@ class OsMediaLazyBuilders implements ContainerInjectionInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public function renderMedia($id, $width, $height) {
+  public function renderMedia($id, $width) {
     if ($entity = $this->entityTypeManager->getStorage('media')->load($id)) {
+      $height = $width == 'default' ? $width : round($width * 9 / 16);
       if ($entity->bundle() === 'oembed') {
         // To control width and height of the rendered video.
         $entity->field_media_oembed_content->width = $width;
@@ -63,7 +62,7 @@ class OsMediaLazyBuilders implements ContainerInjectionInterface {
       elseif ($entity->bundle() === 'image') {
         $field = $entity->field_media_image->get(0)->view('wysiwyg');
         $field['#item']->width = $width;
-        $field['#item']->height = $height;
+        $field['#item']->height = $width == $height;
       }
       elseif ($entity->bundle() === 'html') {
         $entity->field_media_html->width = $width;
