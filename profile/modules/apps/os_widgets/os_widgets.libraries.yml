@@ -35,3 +35,7 @@ accordionWidget:
 randomWidget:
   js:
     js/os_widgets.random.js: {}
+mailchimpWidget:
+  css:
+    component:
+      css/mailchimp.form.css: {}
