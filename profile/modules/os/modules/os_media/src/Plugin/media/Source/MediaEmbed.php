@@ -73,7 +73,6 @@ class MediaEmbed extends OEmbed {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, MediaEntityHelper $media_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_field_manager, $config_factory, $field_type_manager, $logger, $messenger, $http_client, $resource_fetcher, $url_resolver, $iframe_url_helper);
     $this->mediaHelper = $media_helper;
-    $this->configFactory = $config_factory;
   }
 
   /**
@@ -127,14 +126,12 @@ class MediaEmbed extends OEmbed {
           if (!empty($thumbnail_uri)) {
             return $thumbnail_uri;
           }
-          return NULL;
+          else {
+            $this->getGenericThumbnail();
+          }
         }
         else {
-          $icon_base = $this->configFactory->get('media.settings')->get('icon_base_uri');
-          $thumbnail = $icon_base . '/generic.png';
-          if (is_file($thumbnail)) {
-            return $thumbnail;
-          }
+          $this->getGenericThumbnail();
         }
     }
     return NULL;
@@ -145,6 +142,18 @@ class MediaEmbed extends OEmbed {
    */
   public function getSourceFieldConstraints() {
     return [];
+  }
+
+  /**
+   * Gets default generic thumbnail.
+   */
+  protected function getGenericThumbnail() {
+    $icon_base = $this->configFactory->get('media.settings')->get('icon_base_uri');
+    $thumbnail = $icon_base . '/generic.png';
+    if (is_file($thumbnail)) {
+      return $thumbnail;
+    }
+    return NULL;
   }
 
 }
