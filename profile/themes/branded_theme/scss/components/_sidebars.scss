@@ -1,0 +1,14 @@
+/**** sidebars ****/
+aside {
+  .block {
+    margin-bottom: 20px;
+    h2.block-title {
+      background: $color-menu;
+      color: $color-white;
+      font-size: 14px;
+      line-height: 16px;
+      padding: 7px 10px;
+      font-weight: normal;
+    }
+  }
+}

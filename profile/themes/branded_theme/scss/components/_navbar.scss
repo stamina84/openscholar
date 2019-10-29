@@ -1,0 +1,16 @@
+/**** navbar background ****/
+.navbar-collapse {
+  @include nav($color-menu,$color-white,$color-menu-hover,$color-white,$color-white,$color-menu-hover,
+  $color-white,$color-white,$color-white,$fs:20px,$fw:normal);
+  /***** navbar nav *****/
+  .navbar-nav {
+    > li {
+      > a {
+        padding: 16px 15px;
+      }
+      a {
+        font-family: 'Source Sans Pro', sans-serif;
+      }
+    }
+  }
+}
