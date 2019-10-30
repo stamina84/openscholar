@@ -3,8 +3,10 @@
  * page load on top of the ajax call
  */
 (function ($, Drupal) {
+  'use strict';
+
   Drupal.behaviors.os_widgets_follow_me = {
-    attach: function (ctx) {
+    attach: function (ctx, drupalSettings) {
       if ($('#follow-links-list', ctx).length == 0) return;	// do nothing if our table doesn't exist
 
       var $form = $('.os-widgets-follow-me-form'),
@@ -72,7 +74,6 @@
           }
           else {
             // alert the user that the domain was not invalid.
-            // bein' lazy for now
             alert(Drupal.t(' @val is not from a valid social media domain.', {'@val': val}));
           }
         }

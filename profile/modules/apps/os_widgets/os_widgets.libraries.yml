@@ -45,3 +45,4 @@ followMeWidget:
     js/os_widgets.follow_me.js: {}
   dependencies:
     - core/drupal
+    - core/drupal.tabledrag

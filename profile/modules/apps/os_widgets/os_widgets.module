@@ -601,7 +601,6 @@ function os_widgets_alter_follow_me_block_form(array &$form, FormStateInterface 
       '#limit_validation_errors' => [],
       '#attributes' => ['class' => ['add_new']],
     ],
-
     '#weight' => 3,
   ];
 
@@ -619,6 +618,7 @@ function os_widgets_alter_follow_me_block_form(array &$form, FormStateInterface 
 
   // Get all links.
   $all_links = os_widgets_get_profile_url_links($form_state->getFormObject()->getEntity());
+
   foreach ($all_links['links'] as $k => $v) {
     $n = [
       'text' => [
@@ -639,7 +639,7 @@ function os_widgets_alter_follow_me_block_form(array &$form, FormStateInterface 
         '#default_value' => $v['weight'],
         '#size' => 3,
         '#attributes' => [
-          'class' => [$k != 'blank' ? 'field-weight' : 'default-weight'],
+          'class' => [(string) $k != 'blank' ? 'field-weight' : 'default-weight'],
         ],
       ],
     ];
@@ -681,7 +681,7 @@ function os_widgets_follow_me_submit_form($form, FormStateInterface &$form_state
         $paragraph->set('field_link_title', $values['title']);
         $paragraph->set('field_weight', $values['weight']);
         $paragraph->save();
-        // Then attach a new Paragraph to the Config page entity.
+
         $paragraph_items[] = [
           'target_id' => $paragraph->id(),
           'target_revision_id' => $paragraph->getRevisionId(),
@@ -711,7 +711,7 @@ function os_widgets_follow_me_table($element) {
         $render->render($element[$c]['title']),
         $render->render($element[$c]['weight']),
       ],
-      'class' => [$c != 'blank' ? 'draggable' : ''],
+      'class' => [(string) $c != 'blank' ? 'draggable' : ''],
     ];
   }
 
@@ -738,7 +738,7 @@ function os_widgets_follow_me_table($element) {
  *   The entity.
  *
  * @return array
- *   Profile links.
+ *   Return profile links.
  */
 function os_widgets_get_profile_url_links(EntityInterface $entity) {
   $links = [];

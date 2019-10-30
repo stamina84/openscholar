@@ -32,6 +32,7 @@ class FollowMeWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#rss_image_url' => '/profiles/contrib/openscholar/themes/os_base/images/rss.png',
       '#rss_page_url' => '/rss',
     ];
+
     $build['follow_me']['#attached']['library'][] = 'os_widgets/followMeWidget';
   }
 
