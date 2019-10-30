@@ -208,6 +208,11 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
       case 'contextual':
         $bundles = $this->osWidgetsContext->getBundles();
+        // If no context exists, use allowed bundles.
+        if (empty($bundles)) {
+          $settings = $this->taxonomyHelper->getVocabularySettings($vid);
+          $bundles = $settings['allowed_vocabulary_reference_types'];
+        }
         break;
 
       case '--all--':

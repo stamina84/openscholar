@@ -51,7 +51,7 @@ class OsBlockContent extends BlockContent {
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return Cache::mergeContexts(parent::getCacheContexts(), ['os_widgets']);
+    return Cache::mergeContexts(parent::getCacheContexts(), ['route']);
   }
 
 }

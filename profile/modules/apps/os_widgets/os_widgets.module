@@ -5,6 +5,7 @@
  * OS widgets.
  */
 
+use Drupal\views\Plugin\views\filter\Bundle;
 use Drupal\block_content\BlockContentForm;
 use Drupal\Core\Render\Element;
 use Drupal\os_widgets\Plugin\DisplayVariant\PlaceBlockPageVariant;
@@ -77,11 +78,23 @@ function os_widgets_preprocess_media(&$variables) {
  * Implements hook_views_pre_render().
  */
 function os_widgets_views_pre_render(ViewExecutable $view) {
-  if ($view->id() != 'publications') {
-    return;
-  }
-  if (in_array($view->current_display, ['page_1', 'page_2', 'page_3', 'page_4'])) {
+  $allowed_publication_views_displays = ['page_1', 'page_2', 'page_3', 'page_4'];
+  if ($view->id() == 'publications' && in_array($view->current_display, $allowed_publication_views_displays)) {
     Drupal::service('os_widgets.context')->addBundle('bibcite_reference:*');
+  }
+  // Make sure, the filter is not empty.
+  // Check whether current view is a page or not.
+  if (!empty($view->filter) && !empty($view->element['#view_display_plugin_id']) && $view->element['#view_display_plugin_id'] == 'page') {
+    /** @var \Drupal\os_widgets\OsWidgetsContext $os_widget_context */
+    $os_widget_context = Drupal::service('os_widgets.context');
+    /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter */
+    foreach ($view->filter as $filter) {
+      if ($filter instanceof Bundle && $filter->getEntityType() == 'node') {
+        foreach ($filter->value as $bundle) {
+          $os_widget_context->addBundle('node:' . $bundle);
+        }
+      }
+    }
   }
 }
 
