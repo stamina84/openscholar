@@ -12,7 +12,7 @@ field_name: field_display
 entity_type: block_content
 bundle: mailchimp_subscription
 label: Display
-description: ''
+description: 'Please copy form data from Mailchimp website to <a href="[site:url]cp/settings/global-settings/mailchimp" target="_blank">Mailchimp global settings</a> in-order to use Mailchimp form. Please make sure to set API key in Mailchimp global settings.'
 required: true
 translatable: false
 default_value: {  }

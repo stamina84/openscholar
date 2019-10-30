@@ -4,4 +4,4 @@ services:
     arguments: ['@entity_type.manager']
   os_media.media_helper:
     class: \Drupal\os_media\MediaEntityHelper
-    arguments: ['@http_client', '@media.oembed.iframe_url_helper', '@config.factory', '@messenger']
+    arguments: ['@http_client', '@media.oembed.iframe_url_helper', '@config.factory', '@messenger', '@logger.factory']

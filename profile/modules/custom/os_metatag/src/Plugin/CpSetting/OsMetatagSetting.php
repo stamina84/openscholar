@@ -43,16 +43,6 @@ class OsMetatagSetting extends CpSettingBase {
       '#title' => t('Meta Description'),
       '#default_value' => $config->get('meta_description'),
     ];
-    $form['publisher_url'] = [
-      '#type' => 'textfield',
-      '#title' => t('Publisher URL'),
-      '#default_value' => $config->get('publisher_url'),
-    ];
-    $form['author_url'] = [
-      '#type' => 'textfield',
-      '#title' => t('Author URL'),
-      '#default_value' => $config->get('author_url'),
-    ];
   }
 
   /**

@@ -214,12 +214,11 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
    */
   public function getOptionsTree(string $vid): array {
     $vocabulary_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid);
+    $options = ['_none' => $this->t('- None -')];
 
     foreach ($vocabulary_terms as $term) {
       $options[$vid][$term->tid] = FieldFilteredMarkup::create(str_repeat('-', $term->depth) . $term->name);
     }
-
-    $options = ['_none' => $this->t('- None -')] + $options;
 
     return $options;
   }
