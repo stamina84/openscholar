@@ -72,41 +72,7 @@ function os_widgets_entity_view_alter(array &$build, EntityInterface $entity, En
   if ($build['#view_mode'] != 'slideshow_wide') {
     return;
   }
-  $build['#post_render'][] = 'os_widgets_slick_slideshow_post_render';
-}
-
-/**
- * Slick slideshow pre-render to handle responsive slick image styles.
- */
-function os_widgets_slick_slideshow_post_render($output, $element) {
-  $slideshow_breakpoints_image_styles['slideshow_wide'] = [
-    [
-      'slick_slide_class' => 'slide-small',
-      'image_style' => 'os_slideshow_wide_small',
-    ],
-    [
-      'slick_slide_class' => 'slide-medium',
-      'image_style' => 'os_slideshow_wide_medium',
-    ],
-    [
-      'slick_slide_class' => 'slide-large',
-      'image_style' => 'os_slideshow_wide_large',
-    ],
-  ];
-  unset($element['#post_render']);
-  unset($element['#pre_render']);
-  // Create all slide container, handled by slick breakpoints.
-  $element_responsive = [];
-  foreach ($slideshow_breakpoints_image_styles[$element['#view_mode']] as $container_info) {
-    $element_responsive[] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => $container_info['slick_slide_class'],
-      ],
-      'build' => $element,
-    ];
-  }
-  return Drupal::service('renderer')->render($element_responsive);
+  $build['#attached']['library'][] = 'os_widgets/slideshowWidget';
 }
 
 /**

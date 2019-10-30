@@ -16,7 +16,7 @@ skin: default
 breakpoints: 3
 optimized: false
 options:
-  options__active_tab: edit-options-settings
+  options__active_tab: edit-options-responsives
   settings:
     mobileFirst: false
     asNavFor: ''
@@ -50,7 +50,7 @@ options:
     rtl: false
     rows: 1
     slidesPerRow: 1
-    slide: .slide-small
+    slide: ''
     slidesToShow: 1
     slidesToScroll: 1
     speed: 500
@@ -93,7 +93,6 @@ options:
           respondTo: slider
           rows: 1
           slidesPerRow: 1
-          slide: .slide-small
           slidesToShow: 1
           slidesToScroll: 1
           speed: 500
@@ -131,8 +130,7 @@ options:
           respondTo: slider
           rows: 1
           slidesPerRow: 1
-          slide: .slide-medium
-          slidesToShow: 1
+          slidesToShow: 2
           slidesToScroll: 1
           speed: 500
           swipe: false
@@ -169,8 +167,7 @@ options:
           respondTo: slider
           rows: 1
           slidesPerRow: 1
-          slide: .slide-large
-          slidesToShow: 1
+          slidesToShow: 3
           slidesToScroll: 1
           speed: 500
           swipe: false
