@@ -81,15 +81,15 @@ function os_widgets_entity_view_alter(array &$build, EntityInterface $entity, En
 function os_widgets_slick_slideshow_post_render($output, $element) {
   $slideshow_breakpoints_image_styles['slideshow_wide'] = [
     [
-      'slick_slide_class' => 'slick-small',
+      'slick_slide_class' => 'slide-small',
       'image_style' => 'os_slideshow_wide_small',
     ],
     [
-      'slick_slide_class' => 'slick-medium',
+      'slick_slide_class' => 'slide-medium',
       'image_style' => 'os_slideshow_wide_medium',
     ],
     [
-      'slick_slide_class' => 'slick-large',
+      'slick_slide_class' => 'slide-large',
       'image_style' => 'os_slideshow_wide_large',
     ],
   ];
