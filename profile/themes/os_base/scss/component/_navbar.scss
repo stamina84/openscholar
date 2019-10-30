@@ -69,19 +69,21 @@ body {
 }
 
 // nav hover and focus
-.nav {
-  li {
-    ul {
-      visibility: hidden;
-      opacity: 0;
-      transition: all 0.5s ease;
-      display: none;
-    }
-    &:hover, &:focus-within {
-      > ul {
-        visibility: visible;
-        opacity: 1;
-        display: block;
+@media #{$tablet} {
+  .nav {
+    li {
+      ul {
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.5s ease;
+        display: none;
+      }
+      &:hover, &:focus-within {
+        > ul {
+          visibility: visible;
+          opacity: 1;
+          display: block;
+        }
       }
     }
   }

@@ -1,0 +1,39 @@
+uuid: e11a0975-6a57-4025-ad04-cf409c19e469
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_visibility_groups
+    - os_privacy_policy
+    - rng
+  theme:
+    - branded_theme
+id: branded_theme_copyright
+theme: branded_theme
+region: footer
+weight: 0
+provider: null
+plugin: copyright_block
+settings:
+  id: copyright_block
+  label: Copyright
+  provider: os_privacy_policy
+  label_display: '0'
+visibility:
+  condition_group:
+    id: condition_group
+    negate: false
+    block_visibility_group: ''
+    context_mapping: {  }
+  rng_rule_scheduler:
+    id: rng_rule_scheduler
+    rng_rule_component: null
+    rng_rule_scheduler: null
+    date: '1561115804'
+    negate: false
+    context_mapping: {  }
+  rng_current_time:
+    id: rng_current_time
+    date: '1561115804'
+    negate: false
+    context_mapping: {  }
