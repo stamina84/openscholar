@@ -14,8 +14,12 @@ textarea.form-textarea {
   box-shadow: none;
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
-  border: 1px solid $color-light-gray2;
-  border-top-color: $color-light-gray2;
+  border: 1px solid $color-gray6;
+  border-top-color: $color-gray6;
+  min-height: 3em;
+}
+input.form-file {
+  padding-top: .65em;
 }
 .cp-settings-form #edit-default-image {
   max-width: 900px;
@@ -36,4 +40,13 @@ label {
 /**** global form label ****/
 .form-item label.option {
   font-size: 0.923em;
+}
+/**** body fields bordercolor ****/
+form {
+  .cke_chrome,
+  .filter-wrapper,
+  .cke_top,
+  .cke_bottom {
+    border-color: $color-gray6;
+  }
 }

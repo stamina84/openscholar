@@ -14,6 +14,6 @@
 .morelink:hover {
   cursor: pointer;
 }
-.see-more-tag {
-  display: inline-block;
+.last-updated {
+  display: block;
 }
