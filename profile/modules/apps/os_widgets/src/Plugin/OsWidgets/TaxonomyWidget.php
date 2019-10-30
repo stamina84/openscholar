@@ -330,7 +330,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
       // Fix bundles array if remove everything.
       if (count($bundles) == 0) {
-        $bundles[] = 'events';
+        $bundles[0] = 'events';
       }
     }
     // If both special type is present, then nothing to do.
