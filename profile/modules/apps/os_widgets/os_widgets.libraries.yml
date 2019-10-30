@@ -46,3 +46,7 @@ followMeWidget:
   dependencies:
     - core/drupal
     - core/drupal.tabledrag
+mailchimpWidget:
+  css:
+    component:
+      css/mailchimp.form.css: {}

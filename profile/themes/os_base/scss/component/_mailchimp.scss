@@ -1,0 +1,14 @@
+.block--type-mailchimp-subscription {
+  #mc_embed_signup {
+   width: 100%;
+   .asterisk {
+      color: $color-danger;
+    }
+    h2 {
+      margin-top: 0;
+    }
+  }
+  form label {
+    margin-left: 3px;
+  }
+}

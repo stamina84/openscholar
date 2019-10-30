@@ -20,11 +20,6 @@ use Drupal\Core\Url;
  * Implements hook_entity_operation_alter().
  *
  * Remove operations from taxonomy vocabs we don't care about.
- *
- * @param array $operations
- *   List of operations.
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity these operations will act on.
  */
 function cp_taxonomy_entity_operation_alter(array &$operations, EntityInterface $entity) {
   /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsiteContextManager */
@@ -69,11 +64,6 @@ function cp_taxonomy_theme($existing, $type, $theme, $path) {
  * Implements hook_form_FORM_ID_alter().
  *
  * Remove global vocabularies from the list.
- *
- * @param array $form
- *   The form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state.
  */
 function cp_taxonomy_form_taxonomy_overview_vocabularies_alter(array &$form, FormStateInterface $form_state) {
   if (\Drupal::routeMatch()->getRouteName() == 'cp.taxonomy') {
@@ -90,11 +80,6 @@ function cp_taxonomy_form_taxonomy_overview_vocabularies_alter(array &$form, For
  * Implements hook_form_FORM_ID_alter().
  *
  * Add our submit handler to the form.
- *
- * @param array $form
- *   The form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state.
  */
 function cp_taxonomy_form_taxonomy_vocabulary_form_alter(array &$form, FormStateInterface &$form_state) {
   if (\Drupal::routeMatch()->getRouteName() == 'cp.taxonomy.add') {
@@ -161,11 +146,6 @@ function cp_taxonomy_form_taxonomy_vocabulary_form_alter(array &$form, FormState
  * Implements hook_form_FORM_ID_alter().
  *
  * Alter the terms overview page to fix links and redirects.
- *
- * @param array $form
- *   The form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state.
  */
 function cp_taxonomy_form_taxonomy_overview_terms_alter(array &$form, FormStateInterface &$form_state) {
   /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $oldMarkup */
@@ -175,7 +155,8 @@ function cp_taxonomy_form_taxonomy_overview_terms_alter(array &$form, FormStateI
   $arguments = [
     ':link' => Url::fromRoute('cp.taxonomy.term.add', ['taxonomy_vocabulary' => $vocab->id()])->toString(),
   ] + $oldMarkup->getArguments();
-  $form['terms']['#empty'] = t($oldMarkup->getUntranslatedString(), $arguments);
+
+  $form['terms']['#empty'] = t('No terms available. <a href=":link">Add term</a>.', $arguments);
   $form['actions']['reset_alphabetical']['#submit'][] = 'cp_taxonomy_reset_redirect';
 }
 
@@ -197,11 +178,6 @@ function cp_taxonomy_reset_redirect(array &$form, FormStateInterface &$form_stat
  * Implements hook_form_FORM_ID_alter().
  *
  * Change the link for the Cancel button to stay in the cp namespace.
- *
- * @param array $form
- *   The form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state.
  */
 function cp_taxonomy_form_taxonomy_vocabulary_confirm_delete_alter(array &$form, FormStateInterface &$form_state) {
   if (\Drupal::routeMatch()->getRouteName() == 'cp.taxonomy.delete') {
@@ -348,11 +324,6 @@ function cp_taxonomy_bibcite_reference_view_alter(array &$build, EntityInterface
   $cp_taxonomy_helper->checkTaxonomyTermsPageVisibility($build, $view_modes);
   $cp_taxonomy_helper->checkTaxonomyTermsListingVisibility($build, 'bibcite_reference:*');
   $cp_taxonomy_helper->setCacheTags($build);
-  // Override tags title.
-  if (!empty($build['field_taxonomy_terms']['#title'])) {
-    $build['field_taxonomy_terms']['#title'] = t('See also');
-  }
-
 }
 
 /**
