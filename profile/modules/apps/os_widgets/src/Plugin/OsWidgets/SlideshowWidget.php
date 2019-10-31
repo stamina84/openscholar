@@ -56,6 +56,9 @@ class SlideshowWidget extends OsWidgetsBase implements OsWidgetsInterface {
       600 => $image_style_prefix . 'medium',
       900 => $image_style_prefix . 'large',
     ];
+    if (empty($build['field_slideshow']['#build']['items'])) {
+      return;
+    }
     foreach ($build['field_slideshow']['#build']['items'] as &$item) {
       $image_media_values = $item['#paragraph']->get('field_slide_image')->referencedEntities();
       $image_media = reset($image_media_values);
