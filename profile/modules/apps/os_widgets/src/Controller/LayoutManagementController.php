@@ -218,25 +218,38 @@ class LayoutManagementController extends ControllerBase {
     ];
 
     $child_blocks = [];
+    $validated_parents = [];
     foreach ($blocks as $bid => $b) {
       // If the block exists in a parent, check for overrides.
-      if (isset($parent_blocks[$bid])) {
+      $parent_key = array_search($b['id'], array_column($parent_blocks, 'id'));
+      if ($parent_key !== FALSE) {
+        $validated_parents[$parent_key] = $parent_key;
         $changed = FALSE;
         foreach ($block_fields as $field) {
           // One of the block's fields has been changed.
-          if ($parent_blocks[$bid][$field] != $blocks[$bid][$field]) {
+          if ($parent_blocks[$parent_key][$field] != $blocks[$bid][$field]) {
             $changed = TRUE;
           }
         }
         // If something changed, it needs to be saved in the child context.
         if ($changed) {
-          $child_blocks[$bid] = $b;
+          $child_blocks[] = $b;
         }
       }
       // If the block doesn't exist in the parent, but is still in a region.
       elseif ($b['region']) {
         // dpm($bid.': weight: new: '.$blocks[$bid]['weight']);.
-        $child_blocks[$bid] = $b;
+        $child_blocks[] = $b;
+      }
+    }
+
+    $remaining_parents = array_diff_key($parent_blocks, $validated_parents);
+    // Any parents that were removed from the child
+    // should be given the region false in the child.
+    if (count($remaining_parents)) {
+      foreach ($remaining_parents as $b) {
+        $b['region'] = 0;
+        $child_blocks[] = $b;
       }
     }
 
