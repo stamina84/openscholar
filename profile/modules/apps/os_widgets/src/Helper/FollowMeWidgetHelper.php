@@ -5,100 +5,77 @@ namespace Drupal\os_widgets\Helper;
 /**
  * Helper class for follow me widget default networks.
  */
-class FollowMeWidgetHelper {
+final class FollowMeWidgetHelper {
 
   /**
-   * Retrieves the default networks available.
-   *
-   * @return array
-   *   An associative array, keyed by the machine name. The values are an array
-   *   including title of the network, along with the domain to be used for
-   *   input validation of the network.
+   * An associative array, keyed by the machine name.
    */
-  public function osWidgetsFollowMeDefaultNetworks() {
-    $networks = [
-      'facebook'  => [
-        'title' => t('Facebook'),
-        'domain' => 'facebook.com',
-        'offset' => 531,
-      ],
-      'virb' => [
-        'title' => t('Virb'),
-        'domain' => 'virb.com',
-        'offset' => 142,
-      ],
-      'myspace' => [
-        'title' => t('MySpace'),
-        'domain' => 'myspace.com',
-        'offset' => 290,
-      ],
-      'twitter' => [
-        'title' => t('Twitter'),
-        'domain' => 'twitter.com',
-        'offset' => 189,
-      ],
-      'google_photos' => [
-        'title' => t('Google Photos'),
-        'domain' => 'photos.google.com',
-        'offset' => 676,
-      ],
-      'flickr' => [
-        'title' => t('Flickr'),
-        'domain' => 'flickr.com',
-        'offset' => 483,
-      ],
-      'youtube' => [
-        'title' => t('YouTube'),
-        'domain' => 'youtube.com',
-        'offset' => 94,
-      ],
-      'vimeo' => [
-        'title' => t('Vimeo'),
-        'domain' => 'vimeo.com',
-        'offset' => 47,
-      ],
-      'lastfm' => [
-        'title' => t('last.fm'),
-        'domain' => 'last.fm',
-        'offset' => 389,
-      ],
-      'linkedin' => [
-        'title' => t('LinkedIn'),
-        'domain' => 'linkedin.com',
-        'offset' => 340,
-      ],
-      'delicious' => [
-        'title' => t('Delicious'),
-        'domain' => 'del.icio.us',
-        'offset' => 579,
-      ],
-      'tumblr' => [
-        'title' => t('Tumblr'),
-        'domain' => 'tumblr.com',
-        'offset' => 241,
-      ],
-      'pinterest' => [
-        'title' => t('Pinterest'),
-        'domain' => 'pinterest.com',
-        'offset' => 0,
-      ],
-      'instagram' => [
-        'title' => t('Instagram'),
-        'domain' => 'instagram.com',
-        'offset' => 630,
-      ],
-      'soundcloud' => [
-        'title' => t('soundcloud'),
-        'domain' => 'soundcloud.com',
-        'offset' => 436,
-      ],
-      'googleplus' => [
-        'title' => t('Google+'),
-        'domain' => 'plus.google.com',
-        'offset' => 722,
-      ],
-    ];
-    return $networks;
-  }
+  const DEFAULTNETWORKS = [
+    'facebook'  => [
+      'title' => 'Facebook',
+      'domain' => 'facebook.com',
+    ],
+    'virb' => [
+      'title' => 'Virb',
+      'domain' => 'virb.com',
+    ],
+    'myspace' => [
+      'title' => 'MySpace',
+      'domain' => 'myspace.com',
+      'offset' => 290,
+    ],
+    'twitter' => [
+      'title' => 'Twitter',
+      'domain' => 'twitter.com',
+    ],
+    'google_photos' => [
+      'title' => 'Google Photos',
+      'domain' => 'photos.google.com',
+    ],
+    'flickr' => [
+      'title' => 'Flickr',
+      'domain' => 'flickr.com',
+    ],
+    'youtube' => [
+      'title' => 'YouTube',
+      'domain' => 'youtube.com',
+    ],
+    'vimeo' => [
+      'title' => 'Vimeo',
+      'domain' => 'vimeo.com',
+    ],
+    'lastfm' => [
+      'title' => 'last.fm',
+      'domain' => 'last.fm',
+    ],
+    'linkedin' => [
+      'title' => 'LinkedIn',
+      'domain' => 'linkedin.com',
+    ],
+    'delicious' => [
+      'title' => 'Delicious',
+      'domain' => 'del.icio.us',
+    ],
+    'tumblr' => [
+      'title' => 'Tumblr',
+      'domain' => 'tumblr.com',
+    ],
+    'pinterest' => [
+      'title' => 'Pinterest',
+      'domain' => 'pinterest.com',
+    ],
+    'instagram' => [
+      'title' => 'Instagram',
+      'domain' => 'instagram.com',
+    ],
+    'soundcloud' => [
+      'title' => 'soundcloud',
+      'domain' => 'soundcloud.com',
+    ],
+    'googleplus' => [
+      'title' => 'Google+',
+      'domain' => 'plus.google.com',
+    ],
+  ];
 
 }

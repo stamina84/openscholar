@@ -20,9 +20,9 @@
         e.preventDefault();
         var edit_link_to_add = $('#edit-link-to-add', $form),
           patt = /^https?:\/\/([^\/]+)/,
-          matches = patt.exec(edit_link_to_add.val()),
-          new_row, id, i, fd, weight = 0,
-          val = edit_link_to_add.val();
+          val = edit_link_to_add.val(),
+          matches = patt.exec(val),
+          new_row, id, i, fd, weight = 0;
 
         // Empty field check.
         if (matches != null) {
@@ -46,19 +46,20 @@
 
             // get the new weight
             $('.field-weight', $form).each(function () {
-              if ($(this).val() > weight) {
-                weight = parseInt($(this).val());
+              var weight_val = $(this).val();
+              if (weight_val > weight) {
+                weight = parseInt(weight_val);
               }
             });
 
             // set all the form elements in the new row
             var field_weight  = $('.default-weight', new_row);
             var edit_link = $('#edit-links-'+id+'-weight', new_row);
-
+            var title = domains[i]['title'];
             $('span.rrssb-text', new_row).text(val);
             $('li', new_row).addClass('rrssb-'+domain);
-            $('input[name="links['+id+'][title]"]', new_row).val(val);
-            $('input[name="links['+id+'][domain]"]', new_row).val(domain);
+            $('input[name="links['+id+'][title]"]', new_row).val(title);
+            $('input[name="links['+id+'][domain]"]', new_row).val(val);
             field_weight.addClass('field-weight').val(weight+1);
             field_weight.parents('div').css('display', 'none');
             edit_link.addClass('field-weight').val(weight+1);
