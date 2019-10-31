@@ -15,11 +15,11 @@ effects:
     weight: 1
     data:
       crop_type: crop_3_1
-  33fe832d-e55b-4cb7-8da8-edf3ebce71c1:
-    uuid: 33fe832d-e55b-4cb7-8da8-edf3ebce71c1
-    id: image_scale_and_crop
+  e876b2da-a4d5-4832-b46a-76dafb19dff4:
+    uuid: e876b2da-a4d5-4832-b46a-76dafb19dff4
+    id: image_scale
     weight: 2
     data:
-      width: 300
-      height: 200
-      anchor: center-center
+      width: 600
+      height: null
+      upscale: true
