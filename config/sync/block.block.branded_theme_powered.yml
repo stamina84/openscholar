@@ -1,0 +1,22 @@
+uuid: 114341fb-64fd-4c0d-bb5a-560d1d536767
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - branded_theme
+_core:
+  default_config_hash: jQQUUWN2Uxr5qZtc9zcJKBCxpKY8orN1u2HPqYYRQDI
+id: branded_theme_powered
+theme: branded_theme
+region: footer
+weight: -6
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+visibility: {  }
