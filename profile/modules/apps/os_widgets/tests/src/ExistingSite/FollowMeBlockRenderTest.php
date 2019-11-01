@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\os_widgets\ExistingSite;
 
-use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
 
 /**
  * Class FollowMeBlockRenderTest.
@@ -12,6 +12,7 @@ use Drupal\paragraphs\Entity\Paragraph;
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\FollowMeWidget
  */
 class FollowMeBlockRenderTest extends OsWidgetsExistingSiteTestBase {
+  use ExistingSiteTestTrait;
 
   /**
    * Test build function display block.
@@ -61,13 +62,8 @@ class FollowMeBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test build function display rss feed page link.
    */
   public function testBuildDisplayRssFeedPageLink() {
-
-    // Creating pagagraph of follow me links.
-    $paragraph = Paragraph::create(['type' => 'follow_me_links']);
-    $paragraph->set('field_domain', 'facebook');
-    $paragraph->set('field_link_title', 'facebook');
-    $paragraph->set('field_weight', 1);
-    $paragraph->save();
+    // Create paragraph.
+    $paragraph = $this->createParagraph();
 
     $paragraph_items[] = [
       'target_id' => $paragraph->id(),

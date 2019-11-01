@@ -8,7 +8,7 @@ namespace Drupal\os_widgets\Helper;
 final class FollowMeWidgetHelper {
 
   /**
-   * An associative array, keyed by the machine name.
+   * An associative array of default networks.
    */
   const DEFAULTNETWORKS = [
     'facebook'  => [
@@ -22,7 +22,6 @@ final class FollowMeWidgetHelper {
     'myspace' => [
       'title' => 'MySpace',
       'domain' => 'myspace.com',
-      'offset' => 290,
     ],
     'twitter' => [
       'title' => 'Twitter',

@@ -17,6 +17,7 @@ use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\user\UserInterface;
 use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
+use Drupal\paragraphs\Entity\Paragraph;
 
 /**
  * Provides a trait for openscholar tests.
@@ -420,6 +421,32 @@ trait ExistingSiteTestTrait {
     $this->markEntityForCleanup($contributor);
 
     return $contributor;
+  }
+
+  /**
+   * Creates a paragraph.
+   *
+   * @param array $values
+   *   (Optional) Default values for the reference.
+   *
+   * @return array
+   *   The paragraph entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createParagraph(array $values = []) {
+    $paragraph_entity = Paragraph::create($values + [
+      'type' => 'follow_me_links',
+      'field_domain' => 'facebook.com',
+      'field_link_title' => 'facebook',
+      'field_weight' => 1,
+    ]);
+
+    $paragraph_entity->save();
+
+    $this->markEntityForCleanup($paragraph_entity);
+
+    return $paragraph_entity;
   }
 
 }

@@ -26,7 +26,7 @@
       {% endif %}
       {% for link in profile_links %}
       {% set rrssb_class = link.title == 'Google+' ? 'googleplus' :  link.title %}
-        <li class="rrssb-{{ rrssb_class }}">
+        <li class="rrssb-{{ rrssb_class |lower }}">
           <a href ="{{ link.domian }}" target="_blank">
             <span class="rrssb-icon"></span>
             <span class="rrssb-text">{{ link.title |t }}</span>

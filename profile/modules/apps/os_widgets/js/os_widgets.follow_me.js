@@ -18,7 +18,7 @@
       // add a new row to the table, set' all its form elements to the right values and make it draggable
       $('.add_new', $form).click(function (e) {
         e.preventDefault();
-        var edit_link_to_add = $('#edit-link-to-add', $form),
+        var edit_link_to_add = $('.edit-link-to-add', $form),
           patt = /^https?:\/\/([^\/]+)/,
           val = edit_link_to_add.val(),
           matches = patt.exec(val),
@@ -51,7 +51,7 @@
                 weight = parseInt(weight_val);
               }
             });
-
+            alert(domain);
             // set all the form elements in the new row
             var field_weight  = $('.default-weight', new_row);
             var edit_link = $('#edit-links-'+id+'-weight', new_row);
