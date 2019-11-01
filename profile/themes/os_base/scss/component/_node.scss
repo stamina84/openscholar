@@ -17,14 +17,9 @@
 }
 /**** uploaded image ****/
 .field--name-body {
-  img {
-    max-width: 100%;
-    height: auto;
-    &[style*="left"] {
-      padding-right: 15px;
-    }
-    &[style*="right"] {
-      padding-left: 15px;
-    }
+  &:before, &:after {
+    content: '';
+    display: table;
+    width: 100%;
   }
 }

@@ -1,0 +1,21 @@
+/****gloabl styles ****/
+h2.block-title {
+  padding: 10px 0;
+  text-transform: none;
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+}
+.path-front {
+  .content-inner {
+    .block {
+      border-top: 6px solid $color-light-gray5;
+      padding-top: 15px;
+    }
+  }
+}
+/**** acessibility fixes ****/
+.trigger {
+  color: $color-gray;
+}
