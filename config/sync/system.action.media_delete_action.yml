@@ -1,3 +1,4 @@
+uuid: 07dc066f-1a66-4cab-a01c-1c208da490ea
 langcode: en
 status: true
 dependencies:
@@ -6,5 +7,5 @@ dependencies:
 id: media_delete_action
 label: 'Delete media'
 type: media
-plugin: entity:delete_action:media
+plugin: 'entity:delete_action:media'
 configuration: {  }

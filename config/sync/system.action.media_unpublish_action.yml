@@ -1,3 +1,4 @@
+uuid: 1648eead-3f4a-4b50-abf9-040a791920ba
 langcode: en
 status: true
 dependencies:
@@ -6,5 +7,5 @@ dependencies:
 id: media_unpublish_action
 label: 'Unpublish media'
 type: media
-plugin: entity:unpublish_action:media
+plugin: 'entity:unpublish_action:media'
 configuration: {  }
