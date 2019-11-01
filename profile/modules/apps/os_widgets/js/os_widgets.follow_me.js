@@ -51,7 +51,6 @@
                 weight = parseInt(weight_val);
               }
             });
-            alert(domain);
             // set all the form elements in the new row
             var field_weight  = $('.default-weight', new_row);
             var edit_link = $('#edit-links-'+id+'-weight', new_row);
