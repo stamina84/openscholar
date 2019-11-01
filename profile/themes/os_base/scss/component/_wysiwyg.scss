@@ -1,0 +1,12 @@
+.media-element {
+  &[style*="left"] {
+    padding-right: 15px;
+  }
+  &[style*="right"] {
+    padding-left: 15px;
+  }
+  vertical-align: bottom;
+  .field--name-field-media-oembed-content {
+    margin: 0;
+  }
+}
