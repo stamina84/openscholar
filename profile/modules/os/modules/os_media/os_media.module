@@ -177,7 +177,7 @@ function os_media_build_popup_url(array &$variables, $field) : void {
  * Implements hook_views_pre_render().
  */
 function os_media_views_pre_render(ViewExecutable $view) {
-  if (isset($view) && ($view->storage->id() == 'os_media')) {
+  if ($view && ($view->storage->id() == 'os_media')) {
     $view->element['#attached']['library'][] = 'os/osMediaBrowse';
   }
 }
