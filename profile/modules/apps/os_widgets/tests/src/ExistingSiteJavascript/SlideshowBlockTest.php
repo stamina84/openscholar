@@ -52,9 +52,7 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
    */
   public function testAddSlideshowLinkVisibleAndShowModalForm() {
     $web_assert = $this->assertSession();
-    $image = $this->createMedia([
-      'bundle' => 'image',
-    ], 'image');
+    $image = $this->createMediaImage();
     $block_content = $this->createBlockContent([
       'type' => 'slideshow',
     ]);
