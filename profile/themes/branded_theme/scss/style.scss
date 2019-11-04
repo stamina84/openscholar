@@ -1,0 +1,23 @@
+@import '../../os_base/scss/base/breakpoints';
+@import '../../os_base/scss/mixins/navbar';
+@import '../../os_base/scss/base/poweredby_common';
+
+@import 'base/variables';
+@import 'base/base';
+
+@import 'components/footer';
+@import 'components/navbar';
+@import 'components/readmore';
+@import 'components/sidebars';
+@import 'components/tabs';
+@import 'components/header';
+@import 'components/search';
+@import 'components/calendar';
+
+@import 'global/global';
+
+@import 'pages/pages';
+@import 'pages/searchpages';
+
+/**** adding taxonomy widget common ****/
+@import '../../os_base/scss/base/taxonomy-widget-common';

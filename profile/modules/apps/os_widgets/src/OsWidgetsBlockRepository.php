@@ -93,6 +93,9 @@ class OsWidgetsBlockRepository implements BlockRepositoryInterface {
       }
     }
 
+    // Keep track of blocks placed by hierarchical contexts.
+    $placed_blocks = [];
+
     // Take any block in the currently active contexts and
     // place it in the correct region.
     /** @var \Drupal\os_widgets\LayoutContextInterface $a */
@@ -101,10 +104,13 @@ class OsWidgetsBlockRepository implements BlockRepositoryInterface {
         $limit_found = TRUE;
       }
       if ($limit_found) {
-        $keys = [];
         $context_blocks = $a->getBlockPlacements();
         foreach ($context_blocks as $b) {
-          $keys[] = $b['id'];
+          if (in_array($b['id'], $placed_blocks)) {
+            continue;
+          }
+
+          $placed_blocks[] = $b['id'];
           $flat[$b['id']] = $b;
         }
       }
