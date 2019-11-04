@@ -37,11 +37,6 @@ composer require drupal/devel:~1.0
 After that:
 
 ```bash
-
-git clone https://github.com/jaybeaton/traefik-helper.git traefik-helper
-cd traefik-helper
-./traefik-helper.sh up -d
-cd ..
 git clone --branch 8.x-1.x-dev https://github.com/openscholar/openscholar.git some-dir
 cd some-dir
 cp defaults/.env .
@@ -58,15 +53,3 @@ make
 ```
 
 Access your development setup from http://home.d8.theopenscholar.com
-
-## Note:
-As the Docker image traefik has a new release, if you have downloaded the latest traefik-helper, then it needs modification.
-In traefik-helper.yml file (path: `/tmp/traefik-helper.yml`), if you find image is using latest traefik version like shown below:
-```
-version: '2'
-
-services:
-  traefik:
-    image: traefik
-```
-modify it to use the 1.7 verson as `image: traefik:1.7` to fix Docker errors.
