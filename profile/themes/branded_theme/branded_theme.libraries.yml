@@ -1,0 +1,7 @@
+global-styling:
+  version: VERSION
+  css:
+    theme:
+      //fonts.googleapis.com/css?family=Playfair+Display&display=swap: {}
+      //fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap: {}
+      css/style.css: {}
