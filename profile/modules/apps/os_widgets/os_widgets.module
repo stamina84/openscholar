@@ -316,6 +316,10 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
           unset($form['field_slideshow_layout']['widget']['#options']['3_1_overlay']);
         }
       }
+      $form['field_slideshow_layout']['widget']['description']['#markup'] = t('<div class="description full">@help_text</div>', [
+        '@help_text' => 'Slideshow images and captions will be laid out in this manner. Note that the layout can be changed at a later date, but the aspect ratio (Standard/Widescreen) is permanent once selected.',
+      ]);
+      $form['field_slideshow_layout']['widget']['description']['#weight'] = 2;
       break;
 
     case 'block_content_addthis_form':

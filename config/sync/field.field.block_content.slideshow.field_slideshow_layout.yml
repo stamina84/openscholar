@@ -12,7 +12,7 @@ field_name: field_slideshow_layout
 entity_type: block_content
 bundle: slideshow
 label: 'Slideshow Layout'
-description: 'Slideshow images and captions will be laid out in this manner. Note that the layout can be changed at a later date, but the aspect ratio (Standard/Widescreen) is permanent once selected.'
+description: ''
 required: true
 translatable: false
 default_value:
