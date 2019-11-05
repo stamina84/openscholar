@@ -111,6 +111,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $field_taxonomy_show_children_values = $block_content->get('field_taxonomy_show_children')->getValue();
     $field_taxonomy_display_type_values = $block_content->get('field_taxonomy_display_type')->getValue();
     $field_taxonomy_show_empty_terms_values = $block_content->get('field_taxonomy_show_empty_terms')->getValue();
+    $field_taxonomy_behavior_values = $block_content->get('field_taxonomy_behavior')->getValue();
     $vid = $field_taxonomy_vocabulary_values[0]['target_id'];
     $depth = empty($field_taxonomy_tree_depth_values[0]['value']) ? NULL : $field_taxonomy_tree_depth_values[0]['value'];
     // When unchecked, only show top level terms.
@@ -121,6 +122,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $this->settings['depth'] = $depth;
     $this->settings['bundles'] = $this->getFilteredBundles($block_content, $vid);
     $this->settings['show_empty_terms'] = !empty($field_taxonomy_show_empty_terms_values[0]['value']);
+    $this->settings['taxonomy_behavior'] = $field_taxonomy_behavior_values[0]['value'];
     $terms = $this->getTerms();
     switch ($field_taxonomy_display_type_values[0]['value']) {
       case 'menu':
@@ -159,17 +161,15 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $terms_count = $this->getTermsCount($terms);
 
     $keep_term_tids = [];
-    // Only show_empty_terms is FALSE case, we need to check parent visibility.
-    if (!$this->settings['show_empty_terms']) {
-      // Mark tids to handle what term can be deleted.
-      foreach ($terms_count as $tid => $count) {
-        // Get all parents include current one.
-        $parents = $this->entityTypeManager->getStorage("taxonomy_term")->loadAllParents($tid);
-        if (!empty($parents)) {
-          foreach ($parents as $parent) {
-            // Store current tid and all parent tids.
-            $keep_term_tids[$parent->id()] = $parent->id();
-          }
+    // We need to check parent visibility.
+    // Mark tids to handle what term can be deleted.
+    foreach ($terms_count as $tid => $count) {
+      // Get all parents include current one.
+      $parents = $this->entityTypeManager->getStorage("taxonomy_term")->loadAllParents($tid);
+      if (!empty($parents)) {
+        foreach ($parents as $parent) {
+          // Store current tid and all parent tids.
+          $keep_term_tids[$parent->id()] = $parent->id();
         }
       }
     }
@@ -177,6 +177,10 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
     foreach ($terms as $i => $term) {
       // If show_empty_terms is TRUE, we don't unset any items.
       if (!$this->settings['show_empty_terms'] && !in_array($term->tid, $keep_term_tids)) {
+        unset($terms[$i]);
+        continue;
+      }
+      if ($this->settings['taxonomy_behavior'] == 'contextual' && !in_array($term->tid, $keep_term_tids)) {
         unset($terms[$i]);
         continue;
       }
