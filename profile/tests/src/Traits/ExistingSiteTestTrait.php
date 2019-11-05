@@ -472,7 +472,9 @@ trait ExistingSiteTestTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function createParagraph(array $values = []) : ParagraphInterface {
-    $paragraph = Paragraph::create($values);
+    $paragraph = Paragraph::create($values + [
+      'type' => 'class_material',
+    ]);
 
     $paragraph->save();
 
