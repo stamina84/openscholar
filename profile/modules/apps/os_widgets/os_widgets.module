@@ -655,6 +655,9 @@ function os_widgets_alter_follow_me_block_form(array &$form, FormStateInterface 
 
 /**
  * Custom submit for follow me form.
+ *
+ * Since, the form values are changed from JavaScript,
+ * therefore, they can't be retrieved from `form_state_getValues()`.
  */
 function os_widgets_follow_me_submit_form($form, FormStateInterface &$form_state) {
   $profile_links = $form_state->getUserInput();

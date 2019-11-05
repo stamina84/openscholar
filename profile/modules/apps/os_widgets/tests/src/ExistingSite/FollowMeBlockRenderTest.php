@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\os_widgets\ExistingSite;
 
-use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
-
 /**
  * Class FollowMeBlockRenderTest.
  *
@@ -12,7 +10,6 @@ use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\FollowMeWidget
  */
 class FollowMeBlockRenderTest extends OsWidgetsExistingSiteTestBase {
-  use ExistingSiteTestTrait;
 
   /**
    * Test build function display block.
