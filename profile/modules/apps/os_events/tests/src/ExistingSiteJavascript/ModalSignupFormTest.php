@@ -7,6 +7,7 @@ namespace Drupal\Tests\os_events\ExistingSiteJavascript;
  *
  * @group functional-javascript
  * @group events
+ * @group unique
  */
 class ModalSignupFormTest extends EventsJavascriptTestBase {
   /**
@@ -115,6 +116,8 @@ class ModalSignupFormTest extends EventsJavascriptTestBase {
     $page->clickLink('Manage Registrations');
     $new_page = $this->getCurrentPage();
     $new_page->clickLink('Registrations');
+    file_put_contents('public://screenshot.jpg', $this->getSession()->getScreenshot());
+    file_put_contents('public://page-name.html', $this->getCurrentPageContent());
     $this->assertSession()->pageTextContains('test@example.com');
   }
 
