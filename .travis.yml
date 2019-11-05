@@ -25,23 +25,21 @@ env:
     - PATH="$PATH:$HOME/.composer/vendor/bin"
     - TRAVIS_NODE_VERSION="4"
   matrix:
-#    - JOB=job:check-coding-standards
-#    - JOB=job:run-unit-tests
-#    - JOB="job:run-kernel-tests widgets-1"
-#    - JOB="job:run-kernel-tests widgets-2"
-#    - JOB="job:run-kernel-tests os-theme-preview,cp-appearance,profiles"
-#    - JOB="job:run-kernel-tests publications"
-#    - JOB="job:run-kernel-tests redirect,vsite"
-#    - JOB="job:run-kernel-tests os"
-#    - JOB="job:run-kernel-tests cp"
-#    - JOB="job:run-kernel-tests other,cp-menu,wysiwyg"
-#    - JOB="job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,analytics,cp-menu,publications,cp-appearance,redirect,twitter"
-#    - JOB="job:run-functional-tests os,vsite"
-#    - JOB="job:run-functional-javascript-tests classes,pages,publications,widgets,cp-appearance,cp-menu,profiles,cp,vsite,mailchimp,metatag,redirect,os-theme-preview"
-#    - JOB="job:run-functional-javascript-tests events,os"
-    - JOB="job:run-functional-javascript-tests unique"
+    - JOB=job:check-coding-standards
+    - JOB=job:run-unit-tests
+    - JOB="job:run-kernel-tests widgets-1"
+    - JOB="job:run-kernel-tests widgets-2"
+    - JOB="job:run-kernel-tests os-theme-preview,cp-appearance,profiles"
+    - JOB="job:run-kernel-tests publications"
+    - JOB="job:run-kernel-tests redirect,vsite"
+    - JOB="job:run-kernel-tests os"
+    - JOB="job:run-kernel-tests cp"
+    - JOB="job:run-kernel-tests other,cp-menu,wysiwyg"
+    - JOB="job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,analytics,cp-menu,publications,cp-appearance,redirect,twitter"
+    - JOB="job:run-functional-tests os,vsite"
+    - JOB="job:run-functional-javascript-tests classes,pages,publications,widgets,cp-appearance,cp-menu,profiles,cp,vsite,mailchimp,metatag,redirect,os-theme-preview"
+    - JOB="job:run-functional-javascript-tests events,os"
 #    - JOB=job:run-behat-tests
-
 
 before_install:
   - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
