@@ -60,7 +60,7 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
 
   public const CUSTOM_THEME_LIBRARIES_INFO_TEMPLATE = [
     self::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE => [
-      'version' => 'VERSION',
+      'version' => '1.0',
       'css' => [
         'theme' => [
           self::CUSTOM_THEMES_STYLE_LOCATION => [],
@@ -251,6 +251,12 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
 
     if (!$status) {
       throw new CustomThemeException(t('Unable to place theme info file. Please contact the site administrator for support.'));
+    }
+
+    // Make sure the browser assets are flushed. Otherwise, user will see the
+    // old styles.
+    if ($update) {
+      _drupal_flush_css_js();
     }
   }
 
