@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "134ce66cb1a95954d5e35ae002a6bf4a",
+    "content-hash": "3d67c5f9ed6299c81bed16ed0e8acca7",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -4852,7 +4852,9 @@
                     "Getlabel() on null layout builder.": "https://www.drupal.org/files/issues/2018-07-16/2985882-entityfield-2.patch",
                     "'view_path' is set to /views/ajax after second ajax request": "https://www.drupal.org/files/issues/2018-03-14/drupal-views_path_ajax-2866386-10.patch",
                     "Image styles fails with absolute path": "https://www.drupal.org/files/issues/image_styles-2754273-7.patch",
-                    "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch"
+                    "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch",
+                    "User context missing when using toUrl in some circumstances": "https://www.drupal.org/files/issues/2019-05-22/3056234-test-fix-4.patch",
+                    "null route object in big_pipe requests after 8.7.8 upgrade": "https://www.drupal.org/files/issues/2019-10-24/3089913-2.patch"
                 }
             },
             "autoload": {
