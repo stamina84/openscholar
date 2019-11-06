@@ -1,0 +1,8 @@
+uuid: 95739487-bacf-49c1-88b3-22dcace886d6
+langcode: en
+status: true
+dependencies: {  }
+id: dataverse_search_box
+label: 'Dataverse Search Box'
+revision: 1
+description: "TODO description for dataverse search box widget\t\r\n"

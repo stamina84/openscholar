@@ -1,0 +1,23 @@
+uuid: e41d045a-7960-403f-947a-e3cde6dfadfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_search_box
+    - field.field.block_content.dataverse_search_box.body
+  module:
+    - text
+id: block_content.dataverse_search_box.default
+targetEntityType: block_content
+bundle: dataverse_search_box
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true
