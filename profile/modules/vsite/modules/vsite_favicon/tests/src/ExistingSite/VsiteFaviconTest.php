@@ -47,6 +47,9 @@ class VsiteFaviconTest extends OsExistingSiteTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testFaviconOnVsiteModified(): void {
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = \Drupal::service('vsite.context_manager');
+    $vsite_context_manager->activateVsite($this->group);
     $web_assert = $this->assertSession();
 
     $config = $this->container->get('config.factory')->getEditable('vsite.settings');
