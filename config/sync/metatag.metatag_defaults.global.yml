@@ -7,7 +7,7 @@ _core:
 id: global
 label: Global
 tags:
-  title: '[current-page:title] | [site:name]'
+  title: '[current-page:title] | [os_metatag:site_title]'
   canonical_url: '[current-page:url]'
   description: '[os_metatag:meta_description]'
   shortcut_icon: '[vsite:site_favicon]'

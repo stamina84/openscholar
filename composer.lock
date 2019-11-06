@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "410415edef995b06afe91463adf3ea48",
+    "content-hash": "134ce66cb1a95954d5e35ae002a6bf4a",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -665,7 +665,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/colorbutton/releases/colorbutton_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colorbutton_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -676,7 +676,7 @@
             "version": "4.12.1",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/colordialog/releases/colordialog_4.12.1.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colordialog_4.12.1.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -687,7 +687,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/fakeobjects/releases/fakeobjects_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/fakeobjects_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -698,7 +698,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/link/releases/link_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/link_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -709,7 +709,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/mathjax/releases/mathjax_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/mathjax_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -725,7 +725,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/pagebreak/releases/pagebreak_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/pagebreak_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -736,7 +736,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/panelbutton/releases/panelbutton_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/panelbutton_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -4852,9 +4852,7 @@
                     "Getlabel() on null layout builder.": "https://www.drupal.org/files/issues/2018-07-16/2985882-entityfield-2.patch",
                     "'view_path' is set to /views/ajax after second ajax request": "https://www.drupal.org/files/issues/2018-03-14/drupal-views_path_ajax-2866386-10.patch",
                     "Image styles fails with absolute path": "https://www.drupal.org/files/issues/image_styles-2754273-7.patch",
-                    "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch",
-                    "User context missing when using toUrl in some circumstances": "https://www.drupal.org/files/issues/2019-05-22/3056234-test-fix-4.patch",
-                    "null route object in big_pipe requests after 8.7.8 upgrade": "https://www.drupal.org/files/issues/2019-10-24/3089913-2.patch"
+                    "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch"
                 }
             },
             "autoload": {
@@ -5682,11 +5680,10 @@
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/group-8.x-1.0-rc2.zip",
                 "reference": "8.x-1.0-rc2",
-                "shasum": "d5d55167523a3ddccef7f66159b4c417d950d6f5"
+                "shasum": "b21efa2224d20a704484de900ad6f73e4e605a7d"
             },
             "require": {
-                "drupal/core": "^8.6",
-                "drupal/entity": "^1.0-rc1"
+                "drupal/core": "*"
             },
             "type": "drupal-module",
             "extra": {
@@ -5695,7 +5692,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.0-rc2",
-                    "datestamp": "1563460085",
+                    "datestamp": "1560345781",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -5716,21 +5713,18 @@
             ],
             "authors": [
                 {
-                    "name": "Kristiaan Van den Eynde",
-                    "homepage": "https://www.drupal.org/u/kristiaanvandeneynde",
-                    "role": "Maintainer"
+                    "name": "kristiaanvandeneynde",
+                    "homepage": "https://www.drupal.org/user/1345130"
                 },
                 {
-                    "name": "Ronald te Brake",
-                    "homepage": "https://www.drupal.org/u/ronaldtebrake",
-                    "role": "Co-maintainer"
+                    "name": "ronaldtebrake",
+                    "homepage": "https://www.drupal.org/user/2314038"
                 }
             ],
             "description": "This module allows you to group users, content and other entities",
-            "homepage": "http://drupal.org/project/group",
+            "homepage": "https://www.drupal.org/project/group",
             "support": {
-                "source": "https://git.drupalcode.org/project/group",
-                "issues": "https://drupal.org/project/issues/group"
+                "source": "https://git.drupalcode.org/project/group"
             }
         },
         {
