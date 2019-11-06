@@ -10,19 +10,19 @@ namespace Drupal\os_widgets;
 interface OsWidgetsContextInterface {
 
   /**
-   * Add bundle.
+   * Add app.
    *
-   * @param string $bundle
-   *   Bundle name with entity name (eg. "node:article").
+   * @param string $app_id
+   *   App id.
    */
-  public function addBundle(string $bundle) : void;
+  public function addApp(string $app_id) : void;
 
   /**
-   * Get collected bundles.
+   * Get collected active apps.
    *
    * @return array
-   *   List of bundles with entity name.
+   *   List of apps.
    */
-  public function getBundles() : array;
+  public function getActiveApps() : array;
 
 }

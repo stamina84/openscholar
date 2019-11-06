@@ -3,29 +3,29 @@
 namespace Drupal\os_widgets;
 
 /**
- * Class OsWidgetsContext to handle determine for me option.
+ * Class OsWidgetsContext to handle active apps.
  *
  * @package Drupal\os_widgets
  */
 class OsWidgetsContext implements OsWidgetsContextInterface {
 
-  private $bundles = [];
+  private $appIds = [];
 
   /**
    * {@inheritdoc}
    */
-  public function addBundle($bundle): void {
-    if (in_array($bundle, $this->bundles)) {
+  public function addApp($app_id): void {
+    if (in_array($app_id, $this->appIds)) {
       return;
     }
-    $this->bundles[] = $bundle;
+    $this->appIds[] = $app_id;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getBundles(): array {
-    return $this->bundles;
+  public function getActiveApps(): array {
+    return $this->appIds;
   }
 
 }

@@ -9,7 +9,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 /**
  * Manager for the App plugin system.
  */
-class AppManager extends DefaultPluginManager implements AppManangerInterface {
+class AppManager extends DefaultPluginManager implements AppManagerInterface {
 
   /**
    * Constructs an AppManager object.
@@ -37,11 +37,15 @@ class AppManager extends DefaultPluginManager implements AppManangerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAppForBundle(string $bundle): string {
+  public function getAppForBundle(string $entity_type_id, string $bundle): string {
     $defs = $this->getDefinitions();
+    // @TODO: It is possible to $app can be multiple.
     $app = '';
     foreach ($defs as $d) {
-      if (isset($d['bundle']) && \in_array($bundle, $d['bundle'], TRUE)) {
+      if ($d['entityType'] != $entity_type_id) {
+        continue;
+      }
+      if (isset($d['bundle']) && \in_array($bundle, $d['bundle'], TRUE) || $bundle == '*') {
         $app = $d['id'];
       }
     }

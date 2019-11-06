@@ -7,7 +7,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\os_app_access\AppAccessLevels;
-use Drupal\vsite\Plugin\AppManangerInterface;
+use Drupal\vsite\Plugin\AppManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,14 +18,14 @@ class AppAccessForm extends ConfigFormBase {
   /**
    * App manager.
    *
-   * @var \Drupal\vsite\Plugin\AppManangerInterface
+   * @var \Drupal\vsite\Plugin\AppManagerInterface
    */
   protected $appManager;
 
   /**
    * Creates new AppAccessForm object.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, AppManangerInterface $app_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, AppManagerInterface $app_manager) {
     parent::__construct($config_factory);
     $this->appManager = $app_manager;
   }

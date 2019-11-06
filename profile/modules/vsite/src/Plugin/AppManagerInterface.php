@@ -7,18 +7,20 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 /**
  * Interface for classes managing App plugin system.
  */
-interface AppManangerInterface extends PluginManagerInterface {
+interface AppManagerInterface extends PluginManagerInterface {
 
   /**
    * Gets App for bundle.
    *
+   * @param string $entity_type_id
+   *   Entity type id.
    * @param string $bundle
    *   Bundle name.
    *
    * @return string
    *   App name.
    */
-  public function getAppForBundle(string $bundle) : string;
+  public function getAppForBundle(string $entity_type_id, string $bundle) : string;
 
   /**
    * Get group permissions for an app.

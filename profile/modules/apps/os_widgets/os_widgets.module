@@ -48,7 +48,9 @@ function os_widgets_preprocess_node(&$variables) {
     $variables['label']['#access'] = FALSE;
   }
   if ($variables['page']) {
-    Drupal::service('os_widgets.context')->addBundle('node:' . $variables['node']->bundle());
+    $app_manager = Drupal::service('vsite.app.manager');
+    $app = $app_manager->getAppForBundle('node', $variables['node']->bundle());
+    Drupal::service('os_widgets.context')->addApp($app);
   }
 }
 
@@ -59,18 +61,9 @@ function os_widgets_preprocess_bibcite_reference(&$variables) {
   $entity = Drupal::requestStack()->getCurrentRequest()->attributes->get('bibcite_reference');
   // Checking the current request and rendered reference id match.
   if (!empty($entity) && $entity->id() == $variables['bibcite_reference']->id()) {
-    Drupal::service('os_widgets.context')->addBundle('bibcite_reference:*');
-  }
-}
-
-/**
- * Implements hook_preprocess_media().
- */
-function os_widgets_preprocess_media(&$variables) {
-  $entity = Drupal::requestStack()->getCurrentRequest()->attributes->get('media');
-  // Checking the current request and rendered reference id match.
-  if (!empty($entity) && $entity->id() == $variables['media']->id()) {
-    Drupal::service('os_widgets.context')->addBundle('media:*');
+    $app_manager = Drupal::service('vsite.app.manager');
+    $app = $app_manager->getAppForBundle('bibcite_reference', '*');
+    Drupal::service('os_widgets.context')->addApp($app);
   }
 }
 
@@ -78,9 +71,12 @@ function os_widgets_preprocess_media(&$variables) {
  * Implements hook_views_pre_render().
  */
 function os_widgets_views_pre_render(ViewExecutable $view) {
+  $app_manager = Drupal::service('vsite.app.manager');
+
   $allowed_publication_views_displays = ['page_1', 'page_2', 'page_3', 'page_4'];
   if ($view->id() == 'publications' && in_array($view->current_display, $allowed_publication_views_displays)) {
-    Drupal::service('os_widgets.context')->addBundle('bibcite_reference:*');
+    $app = $app_manager->getAppForBundle('bibcite_reference', '*');
+    Drupal::service('os_widgets.context')->addApp($app);
   }
   // Make sure, the filter is not empty.
   // Check whether current view is a page or not.
@@ -91,7 +87,8 @@ function os_widgets_views_pre_render(ViewExecutable $view) {
     foreach ($view->filter as $filter) {
       if ($filter instanceof Bundle && $filter->getEntityType() == 'node') {
         foreach ($filter->value as $bundle) {
-          $os_widget_context->addBundle('node:' . $bundle);
+          $app = $app_manager->getAppForBundle('node', $bundle);
+          $os_widget_context->addBundle($app);
         }
       }
     }

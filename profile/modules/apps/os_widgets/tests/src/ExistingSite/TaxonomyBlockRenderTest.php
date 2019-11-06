@@ -4,51 +4,15 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
 
 use DateTime;
 use DateInterval;
-use Drupal\block_content\BlockContentInterface;
 
 /**
- * Class TaxonomyWidget.
+ * Class TaxonomyBlockRenderTest.
  *
  * @group kernel
  * @group widgets
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\TaxonomyWidget
  */
-class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
-
-  /**
-   * The object we're testing.
-   *
-   * @var \Drupal\os_widgets\Plugin\OsWidgets\TaxonomyWidget
-   */
-  protected $taxonomyWidget;
-
-  /**
-   * Test vocabulary.
-   *
-   * @var \Drupal\taxonomy\Entity\Vocabulary
-   */
-  protected $vocabulary;
-
-  /**
-   * Config.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $config;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-    $this->taxonomyWidget = $this->osWidgets->createInstance('taxonomy_widget');
-    $this->vocabulary = $this->createVocabulary();
-    $this->config = $this->container->get('config.factory');
-    // Reset vocabulary allowed values.
-    $config_vocab = $this->config->getEditable('taxonomy.vocabulary.' . $this->vocabulary->id());
-    $config_vocab->set('allowed_vocabulary_reference_types', [])
-      ->save(TRUE);
-  }
+class TaxonomyBlockRenderTest extends TaxonomyBlockRenderTestBase {
 
   /**
    * Test basic listing test without count.
@@ -809,117 +773,6 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $markup = $renderer->renderRoot($render);
     $this->assertContains($term1->label() . ' (1)', $markup->__toString());
     $this->assertContains($term2->label() . ' (1)', $markup->__toString());
-  }
-
-  /**
-   * Test proper term is rendered with blog contextual.
-   */
-  public function testBuildContextualNodeBundle() {
-    $config_vocab = $this->config->getEditable('taxonomy.vocabulary.' . $this->vocabulary->id());
-    $config_vocab
-      ->set('allowed_vocabulary_reference_types', [
-        'node:blog',
-        'node:news',
-      ])
-      ->save(TRUE);
-    $term_blog = $this->createTerm($this->vocabulary);
-    $term_other = $this->createTerm($this->vocabulary);
-    // Block content without empty terms.
-    $block_contents[] = $this->createTaxonomyBlockContent([
-      'type' => 'taxonomy',
-      'field_taxonomy_show_empty_terms' => 0,
-      'field_taxonomy_behavior' => [
-        'contextual',
-      ],
-    ]);
-    // Block content with empty terms.
-    $block_contents[] = $this->createTaxonomyBlockContent([
-      'type' => 'taxonomy',
-      'field_taxonomy_show_empty_terms' => 1,
-      'field_taxonomy_behavior' => [
-        'contextual',
-      ],
-    ]);
-    $os_widgets_context = $this->container->get('os_widgets.context');
-    $os_widgets_context->addBundle('node:blog');
-    $this->createNode([
-      'type' => 'blog',
-      'field_taxonomy_terms' => [
-        $term_blog,
-      ],
-    ]);
-    $view_builder = $this->entityTypeManager
-      ->getViewBuilder('block_content');
-    $renderer = $this->container->get('renderer');
-    // All should work as same.
-    foreach ($block_contents as $block_content) {
-      $render = $view_builder->view($block_content);
-      /** @var \Drupal\Core\Render\Markup $markup */
-      $markup = $renderer->renderRoot($render);
-      // Checking rendered term.
-      $this->assertContains($term_blog->label(), $markup->__toString());
-      $this->assertNotContains($term_other->label(), $markup->__toString());
-    }
-  }
-
-  /**
-   * Test proper term is rendered with media contextual.
-   */
-  public function testBuildContextualMedia() {
-    $config_vocab = $this->config->getEditable('taxonomy.vocabulary.' . $this->vocabulary->id());
-    $config_vocab
-      ->set('allowed_vocabulary_reference_types', [
-        'media:*',
-      ])
-      ->save(TRUE);
-    $term_media = $this->createTerm($this->vocabulary);
-    $term_other = $this->createTerm($this->vocabulary);
-    $block_content = $this->createTaxonomyBlockContent([
-      'type' => 'taxonomy',
-      'field_taxonomy_show_empty_terms' => 1,
-      'field_taxonomy_behavior' => [
-        'contextual',
-      ],
-    ]);
-    $os_widgets_context = $this->container->get('os_widgets.context');
-    $os_widgets_context->addBundle('media:*');
-    $this->createMedia([
-      'field_taxonomy_terms' => [
-        $term_media,
-      ],
-    ]);
-    $view_builder = $this->entityTypeManager
-      ->getViewBuilder('block_content');
-    $render = $view_builder->view($block_content);
-    $renderer = $this->container->get('renderer');
-
-    /** @var \Drupal\Core\Render\Markup $markup */
-    $markup = $renderer->renderRoot($render);
-    // Checking rendered term.
-    $this->assertContains($term_media->label(), $markup->__toString());
-    $this->assertNotContains($term_other->label(), $markup->__toString());
-  }
-
-  /**
-   * Creates a taxonomy block content.
-   *
-   * @param array $values
-   *   (optional) The values used to create the entity.
-   *
-   * @return \Drupal\block_content\BlockContentInterface
-   *   The created block content entity.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  protected function createTaxonomyBlockContent(array $values = []): BlockContentInterface {
-    // Add default required fields.
-    $values += [
-      'field_taxonomy_behavior' => ['--all--'],
-      'field_taxonomy_vocabulary' => [$this->vocabulary->id()],
-      'field_taxonomy_tree_depth' => [0],
-      'field_taxonomy_display_type' => ['classic'],
-    ];
-    return $this->createBlockContent($values);
   }
 
 }
