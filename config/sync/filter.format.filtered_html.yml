@@ -61,3 +61,4 @@ filters:
     provider: filter
     status: true
     weight: 0
+    settings: {  }
