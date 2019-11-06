@@ -48,7 +48,7 @@ class VsiteFaviconTest extends OsExistingSiteTestBase {
    */
   public function testFaviconOnVsiteModified(): void {
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
-    $vsite_context_manager = \Drupal::service('vsite.context_manager');
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
     $vsite_context_manager->activateVsite($this->group);
     $web_assert = $this->assertSession();
 
