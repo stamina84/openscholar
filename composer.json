@@ -75,7 +75,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/panelbutton/releases/panelbutton_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/panelbutton_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -87,7 +87,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/colorbutton/releases/colorbutton_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colorbutton_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -99,7 +99,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/fakeobjects/releases/fakeobjects_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/fakeobjects_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -111,7 +111,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/pagebreak/releases/pagebreak_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/pagebreak_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -123,7 +123,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/link/releases/link_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/link_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -135,7 +135,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/mathjax/releases/mathjax_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/mathjax_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -147,7 +147,7 @@
                 "version": "4.12.1",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/colordialog/releases/colordialog_4.12.1.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colordialog_4.12.1.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -160,13 +160,13 @@
     ],
     "require": {
         "ext-json": "*",
-        "ckeditor/colorbutton": "4.11.3",
+        "ckeditor/colorbutton": "^4.11",
         "ckeditor/colordialog": "^4.12",
-        "ckeditor/fakeobjects": "4.11.3",
-        "ckeditor/link": "4.11.3",
-        "ckeditor/mathjax": "4.11.3",
-        "ckeditor/pagebreak": "4.11.3",
-        "ckeditor/panelbutton": "4.11.3",
+        "ckeditor/fakeobjects": "^4.11",
+        "ckeditor/link": "^4.11",
+        "ckeditor/mathjax": "^4.11",
+        "ckeditor/pagebreak": "^4.11",
+        "ckeditor/panelbutton": "^4.11",
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6",
         "doctrine/lexer": "dev-master",
