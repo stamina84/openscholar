@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91640de4b509246d50730154ee5ded28",
+    "content-hash": "2201e87bf236603a129a8d9487b34347",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -297,9 +297,9 @@
             "authors": [
                 {
                     "name": "Nils Werner",
+                    "role": "Developer",
                     "email": "nils.werner@audiolabs-erlangen.de",
-                    "homepage": "http://www.audiolabs-erlangen.de",
-                    "role": "Developer"
+                    "homepage": "http://www.audiolabs-erlangen.de"
                 }
             ],
             "description": "Bibtex parser for PHP 5.3",
@@ -434,7 +434,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/colorbutton/releases/colorbutton_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colorbutton_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -445,7 +445,7 @@
             "version": "4.12.1",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/colordialog/releases/colordialog_4.12.1.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colordialog_4.12.1.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -456,7 +456,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/fakeobjects/releases/fakeobjects_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/fakeobjects_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -467,7 +467,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/link/releases/link_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/link_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -478,7 +478,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/mathjax/releases/mathjax_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/mathjax_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -494,7 +494,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/pagebreak/releases/pagebreak_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/pagebreak_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -505,7 +505,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/panelbutton/releases/panelbutton_4.11.3.zip",
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/panelbutton_4.11.3.zip?raw=true",
                 "reference": null,
                 "shasum": null
             },
@@ -3007,7 +3007,7 @@
                 },
                 "drupal": {
                     "version": "8.x-2.7",
-                    "datestamp": "1554029581",
+                    "datestamp": "1565942881",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3081,7 +3081,7 @@
                 },
                 "drupal": {
                     "version": "8.x-2.7",
-                    "datestamp": "1554029581",
+                    "datestamp": "1565942881",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4780,7 +4780,7 @@
                 },
                 "drupal": {
                     "version": "8.x-2.0-beta4",
-                    "datestamp": "1556606885",
+                    "datestamp": "1562489586",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -4836,10 +4836,10 @@
                 },
                 "drupal": {
                     "version": "8.x-1.0-alpha2",
-                    "datestamp": "1556602985",
+                    "datestamp": "1565786289",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "message": "Alpha releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -5696,7 +5696,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.8",
-                    "datestamp": "1543531081",
+                    "datestamp": "1561057681",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5721,8 +5721,16 @@
                     "homepage": "https://www.drupal.org/user/3181721"
                 },
                 {
+                    "name": "aprice42",
+                    "homepage": "https://www.drupal.org/user/369147"
+                },
+                {
                     "name": "gcb",
                     "homepage": "https://www.drupal.org/user/1682976"
+                },
+                {
+                    "name": "julia.leah.ford",
+                    "homepage": "https://www.drupal.org/user/3590443"
                 },
                 {
                     "name": "levelos",
@@ -5756,7 +5764,7 @@
             "description": "Mailchimp is an integration with the Mailchimp Mass email tool.",
             "homepage": "http://drupal.org/project/mailchimp",
             "support": {
-                "source": "http://cgit.drupalcode.org/mailchimp"
+                "source": "https://git.drupalcode.org/project/mailchimp"
             }
         },
         {
@@ -6179,7 +6187,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.3",
-                    "datestamp": "1539682684",
+                    "datestamp": "1561757585",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -6210,7 +6218,7 @@
             "description": "Allows users to redirect from old URLs to new URLs.",
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
-                "source": "http://cgit.drupalcode.org/redirect"
+                "source": "https://git.drupalcode.org/project/redirect"
             }
         },
         {
@@ -6584,7 +6592,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.13",
-                    "datestamp": "1557244685",
+                    "datestamp": "1562599986",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7307,7 +7315,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.2",
-                    "datestamp": "1544298180",
+                    "datestamp": "1568186884",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7327,7 +7335,7 @@
             "description": "Provides an accordion views display plugin.",
             "homepage": "https://www.drupal.org/project/views_accordion",
             "support": {
-                "source": "http://cgit.drupalcode.org/views_accordion",
+                "source": "https://git.drupalcode.org/project/views_accordion",
                 "issues": "https://www.drupal.org/project/issues/views_accordion"
             }
         },
@@ -7429,7 +7437,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.5",
-                    "datestamp": "1503109444",
+                    "datestamp": "1561996386",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7442,6 +7450,10 @@
             ],
             "authors": [
                 {
+                    "name": "Bobík",
+                    "homepage": "https://www.drupal.org/user/123612"
+                },
+                {
                     "name": "Remon",
                     "homepage": "https://www.drupal.org/user/143827"
                 },
@@ -7453,7 +7465,7 @@
             "description": "A pager which allows an infinite scroll effect for views.",
             "homepage": "https://www.drupal.org/project/views_infinite_scroll",
             "support": {
-                "source": "http://cgit.drupalcode.org/views_infinite_scroll"
+                "source": "https://git.drupalcode.org/project/views_infinite_scroll"
             }
         },
         {
@@ -11136,19 +11148,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org"
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "role": "Project Founder",
-                    "email": "armin.ronacher@active-4.com"
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
                 },
                 {
                     "name": "Twig Team",
-                    "role": "Contributors",
-                    "homepage": "https://twig.symfony.com/contributors"
+                    "homepage": "https://twig.symfony.com/contributors",
+                    "role": "Contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -12478,6 +12490,10 @@
                     "homepage": "https://www.drupal.org/user/2828287"
                 },
                 {
+                    "name": "oknate",
+                    "homepage": "https://www.drupal.org/user/471638"
+                },
+                {
                     "name": "phenaproxima",
                     "homepage": "https://www.drupal.org/user/205645"
                 },
@@ -13094,7 +13110,7 @@
             "time": "2019-01-14T23:55:14+00:00"
         },
         {
-            "name": "mikey179/vfsStream",
+            "name": "mikey179/vfsstream",
             "version": "v1.6.6",
             "source": {
                 "type": "git",
@@ -13131,8 +13147,8 @@
             "authors": [
                 {
                     "name": "Frank Kleine",
-                    "homepage": "http://frankkleine.de/",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "homepage": "http://frankkleine.de/"
                 }
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
@@ -13337,8 +13353,8 @@
             "authors": [
                 {
                     "name": "Christian Weiske",
-                    "email": "cweiske@php.net",
-                    "role": "Lead"
+                    "role": "Lead",
+                    "email": "cweiske@php.net"
                 }
             ],
             "description": "Minimal set of PEAR core files to be used as composer dependency",
@@ -14913,8 +14929,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
