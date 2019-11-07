@@ -10,7 +10,6 @@ dependencies:
     - field.field.block_content.media_gallery.field_widget_title
     - image.style.thumbnail
   module:
-    - content_moderation
     - field_layout
     - image
     - layout_discovery
@@ -69,11 +68,5 @@ content:
     region: content
     settings:
       include_locked: true
-    third_party_settings: {  }
-  moderation_state:
-    type: moderation_state_default
-    weight: 3
-    settings: {  }
-    region: content
     third_party_settings: {  }
 hidden: {  }

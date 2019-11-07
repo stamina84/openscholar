@@ -29,6 +29,7 @@ services:
       PHP_MAX_EXECUTION_TIME: $PHP_MAX_EXECUTION_TIME
       PHP_MAX_INPUT_TIME: $PHP_MAX_INPUT_TIME
       PHP_IDE_CONFIG: $PHP_IDE_CONFIG # See https://www.jetbrains.com/help/phpstorm/debugging-a-php-cli-script.html
+      COMPOSER_AUTH: '{"github-oauth": {"github.com": "${GITHUB_TOKEN}"}}'
     volumes:
       - ./:/var/www/html:cached
 
