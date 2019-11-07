@@ -6,10 +6,6 @@ use Drupal\block_content\BlockContentInterface;
 
 /**
  * Class TaxonomyBlockRenderTestBase.
- *
- * @group kernel
- * @group widgets
- * @covers \Drupal\os_widgets\Plugin\OsWidgets\TaxonomyWidget
  */
 class TaxonomyBlockRenderTestBase extends OsWidgetsExistingSiteTestBase {
 

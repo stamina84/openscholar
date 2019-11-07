@@ -6,7 +6,7 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
  * Class TaxonomyBlockContextualRenderTest.
  *
  * @group kernel
- * @group widgets
+ * @group widgets-2
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\TaxonomyWidget
  */
 class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
