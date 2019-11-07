@@ -1,0 +1,57 @@
+uuid: f109ea0c-894f-4ec4-ba42-6c0c1d86c7bc
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.field.block_content.list_of_posts.body
+    - field.field.block_content.list_of_posts.field_content_type
+    - field.field.block_content.list_of_posts.field_display_style
+    - field.field.block_content.list_of_posts.field_filter_by_vocabulary
+    - field.field.block_content.list_of_posts.field_number_of_items_to_display
+    - field.field.block_content.list_of_posts.field_show_more_link
+    - field.field.block_content.list_of_posts.field_show_pager
+    - field.field.block_content.list_of_posts.field_sorted_by
+    - field.field.block_content.list_of_posts.field_url_for_the_more_link
+    - field.field.block_content.list_of_posts.field_widget_title
+  module:
+    - layout_builder
+    - link
+third_party_settings:
+  layout_builder:
+    sections: {  }
+id: block_content.list_of_posts.default
+targetEntityType: block_content
+bundle: list_of_posts
+mode: default
+content:
+  field_url_for_the_more_link:
+    weight: 1
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_widget_title:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  body: true
+  field_content_type: true
+  field_display_style: true
+  field_filter_by_vocabulary: true
+  field_number_of_items_to_display: true
+  field_show_more_link: true
+  field_show_pager: true
+  field_sorted_by: true
+  langcode: true

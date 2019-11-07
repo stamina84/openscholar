@@ -1,0 +1,104 @@
+uuid: af4ced1a-931b-4fe5-b996-aa971cd82cd4
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.field.block_content.list_of_posts.body
+    - field.field.block_content.list_of_posts.field_content_type
+    - field.field.block_content.list_of_posts.field_display_style
+    - field.field.block_content.list_of_posts.field_filter_by_vocabulary
+    - field.field.block_content.list_of_posts.field_number_of_items_to_display
+    - field.field.block_content.list_of_posts.field_show_more_link
+    - field.field.block_content.list_of_posts.field_show_pager
+    - field.field.block_content.list_of_posts.field_sorted_by
+    - field.field.block_content.list_of_posts.field_url_for_the_more_link
+    - field.field.block_content.list_of_posts.field_widget_title
+  module:
+    - field_layout
+    - layout_discovery
+    - link
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.list_of_posts.default
+targetEntityType: block_content
+bundle: list_of_posts
+mode: default
+content:
+  field_content_type:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_display_style:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_filter_by_vocabulary:
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_number_of_items_to_display:
+    weight: 9
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_show_more_link:
+    weight: 6
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_show_pager:
+    weight: 8
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_sorted_by:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_url_for_the_more_link:
+    weight: 7
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_widget_title:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  body: true
+  langcode: true
+  moderation_state: true

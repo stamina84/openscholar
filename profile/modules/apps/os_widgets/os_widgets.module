@@ -168,6 +168,12 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'link_url' => '',
       ],
     ],
+    'os_widgets_list_of_posts' => [
+      'variables' => [
+        'posts' => '',
+        'pager' => '',
+      ],
+    ],
   ];
 }
 
@@ -304,6 +310,49 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
     case 'block_content_addthis_edit_form':
       $form['addthis_description']['#markup'] = \Drupal::token()->replace('[os_widgets:addthis_display_style_description]');
       break;
+
+    case 'block_content_list_of_posts_form':
+    case 'block_content_list_of_posts_edit_form':
+
+      // Remove None option from select lists.
+      array_shift($form['field_content_type']['widget']['#options']);
+      array_shift($form['field_display_style']['widget']['#options']);
+      array_shift($form['field_sorted_by']['widget']['#options']);
+
+      // Content details group.
+      $form['content_details'] = [
+        '#type' => 'details',
+        '#title' => '',
+        '#group' => 'content',
+        '#weight' => 2,
+        '#open' => TRUE,
+      ];
+      $form['field_content_type']['#group'] = 'content_details';
+      $form['field_display_style']['#group'] = 'content_details';
+      $form['field_sorted_by']['#group'] = 'content_details';
+
+      $form['field_url_for_the_more_link']['#states'] = [
+        'visible' => [
+          ':input[name="field_show_more_link[value]"]' => ['checked' => TRUE],
+        ],
+      ];
+      // Pager details group.
+      $form['pager_details'] = [
+        '#type' => 'details',
+        '#title' => '',
+        '#group' => 'content',
+        '#weight' => 5,
+        '#open' => TRUE,
+      ];
+      $form['field_show_more_link']['#group'] = 'pager_details';
+      $form['field_show_pager']['#group'] = 'pager_details';
+      $form['field_url_for_the_more_link']['#group'] = 'pager_details';
+      $form['field_number_of_items_to_display']['#group'] = 'pager_details';
+      $uri_title = $form['field_url_for_the_more_link']['widget']['0']['#title'];
+      $form['field_url_for_the_more_link']['widget']['0']['#title'] = '';
+      $form['field_url_for_the_more_link']['widget']['0']['uri']['#title'] = t("@title", ['@title' => $uri_title]);
+      $form['field_url_for_the_more_link']['widget']['0']['uri']['#description'] = '';
+      $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
   }
 }
 

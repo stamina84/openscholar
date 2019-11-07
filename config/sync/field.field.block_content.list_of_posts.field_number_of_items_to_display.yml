@@ -1,0 +1,23 @@
+uuid: e1203c69-72bc-4da4-833b-3a1cefac6a75
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.storage.block_content.field_number_of_items_to_display
+  module:
+    - options
+id: block_content.list_of_posts.field_number_of_items_to_display
+field_name: field_number_of_items_to_display
+entity_type: block_content
+bundle: list_of_posts
+label: 'Number of items to display'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 6
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

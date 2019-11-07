@@ -1,0 +1,60 @@
+uuid: a714015f-0489-4b99-8c34-ce6fc79d6aa0
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - options
+id: block_content.field_content_type
+field_name: field_content_type
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: all
+      label: All
+    -
+      value: blog
+      label: Blog
+    -
+      value: class
+      label: Class
+    -
+      value: events
+      label: Events
+    -
+      value: faq
+      label: FAQ
+    -
+      value: link
+      label: Link
+    -
+      value: news
+      label: News
+    -
+      value: page
+      label: Page
+    -
+      value: person
+      label: Person
+    -
+      value: presentation
+      label: Presentation
+    -
+      value: reference
+      label: Publication
+    -
+      value: software_project
+      label: 'Software Project'
+    -
+      value: software_release
+      label: 'Software Release'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
