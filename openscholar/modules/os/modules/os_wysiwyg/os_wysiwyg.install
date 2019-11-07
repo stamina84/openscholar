@@ -138,3 +138,11 @@ function os_wysiwyg_update_7014() {
 function os_wysiwyg_update_7015() {
   features_revert(array('os_wysiwyg' => array('filter')));
 }
+
+/**
+ * Remove pasteFromWordPromptCleanup checkbox and Checked PasteFromWordRemoveFontStyles checkbox
+ */
+function os_wysiwyg_update_7016() {
+  features_revert(array('os_wysiwyg' => array('wysiwyg')));
+  return t('Apply new Paste From Word settings to filtered HTML.');
+}
