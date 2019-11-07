@@ -88,7 +88,7 @@ function os_widgets_views_pre_render(ViewExecutable $view) {
       if ($filter instanceof Bundle && $filter->getEntityType() == 'node') {
         foreach ($filter->value as $bundle) {
           $app = $app_manager->getAppForBundle('node', $bundle);
-          $os_widget_context->addBundle($app);
+          $os_widget_context->addApp($app);
         }
       }
     }
