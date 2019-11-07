@@ -190,7 +190,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
         unset($terms[$i]);
         continue;
       }
-      if (!empty($this->getBundlesFromApps()) && $this->settings['taxonomy_behavior'] == 'contextual' && !in_array($term->tid, $keep_term_tids)) {
+      if (!empty($this->osWidgetsContext->getActiveApps()) && $this->settings['taxonomy_behavior'] == 'contextual' && !in_array($term->tid, $keep_term_tids)) {
         unset($terms[$i]);
         continue;
       }

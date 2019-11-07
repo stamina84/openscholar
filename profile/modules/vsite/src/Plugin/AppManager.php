@@ -5,6 +5,7 @@ namespace Drupal\vsite\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\views\ViewExecutable;
 
 /**
  * Manager for the App plugin system.
@@ -55,6 +56,31 @@ class AppManager extends DefaultPluginManager implements AppManagerInterface {
     }
 
     return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAppsForView(ViewExecutable $view): array {
+    $defs = $this->getDefinitions();
+    $apps = [];
+    foreach ($defs as $d) {
+      if (!empty($d['viewsTabs'])) {
+        foreach ($d['viewsTabs'] as $view_id => $displays) {
+          if ($view_id != $view->id()) {
+            continue;
+          }
+          foreach ($displays as $display) {
+            if ($display != $view->current_display) {
+              continue;
+            }
+            $apps[] = $d['id'];
+          }
+        }
+      }
+    }
+
+    return $apps;
   }
 
   /**

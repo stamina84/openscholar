@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\os_widgets\ExistingSite;
 
+use Drupal\views\Entity\View;
+
 /**
  * Class TaxonomyBlockContextualRenderTest.
  *
@@ -182,6 +184,112 @@ class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
     // Checking rendered term.
     $this->assertContains($term_pub->label(), $markup->__toString());
     $this->assertNotContains($term_other->label(), $markup->__toString());
+  }
+
+  /**
+   * Test proper term is rendered with blog contextual at views.
+   */
+  public function testBuildContextualViewNodeBundle() {
+    $config_vocab = $this->config->getEditable('taxonomy.vocabulary.' . $this->vocabulary->id());
+    $config_vocab
+      ->set('allowed_vocabulary_reference_types', [
+        'node:blog',
+        'node:news',
+      ])
+      ->save(TRUE);
+    $term_blog = $this->createTerm($this->vocabulary);
+    $term_other = $this->createTerm($this->vocabulary);
+    // Block content without empty terms.
+    $block_content = $this->createTaxonomyBlockContent([
+      'type' => 'taxonomy',
+      'field_taxonomy_show_empty_terms' => 1,
+      'field_taxonomy_behavior' => [
+        'contextual',
+      ],
+    ]);
+    $this->createNode([
+      'type' => 'blog',
+      'field_taxonomy_terms' => [
+        $term_blog,
+      ],
+    ]);
+    $view_builder = $this->entityTypeManager
+      ->getViewBuilder('block_content');
+    $renderer = $this->container->get('renderer');
+
+    $view_blog = View::load('blog');
+    $view_blog_exec = $view_blog->getExecutable();
+    $view_blog_exec->setDisplay('page_1');
+
+    // Check without active apps.
+    $render = $view_builder->view($block_content);
+    /** @var \Drupal\Core\Render\Markup $markup */
+    $markup = $renderer->renderRoot($render);
+    // Checking rendered term.
+    $this->assertContains($term_blog->label(), $markup->__toString());
+    $this->assertContains($term_other->label(), $markup->__toString());
+
+    os_widgets_views_pre_render($view_blog_exec);
+
+    // Check with active apps.
+    $render = $view_builder->view($block_content);
+    /** @var \Drupal\Core\Render\Markup $markup */
+    $markup = $renderer->renderRoot($render);
+    // Checking rendered term.
+    $this->assertContains($term_blog->label(), $markup->__toString());
+    $this->assertNotContains($term_other->label(), $markup->__toString());
+  }
+
+  /**
+   * Test proper term is rendered with publications contextual at views.
+   */
+  public function testBuildContextualViewPublications() {
+    $config_vocab = $this->config->getEditable('taxonomy.vocabulary.' . $this->vocabulary->id());
+    $config_vocab
+      ->set('allowed_vocabulary_reference_types', [
+        'bibcite_reference:*',
+        'node:news',
+      ])
+      ->save(TRUE);
+    $term_pub = $this->createTerm($this->vocabulary);
+    $term_other = $this->createTerm($this->vocabulary);
+    // Block content without empty terms.
+    $block_content = $this->createTaxonomyBlockContent([
+      'type' => 'taxonomy',
+      'field_taxonomy_show_empty_terms' => 1,
+      'field_taxonomy_behavior' => [
+        'contextual',
+      ],
+    ]);
+    $this->createReference([
+      'field_taxonomy_terms' => [
+        $term_pub,
+      ],
+    ]);
+    $view_builder = $this->entityTypeManager
+      ->getViewBuilder('block_content');
+    $renderer = $this->container->get('renderer');
+
+    $allowed_publication_views_displays = [
+      'page_1',
+      'page_2',
+      'page_3',
+      'page_4',
+    ];
+    $view = View::load('publications');
+    $view_exec = $view->getExecutable();
+    foreach ($allowed_publication_views_displays as $display) {
+      $this->container->get('os_widgets.context')->resetApps();
+      $view_exec->setDisplay($display);
+      os_widgets_views_pre_render($view_exec);
+      // Check with active apps.
+      $render = $view_builder->view($block_content);
+      /** @var \Drupal\Core\Render\Markup $markup */
+      $markup = $renderer->renderRoot($render);
+      // Checking rendered term.
+      $this->assertContains($term_pub->label(), $markup->__toString());
+      $this->assertNotContains($term_other->label(), $markup->__toString());
+    }
   }
 
 }

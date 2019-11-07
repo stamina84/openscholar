@@ -28,4 +28,11 @@ class OsWidgetsContext implements OsWidgetsContextInterface {
     return $this->appIds;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function resetApps(): void {
+    $this->appIds = [];
+  }
+
 }

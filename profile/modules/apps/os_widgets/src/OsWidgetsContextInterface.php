@@ -25,4 +25,9 @@ interface OsWidgetsContextInterface {
    */
   public function getActiveApps() : array;
 
+  /**
+   * Reset collected apps.
+   */
+  public function resetApps() : void;
+
 }

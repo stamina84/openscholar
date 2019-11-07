@@ -3,6 +3,7 @@
 namespace Drupal\vsite\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Interface for classes managing App plugin system.
@@ -21,6 +22,17 @@ interface AppManagerInterface extends PluginManagerInterface {
    *   App name.
    */
   public function getAppForBundle(string $entity_type_id, string $bundle) : string;
+
+  /**
+   * Get Apps for view.
+   *
+   * @param \Drupal\views\ViewExecutable $view
+   *   View entity.
+   *
+   * @return array
+   *   Array of App ids.
+   */
+  public function getAppsForView(ViewExecutable $view) : array;
 
   /**
    * Get group permissions for an app.

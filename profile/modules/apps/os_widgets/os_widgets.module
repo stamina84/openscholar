@@ -71,27 +71,14 @@ function os_widgets_preprocess_bibcite_reference(&$variables) {
  * Implements hook_views_pre_render().
  */
 function os_widgets_views_pre_render(ViewExecutable $view) {
-  $app_manager = Drupal::service('vsite.app.manager');
+  /** @var \Drupal\os_widgets\OsWidgetsContext $os_widget_context */
+  $os_widget_context = Drupal::service('os_widgets.context');
 
-  $allowed_publication_views_displays = ['page_1', 'page_2', 'page_3', 'page_4'];
-  if ($view->id() == 'publications' && in_array($view->current_display, $allowed_publication_views_displays)) {
-    $app = $app_manager->getAppForBundle('bibcite_reference', '*');
-    Drupal::service('os_widgets.context')->addApp($app);
-  }
-  // Make sure, the filter is not empty.
-  // Check whether current view is a page or not.
-  if (!empty($view->filter) && !empty($view->element['#view_display_plugin_id']) && $view->element['#view_display_plugin_id'] == 'page') {
-    /** @var \Drupal\os_widgets\OsWidgetsContext $os_widget_context */
-    $os_widget_context = Drupal::service('os_widgets.context');
-    /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter */
-    foreach ($view->filter as $filter) {
-      if ($filter instanceof Bundle && $filter->getEntityType() == 'node') {
-        foreach ($filter->value as $bundle) {
-          $app = $app_manager->getAppForBundle('node', $bundle);
-          $os_widget_context->addApp($app);
-        }
-      }
-    }
+  /** @var \Drupal\vsite\Plugin\AppManager $app_manager */
+  $app_manager = Drupal::service('vsite.app.manager');
+  $apps = $app_manager->getAppsForView($view);
+  foreach ($apps as $app) {
+    $os_widget_context->addApp($app);
   }
 }
 
