@@ -95,7 +95,7 @@
         a {
           &:before {
             content: "";
-            background: url(../../../themes/os_base/images/widgets.png) no-repeat;
+            background: url(../../../themes/os_base/images/widgets/widgets-icon.png) no-repeat;
             height: 21px;
             width: 21px;
             position: absolute;
@@ -119,42 +119,42 @@
         &.custom-text-html {
           a {
             &:before {
-              background-position: -20px -310px;
+              background-position: -20px -490px;
             }
           }
         }
         &.embed-media {
           a {
             &:before {
-              background-position: -20px 610px;
+              background-position: -20px -610px;
             }
           }
         }
         &.publication-types {
           a {
             &:before {
-              background-position: -20px 850px;
+              background-position: -20px -850px;
             }
           }
         }
         &.featured-posts {
           a {
             &:before {
-              background-position: -20px 370px;
+              background-position: -20px -370px;
             }
           }
         }
         &.media-gallery {
           a {
             &:before {
-              background-position: -20px 610px;
+              background-position: -20px -610px;
             }
           }
         }
         &.publication-years {
           a {
             &:before {
-              background-position: -20px 310px;
+              background-position: -20px -310px;
             }
           }
         }
@@ -190,6 +190,13 @@
           a {
             &:before {
               background-position: -20px -550px;
+            }
+          }
+        }
+        &.publication-authors {
+          a {
+            &:before {
+              background-position: -20px -20px;
             }
           }
         }
