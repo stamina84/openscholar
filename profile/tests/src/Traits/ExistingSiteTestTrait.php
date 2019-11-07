@@ -388,6 +388,7 @@ trait ExistingSiteTestTrait {
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
     $block_content = $this->container->get('entity_type.manager')->getStorage('block_content')->create($values + [
       'type' => 'basic',
+      'info' => $this->randomMachineName(),
     ]);
     $block_content->enforceIsNew();
     $block_content->save();
