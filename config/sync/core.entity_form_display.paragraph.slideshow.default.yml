@@ -3,15 +3,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.slideshow.field_slide_heading
-    - field.field.paragraph.slideshow.field_slide_images
-    - field.field.paragraph.slideshow.field_slide_subheading
-    - image.style.medium
+    - field.field.paragraph.slideshow.field_slide_alt_text
+    - field.field.paragraph.slideshow.field_slide_description
+    - field.field.paragraph.slideshow.field_slide_headline
+    - field.field.paragraph.slideshow.field_slide_image
+    - field.field.paragraph.slideshow.field_slide_link
+    - field.field.paragraph.slideshow.field_slide_title_text
     - paragraphs.paragraphs_type.slideshow
   module:
     - field_layout
-    - image
     - layout_discovery
+    - link
 third_party_settings:
   field_layout:
     id: layout_onecol
@@ -21,24 +23,49 @@ targetEntityType: paragraph
 bundle: slideshow
 mode: default
 content:
-  field_slide_heading:
-    weight: 0
+  field_slide_alt_text:
+    weight: 6
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_slide_images:
+  field_slide_description:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_slide_headline:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_slide_image:
     weight: 2
     settings:
-      preview_image_style: medium
-      progress_indicator: throbber
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: image_image
+    type: entity_reference_autocomplete
     region: content
-  field_slide_subheading:
-    weight: 1
+  field_slide_link:
+    weight: 4
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_slide_title_text:
+    weight: 7
     settings:
       size: 60
       placeholder: ''

@@ -15,6 +15,8 @@ use Drupal\file\FileInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\paragraphs\ParagraphInterface;
 use Drupal\user\UserInterface;
 use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
 
@@ -181,6 +183,41 @@ trait ExistingSiteTestTrait {
         'target_id' => 'document',
       ],
       'field_media_file' => [
+        'target_id' => $file->id(),
+        'display' => 1,
+      ],
+    ]);
+    $media->enforceIsNew();
+    $media->save();
+
+    $this->markEntityForCleanup($media);
+
+    return $media;
+  }
+
+  /**
+   * Creates a media image entity.
+   *
+   * @param array $values
+   *   (optional) The values used to create the entity.
+   *
+   * @return \Drupal\media\MediaInterface
+   *   The new media entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function createMediaImage(array $values = []): MediaInterface {
+    $file = $this->createFile('image');
+    /** @var \Drupal\media\MediaStorage $storage */
+    $storage = $this->container->get('entity_type.manager')->getStorage('media');
+    $media = $storage->create($values + [
+      'name' => [
+        'value' => $this->randomMachineName(),
+      ],
+      'bundle' => [
+        'target_id' => 'image',
+      ],
+      'field_media_image' => [
         'target_id' => $file->id(),
         'display' => 1,
       ],
@@ -421,6 +458,29 @@ trait ExistingSiteTestTrait {
     $this->markEntityForCleanup($contributor);
 
     return $contributor;
+  }
+
+  /**
+   * Creates a paragraph.
+   *
+   * @param array $values
+   *   (Optional) Default values for the paragraph.
+   *
+   * @return \Drupal\paragraphs\ParagraphInterface
+   *   The new paragraph entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createParagraph(array $values = []) : ParagraphInterface {
+    $paragraph = Paragraph::create($values + [
+      'type' => 'class_material',
+    ]);
+
+    $paragraph->save();
+
+    $this->markEntityForCleanup($paragraph);
+
+    return $paragraph;
   }
 
 }

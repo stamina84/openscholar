@@ -1,8 +1,9 @@
-uuid: f31159de-6e46-4275-af19-8724a233536f
+uuid: d40ebf61-2555-4ac9-9366-5adce4575ece
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.slideshow_wide
     - field.field.paragraph.slideshow.field_slide_alt_text
     - field.field.paragraph.slideshow.field_slide_description
     - field.field.paragraph.slideshow.field_slide_headline
@@ -16,10 +17,12 @@ dependencies:
 third_party_settings:
   layout_builder:
     sections: {  }
-id: paragraph.slideshow.default
+    allow_custom: false
+    enabled: false
+id: paragraph.slideshow.slideshow_wide
 targetEntityType: paragraph
 bundle: slideshow
-mode: default
+mode: slideshow_wide
 content:
   field_slide_alt_text:
     weight: 6

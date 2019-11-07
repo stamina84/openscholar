@@ -16,3 +16,8 @@ services:
   os_widgets.context:
     class: Drupal\os_widgets\OsWidgetsContext
     parent: default_plugin_manager
+  os.add_slideshow_access:
+    class: Drupal\os_widgets\Access\AddSlideshowAccessCheck
+    arguments: ['@current_user', '@entity_type.manager', '@vsite.context_manager']
+    tags:
+      - { name: access_check, applies_to: _add_slideshow_access_check }
