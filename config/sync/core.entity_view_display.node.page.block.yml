@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.block
     - field.field.node.page.body
+    - field.field.node.page.field_attached_media
     - field.field.node.page.field_taxonomy_terms
     - node.type.page
   module:

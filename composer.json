@@ -24,10 +24,6 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/openscholar/drupal-test-traits"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/openscholar/groupmenu"
         },
         {
@@ -187,7 +183,7 @@
         "drupal/config_sync": "^2.0@alpha",
         "drupal/console": "^1.0.2",
         "drupal/context": "^4.0@beta",
-        "drupal/core": "8.6.16",
+        "drupal/core": "^8.7.8",
         "drupal/date_recur": "^2.0",
         "drupal/date_recur_modular": "^1.0@alpha",
         "drupal/easy_breadcrumb": "^1.8",
@@ -228,7 +224,7 @@
         "drupal/views_ical": "^2.1",
         "drupal/views_infinite_scroll": "^1.5",
         "drush/drush": "^9.0.0",
-        "egulias/email-validator": "1.2.6",
+        "egulias/email-validator": "^2.0",
         "ezyang/htmlpurifier": "^4.11",
         "fullcalendar/fullcalendar": "^3.3",
         "j7mbo/twitter-api-php": "^1.0",
@@ -242,16 +238,17 @@
         "twbs/bootstrap-sass": "^3.3.7",
         "twig/extensions": "^1.5",
         "vlucas/phpdotenv": "^2.4",
+        "webflo/drupal-core-require-dev": "^8.7.8",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
-        "drupal/features": "^3.7",
-        "webflo/drupal-core-require-dev": "8.6.16",
+        "dmore/chrome-mink-driver": "^2.6",
         "drupal/devel": "^1.2",
-        "weitzman/drupal-test-traits": "dev-pass-chrome-driver-options",
-        "dmore/chrome-mink-driver": "^2.6"
+        "drupal/features": "^3.7",
+        "drupal/restui": "^1.17",
+        "weitzman/drupal-test-traits": "^1.3"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -350,7 +347,9 @@
                 "Getlabel() on null layout builder.": "https://www.drupal.org/files/issues/2018-07-16/2985882-entityfield-2.patch",
                 "'view_path' is set to /views/ajax after second ajax request": "https://www.drupal.org/files/issues/2018-03-14/drupal-views_path_ajax-2866386-10.patch",
                 "Image styles fails with absolute path": "https://www.drupal.org/files/issues/image_styles-2754273-7.patch",
-                "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch"
+                "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch",
+                "User context missing when using toUrl in some circumstances": "https://www.drupal.org/files/issues/2019-05-22/3056234-test-fix-4.patch",	
+                "null route object in big_pipe requests after 8.7.8 upgrade": "https://www.drupal.org/files/issues/2019-10-24/3089913-2.patch"
             },
             "drupal/group_purl": {
                 "Prevent base path from interfering with purl detection": "https://www.drupal.org/files/issues/2019-04-12/group_purl.3026646-3.basepath.patch",

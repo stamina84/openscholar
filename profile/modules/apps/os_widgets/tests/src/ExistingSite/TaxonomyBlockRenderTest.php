@@ -9,7 +9,7 @@ use DateInterval;
  * Class TaxonomyBlockRenderTest.
  *
  * @group kernel
- * @group widgets
+ * @group widgets-2
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\TaxonomyWidget
  */
 class TaxonomyBlockRenderTest extends TaxonomyBlockRenderTestBase {

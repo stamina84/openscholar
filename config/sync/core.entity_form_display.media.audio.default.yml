@@ -7,7 +7,6 @@ dependencies:
     - field.field.media.audio.field_taxonomy_terms
     - media.type.audio
   module:
-    - content_moderation
     - cp_taxonomy
     - field_layout
     - file
@@ -47,12 +46,6 @@ content:
     region: content
     settings:
       include_locked: true
-    third_party_settings: {  }
-  moderation_state:
-    type: moderation_state_default
-    weight: 7
-    settings: {  }
-    region: content
     third_party_settings: {  }
   name:
     type: string_textfield

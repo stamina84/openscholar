@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.media.teaser
     - field.field.media.executable.field_media_file
+    - field.field.media.executable.field_taxonomy_terms
     - media.type.executable
   module:
     - file
@@ -23,6 +24,7 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_taxonomy_terms: true
   langcode: true
   name: true
   thumbnail: true
