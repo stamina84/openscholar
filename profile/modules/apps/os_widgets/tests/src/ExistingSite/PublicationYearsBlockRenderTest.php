@@ -3,17 +3,15 @@
 namespace Drupal\Tests\os_widgets\ExistingSite;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
 
 /**
  * Class PublicationYearsWidget.
  *
  * @group kernel
- * @group widgets
+ * @group widgets-1
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\PublicationYearsWidget
  */
 class PublicationYearsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
-  use ExistingSiteTestTrait;
 
   /**
    * The object we're testing.

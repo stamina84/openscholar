@@ -76,13 +76,6 @@ class OsGroupResource extends OsEntityResource {
   /**
    * {@inheritdoc}
    */
-  public function get(EntityInterface $entity) {
-    return parent::get($entity);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function post(EntityInterface $entity = NULL) {
 
     // Values on the entity get destroyed when the entity is saved.

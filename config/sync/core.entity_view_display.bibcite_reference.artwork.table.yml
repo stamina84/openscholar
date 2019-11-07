@@ -5,6 +5,11 @@ dependencies:
   config:
     - bibcite_entity.bibcite_reference_type.artwork
     - core.entity_view_mode.bibcite_reference.table
+    - field.field.bibcite_reference.artwork.field_attach_files
+    - field.field.bibcite_reference.artwork.field_extra_fields
+    - field.field.bibcite_reference.artwork.field_publication_image
+    - field.field.bibcite_reference.artwork.field_redirect_to_source
+    - field.field.bibcite_reference.artwork.field_taxonomy_terms
   enforced:
     config:
       - core.entity_view_mode.bibcite_reference.table
@@ -13,6 +18,7 @@ dependencies:
       - bibcite_entity
   module:
     - bibcite_entity
+    - text
 _core:
   default_config_hash: 1Pm2bU5MuoFvsZKF9VSs28rOcXSCsn9Av-1QApfVwc8
 id: bibcite_reference.artwork.table
