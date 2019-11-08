@@ -60,7 +60,13 @@ class FollowMeBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    */
   public function testBuildDisplayRssFeedPageLink() {
     // Create paragraph.
-    $paragraph = $this->createParagraph();
+    $values = [
+      'type' => 'follow_me_links',
+      'field_domain' => 'facebook.com',
+      'field_link_title' => 'facebook',
+      'field_weight' => 1,
+    ];
+    $paragraph = $this->createParagraph($values);
 
     $paragraph_items[] = [
       'target_id' => $paragraph->id(),
