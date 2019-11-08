@@ -306,6 +306,28 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
 
       break;
 
+    case 'block_content_slideshow_form':
+    case 'block_content_slideshow_edit_form':
+      $block_content = $form_object->getEntity();
+      // Exists block content.
+      if (!$block_content->isNew()) {
+        // If overlay value is Wide Overlay, then we shouldn't choose else.
+        if ($form['field_slideshow_layout']['widget']['#default_value'] == '3_1_overlay') {
+          unset($form['field_slideshow_layout']['widget']['#options']['16_9_overlay']);
+          unset($form['field_slideshow_layout']['widget']['#options']['16_9_below']);
+          unset($form['field_slideshow_layout']['widget']['#options']['16_9_side']);
+        }
+        else {
+          // If not Wide overlay, then we shouldn't choose this one.
+          unset($form['field_slideshow_layout']['widget']['#options']['3_1_overlay']);
+        }
+      }
+      $form['field_slideshow_layout']['widget']['description']['#markup'] = t('<div class="description full">@help_text</div>', [
+        '@help_text' => 'Slideshow images and captions will be laid out in this manner. Note that the layout can be changed at a later date, but the aspect ratio (Standard/Widescreen) is permanent once selected.',
+      ]);
+      $form['field_slideshow_layout']['widget']['description']['#weight'] = 2;
+      break;
+
     case 'block_content_addthis_form':
     case 'block_content_addthis_edit_form':
       $form['addthis_description']['#markup'] = \Drupal::token()->replace('[os_widgets:addthis_display_style_description]');

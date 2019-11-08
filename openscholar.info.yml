@@ -83,7 +83,6 @@ dependencies:
   - drupal:os_pages
   - drupal:os_publications
   - drupal:os_redirect
-  - drupal:os_slideshow
   - drupal:page_cache
   - drupal:path
   - drupal:purl

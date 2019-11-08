@@ -1,0 +1,10 @@
+uuid: 09f85fe5-a9ad-4126-85bf-710cf0dddc5c
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.slideshow_wide
+label: 'Slideshow wide'
+targetEntityType: paragraph
+cache: true

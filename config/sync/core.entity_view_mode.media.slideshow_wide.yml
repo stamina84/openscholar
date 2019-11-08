@@ -1,0 +1,10 @@
+uuid: 4ffa5f94-6191-468b-8419-16fe35c0407e
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.slideshow_wide
+label: 'Slideshow wide'
+targetEntityType: media
+cache: true

@@ -41,8 +41,8 @@ content:
     weight: 2
     region: content
     settings:
-      progress_indicator: throbber
       preview_image_style: thumbnail
+      progress_indicator: throbber
     third_party_settings: {  }
   field_taxonomy_terms:
     weight: 26
