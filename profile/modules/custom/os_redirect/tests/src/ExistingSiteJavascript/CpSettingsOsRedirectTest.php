@@ -38,10 +38,9 @@ class CpSettingsOsRedirectTest extends OsExistingSiteJavascriptTestBase {
     $this->visitViaVsite("cp/settings/global-settings/redirect_maximum", $this->group);
     $web_assert->statusCodeEquals(200);
 
-    $edit = [
-      'maximum_number' => 20,
-    ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $page = $this->getCurrentPage();
+    $page->fillField('maximum_number', 20);
+    $page->pressButton('Save configuration');
     $page = $this->getCurrentPage();
     $check_html_value = $page->hasContent('The configuration options have been saved.');
     $this->assertTrue($check_html_value, 'The form did not write the correct message.');
