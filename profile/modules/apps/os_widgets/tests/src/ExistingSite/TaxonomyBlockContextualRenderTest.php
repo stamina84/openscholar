@@ -8,7 +8,7 @@ use Drupal\views\Entity\View;
  * Class TaxonomyBlockContextualRenderTest.
  *
  * @group kernel
- * @group widgets-2
+ * @group widgets-1
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\TaxonomyWidget
  */
 class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
