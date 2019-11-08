@@ -24,9 +24,7 @@ class CpSettingsOsRedirectTest extends OsExistingSiteJavascriptTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->groupAdmin = $this->createUser([
-      'administer control panel redirects',
-    ]);
+    $this->groupAdmin = $this->createUser();
     $this->addGroupAdmin($this->groupAdmin, $this->group);
   }
 
@@ -37,7 +35,7 @@ class CpSettingsOsRedirectTest extends OsExistingSiteJavascriptTestBase {
     $web_assert = $this->assertSession();
     $this->drupalLogin($this->groupAdmin);
 
-    $this->visit("{$this->group->get('path')->first()->getValue()['alias']}/cp/settings/global-settings/redirect_maximum");
+    $this->visitViaVsite("cp/settings/global-settings/redirect_maximum", $this->group);
     $web_assert->statusCodeEquals(200);
 
     $edit = [
