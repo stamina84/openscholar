@@ -4,20 +4,28 @@ status: true
 dependencies:
   config:
     - block_content.type.dataverse_search_box
-    - field.field.block_content.dataverse_search_box.body
+    - field.field.block_content.dataverse_search_box.field_dataverse_identifier
+    - field.field.block_content.dataverse_search_box.field_search_placeholder_text
+    - field.field.block_content.dataverse_search_box.field_widget_title
   module:
-    - text
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    sections: {  }
 id: block_content.dataverse_search_box.default
 targetEntityType: block_content
 bundle: dataverse_search_box
 mode: default
 content:
-  body:
-    label: hidden
-    type: text_default
+  field_widget_title:
     weight: 0
-    settings: {  }
+    label: above
+    settings:
+      link_to_entity: false
     third_party_settings: {  }
+    type: string
     region: content
 hidden:
+  field_dataverse_identifier: true
+  field_search_placeholder_text: true
   langcode: true
