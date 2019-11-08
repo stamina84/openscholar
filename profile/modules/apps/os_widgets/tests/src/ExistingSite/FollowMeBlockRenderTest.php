@@ -67,7 +67,6 @@ class FollowMeBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'field_weight' => 1,
     ];
     $paragraph = $this->createParagraph($values);
-
     $paragraph_items[] = [
       'target_id' => $paragraph->id(),
       'target_revision_id' => $paragraph->getRevisionId(),
