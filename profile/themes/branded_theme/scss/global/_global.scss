@@ -19,3 +19,8 @@ h2.block-title {
 .trigger {
   color: $color-gray;
 }
+nav {
+  .sr-only {
+    color: $color-white;
+  }
+}

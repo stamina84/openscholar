@@ -15,9 +15,10 @@ use Drupal\file\FileInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\paragraphs\ParagraphInterface;
 use Drupal\user\UserInterface;
 use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
-use Drupal\paragraphs\Entity\Paragraph;
 
 /**
  * Provides a trait for openscholar tests.
@@ -182,6 +183,41 @@ trait ExistingSiteTestTrait {
         'target_id' => 'document',
       ],
       'field_media_file' => [
+        'target_id' => $file->id(),
+        'display' => 1,
+      ],
+    ]);
+    $media->enforceIsNew();
+    $media->save();
+
+    $this->markEntityForCleanup($media);
+
+    return $media;
+  }
+
+  /**
+   * Creates a media image entity.
+   *
+   * @param array $values
+   *   (optional) The values used to create the entity.
+   *
+   * @return \Drupal\media\MediaInterface
+   *   The new media entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function createMediaImage(array $values = []): MediaInterface {
+    $file = $this->createFile('image');
+    /** @var \Drupal\media\MediaStorage $storage */
+    $storage = $this->container->get('entity_type.manager')->getStorage('media');
+    $media = $storage->create($values + [
+      'name' => [
+        'value' => $this->randomMachineName(),
+      ],
+      'bundle' => [
+        'target_id' => 'image',
+      ],
+      'field_media_image' => [
         'target_id' => $file->id(),
         'display' => 1,
       ],
@@ -389,6 +425,7 @@ trait ExistingSiteTestTrait {
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
     $block_content = $this->container->get('entity_type.manager')->getStorage('block_content')->create($values + [
       'type' => 'basic',
+      'info' => $this->randomMachineName(),
     ]);
     $block_content->enforceIsNew();
     $block_content->save();
@@ -427,26 +464,23 @@ trait ExistingSiteTestTrait {
    * Creates a paragraph.
    *
    * @param array $values
-   *   (Optional) Default values for the reference.
+   *   (Optional) Default values for the paragraph.
    *
-   * @return array
-   *   The paragraph entity.
+   * @return \Drupal\paragraphs\ParagraphInterface
+   *   The new paragraph entity.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function createParagraph(array $values = []) {
-    $paragraph_entity = Paragraph::create($values + [
-      'type' => 'follow_me_links',
-      'field_domain' => 'facebook.com',
-      'field_link_title' => 'facebook',
-      'field_weight' => 1,
+  public function createParagraph(array $values = []) : ParagraphInterface {
+    $paragraph = Paragraph::create($values + [
+      'type' => 'class_material',
     ]);
 
-    $paragraph_entity->save();
+    $paragraph->save();
 
-    $this->markEntityForCleanup($paragraph_entity);
+    $this->markEntityForCleanup($paragraph);
 
-    return $paragraph_entity;
+    return $paragraph;
   }
 
 }

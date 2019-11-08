@@ -8,6 +8,7 @@ dependencies:
     - field.field.bibcite_reference.manuscript.field_attach_files
     - field.field.bibcite_reference.manuscript.field_extra_fields
     - field.field.bibcite_reference.manuscript.field_publication_image
+    - field.field.bibcite_reference.manuscript.field_redirect_to_source
     - field.field.bibcite_reference.manuscript.field_taxonomy_terms
   enforced:
     config:

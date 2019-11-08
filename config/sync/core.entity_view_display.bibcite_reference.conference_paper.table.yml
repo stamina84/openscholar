@@ -8,6 +8,7 @@ dependencies:
     - field.field.bibcite_reference.conference_paper.field_attach_files
     - field.field.bibcite_reference.conference_paper.field_extra_fields
     - field.field.bibcite_reference.conference_paper.field_publication_image
+    - field.field.bibcite_reference.conference_paper.field_redirect_to_source
     - field.field.bibcite_reference.conference_paper.field_taxonomy_terms
   enforced:
     config:

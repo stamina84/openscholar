@@ -50,3 +50,8 @@ mailchimpWidget:
   css:
     component:
       css/mailchimp.form.css: {}
+slideshowWidget:
+  js:
+    js/os_widgets.slideshow.js: {}
+  dependencies:
+    - slick/slick.load
