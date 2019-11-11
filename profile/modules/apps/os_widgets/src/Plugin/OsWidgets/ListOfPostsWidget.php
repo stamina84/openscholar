@@ -99,17 +99,30 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $query->orderBy('title', 'ASC');
     }
     elseif ($sortedBy === 'sort_random') {
+      $pubQuery->addExpression('RAND()', 'random_field');
       $query->orderRandom();
     }
 
     $results = $query->execute()->fetchAll();
 
+    $renderItems = [];
     foreach ($results as $item) {
       if (in_array($item->type, $nodeTypes)) {
-        $renderItems[] = $node_view_builder->view(Node::load($item->nid), $displayStyle);
+        if ($displayStyle === 'title') {
+          $renderItems[] = Node::load($item->nid)->toLink()->toRenderable();
+        }
+        else {
+          $renderItems[] = $node_view_builder->view(Node::load($item->nid), $displayStyle);
+        }
       }
       elseif (in_array($item->type, $pubTypes)) {
-        $renderItems[] = $publication_view_builder->view(Reference::load($item->nid), 'citation');
+        if ($displayStyle === 'title') {
+          $renderItems[] = Reference::load($item->nid)->toLink()->toRenderable();
+        }
+        else {
+          $displayStyle = $displayStyle === 'default' ? 'citation' : $displayStyle;
+          $renderItems[] = $publication_view_builder->view(Reference::load($item->nid), $displayStyle);
+        }
       }
     }
 

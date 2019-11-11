@@ -2,7 +2,6 @@
 
 namespace Drupal\cp_taxonomy\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -36,14 +35,11 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
   protected $taxonomyHelper;
 
   /**
-   * Instance of selected widget.
+   * Entity Type manager.
    *
-   * @var \Drupal\Core\Field\WidgetInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $fieldWidgets;
-  protected $pluginManager;
   protected $entityTypeManager;
-  protected $widgetConfiguration;
 
   /**
    * TaxonomyTermsWidget constructor.
@@ -54,30 +50,21 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
    *   The plugin implementation definition.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The definition of the field to which the widget is associated.
-   * @param array $settings
+   * @param array $visibility_settings
    *   The widget settings.
    * @param array $third_party_settings
    *   Any third party settings.
    * @param \Drupal\cp_taxonomy\CpTaxonomyHelperInterface $taxonomy_helper
    *   Config Factory.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager
-   *   Plugin manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity Type Manager.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, CpTaxonomyHelperInterface $taxonomy_helper, PluginManagerInterface $plugin_manager, EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $visibility_settings, array $third_party_settings, CpTaxonomyHelperInterface $taxonomy_helper, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $visibility_settings, $third_party_settings);
     $this->taxonomyHelper = $taxonomy_helper;
-
-    $this->pluginManager = $plugin_manager;
     $this->entityTypeManager = $entity_type_manager;
-
-    $configuration['field_definition'] = $field_definition;
-    $configuration['settings'] = $settings;
-    $configuration['third_party_settings'] = $third_party_settings;
-    $this->widgetConfiguration = $configuration;
   }
 
   /**
@@ -91,7 +78,6 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
       $configuration['settings'],
       $configuration['third_party_settings'],
       $container->get('cp.taxonomy.helper'),
-      $container->get('plugin.manager.field.widget'),
       $container->get('entity_type.manager')
     );
   }
@@ -100,18 +86,6 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $main_element = [
-      '#tree' => TRUE,
-    ];
-    // $nodeTypes = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
-    //    foreach ($nodeTypes as $key => $type) {
-    //      $list[$key] = $type->get('name');
-    //    }
-    //    $list['publication'] = 'Publication';
-    //    asort($list);
-    //    foreach ($list as $key => $item) {
-    //      $vids[$key] = $this->taxonomyHelper->searchAllowedVocabulariesByType("node:$key");
-    //    }.
     $title = $element['#title'];
     $description = $element['#description'];
     $vocabularies = Vocabulary::loadMultiple();
@@ -124,32 +98,80 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
       '#title' => $title,
       '#description' => $description,
       '#open' => TRUE,
-      '#collapsible' => FALSE,
     ];
 
     foreach ($list as $vid => $vocab) {
+      $visibility_settings = [];
+      $visibility_settings[] = ['value' => 'all'];
+      $allowed_types = $this->taxonomyHelper->getVocabularySettings($vid)['allowed_vocabulary_reference_types'];
+      foreach ($allowed_types as $type) {
+        if (strpos($type, 'node') !== FALSE) {
+          $visibility_settings[] = ['value' => str_replace('node:', '', $type)];
+        }
+        elseif (strpos($type, 'bibcite_reference') !== FALSE) {
+          $visibility_settings[] = ['value' => 'publication'];
+        }
+      }
       $element['terms_container'][$vid] = [
-        '#type' => 'textfield',
+        '#type' => 'select',
         '#title' => $vocab->get('name'),
+        '#multiple' => TRUE,
+        '#chosen' => TRUE,
+        '#size' => 10,
+        '#options' => $this->getVocabTerms($vid),
+        '#default_value' => $this->getVocabTerms($vid, $items, TRUE) ?? '',
+        '#states' => [
+          'visible' => [
+            'select[name="field_content_type"]' => [$visibility_settings],
+          ],
+        ],
       ];
     }
-
     return $element;
-
-    /** @var \Drupal\group\Entity\GroupInterface $vsite */
-    // $vsite = \Drupal::service('vsite.context_manager')->getActiveVsite();
-    //    $terms = $vsite->getContentEntities('group_entity:taxonomy_term');
-    //    foreach ($terms as $term) {
-    //      $list[$term->bundle()] = $term->name->value;
-    //    }
-    //    ksm($list);
   }
 
   /**
    * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+    $values = $values['terms_container'];
+    foreach ($values as $value) {
+      if ($value) {
+        $tids[] = array_keys($value);
+      }
+    }
+    return array_merge(...$tids);
+  }
 
+  /**
+   * Gets terms based on vid.
+   *
+   * @param string $vid
+   *   Vocabulary id.
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   Field items.
+   * @param bool $defaults
+   *   If need default/selected values.
+   *
+   * @return array
+   *   Term ids.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function getVocabTerms($vid, FieldItemListInterface $items = [], $defaults = FALSE): array {
+    $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid);
+    foreach ($terms as $term) {
+      $data[$term->tid] = $term->name;
+    }
+    if ($items && $defaults) {
+      foreach ($items as $item) {
+        if (in_array($item->getValue()['target_id'], array_keys($data))) {
+          $data[] = $item->getValue()['target_id'];
+        }
+      }
+    }
+    return $data;
   }
 
 }

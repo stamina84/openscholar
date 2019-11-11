@@ -869,19 +869,3 @@ function os_widgets_field_mailing_list_options() {
 
   return $options;
 }
-
-/**
- * Implements hook_field_widget_form_alter().
- */
-function os_widgets_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
-  if (($context['items']->getName() != 'field_filter_by_vocabulary')) {
-    return;
-  }
-  /** @var \Drupal\group\Entity\GroupInterface $vsite */
-  $vsite = \Drupal::service('vsite.context_manager')->getActiveVsite();
-  $terms = $vsite->getContentEntities('group_entity:taxonomy_term');
-  // Foreach ($terms as $term) {
-  // $list[$term->bundle()] = $term->name->value;
-  // }.
-  $vocabularies = Drupal::service('cp.taxonomy.helper')->searchAllowedVocabulariesByType('node:news');
-}
