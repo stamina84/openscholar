@@ -73,7 +73,7 @@
       // Open the new widget panel
       $('#create-new-widget-btn', context).click(function (e) {
         let $factoryWrapperElement = $('#factory-wrapper');
-        $factoryWrapperElement.show().
+        $factoryWrapperElement.show();
         $factoryWrapperElement.find('li').find('a').first().focus();
       });
 
