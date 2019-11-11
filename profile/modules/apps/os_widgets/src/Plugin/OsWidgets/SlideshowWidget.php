@@ -10,7 +10,7 @@ use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
 
 /**
- * Class EmbedMediaWidget.
+ * Class SlideshowWidget.
  *
  * @OsWidget(
  *   id = "slideshow_widget",
