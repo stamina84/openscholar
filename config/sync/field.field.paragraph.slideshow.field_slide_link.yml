@@ -1,0 +1,23 @@
+uuid: 46a0be7d-c34c-44de-aee1-9e05ad8aee69
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_slide_link
+    - paragraphs.paragraphs_type.slideshow
+  module:
+    - link
+id: paragraph.slideshow.field_slide_link
+field_name: field_slide_link
+entity_type: paragraph
+bundle: slideshow
+label: Link
+description: 'You may provide a link for each slide in your slideshow.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 0
+field_type: link

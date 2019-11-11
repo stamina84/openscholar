@@ -2,10 +2,11 @@
 
 namespace Drupal\os_media\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\blazy\BlazyEntity;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Link;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Url;
@@ -51,7 +52,8 @@ class OsSlickMediaFormatter extends SlickMediaFormatter {
       $configuration['view_mode'],
       $configuration['third_party_settings'],
       $container->get('logger.factory'),
-      $container->get('entity.manager')->getStorage('image_style'),
+      $container->get('image.factory'),
+      $container->get('blazy.entity'),
       $container->get('slick.formatter'),
       $container->get('slick.manager'),
       $container->get('entity_type.manager')
@@ -61,8 +63,8 @@ class OsSlickMediaFormatter extends SlickMediaFormatter {
   /**
    * Constructor to get this object.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, EntityStorageInterface $image_style_storage, SlickFormatterInterface $formatter, SlickManagerInterface $manager, EntityTypeManager $entity_manager) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $logger_factory, $image_style_storage, $formatter, $manager);
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, ImageFactory $image_factory, BlazyEntity $blazy_entity, SlickFormatterInterface $formatter, SlickManagerInterface $manager, EntityTypeManager $entity_manager) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $logger_factory, $image_factory, $blazy_entity, $formatter, $manager);
     $this->entityTypeManager = $entity_manager;
   }
 

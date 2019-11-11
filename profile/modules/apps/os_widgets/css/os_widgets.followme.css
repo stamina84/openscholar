@@ -1,0 +1,43 @@
+.os-follow-me-form .rrssb {
+  float: left;
+  margin-top: -5px;
+}
+.os-follow-me-form .remove {
+  margin-left: 3px;
+}
+.os-follow-me-form .table {
+  border: 1px solid #bebfb9;
+}
+.os-follow-me-form table.table tbody tr {
+  background: #fff;
+}
+.os-follow-me-form .table tbody tr td {
+  border: 0;
+}
+.os-follow-me-form fieldset {
+  background: none;
+}
+.os-follow-me-form fieldset legend {
+  margin: 0;
+}
+/***** follow me block *****/
+.block--type-follow-me .rrssb.no-label .rss-follow-icon {
+  vertical-align: top;
+  display: inline-block;
+}
+.block--type-follow-me .rss-follow-icon a {
+  background: none;
+  width: 24px;
+}
+.block--type-follow-me .rss-follow-icon,
+.block--type-follow-me .rss-follow-icon a {
+  display: flex;
+}
+.block--type-follow-me .rss-follow-icon .rrssb-text {
+  padding: 0;
+  line-height: initial;
+  color: inherit;
+  font-weight: normal;
+  margin-left: 5px;
+  margin-top: 5px;
+}

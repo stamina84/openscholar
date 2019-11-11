@@ -16,7 +16,7 @@ skin: default
 breakpoints: 3
 optimized: false
 options:
-  options__active_tab: edit-options-responsives
+  options__active_tab: edit-options-settings
   settings:
     mobileFirst: false
     asNavFor: ''
@@ -26,6 +26,7 @@ options:
     autoplaySpeed: 3000
     pauseOnHover: true
     pauseOnDotsHover: false
+    pauseOnFocus: true
     arrows: true
     prevArrow: '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0" role="button">Previous</button>'
     nextArrow: '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0" role="button">Next</button>'
@@ -79,6 +80,7 @@ options:
           autoplaySpeed: 3000
           pauseOnHover: false
           pauseOnDotsHover: false
+          pauseOnFocus: true
           arrows: true
           centerMode: false
           centerPadding: 50px
@@ -99,6 +101,9 @@ options:
           edgeFriction: 0.35000000000002
           touchMove: true
           touchThreshold: 5
+          cssEase: ease
+          cssEaseBezier: ''
+          cssEaseOverride: ''
           variableWidth: false
           vertical: false
           verticalSwiping: false
@@ -112,6 +117,7 @@ options:
           autoplaySpeed: 3000
           pauseOnHover: false
           pauseOnDotsHover: false
+          pauseOnFocus: true
           arrows: true
           centerMode: false
           centerPadding: 50px
@@ -132,6 +138,9 @@ options:
           edgeFriction: 0.35000000000002
           touchMove: true
           touchThreshold: 5
+          cssEase: ease
+          cssEaseBezier: ''
+          cssEaseOverride: ''
           variableWidth: false
           vertical: false
           verticalSwiping: false
@@ -145,6 +154,7 @@ options:
           autoplaySpeed: 3000
           pauseOnHover: false
           pauseOnDotsHover: false
+          pauseOnFocus: true
           arrows: true
           centerMode: false
           centerPadding: 50px
@@ -165,6 +175,9 @@ options:
           edgeFriction: 0.35000000000002
           touchMove: true
           touchThreshold: 5
+          cssEase: ease
+          cssEaseBezier: ''
+          cssEaseOverride: ''
           variableWidth: false
           vertical: false
           verticalSwiping: false

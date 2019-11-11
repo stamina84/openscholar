@@ -1,0 +1,41 @@
+uuid: 7efabcf2-0223-43d4-8b1f-9a0d118e7701
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.slideshow_standard
+    - field.field.media.image.field_image_caption
+    - field.field.media.image.field_media_image
+    - field.field.media.image.field_taxonomy_terms
+    - image.style.os_slideshow_standard_large
+    - media.type.image
+  module:
+    - image
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    sections: {  }
+    allow_custom: false
+    enabled: false
+id: media.image.slideshow_standard
+targetEntityType: media
+bundle: image
+mode: slideshow_standard
+content:
+  field_media_image:
+    type: image
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: os_slideshow_standard_large
+      image_link: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_image_caption: true
+  field_taxonomy_terms: true
+  langcode: true
+  name: true
+  thumbnail: true
+  uid: true
