@@ -42,7 +42,7 @@ settings:
       value: presentation
       label: Presentation
     -
-      value: reference
+      value: publication
       label: Publication
     -
       value: software_project

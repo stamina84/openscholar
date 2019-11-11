@@ -9,12 +9,14 @@ dependencies:
     - field.field.block_content.list_of_posts.field_display_style
     - field.field.block_content.list_of_posts.field_filter_by_vocabulary
     - field.field.block_content.list_of_posts.field_number_of_items_to_display
+    - field.field.block_content.list_of_posts.field_publication_types
     - field.field.block_content.list_of_posts.field_show_more_link
     - field.field.block_content.list_of_posts.field_show_pager
     - field.field.block_content.list_of_posts.field_sorted_by
     - field.field.block_content.list_of_posts.field_url_for_the_more_link
     - field.field.block_content.list_of_posts.field_widget_title
   module:
+    - cp_taxonomy
     - field_layout
     - layout_discovery
     - link
@@ -41,18 +43,21 @@ content:
     region: content
   field_filter_by_vocabulary:
     weight: 5
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: filter_by_vocab
     region: content
   field_number_of_items_to_display:
     weight: 9
     settings: {  }
     third_party_settings: {  }
     type: options_select
+    region: content
+  field_publication_types:
+    weight: 26
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
     region: content
   field_show_more_link:
     weight: 6

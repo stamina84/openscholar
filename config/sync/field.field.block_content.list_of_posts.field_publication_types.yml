@@ -1,0 +1,99 @@
+uuid: 892c2cbc-4766-41cd-b815-57e0d2d67b64
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.storage.block_content.field_publication_types
+  module:
+    - options
+id: block_content.list_of_posts.field_publication_types
+field_name: field_publication_types
+entity_type: block_content
+bundle: list_of_posts
+label: 'Publication Types'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: all
+  -
+    value: artwork
+  -
+    value: audiovisual
+  -
+    value: bill
+  -
+    value: book
+  -
+    value: book_chapter
+  -
+    value: broadcast
+  -
+    value: case
+  -
+    value: chart
+  -
+    value: classical
+  -
+    value: conference_paper
+  -
+    value: conference_proceedings
+  -
+    value: data
+  -
+    value: database
+  -
+    value: film
+  -
+    value: government_report
+  -
+    value: hearing
+  -
+    value: journal
+  -
+    value: journal_article
+  -
+    value: legal_ruling
+  -
+    value: magazine_article
+  -
+    value: manuscript
+  -
+    value: map
+  -
+    value: miscellaneous
+  -
+    value: miscellaneous_section
+  -
+    value: newspaper_article
+  -
+    value: patent
+  -
+    value: personal
+  -
+    value: presentation
+  -
+    value: report
+  -
+    value: software
+  -
+    value: statute
+  -
+    value: thesis
+  -
+    value: unpublished
+  -
+    value: website
+  -
+    value: web_article
+  -
+    value: web_project_page
+  -
+    value: web_service
+  -
+    value: working_paper
+default_value_callback: ''
+settings: {  }
+field_type: list_string
