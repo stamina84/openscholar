@@ -53,6 +53,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     else {
       $nodes[] = $vsite->getContentEntities("group_node:$contentType");
     }
+
     $nodes = array_filter($nodes);
     foreach ($nodes as $nodeArr) {
       foreach ($nodeArr as $node) {
@@ -66,17 +67,25 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
     }
 
+    $nodesList = $nodesList ?? '';
     /** @var \Drupal\Core\Database\Query\SelectInterface $nodeQuery */
     $nodeQuery = $this->connection->select('node_field_data', 'nfd');
     $nodeQuery->fields('nfd', ['nid', 'created', 'title', 'type'])
       ->condition('nid', $nodesList, 'IN');
-    $nodeQuery->join('node__field_taxonomy_terms', 'nftm', 'nfd.nid = nftm.entity_id');
-    $nodeQuery->condition('field_taxonomy_terms_target_id', $tids, 'IN');
+    if ($tids) {
+      $nodeQuery->join('node__field_taxonomy_terms', 'nftm', 'nfd.nid = nftm.entity_id');
+      $nodeQuery->condition('field_taxonomy_terms_target_id', $tids, 'IN');
+    }
 
+    $pubList = $pubList ?? '';
     /** @var \Drupal\Core\Database\Query\SelectInterface $pubQuery */
     $pubQuery = $this->connection->select('bibcite_reference', 'pub');
     $pubQuery->fields('pub', ['id', 'created', 'title', 'type'])
       ->condition('id', $pubList, 'IN');
+    if ($tids) {
+      $pubQuery->join('bibcite_reference__field_taxonomy_terms', 'pubftm', 'pub.id = pubftm.entity_id');
+      $pubQuery->condition('field_taxonomy_terms_target_id', $tids, 'IN');
+    }
 
     $query = $nodeQuery->union($pubQuery, 'UNION ALL');
 

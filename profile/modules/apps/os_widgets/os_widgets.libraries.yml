@@ -44,3 +44,6 @@ slideshowWidget:
     js/os_widgets.slideshow.js: {}
   dependencies:
     - slick/slick.load
+widgetForm:
+  js:
+    js/os_widgets_form.js: {}

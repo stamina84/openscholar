@@ -336,6 +336,8 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
     case 'block_content_list_of_posts_form':
     case 'block_content_list_of_posts_edit_form':
 
+      $form['#attached']['library'][] = 'os_widgets/widgetForm';
+
       // Remove None option from select lists.
       array_shift($form['field_content_type']['widget']['#options']);
       array_shift($form['field_display_style']['widget']['#options']);
@@ -358,6 +360,19 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
           ':input[name="field_show_more_link[value]"]' => ['checked' => TRUE],
         ],
       ];
+
+      // Publication type form element changes.
+      $form['field_publication_types']['#type'] = 'details';
+      $form['field_publication_types']['#title'] = t('Publication Types');
+      $form['field_publication_types']['widget']['#title'] = t('Select publication types to display');
+      $form['field_publication_types']['#group'] = 'content_details';
+      $form['field_publication_types']['#states'] = [
+        'visible' => [
+          'select[name="field_content_type"]' => ['value' => 'publication'],
+        ],
+      ];
+      $form['field_publication_types']['#collapsible'] = TRUE;
+      $form['field_publication_types']['#collapsed'] = TRUE;
       // Pager details group.
       $form['pager_details'] = [
         '#type' => 'details',
@@ -626,4 +641,21 @@ function os_widgets_field_mailing_list_options() {
   }
 
   return $options;
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function os_widgets_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  if (($context['items']->getName() != 'field_filter_by_vocabulary')) {
+    return;
+  }
+  /** @var \Drupal\group\Entity\GroupInterface $vsite */
+  $vsite = \Drupal::service('vsite.context_manager')->getActiveVsite();
+  $terms = $vsite->getContentEntities('group_entity:taxonomy_term');
+  foreach ($terms as $term) {
+    $list[$term->bundle()] = $term->name->value;
+  }
+  $vocabularies = Drupal::service('cp.taxonomy.helper')->searchAllowedVocabulariesByType('node:news');
+  ksm($vocabularies);
 }
