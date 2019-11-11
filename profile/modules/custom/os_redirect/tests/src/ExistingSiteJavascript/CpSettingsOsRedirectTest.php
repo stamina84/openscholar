@@ -8,7 +8,7 @@ use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTest
  * Tests os_redirect module.
  *
  * @group functional-javascript
- * @group redirect-settings
+ * @group redirect
  */
 class CpSettingsOsRedirectTest extends OsExistingSiteJavascriptTestBase {
 
@@ -24,11 +24,9 @@ class CpSettingsOsRedirectTest extends OsExistingSiteJavascriptTestBase {
    */
   public function setUp() {
     parent::setUp();
-    echo "setUp starting...\n";
     $this->groupAdmin = $this->createUser();
     $this->addGroupAdmin($this->groupAdmin, $this->group);
     $this->drupalLogin($this->groupAdmin);
-    echo "logged in...\n";
   }
 
   /**
@@ -37,29 +35,22 @@ class CpSettingsOsRedirectTest extends OsExistingSiteJavascriptTestBase {
   public function testCpSettingsFormSave(): void {
     $web_assert = $this->assertSession();
 
-    echo "visit settings...\n";
     $this->visitViaVsite("cp/settings/global-settings/redirect_maximum", $this->group);
     $web_assert->statusCodeEquals(200);
 
     $page = $this->getCurrentPage();
-    echo "set field...\n";
     $page->fillField('maximum_number', 20);
-    echo "press button...\n";
     $page->pressButton('Save configuration');
-    echo "get page...\n";
     $page = $this->getCurrentPage();
     $check_html_value = $page->hasContent('The configuration options have been saved.');
     $this->assertTrue($check_html_value, 'The form did not write the correct message.');
 
     // Check form elements load default values.
-    echo "visit again...\n";
     $this->visitViaVsite("cp/settings/global-settings/redirect_maximum", $this->group);
     $web_assert->statusCodeEquals(200);
     $page = $this->getCurrentPage();
-    echo "find field...\n";
     $field_value = $page->findField('maximum_number')->getValue();
     $this->assertSame('20', $field_value, 'Form is not loaded maximum_number value.');
-    echo "finish";
   }
 
 }
