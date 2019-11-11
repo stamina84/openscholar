@@ -1,0 +1,67 @@
+uuid: 39eb5f88-eff0-4007-867a-f13abf73bccd
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.follow_me
+    - field.field.block_content.follow_me.field_add_link_to_rss_feed_page
+    - field.field.block_content.follow_me.field_display_social
+    - field.field.block_content.follow_me.field_links
+    - field.field.block_content.follow_me.field_widget_title
+  module:
+    - content_moderation
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.follow_me.default
+targetEntityType: block_content
+bundle: follow_me
+mode: default
+content:
+  field_add_link_to_rss_feed_page:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_display_social:
+    type: options_buttons
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_widget_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 3
+    settings: {  }
+    region: content
+    third_party_settings: {  }
+hidden:
+  field_links: true
