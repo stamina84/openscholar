@@ -52,6 +52,6 @@ mailchimpWidget:
       css/mailchimp.form.css: {}
 slideshowWidget:
   js:
-    js/os_widgets.slideshow.js: {}
+    js/os_widgets.slideshow.js: { weight: -1 }
   dependencies:
     - slick/slick.load
