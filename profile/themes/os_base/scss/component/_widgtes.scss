@@ -133,7 +133,7 @@
         &.publication-types {
           a {
             &:before {
-              background-position: -20px -850px;
+              background-position: -20px -910px;
             }
           }
         }
@@ -197,6 +197,13 @@
           a {
             &:before {
               background-position: -20px -20px;
+            }
+          }
+        }
+        &.slideshow {
+          a {
+            &:before {
+              background-position: -20px -849px;
             }
           }
         }
