@@ -29,7 +29,7 @@ class DataverseSearchBoxForm extends FormBase {
       '#placeholder' => $this->t('Search My Dataverse'),
       '#attributes' => [
     // TODO set actual css class.
-        'class' => ['todo-for-JS'],
+        'class' => ['dataverse_search_input'],
         'title' => $this->t('Enter the terms you wish to search for.'),
       ],
       // TODO: Maybe allow empty strings too?
@@ -44,9 +44,14 @@ class DataverseSearchBoxForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Search'),
       '#button_type' => 'primary',
+      '#attributes' => [
+        'class' => ['dataverse_search_button'],
+      ],
     ];
     // TODO: Maybe just add regular button with JS attached, not an action
     // button of type submit?
+    $form['#attached']['library'][] = 'os_widgets/dataverse_search_box';
+
     return $form;
   }
 
