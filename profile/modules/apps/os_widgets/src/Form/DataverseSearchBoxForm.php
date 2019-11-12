@@ -20,15 +20,13 @@ class DataverseSearchBoxForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, $params = []) {
     $form['search'] = [
       '#type' => 'search',
       '#title' => $this->t('Search'),
       '#title_display' => 'invisible',
-    // TODO customize placeholder.
-      '#placeholder' => $this->t('Search My Dataverse'),
+      '#placeholder' => isset($params['dataverse_search_box_placeholder']) ? $params['dataverse_search_box_placeholder'] : $this->t('Search My Dataverse'),
       '#attributes' => [
-    // TODO set actual css class.
         'class' => ['dataverse_search_input'],
         'title' => $this->t('Enter the terms you wish to search for.'),
       ],
@@ -51,6 +49,8 @@ class DataverseSearchBoxForm extends FormBase {
     // TODO: Maybe just add regular button with JS attached, not an action
     // button of type submit?
     $form['#attached']['library'][] = 'os_widgets/dataverse_search_box';
+    $form['#attached']['drupalSettings']['osWidgets']['dataverseIdentifier'] = $params['dataverse_identifier'];
+    $form['#attached']['drupalSettings']['osWidgets']['dataverseSearchBaseurl'] = $params['dataverse_search_baseurl'];
 
     return $form;
   }
