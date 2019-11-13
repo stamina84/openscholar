@@ -354,6 +354,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
     case 'block_content_list_of_posts_edit_form':
 
       $form['#attached']['library'][] = 'os_widgets/widgetForm';
+      $form['#attached']['library'][] = 'os_widgets/lopwidgetForm';
 
       // Remove None option from select lists.
       array_shift($form['field_content_type']['widget']['#options']);
@@ -367,6 +368,9 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
         '#group' => 'content',
         '#weight' => 2,
         '#open' => TRUE,
+        '#attributes' => [
+          'class' => ['lop-details'],
+        ],
       ];
       $form['field_content_type']['#group'] = 'content_details';
       $form['field_display_style']['#group'] = 'content_details';
