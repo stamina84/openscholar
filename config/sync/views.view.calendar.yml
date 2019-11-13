@@ -75,7 +75,7 @@ display:
           times:
             default_date: false
             date: ''
-          left: 'today month listWeek listDay listUpcoming listPast'
+          left: 'month listWeek listDay listUpcoming listPast'
           center: 'prev title next'
           right: ''
           timeformat: 'h:mm A'

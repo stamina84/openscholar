@@ -4,28 +4,29 @@
 
   Drupal.behaviors.osWidgetsSlideshow = {
     attach: function (context) {
-      /*$('.block--type-slideshow .slick')
-        .once('os_widgets_slick_breakpoint')
-        .on('breakpoint', Drupal.osWidgetsSlideshow.onSlickBreakpointChange);*/
       $('.block--type-slideshow .slick')
-        .once('os_widgets_slick_setPosition')
-        .on('setPosition', Drupal.osWidgetsSlideshow.onSlickSetPosition);
+        .once('os_widgets_slick_breakpoint')
+        .on('breakpoint', Drupal.osWidgetsSlideshow.onSlickBreakpointChange);
+      $('.block--type-slideshow .slick')
+        .once('os_widgets_slick_init')
+        .on('init', Drupal.osWidgetsSlideshow.onSlickInit);
     }
   };
 
   Drupal.osWidgetsSlideshow = Drupal.osWidgetsSlideshow || {};
 
-  /*Drupal.osWidgetsSlideshow.onSlickBreakpointChange = function(event, slick, breakpoint) {
-    console.log(event);
-    console.log(slick);
+  Drupal.osWidgetsSlideshow.onSlickBreakpointChange = function(event, slick, breakpoint) {
     Drupal.osWidgetsSlideshow.replaceResponsiveImage(event, slick, breakpoint, $(this));
-  };*/
+  };
 
-  Drupal.osWidgetsSlideshow.onSlickSetPosition = function(event, slick) {
+  Drupal.osWidgetsSlideshow.onSlickInit = function(event, slick) {
     Drupal.osWidgetsSlideshow.replaceResponsiveImage(event, slick, slick.activeBreakpoint, $(this));
   };
 
   Drupal.osWidgetsSlideshow.replaceResponsiveImage = function(event, slick, breakpoint, element) {
+    if (breakpoint === null) {
+      return;
+    }
     $.each(element.find('.paragraph'), function () {
       breakpoint_uri = $(this).data('breakpoint_uri');
       if (!(breakpoint in breakpoint_uri)) {

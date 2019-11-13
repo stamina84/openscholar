@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Template for Tabs widget.
+ *
+ * - contents: referenced block contents.
+ * - activeClass: Temporary variable in order to set the 'active'
+ *   tab for the first tab.
+ *
+ */
+#}
+<ul class="nav nav-tabs" role="tablist">
+  {% for key,content in contents %}
+    {% set activeClass = ''  %}
+    {% if loop.first %}
+      {% set activeClass = 'active'  %}
+    {% endif %}
+      <li class="{{ activeClass }}" role="presentation"><a data-toggle="tab" href="#tab-{{ key }}" aria-controls="tab-{{ key }}">{{ content.field_widget_title }}</a></li>
+  {% endfor %}
+</ul>
+<div class="tab-content">
+  {% for key, content in contents %}
+    {% set activeClass = ''  %}
+    {% if loop.first %}
+      {% set activeClass = 'active'  %}
+    {% endif %}
+    <div id="tab-{{ key }}" class="tab-pane {{ activeClass }}" role="tabpanel">
+      {{ content }}
+    </div>
+  {% endfor %}
+</div>
+
