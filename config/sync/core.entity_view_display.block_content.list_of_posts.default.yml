@@ -10,6 +10,7 @@ dependencies:
     - field.field.block_content.list_of_posts.field_filter_by_vocabulary
     - field.field.block_content.list_of_posts.field_number_of_items_to_display
     - field.field.block_content.list_of_posts.field_publication_types
+    - field.field.block_content.list_of_posts.field_show
     - field.field.block_content.list_of_posts.field_show_more_link
     - field.field.block_content.list_of_posts.field_show_pager
     - field.field.block_content.list_of_posts.field_sorted_by
@@ -49,6 +50,7 @@ hidden:
   field_filter_by_vocabulary: true
   field_number_of_items_to_display: true
   field_publication_types: true
+  field_show: true
   field_show_more_link: true
   field_show_pager: true
   field_sorted_by: true
