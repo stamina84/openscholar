@@ -1,0 +1,47 @@
+uuid: 401871e9-e2f6-4922-8aaa-27751de284b5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.follow_me_links.field_domain
+    - field.field.paragraph.follow_me_links.field_link_title
+    - field.field.paragraph.follow_me_links.field_weight
+    - paragraphs.paragraphs_type.follow_me_links
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: paragraph.follow_me_links.default
+targetEntityType: paragraph
+bundle: follow_me_links
+mode: default
+content:
+  field_domain:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_link_title:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_weight:
+    weight: 2
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+hidden:
+  created: true
+  status: true

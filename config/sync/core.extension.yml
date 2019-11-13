@@ -122,7 +122,6 @@ module:
   os_redirect_to_source: 0
   os_rest: 0
   os_search_solr: 0
-  os_slideshow: 0
   os_software: 0
   os_taxonomy: 0
   os_theme_preview: 0
@@ -151,6 +150,7 @@ module:
   shorten: 0
   slick: 0
   slick_media: 0
+  slick_paragraphs: 0
   slick_ui: 0
   styleguide: 0
   system: 0

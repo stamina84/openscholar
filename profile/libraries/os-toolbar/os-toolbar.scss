@@ -8,6 +8,7 @@ $color-gray: #565656;
 $color-black: #000;
 
 .toolbar {
+  font-family: Arial, Helvetica, sans-serif;
   .toolbar-tray-vertical {
     background-color: $color-white;
     border-right: 1px solid $color-light-gray;
@@ -49,7 +50,7 @@ $color-black: #000;
           background-image: none;
         }
     }
-    /**** toolbar icons ****/
+  //toolbar icons
     .toolbar-icon-menu:before {
       background: url(images/hamburger.png) 0 center no-repeat;
     }
@@ -123,7 +124,7 @@ $color-black: #000;
         }
       }
     }
-    /**** accessibility fixes ****/
+  //accessibility fixes
     .visually-hidden {
       color: $color_black;
     }

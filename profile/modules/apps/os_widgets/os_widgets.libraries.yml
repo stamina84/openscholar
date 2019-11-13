@@ -35,7 +35,23 @@ accordionWidget:
 randomWidget:
   js:
     js/os_widgets.random.js: {}
+followMeWidget:
+  css:
+    base:
+      /libraries/rrssb-plus/css/rrssb.css: {}
+      /libraries/rrssb-plus/css/rrssb.buttons.css: {}
+      css/os_widgets.followme.css: {}
+  js:
+    js/os_widgets.follow_me.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.tabledrag
 mailchimpWidget:
   css:
     component:
       css/mailchimp.form.css: {}
+slideshowWidget:
+  js:
+    js/os_widgets.slideshow.js: { weight: -1 }
+  dependencies:
+    - slick/slick.load

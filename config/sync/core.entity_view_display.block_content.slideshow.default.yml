@@ -1,0 +1,65 @@
+uuid: 3544ea47-52e4-46ce-8c30-74ceb6ca12ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slideshow
+    - field.field.block_content.slideshow.body
+    - field.field.block_content.slideshow.field_slideshow
+    - field.field.block_content.slideshow.field_slideshow_layout
+    - field.field.block_content.slideshow.field_widget_title
+  module:
+    - layout_builder
+    - slick_paragraphs
+    - text
+third_party_settings:
+  layout_builder:
+    sections: {  }
+id: block_content.slideshow.default
+targetEntityType: block_content
+bundle: slideshow
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_slideshow:
+    weight: 1
+    label: above
+    settings:
+      optionset: os_slideshow
+      skin: ''
+      view_mode: slideshow_standard
+      cache: 0
+      current_view_mode: default
+      override: false
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      skin_arrows: ''
+      skin_dots: ''
+      style: ''
+    third_party_settings: {  }
+    type: slick_paragraphs_vanilla
+    region: content
+  field_widget_title:
+    weight: 2
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_slideshow_layout: true
+  langcode: true
