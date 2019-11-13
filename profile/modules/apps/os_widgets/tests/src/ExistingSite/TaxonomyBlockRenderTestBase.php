@@ -7,7 +7,7 @@ use Drupal\block_content\BlockContentInterface;
 /**
  * Class TaxonomyBlockRenderTestBase.
  */
-class TaxonomyBlockRenderTestBase extends OsWidgetsExistingSiteTestBase {
+abstract class TaxonomyBlockRenderTestBase extends OsWidgetsExistingSiteTestBase {
 
   /**
    * The object we're testing.
