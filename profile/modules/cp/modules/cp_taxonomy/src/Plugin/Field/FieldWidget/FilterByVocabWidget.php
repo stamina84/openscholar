@@ -100,6 +100,7 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
       '#open' => TRUE,
     ];
 
+    $list = [];
     foreach ($list as $vid => $vocab) {
       $visibility_settings = [];
       $visibility_settings[] = ['value' => 'all'];
@@ -117,7 +118,6 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
         '#title' => $vocab->get('name'),
         '#multiple' => TRUE,
         '#chosen' => TRUE,
-        '#size' => 10,
         '#options' => $this->getVocabTerms($vid),
         '#default_value' => $this->getVocabTerms($vid, $items, TRUE) ?? '',
         '#states' => [
@@ -134,6 +134,7 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
    * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+    $tids = [];
     $values = $values['terms_container'];
     foreach ($values as $value) {
       if ($value) {
@@ -159,7 +160,8 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getVocabTerms($vid, FieldItemListInterface $items = NULL, $defaults = FALSE): array {
+  protected function getVocabTerms($vid, FieldItemListInterface $items = NULL, $defaults = FALSE): ?array {
+    $data = [];
     $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid);
     foreach ($terms as $term) {
       $data[$term->tid] = $term->name;

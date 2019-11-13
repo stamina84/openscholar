@@ -3,10 +3,14 @@
 namespace Drupal\os_widgets\Plugin\OsWidgets;
 
 use Drupal\bibcite_entity\Entity\Reference;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\Entity\Node;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
+use Drupal\vsite\Plugin\VsiteContextManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class FeaturedPostsWidget.
@@ -17,6 +21,35 @@ use Drupal\os_widgets\OsWidgetsInterface;
  * )
  */
 class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
+
+  /**
+   * Vsite context manager.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManagerInterface
+   */
+  private $vsiteContextManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, VsiteContextManagerInterface $vsite_context_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $connection);
+    $this->vsiteContextManager = $vsite_context_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager'),
+      $container->get('database'),
+      $container->get('vsite.context_manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -42,10 +75,10 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $node_view_builder = $this->entityTypeManager->getViewBuilder('node');
     $publication_view_builder = $this->entityTypeManager->getViewBuilder('bibcite_reference');
     /** @var \Drupal\group\Entity\GroupInterface $vsite */
-    $vsite = \Drupal::service('vsite.context_manager')->getActiveVsite();
-    $pubTypes = \Drupal::entityTypeManager()->getStorage('bibcite_reference_type')->loadMultiple();
+    $vsite = $this->vsiteContextManager->getActiveVsite();
+    $pubTypes = $this->entityTypeManager->getStorage('bibcite_reference_type')->loadMultiple();
     $pubTypes = array_keys($pubTypes);
-    $nodeTypes = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
+    $nodeTypes = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
     $nodeTypes = array_keys($nodeTypes);
     // Get nodes and publications for current vsite.
     if ($contentType === 'all') {
