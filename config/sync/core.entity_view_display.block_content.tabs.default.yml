@@ -1,0 +1,29 @@
+uuid: 95ff1257-b66a-4ad4-b08c-04e60dceb7d7
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.tabs
+    - field.field.block_content.tabs.field_widget_collection
+    - field.field.block_content.tabs.field_widget_title
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    sections: {  }
+id: block_content.tabs.default
+targetEntityType: block_content
+bundle: tabs
+mode: default
+content:
+  field_widget_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_widget_collection: true
+  langcode: true

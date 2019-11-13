@@ -191,6 +191,11 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'pager' => '',
       ],
     ],
+    'os_widgets_tabs' => [
+      'variables' => [
+        'contents' => [],
+      ],
+    ],
   ];
 }
 
