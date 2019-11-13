@@ -159,7 +159,7 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getVocabTerms($vid, FieldItemListInterface $items = [], $defaults = FALSE): array {
+  protected function getVocabTerms($vid, FieldItemListInterface $items = NULL, $defaults = FALSE): array {
     $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid);
     foreach ($terms as $term) {
       $data[$term->tid] = $term->name;
