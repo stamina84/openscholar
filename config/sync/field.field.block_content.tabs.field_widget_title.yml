@@ -1,0 +1,19 @@
+uuid: 177b9d4c-6f5e-4b57-87a7-fc68c8e211c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.tabs
+    - field.storage.block_content.field_widget_title
+id: block_content.tabs.field_widget_title
+field_name: field_widget_title
+entity_type: block_content
+bundle: tabs
+label: 'Widget Title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
