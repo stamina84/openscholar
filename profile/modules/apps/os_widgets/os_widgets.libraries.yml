@@ -58,3 +58,7 @@ slideshowWidget:
 widgetForm:
   js:
     js/os_widgets_form.js: {}
+lopwidgetForm:
+  css:
+    component:
+      css/os_widgets.lop.css: {}

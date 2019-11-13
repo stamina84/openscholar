@@ -1,0 +1,9 @@
+.lop-details .panel-body>div {
+  display: inline-block;
+}
+
+.block-list-of-posts-form .chosen-container {
+  border: 0;
+  padding: 0;
+  box-shadow: 0;
+}
