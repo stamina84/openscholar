@@ -5,4 +5,4 @@ dependencies: {  }
 id: dataverse_search_box
 label: 'Dataverse Search Box'
 revision: 1
-description: "TODO description for dataverse search box widget\t\r\n"
+description: "This widget places a Dataverse Search From on the page, in which a user can enter a search query and be taken to a Dataverse search page in a new tab. \t\r\n"

@@ -30,13 +30,10 @@ class DataverseSearchBoxForm extends FormBase {
         'class' => ['dataverse_search_input'],
         'title' => $this->t('Enter the terms you wish to search for.'),
       ],
-      // TODO: Maybe allow empty strings too?
       '#required' => TRUE,
     ];
     // TODO: Discuss with team how bootstrap's `Plugin/Process/Search.php`
     // forces a visible description.
-    // TODO: Learn from team what to do about long file paths in comments
-    // in reference to coding standards.
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = [
       '#type' => 'submit',
@@ -46,8 +43,7 @@ class DataverseSearchBoxForm extends FormBase {
         'class' => ['dataverse_search_button'],
       ],
     ];
-    // TODO: Maybe just add regular button with JS attached, not an action
-    // button of type submit?
+    // TODO: Talk to team, learn how we automatically get search icon here.
     $form['#attached']['library'][] = 'os_widgets/dataverse_search_box';
     $form['#attached']['drupalSettings']['osWidgets']['dataverseIdentifier'] = $params['dataverse_identifier'];
     $form['#attached']['drupalSettings']['osWidgets']['dataverseSearchBaseurl'] = $params['dataverse_search_baseurl'];
