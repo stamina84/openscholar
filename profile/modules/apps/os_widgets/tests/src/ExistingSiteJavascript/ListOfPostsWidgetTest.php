@@ -33,7 +33,6 @@ class ListOfPostsWidgetTest extends OsExistingSiteJavascriptTestBase {
    * @var \Drupal\user\Entity\User|false
    */
   protected $user;
-
   protected $widgetName;
 
   /**
