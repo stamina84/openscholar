@@ -6,7 +6,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\os_widgets\OsWidgetsContextInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\vsite\Plugin\AppManagerInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 
@@ -32,6 +34,20 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
   private $vsiteContextManager;
 
   /**
+   * Os Widget context interface.
+   *
+   * @var \Drupal\os_widgets\OsWidgetsContextInterface
+   */
+  protected $osWidgetsContext;
+
+  /**
+   * Vsite app manager.
+   *
+   * @var \Drupal\vsite\Plugin\AppManagerInterface
+   */
+  protected $vsiteAppManager;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -42,12 +58,18 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
    *   Entity Type Bundle Info Interface.
    * @param \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager
    *   Vsite context manager.
+   * @param \Drupal\os_widgets\OsWidgetsContextInterface $os_widgets_context
+   *   OS Widgets Context.
+   * @param \Drupal\vsite\Plugin\AppManagerInterface $vsite_app_manager
+   *   Vsite App Manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, VsiteContextManagerInterface $vsite_context_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, VsiteContextManagerInterface $vsite_context_manager, OsWidgetsContextInterface $os_widgets_context, AppManagerInterface $vsite_app_manager) {
     $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->vsiteContextManager = $vsite_context_manager;
+    $this->osWidgetsContext = $os_widgets_context;
+    $this->vsiteAppManager = $vsite_app_manager;
   }
 
   /**
@@ -221,6 +243,28 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
     }
 
     return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundlesFromApps() : array {
+    $bundles = [];
+    $active_apps = $this->osWidgetsContext->getActiveApps();
+    if (empty($active_apps)) {
+      return $bundles;
+    }
+    foreach ($active_apps as $app) {
+      $plugin_definition = $this->vsiteAppManager->getDefinition($app);
+      if (empty($plugin_definition['bundle'])) {
+        $bundles[] = $plugin_definition['entityType'] . ':*';
+        continue;
+      }
+      foreach ($plugin_definition['bundle'] as $bundle) {
+        $bundles[] = $plugin_definition['entityType'] . ':' . $bundle;
+      }
+    }
+    return $bundles;
   }
 
 }

@@ -110,4 +110,12 @@ interface CpTaxonomyHelperInterface {
    */
   public function getOptionsTree(string $vid): array;
 
+  /**
+   * Get all bundles from active apps.
+   *
+   * @return array
+   *   Return array of bundle keys.
+   */
+  public function getBundlesFromApps(): array;
+
 }
