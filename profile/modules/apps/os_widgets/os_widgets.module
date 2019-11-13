@@ -359,6 +359,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       array_shift($form['field_content_type']['widget']['#options']);
       array_shift($form['field_display_style']['widget']['#options']);
       array_shift($form['field_sorted_by']['widget']['#options']);
+      array_shift($form['field_show']['widget']['#options']);
 
       // Content details group.
       $form['content_details'] = [
@@ -371,10 +372,16 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['field_content_type']['#group'] = 'content_details';
       $form['field_display_style']['#group'] = 'content_details';
       $form['field_sorted_by']['#group'] = 'content_details';
+      $form['field_show']['#group'] = 'content_details';
 
       $form['field_url_for_the_more_link']['#states'] = [
         'visible' => [
           ':input[name="field_show_more_link[value]"]' => ['checked' => TRUE],
+        ],
+      ];
+      $form['field_show']['#states'] = [
+        'visible' => [
+          ':input[name="field_content_type"]' => ['value' => 'events'],
         ],
       ];
 

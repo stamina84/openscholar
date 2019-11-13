@@ -3,6 +3,7 @@
 namespace Drupal\os_widgets\Plugin\OsWidgets;
 
 use Drupal\bibcite_entity\Entity\Reference;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\Entity\Node;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
@@ -25,6 +26,11 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $displayStyle = $block_content->field_display_style->value;
     $sortedBy = $block_content->field_sorted_by->value;
     $numItems = $block_content->field_number_of_items_to_display->value;
+    $showEvents = $block_content->field_show->value;
+    $publicationValues = $block_content->get('field_publication_types')->getValue();
+    foreach ($publicationValues as $type) {
+      $publicationTypes[] = $type['value'];
+    }
     $terms = $block_content->get('field_filter_by_vocabulary')->getValue();
     $tids = [];
     foreach ($terms as $tid) {
@@ -41,6 +47,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $pubTypes = array_keys($pubTypes);
     $nodeTypes = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
     $nodeTypes = array_keys($nodeTypes);
+    // Get nodes and publications for current vsite.
     if ($contentType === 'all') {
       foreach ($nodeTypes as $type) {
         $nodes[] = $vsite->getContentEntities("group_node:$type");
@@ -54,6 +61,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $nodes[] = $vsite->getContentEntities("group_node:$contentType");
     }
 
+    // Extract entity ids from nodes and publications.
     $nodes = array_filter($nodes);
     foreach ($nodes as $nodeArr) {
       foreach ($nodeArr as $node) {
@@ -67,6 +75,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
     }
 
+    // Filter nodes based on vsite nids and taxonomy terms.
     $nodesList = $nodesList ?? '';
     /** @var \Drupal\Core\Database\Query\SelectInterface $nodeQuery */
     $nodeQuery = $this->connection->select('node_field_data', 'nfd');
@@ -77,6 +86,34 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $nodeQuery->condition('field_taxonomy_terms_target_id', $tids, 'IN');
     }
 
+    // If events node is selected then check if only upcoming or past events
+    // need to be shown.
+    if ($contentType === 'events' && $showEvents !== 'all_events') {
+      $eventQuery = clone $nodeQuery;
+      $currentTime = new DrupalDateTime('now');
+      $eventQuery->join('node__field_recurring_date', 'nfrd', 'nfd.nid = nfrd.entity_id');
+      $eventQuery->addField('nfrd', 'field_recurring_date_value');
+      $eventResults = $eventQuery->execute()->fetchAll();
+      foreach ($eventResults as $eventNode) {
+        $dateTime = new DrupalDateTime($eventNode->field_recurring_date_value);
+        switch ($showEvents) {
+          case 'upcoming_events':
+            if ($currentTime >= $dateTime) {
+              continue;
+            }
+            $to_keep[] = $eventNode->nid;
+            break;
+
+          case 'past_events':
+            if ($currentTime >= $dateTime) {
+              $to_keep[] = $eventNode->nid;
+            }
+        }
+      }
+      $nodeQuery->condition('nid', $to_keep, 'IN');
+    }
+
+    // Filter publications based on vsite nids and taxonomy terms.
     $pubList = $pubList ?? '';
     /** @var \Drupal\Core\Database\Query\SelectInterface $pubQuery */
     $pubQuery = $this->connection->select('bibcite_reference', 'pub');
@@ -87,6 +124,13 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $pubQuery->condition('field_taxonomy_terms_target_id', $tids, 'IN');
     }
 
+    // Check if only certain publication types are to be displayed.
+    if ($contentType === 'publication') {
+      $pubQuery->condition('type', $publicationTypes, 'IN');
+    }
+
+    // Union of two queries so that we can sort them as one. Join will not work
+    // in our case.
     $query = $nodeQuery->union($pubQuery, 'UNION ALL');
 
     if ($sortedBy === 'sort_newest') {
@@ -105,6 +149,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
     $results = $query->execute()->fetchAll();
 
+    // Prepare render array for the template based on type and display styles.
     $renderItems = [];
     foreach ($results as $item) {
       if (in_array($item->type, $nodeTypes)) {
@@ -126,8 +171,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
     }
 
+    // Pager for the widget.
     $total_count = count($renderItems);
-
     $page = pager_find_page();
     $offset = $numItems * $page;
     $renderItems = array_slice($renderItems, $offset, $numItems);
