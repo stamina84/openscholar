@@ -111,6 +111,7 @@ class ListOfPostsWidgetTest extends OsExistingSiteJavascriptTestBase {
     foreach ($blocks as $block) {
       $block->delete();
     }
+    parent::tearDown();
   }
 
 }
