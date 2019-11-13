@@ -171,16 +171,15 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $terms_count = $this->getTermsCount($terms);
 
     $keep_term_tids = [];
+    $taxonomy_term_storage = $this->entityTypeManager->getStorage("taxonomy_term");
     // We need to check parent visibility.
     // Mark tids to handle what term can be deleted.
     foreach ($terms_count as $tid => $count) {
       // Get all parents include current one.
-      $parents = $this->entityTypeManager->getStorage("taxonomy_term")->loadAllParents($tid);
-      if (!empty($parents)) {
-        foreach ($parents as $parent) {
-          // Store current tid and all parent tids.
-          $keep_term_tids[$parent->id()] = $parent->id();
-        }
+      $parents = $taxonomy_term_storage->loadAllParents($tid);
+      foreach ($parents as $parent) {
+        // Store current tid and all parent tids.
+        $keep_term_tids[$parent->id()] = $parent->id();
       }
     }
 
