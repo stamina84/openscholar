@@ -165,23 +165,22 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
       }
     }
 
-    // Place styles and scripts.
+    // Place styles.
     $styles = $this->getStyles();
-    if ($styles) {
-      $styles_location = "file://$custom_theme_directory_path/" . self::CUSTOM_THEMES_STYLE_LOCATION;
-      $status = touch($styles_location);
+    $styles_location = "file://$custom_theme_directory_path/" . self::CUSTOM_THEMES_STYLE_LOCATION;
+    $status = touch($styles_location);
 
-      if (!$status) {
-        throw new CustomThemeException(t('Unable to place the styles. Please contact the site administrator for support.'));
-      }
-
-      $status = file_unmanaged_save_data($styles, $styles_location, FILE_EXISTS_REPLACE);
-
-      if (!$status) {
-        throw new CustomThemeException(t('Unable to place the styles. Please contact the site administrator for support.'));
-      }
+    if (!$status) {
+      throw new CustomThemeException(t('Unable to place the styles. Please contact the site administrator for support.'));
     }
 
+    $status = file_unmanaged_save_data($styles, $styles_location, FILE_EXISTS_REPLACE);
+
+    if (!$status) {
+      throw new CustomThemeException(t('Unable to place the styles. Please contact the site administrator for support.'));
+    }
+
+    // Place scripts.
     $scripts = $this->getScripts();
     $scripts_location = "file://$custom_theme_directory_path/" . self::CUSTOM_THEMES_SCRIPT_LOCATION;
     $status = touch($scripts_location);
