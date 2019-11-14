@@ -1,23 +1,23 @@
-.os-follow-me-form .rrssb {
+.os-widgets-follow-me-form .rrssb {
   float: left;
   margin-top: -5px;
 }
-.os-follow-me-form .remove {
+.os-widgets-follow-me-form .remove {
   margin-left: 3px;
 }
-.os-follow-me-form .table {
+.os-widgets-follow-me-form .table {
   border: 1px solid #bebfb9;
 }
-.os-follow-me-form table.table tbody tr {
+.os-widgets-follow-me-form table.table tbody tr {
   background: #fff;
 }
-.os-follow-me-form .table tbody tr td {
+.os-widgets-follow-me-form .table tbody tr td {
   border: 0;
 }
-.os-follow-me-form fieldset {
+.os-widgets-follow-me-form fieldset {
   background: none;
 }
-.os-follow-me-form fieldset legend {
+.os-widgets-follow-me-form fieldset legend {
   margin: 0;
 }
 /***** follow me block *****/
