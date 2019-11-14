@@ -44,6 +44,13 @@ class VsiteCurrentFilterTest extends VsiteExistingSiteTestBase {
   protected $vsiteContextManager;
 
   /**
+   * Test sub group.
+   *
+   * @var \Drupal\group\Entity\GroupInterface
+   */
+  protected $subGroup1;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -82,7 +89,7 @@ class VsiteCurrentFilterTest extends VsiteExistingSiteTestBase {
     ]);
     $this->groupedNode->save();
 
-    $subGroup1 = $this->createGroup([
+    $this->subGroup1 = $this->createGroup([
       'type' => 'subsite_test',
       'label' => 'SubSite01',
       'field_parent_site' => $this->group->id(),
@@ -111,7 +118,7 @@ class VsiteCurrentFilterTest extends VsiteExistingSiteTestBase {
 
     $this->group->addContent($this->groupedNode, $plugin->getContentPluginId());
     $otherGroup->addContent($otherNode, $plugin->getContentPluginId());
-    $subGroup1->addContent($subNode1, $plugin->getContentPluginId());
+    $this->subGroup1->addContent($subNode1, $plugin->getContentPluginId());
     $subGroup2->addContent($subNode2, $plugin->getContentPluginId());
 
     $this->vsiteContextManager = $this->container->get('vsite.context_manager');
@@ -166,7 +173,7 @@ class VsiteCurrentFilterTest extends VsiteExistingSiteTestBase {
    * Check that only the subsite grouped post shows up in a vsite.
    */
   public function testSubsiteContentVsite() {
-    $this->vsiteContextManager->activateVsite($this->group);
+    $this->vsiteContextManager->activateVsite($this->subGroup1);
 
     $results = $this->getViewResults();
 
