@@ -66,6 +66,9 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
           self::CUSTOM_THEMES_STYLE_LOCATION => [],
         ],
       ],
+      'js' => [
+        self::CUSTOM_THEMES_SCRIPT_LOCATION => [],
+      ],
     ],
   ];
 
@@ -180,29 +183,21 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
     }
 
     $scripts = $this->getScripts();
-    if ($scripts) {
-      $scripts_location = "file://$custom_theme_directory_path/" . self::CUSTOM_THEMES_SCRIPT_LOCATION;
-      $status = touch($scripts_location);
+    $scripts_location = "file://$custom_theme_directory_path/" . self::CUSTOM_THEMES_SCRIPT_LOCATION;
+    $status = touch($scripts_location);
 
-      if (!$status) {
-        throw new CustomThemeException(t('Unable to place the scripts. Please contact the site administrator for support.'));
-      }
+    if (!$status) {
+      throw new CustomThemeException(t('Unable to place the scripts. Please contact the site administrator for support.'));
+    }
 
-      $status = file_unmanaged_save_data($scripts, $scripts_location, FILE_EXISTS_REPLACE);
+    $status = file_unmanaged_save_data($scripts, $scripts_location, FILE_EXISTS_REPLACE);
 
-      if (!$status) {
-        throw new CustomThemeException(t('Unable to place the scripts. Please contact the site administrator for support.'));
-      }
+    if (!$status) {
+      throw new CustomThemeException(t('Unable to place the scripts. Please contact the site administrator for support.'));
     }
 
     // Place theme.libraries.yml file.
     $libraries_info = self::CUSTOM_THEME_LIBRARIES_INFO_TEMPLATE;
-
-    if ($scripts) {
-      $libraries_info[self::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE]['js'] = [
-        self::CUSTOM_THEMES_SCRIPT_LOCATION => [],
-      ];
-    }
 
     $libraries_info_location = "file://$custom_theme_directory_path/{$this->id()}.libraries.yml";
     $status = touch($libraries_info_location);
@@ -254,7 +249,7 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
     }
 
     // Make sure the browser assets are flushed. Otherwise, user will see the
-    // old styles.
+    // old styles and scripts.
     if ($update) {
       _drupal_flush_css_js();
     }
