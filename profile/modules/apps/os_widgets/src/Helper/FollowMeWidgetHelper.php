@@ -71,10 +71,6 @@ final class FollowMeWidgetHelper {
       'title' => 'soundcloud',
       'domain' => 'soundcloud.com',
     ],
-    'googleplus' => [
-      'title' => 'Google+',
-      'domain' => 'plus.google.com',
-    ],
   ];
 
 }
