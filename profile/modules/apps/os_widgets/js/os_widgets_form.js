@@ -34,7 +34,12 @@
           $uriField.val('/' + pubMapping[bundle]);
         }
         else {
-          $uriField.val('/' + nodeMapping[bundle]);
+          if (typeof nodeMapping[bundle] === 'undefined' ) {
+            $uriField.val('');
+          }
+          else {
+            $uriField.val('/' + nodeMapping[bundle]);
+          }
         }
       });
     }

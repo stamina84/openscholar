@@ -194,6 +194,7 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'posts' => '',
         'pager' => '',
         'more_link' => '',
+        'attributes' => [],
       ],
     ],
     'os_widgets_tabs' => [
@@ -426,7 +427,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['field_number_of_items_to_display']['#group'] = 'pager_details';
       $uri_title = $form['field_url_for_the_more_link']['widget']['0']['#title'];
       $form['field_url_for_the_more_link']['widget']['0']['#title'] = '';
-      $form['field_url_for_the_more_link']['widget']['0']['uri']['#title'] = t("@title", ['@title' => $uri_title]);
+      $form['field_url_for_the_more_link']['widget']['0']['uri']['#title'] = Html::escape($uri_title);
       $form['field_url_for_the_more_link']['widget']['0']['uri']['#description'] = '';
       $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
       $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');

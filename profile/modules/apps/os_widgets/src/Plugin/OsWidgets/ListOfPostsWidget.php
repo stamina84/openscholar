@@ -217,6 +217,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $build['rendered_posts']['#theme'] = 'os_widgets_list_of_posts';
     $build['rendered_posts']['#posts'] = $renderItems;
     $build['rendered_posts']['#more_link'] = $moreLink;
+    $build['rendered_posts']['#attributes'] = ['id' => 'list-of-posts'];
     $build['rendered_posts']['#pager'] = [
       '#type' => 'pager',
     ];

@@ -1,4 +1,15 @@
-<ul id="list-of-posts">
+{#
+/**
+ * @file
+ * Theme implementation for List of Post widget.
+ *
+ * Available variables:
+ * - posts: A list of posts to display.
+ * - pager : Pager for the content.
+ * - more_link : More display link.
+#}
+
+<ul {{ attributes }}>
 {% for post in posts %}
  <li>{{ post }}</li>
 {% endfor %}
