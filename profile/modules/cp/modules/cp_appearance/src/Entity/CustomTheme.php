@@ -258,7 +258,9 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
       _drupal_flush_css_js();
     }
 
-    $this->makeCustomThemesInstallable();
+    /** @var \Drupal\cp_appearance\CustomThemeInstallerInterface $custom_theme_installer */
+    $custom_theme_installer = \Drupal::service('cp_appearance.custom_theme_installer');
+    $custom_theme_installer->makeInstallable();
   }
 
   /**
@@ -346,26 +348,6 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
   public function calculateDependencies() {
     parent::calculateDependencies();
     $this->addDependency('theme', $this->getBaseTheme());
-  }
-
-  /**
-   * Makes sure custom themes are available for installation.
-   *
-   * @throws \Drupal\cp_appearance\Entity\CustomThemeException
-   */
-  protected function makeCustomThemesInstallable(): void {
-    $absolute_installable_path = DRUPAL_ROOT . '/' . self::CUSTOM_THEMES_DRUPAL_LOCATION;
-    // Warning is intentionally suppressed, as it is known that the symlink will
-    // not exist during initiation.
-    $link_target = @readlink($absolute_installable_path);
-
-    if (!$link_target) {
-      $status = symlink(self::ABSOLUTE_CUSTOM_THEMES_LOCATION, $absolute_installable_path);
-
-      if (!$status) {
-        throw new CustomThemeException(t('Unable to make the custom theme installable. Please contact the site administrator for support.'));
-      }
-    }
   }
 
 }
