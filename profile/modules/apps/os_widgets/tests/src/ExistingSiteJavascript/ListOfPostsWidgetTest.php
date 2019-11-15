@@ -67,7 +67,7 @@ class ListOfPostsWidgetTest extends OsExistingSiteJavascriptTestBase {
     $show_field = $page->findField('field_show');
     $this->assertFalse($show_field->isVisible());
     $field_content_type = $page->findField('field_content_type');
-    $field_content_type->selectOption('event');
+    $field_content_type->selectOption('events');
     $this->assertTrue($show_field->isVisible());
 
     // Check when Publication is selected then only publication types field is
