@@ -6,7 +6,10 @@
  */
 
 use Drupal\block_content\BlockContentForm;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\os_widgets\Plugin\DisplayVariant\PlaceBlockPageVariant;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -358,8 +361,9 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
     case 'block_content_list_of_posts_form':
     case 'block_content_list_of_posts_edit_form':
 
-      $form['#attached']['library'][] = 'os_widgets/widgetForm';
       $form['#attached']['library'][] = 'os_widgets/lopwidgetForm';
+      $mappings = \Drupal::service('vsite.form_delete_destination')::REDIRECT_MAPPING;
+      $form['#attached']['drupalSettings']['pathMapping'] = $mappings;
 
       // Remove None option from select lists.
       array_shift($form['field_content_type']['widget']['#options']);
@@ -884,4 +888,66 @@ function os_widgets_field_mailing_list_options() {
   }
 
   return $options;
+}
+
+/**
+ * Set dynamic allowed values for the fields.
+ *
+ * @param \Drupal\field\Entity\FieldStorageConfig $definition
+ *   The field definition.
+ * @param \Drupal\Core\Entity\ContentEntityInterface|null $entity
+ *   The entity being created if applicable.
+ * @param bool $cacheable
+ *   Boolean indicating if the results are cacheable.
+ *
+ * @return array
+ *   An array of possible key and value options.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ *
+ * @see options_allowed_values()
+ */
+function os_widgets_allowed_values_function(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+  $field_name = $definition->get('field_name');
+
+  $options['all'] = t('Select All');
+  if ($field_name === 'field_publication_types') {
+    $publication_types = \Drupal::entityTypeManager()->getStorage('bibcite_reference_type')->loadMultiple();
+    foreach ($publication_types as $id => $type) {
+      $options[$id] = $type->get('label');
+    }
+  }
+  return $options;
+}
+
+/**
+ * Sets the default value for the fields.
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   The entity being created.
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
+ *   The field definition.
+ *
+ * @return array
+ *   An array of default value keys with each entry keyed with the “value” key.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ *
+ * @see \Drupal\Core\Field\FieldConfigBase::getDefaultValue()
+ */
+function os_widgets_default_value_function(ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
+  $field_name = $definition->getName();
+
+  $default[] = ['value' => 'all'];
+  if ($field_name === 'field_publication_types') {
+    $publication_types = \Drupal::entityTypeManager()->getStorage('bibcite_reference_type')->loadMultiple();
+    foreach ($publication_types as $type) {
+      $default[] = [
+        'value' => $type->id(),
+      ];
+    }
+  }
+  return $default;
 }

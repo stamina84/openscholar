@@ -89,6 +89,7 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
     $title = $element['#title'];
     $description = $element['#description'];
     $vocabularies = Vocabulary::loadMultiple();
+    $list = [];
     foreach ($vocabularies as $vid => $vocabulary) {
       $list[$vid] = $vocabulary;
     }
@@ -100,7 +101,6 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
       '#open' => TRUE,
     ];
 
-    $list = [];
     foreach ($list as $vid => $vocab) {
       $visibility_settings = [];
       $visibility_settings[] = ['value' => 'all'];
@@ -118,8 +118,8 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
         '#title' => $vocab->get('name'),
         '#multiple' => TRUE,
         '#chosen' => TRUE,
-        '#options' => $this->getVocabTerms($vid),
-        '#default_value' => $this->getVocabTerms($vid, $items, TRUE) ?? '',
+        '#options' => $this->getTermsByField($vid),
+        '#default_value' => $this->getTermsByField($vid, $items, TRUE) ?? '',
         '#states' => [
           'visible' => [
             'select[name="field_content_type"]' => [$visibility_settings],
@@ -131,21 +131,43 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
   }
 
   /**
-   * {@inheritdoc}
+   * Get values from split up fields to be merged into one and also filter out.
+   *
+   * Invalid insertions based on content type.
+   *
+   * @param array $values
+   *   Widget element values.
+   * @param array $form
+   *   Entire form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Entire form state.
+   *
+   * @return array
+   *   Merged return values.
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     $tids = [];
+    $contentType = $form_state->getValue('field_content_type')[0]['value'];
+    if ($contentType !== 'all') {
+      $contentType = $contentType === 'publication' ? 'bibcite_reference:*' : "node:$contentType";
+      $allowedVocabList = $this->taxonomyHelper->searchAllowedVocabulariesByType($contentType);
+    }
+    $allowedVocabList = array_values($allowedVocabList);
+
     $values = $values['terms_container'];
-    foreach ($values as $value) {
-      if ($value) {
-        $tids[] = array_keys($value);
+    foreach ($values as $vid => $value) {
+      if ($allowedVocabList && !in_array($vid, $allowedVocabList)) {
+        continue;
       }
+      $tids[] = array_values($value);
     }
     return array_merge(...$tids);
   }
 
   /**
-   * Gets terms based on vid.
+   * Gets terms based on vid for the filter by vocabulary field or return.
+   *
+   * Previously saved data.
    *
    * @param string $vid
    *   Vocabulary id.
@@ -160,7 +182,7 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getVocabTerms($vid, FieldItemListInterface $items = NULL, $defaults = FALSE): ?array {
+  protected function getTermsByField($vid, FieldItemListInterface $items = NULL, $defaults = FALSE): ?array {
     $data = [];
     $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid);
     foreach ($terms as $term) {

@@ -55,10 +55,9 @@ slideshowWidget:
     js/os_widgets.slideshow.js: { weight: -1 }
   dependencies:
     - slick/slick.load
-widgetForm:
+lopwidgetForm:
   js:
     js/os_widgets_form.js: {}
-lopwidgetForm:
   css:
     component:
       css/os_widgets.lop.css: {}
