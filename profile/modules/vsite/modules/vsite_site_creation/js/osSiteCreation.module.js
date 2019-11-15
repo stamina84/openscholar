@@ -393,7 +393,9 @@
       minWidth: 900,
       minHeight: 300,
       modal: true,
-      position: 'center',
+      draggable: false,
+      resizable: false,
+      position: { my: "center", at: "center", of: window },
       dialogClass: 'site-creation-form'
     };
 

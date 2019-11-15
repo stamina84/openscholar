@@ -18,13 +18,59 @@ use Drupal\os_app_access\AppAccessLevels;
 class AppAccessTest extends AppAccessTestBase {
 
   /**
-   * @covers ::access
-   * @covers ::cacheAccessResult
+   * Test group admin.
    *
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @var \Drupal\Core\Session\AccountInterface
    */
-  public function testAccess(): void {
-    // Setup.
+  protected $groupAdmin;
+
+  /**
+   * Test group member.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $groupMember;
+
+  /**
+   * Test non group member.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $nonGroupMember;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $this->groupAdmin = $this->createUser();
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
+    $this->groupMember = $this->createUser();
+    $this->group->addMember($this->groupMember);
+    $this->nonGroupMember = $this->createUser();
+  }
+
+  /**
+   * @covers ::access
+   */
+  public function testAccessPublicAccessLevel(): void {
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+    /** @var \Drupal\Core\Config\Config $mut_app_access_config */
+    $mut_app_access_config = $config_factory->getEditable('os_app_access.access');
+    /** @var \Drupal\os_app_access\Access\AppAccess $os_app_access_service */
+    $os_app_access_service = $this->container->get('os_app_access.app_access');
+
+    // Public access level test.
+    $mut_app_access_config->set('blog', AppAccessLevels::PUBLIC)->save();
+    $this->assertInstanceOf(AccessResultNeutral::class, $os_app_access_service->access($this->nonGroupMember, 'blog'));
+  }
+
+  /**
+   * @covers ::access
+   */
+  public function testAccessPrivateAccessLevelGroupMember(): void {
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
     $config_factory = $this->container->get('config.factory');
     /** @var \Drupal\Core\Config\Config $mut_app_access_config */
@@ -33,43 +79,75 @@ class AppAccessTest extends AppAccessTestBase {
     $os_app_access_service = $this->container->get('os_app_access.app_access');
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
     $vsite_context_manager = $this->container->get('vsite.context_manager');
-    $group_admin = $this->createUser();
-    $this->addGroupAdmin($group_admin, $this->group);
-    $group_member = $this->createUser();
-    $this->group->addMember($group_member);
-    $non_group_member = $this->createUser();
 
-    // Tests.
-    // Public access level test.
-    $mut_app_access_config->set('blog', AppAccessLevels::PUBLIC)->save();
-    $this->assertInstanceOf(AccessResultNeutral::class, $os_app_access_service->access($group_admin, 'blog'));
-
-    // Private access level test.
     $mut_app_access_config->set('blog', AppAccessLevels::PRIVATE)->save();
-    $this->assertInstanceOf(AccessResultNeutral::class, $os_app_access_service->access($group_admin, 'blog'));
+    $this->assertInstanceOf(AccessResultNeutral::class, $os_app_access_service->access($this->groupMember, 'blog'));
 
     $vsite_context_manager->activateVsite($this->group);
-    $this->assertInstanceOf(AccessResultAllowed::class, $os_app_access_service->access($group_admin, 'blog'));
+    $this->assertInstanceOf(AccessResultAllowed::class, $os_app_access_service->access($this->groupMember, 'blog'));
+  }
 
-    $this->assertInstanceOf(AccessResultForbidden::class, $os_app_access_service->access($non_group_member, 'blog'));
+  /**
+   * @covers ::access
+   */
+  public function testAccessPrivateAccessLevelNonGroupMember(): void {
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+    /** @var \Drupal\Core\Config\Config $mut_app_access_config */
+    $mut_app_access_config = $config_factory->getEditable('os_app_access.access');
+    /** @var \Drupal\os_app_access\Access\AppAccess $os_app_access_service */
+    $os_app_access_service = $this->container->get('os_app_access.app_access');
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
 
-    // Disabled access level test.
+    $mut_app_access_config->set('blog', AppAccessLevels::PRIVATE)->save();
+    $this->assertInstanceOf(AccessResultNeutral::class, $os_app_access_service->access($this->nonGroupMember, 'blog'));
+
+    $vsite_context_manager->activateVsite($this->group);
+    $this->assertInstanceOf(AccessResultForbidden::class, $os_app_access_service->access($this->nonGroupMember, 'blog'));
+  }
+
+  /**
+   * @covers ::access
+   */
+  public function testAccessDisabledAccessLevel(): void {
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+    /** @var \Drupal\Core\Config\Config $mut_app_access_config */
+    $mut_app_access_config = $config_factory->getEditable('os_app_access.access');
+    /** @var \Drupal\os_app_access\Access\AppAccess $os_app_access_service */
+    $os_app_access_service = $this->container->get('os_app_access.app_access');
+
     $mut_app_access_config->set('blog', AppAccessLevels::DISABLED)->save();
-    $this->assertInstanceOf(AccessResultForbidden::class, $os_app_access_service->access($group_admin, 'blog'));
+    $this->assertInstanceOf(AccessResultForbidden::class, $os_app_access_service->access($this->groupAdmin, 'blog'));
 
-    // Test whether access result is cached.
-    $this->assertContains('app:access_changed', $os_app_access_service->access($group_admin, 'blog')->getCacheTags());
-    $this->assertContains('vsite', $os_app_access_service->access($group_admin, 'blog')->getCacheContexts());
+  }
+
+  /**
+   * @covers ::cacheAccessResult
+   */
+  public function testCachedAccess(): void {
+    /** @var \Drupal\os_app_access\Access\AppAccess $os_app_access_service */
+    $os_app_access_service = $this->container->get('os_app_access.app_access');
+
+    $this->assertContains('app:access_changed', $os_app_access_service->access($this->nonGroupMember, 'blog')->getCacheTags());
+    $this->assertContains('vsite', $os_app_access_service->access($this->nonGroupMember, 'blog')->getCacheContexts());
   }
 
   /**
    * @covers ::accessFromRouteMatch
-   * @covers ::cacheAccessResult
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testAccessFromRouteMatch(): void {
-    // Setup.
+  public function testAccessFromRouteMatchInactiveVsite(): void {
+    /** @var \Drupal\os_app_access\Access\AppAccess $os_app_access_service */
+    $os_app_access_service = $this->container->get('os_app_access.app_access');
+
+    $this->assertInstanceOf(AccessResultNeutral::class, $os_app_access_service->accessFromRouteMatch($this->groupAdmin, 'blog'));
+  }
+
+  /**
+   * @covers ::accessFromRouteMatch
+   */
+  public function testAccessFromRouteMatchDisabledAccessLevel(): void {
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
     $config_factory = $this->container->get('config.factory');
     /** @var \Drupal\Core\Config\Config $mut_app_access_config */
@@ -78,35 +156,78 @@ class AppAccessTest extends AppAccessTestBase {
     $os_app_access_service = $this->container->get('os_app_access.app_access');
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
     $vsite_context_manager = $this->container->get('vsite.context_manager');
-    $group_admin = $this->createUser();
-    $this->addGroupAdmin($group_admin, $this->group);
-    $group_member = $this->createUser();
-    $this->group->addMember($group_member);
-    $non_group_member = $this->createUser();
-
-    // Tests.
-    // Test inactive vsite.
-    $this->assertInstanceOf(AccessResultNeutral::class, $os_app_access_service->accessFromRouteMatch($group_admin, 'blog'));
-
     $vsite_context_manager->activateVsite($this->group);
 
-    // Test disabled access level.
     $mut_app_access_config->set('blog', AppAccessLevels::DISABLED)->save();
-    $this->assertInstanceOf(AccessResultForbidden::class, $os_app_access_service->accessFromRouteMatch($group_admin, 'blog'));
+    $this->assertInstanceOf(AccessResultForbidden::class, $os_app_access_service->accessFromRouteMatch($this->groupAdmin, 'blog'));
+  }
 
-    // Test public access level.
+  /**
+   * @covers ::accessFromRouteMatch
+   */
+  public function testAccessFromRouteMatchPublicAccessLevel(): void {
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+    /** @var \Drupal\Core\Config\Config $mut_app_access_config */
+    $mut_app_access_config = $config_factory->getEditable('os_app_access.access');
+    /** @var \Drupal\os_app_access\Access\AppAccess $os_app_access_service */
+    $os_app_access_service = $this->container->get('os_app_access.app_access');
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $vsite_context_manager->activateVsite($this->group);
+
     $mut_app_access_config->set('blog', AppAccessLevels::PUBLIC)->save();
-    $this->assertInstanceOf(AccessResultAllowed::class, $os_app_access_service->accessFromRouteMatch($group_member, 'blog'));
+    $this->assertInstanceOf(AccessResultAllowed::class, $os_app_access_service->accessFromRouteMatch($this->nonGroupMember, 'blog'));
+  }
 
-    // Test private access level.
+  /**
+   * @covers ::accessFromRouteMatch
+   */
+  public function testAccessFromRouteMatchPrivateAccessLevelGroupMember(): void {
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+    /** @var \Drupal\Core\Config\Config $mut_app_access_config */
+    $mut_app_access_config = $config_factory->getEditable('os_app_access.access');
+    /** @var \Drupal\os_app_access\Access\AppAccess $os_app_access_service */
+    $os_app_access_service = $this->container->get('os_app_access.app_access');
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $vsite_context_manager->activateVsite($this->group);
+
     $mut_app_access_config->set('blog', AppAccessLevels::PRIVATE)->save();
-    $this->assertInstanceOf(AccessResultAllowed::class, $os_app_access_service->accessFromRouteMatch($group_admin, 'blog'));
-    $this->assertInstanceOf(AccessResultAllowed::class, $os_app_access_service->accessFromRouteMatch($group_member, 'blog'));
-    $this->assertInstanceOf(AccessResultForbidden::class, $os_app_access_service->accessFromRouteMatch($non_group_member, 'blog'));
+    $this->assertInstanceOf(AccessResultAllowed::class, $os_app_access_service->accessFromRouteMatch($this->groupMember, 'blog'));
+  }
 
-    // Test whether access result is cached.
-    $this->assertContains('app:access_changed', $os_app_access_service->accessFromRouteMatch($group_member, 'blog')->getCacheTags());
-    $this->assertContains('vsite', $os_app_access_service->accessFromRouteMatch($group_member, 'blog')->getCacheContexts());
+  /**
+   * @covers ::accessFromRouteMatch
+   */
+  public function testAccessFromRouteMatchPrivateAccessLevelNonGroupMember(): void {
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+    /** @var \Drupal\Core\Config\Config $mut_app_access_config */
+    $mut_app_access_config = $config_factory->getEditable('os_app_access.access');
+    /** @var \Drupal\os_app_access\Access\AppAccess $os_app_access_service */
+    $os_app_access_service = $this->container->get('os_app_access.app_access');
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $vsite_context_manager->activateVsite($this->group);
+
+    $mut_app_access_config->set('blog', AppAccessLevels::PRIVATE)->save();
+    $this->assertInstanceOf(AccessResultForbidden::class, $os_app_access_service->accessFromRouteMatch($this->nonGroupMember, 'blog'));
+  }
+
+  /**
+   * @covers ::cacheAccessResult
+   */
+  public function testCachedAccessFromRouteMatch(): void {
+    /** @var \Drupal\os_app_access\Access\AppAccess $os_app_access_service */
+    $os_app_access_service = $this->container->get('os_app_access.app_access');
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $vsite_context_manager->activateVsite($this->group);
+
+    $this->assertContains('app:access_changed', $os_app_access_service->accessFromRouteMatch($this->nonGroupMember, 'blog')->getCacheTags());
+    $this->assertContains('vsite', $os_app_access_service->accessFromRouteMatch($this->nonGroupMember, 'blog')->getCacheContexts());
   }
 
 }
