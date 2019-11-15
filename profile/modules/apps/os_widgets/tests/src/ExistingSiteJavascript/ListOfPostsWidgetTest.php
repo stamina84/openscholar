@@ -67,7 +67,7 @@ class ListOfPostsWidgetTest extends OsExistingSiteJavascriptTestBase {
     $show_field = $page->findField('field_show');
     $this->assertFalse($show_field->isVisible());
     $field_content_type = $page->findField('field_content_type');
-    $field_content_type->selectOption('events');
+    $field_content_type->selectOption('event');
     $this->assertTrue($show_field->isVisible());
 
     // Check when Publication is selected then only publication types field is
@@ -75,7 +75,7 @@ class ListOfPostsWidgetTest extends OsExistingSiteJavascriptTestBase {
     $publication_type_fields = $page->find('css', '.field--name-field-publication-types');
     $this->assertFalse($publication_type_fields->isVisible());
     $field_content_type = $page->findField('field_content_type');
-    $field_content_type->selectOption('publication');
+    $field_content_type->selectOption('publications');
     $this->assertTrue($publication_type_fields->isVisible());
 
     // Check when Show More is checked then only uri and title fields are

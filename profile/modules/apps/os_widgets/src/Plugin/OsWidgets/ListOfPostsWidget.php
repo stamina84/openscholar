@@ -60,6 +60,9 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $sortedBy = $block_content->field_sorted_by->value;
     $numItems = $block_content->field_number_of_items_to_display->value;
     $showEvents = $block_content->field_show->value;
+    $moreLinkStatus = $block_content->field_show_more_link->value;
+    $moreLink = $moreLinkStatus ? $block_content->get('field_url_for_the_more_link')->view(['label' => 'hidden']) : '';
+
     $publicationValues = $block_content->get('field_publication_types')->getValue();
     foreach ($publicationValues as $type) {
       $publicationTypes[] = $type['value'];
@@ -87,7 +90,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
       $publications[] = $vsite->getContentEntities("group_entity:bibcite_reference");
     }
-    elseif ($contentType === 'publication') {
+    elseif ($contentType === 'publications') {
       $publications[] = $vsite->getContentEntities("group_entity:bibcite_reference");
     }
     else {
@@ -213,6 +216,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     pager_default_initialize($total_count, $numItems);
     $build['rendered_posts']['#theme'] = 'os_widgets_list_of_posts';
     $build['rendered_posts']['#posts'] = $renderItems;
+    $build['rendered_posts']['#more_link'] = $moreLink;
     $build['rendered_posts']['#pager'] = [
       '#type' => 'pager',
     ];

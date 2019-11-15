@@ -10,47 +10,8 @@ field_name: field_content_type
 entity_type: block_content
 type: list_string
 settings:
-  allowed_values:
-    -
-      value: all
-      label: All
-    -
-      value: blog
-      label: Blog
-    -
-      value: class
-      label: Class
-    -
-      value: events
-      label: Events
-    -
-      value: faq
-      label: FAQ
-    -
-      value: link
-      label: Link
-    -
-      value: news
-      label: News
-    -
-      value: page
-      label: Page
-    -
-      value: person
-      label: Person
-    -
-      value: presentation
-      label: Presentation
-    -
-      value: publication
-      label: Publication
-    -
-      value: software_project
-      label: 'Software Project'
-    -
-      value: software_release
-      label: 'Software Release'
-  allowed_values_function: ''
+  allowed_values: {  }
+  allowed_values_function: os_widgets_allowed_values_lop_form
 module: options
 locked: false
 cardinality: 1

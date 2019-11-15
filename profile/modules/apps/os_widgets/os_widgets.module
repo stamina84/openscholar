@@ -24,6 +24,7 @@ use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\os_widgets\Helper\FollowMeWidgetHelper;
 use Drupal\Component\Utility\Html;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_library_info_alter().
@@ -192,6 +193,7 @@ function os_widgets_theme($existing, $type, $theme, $path) {
       'variables' => [
         'posts' => '',
         'pager' => '',
+        'more_link' => '',
       ],
     ],
     'os_widgets_tabs' => [
@@ -405,7 +407,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['field_publication_types']['#group'] = 'content_details';
       $form['field_publication_types']['#states'] = [
         'visible' => [
-          'select[name="field_content_type"]' => ['value' => 'publication'],
+          'select[name="field_content_type"]' => ['value' => 'publications'],
         ],
       ];
       $form['field_publication_types']['#collapsible'] = TRUE;
@@ -426,6 +428,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['field_url_for_the_more_link']['widget']['0']['#title'] = '';
       $form['field_url_for_the_more_link']['widget']['0']['uri']['#title'] = t("@title", ['@title' => $uri_title]);
       $form['field_url_for_the_more_link']['widget']['0']['uri']['#description'] = '';
+      $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
       $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
   }
 }
@@ -908,14 +911,24 @@ function os_widgets_field_mailing_list_options() {
  *
  * @see options_allowed_values()
  */
-function os_widgets_allowed_values_function(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+function os_widgets_allowed_values_lop_form(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
   $field_name = $definition->get('field_name');
 
   $options['all'] = t('Select All');
   if ($field_name === 'field_publication_types') {
+    $options['all'] = t('Select All');
     $publication_types = \Drupal::entityTypeManager()->getStorage('bibcite_reference_type')->loadMultiple();
     foreach ($publication_types as $id => $type) {
       $options[$id] = $type->get('label');
+    }
+  }
+  elseif ($field_name === 'field_content_type') {
+    $options['all'] = t('All');
+    $apps = \Drupal::service('os_app_access.user_app_loader')->getAppsForUser(User::load(Drupal::currentUser()->id()));
+    foreach ($apps as $app) {
+      $title = $app['title']->__toString();
+      $bundle = $app['entityType'] === 'bibcite_reference' ? 'publications' : $app['bundle'][0];
+      $options[$bundle] = $title;
     }
   }
   return $options;
@@ -937,7 +950,7 @@ function os_widgets_allowed_values_function(FieldStorageConfig $definition, Cont
  *
  * @see \Drupal\Core\Field\FieldConfigBase::getDefaultValue()
  */
-function os_widgets_default_value_function(ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
+function os_widgets_default_values_lop_form(ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
   $field_name = $definition->getName();
 
   $default[] = ['value' => 'all'];

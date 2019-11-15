@@ -16,6 +16,6 @@ description: ''
 required: false
 translatable: false
 default_value: {  }
-default_value_callback: os_widgets_default_value_function
+default_value_callback: os_widgets_default_values_lop_form
 settings: {  }
 field_type: list_string
