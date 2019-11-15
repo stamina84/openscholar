@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.group.personal.field_parent_site
+    - field.field.group.personal.field_preset
     - field.field.group.personal.field_privacy_level
     - field.field.group.personal.field_site_description
     - field.field.group.personal.field_site_logo

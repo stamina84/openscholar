@@ -10,7 +10,7 @@ use Drupal\os_widgets\Plugin\OsWidgets\TwitterFeedWidget;
  * Class TwitterFeedBlockRenderTest.
  *
  * @group kernel
- * @group widgets
+ * @group widgets-2
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\TwitterFeedWidget
  */
 class TwitterFeedBlockRenderTest extends OsWidgetsExistingSiteTestBase {

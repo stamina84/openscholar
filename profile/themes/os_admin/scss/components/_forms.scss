@@ -18,6 +18,9 @@ textarea.form-textarea {
   border-top-color: $color-gray6;
   min-height: 3em;
 }
+select {
+  min-height: 3.3em;
+}
 input.form-file {
   padding-top: .65em;
 }

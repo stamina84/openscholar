@@ -1,0 +1,8 @@
+uuid: aff06866-a4d2-49d0-a107-0a6562e92be9
+langcode: en
+status: true
+dependencies: {  }
+id: tabs
+label: Tabs
+revision: 1
+description: 'Tabs widget type to embed widgets in a tabbed format.'

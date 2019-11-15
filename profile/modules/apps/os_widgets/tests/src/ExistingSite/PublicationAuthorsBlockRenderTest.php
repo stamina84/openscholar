@@ -9,7 +9,7 @@ use Drupal\group\Entity\Group;
  * Class PublicationAuthorsWidget.
  *
  * @group kernel
- * @group widgets
+ * @group widgets-1
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\PublicationAuthorsWidget
  */
 class PublicationAuthorsBlockRenderTest extends OsWidgetsExistingSiteTestBase {

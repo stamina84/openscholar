@@ -1,0 +1,22 @@
+vsite.type.*:
+  type: config_entity
+  label: Group Preset
+  mapping:
+    id:
+      type: string
+      label: Id
+    label:
+      type: label
+      label: Label
+    description:
+      type: string
+      label: Description
+    applicableTo:
+      type: sequence
+      label: Applies To
+      sequence:
+        type: string
+        label: Applicable Vsites
+    creationTasks:
+      type: string
+      label: Creation Tasks

@@ -1,0 +1,10 @@
+uuid: fc71e021-6567-433f-bdf4-f664402b4186
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.slideshow_standard
+label: 'Slideshow standard'
+targetEntityType: paragraph
+cache: true

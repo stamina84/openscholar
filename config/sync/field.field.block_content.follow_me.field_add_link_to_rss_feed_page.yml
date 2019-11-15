@@ -1,0 +1,23 @@
+uuid: ddd206d2-2f0b-4169-872d-d83aecc6adad
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.follow_me
+    - field.storage.block_content.field_add_link_to_rss_feed_page
+id: block_content.follow_me.field_add_link_to_rss_feed_page
+field_name: field_add_link_to_rss_feed_page
+entity_type: block_content
+bundle: follow_me
+label: 'Add link to RSS Feed page to list.'
+description: 'Adds a link the page where users can select an RSS feed to subscribe to.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

@@ -8,6 +8,7 @@ dependencies:
     - field.field.bibcite_reference.patent.field_attach_files
     - field.field.bibcite_reference.patent.field_extra_fields
     - field.field.bibcite_reference.patent.field_publication_image
+    - field.field.bibcite_reference.patent.field_redirect_to_source
     - field.field.bibcite_reference.patent.field_taxonomy_terms
   enforced:
     config:

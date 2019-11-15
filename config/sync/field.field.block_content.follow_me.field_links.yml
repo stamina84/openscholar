@@ -1,0 +1,40 @@
+uuid: 53ae5697-01e9-496d-9906-29a6ceb6c425
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.follow_me
+    - field.storage.block_content.field_links
+    - paragraphs.paragraphs_type.follow_me_links
+  module:
+    - entity_reference_revisions
+id: block_content.follow_me.field_links
+field_name: field_links
+entity_type: block_content
+bundle: follow_me
+label: links
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      follow_me_links: follow_me_links
+    target_bundles_drag_drop:
+      class_material:
+        weight: 5
+        enabled: false
+      follow_me_links:
+        enabled: true
+        weight: 6
+      slideshow:
+        weight: 7
+        enabled: false
+      test:
+        weight: 8
+        enabled: false
+field_type: entity_reference_revisions

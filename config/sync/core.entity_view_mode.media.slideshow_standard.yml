@@ -1,0 +1,10 @@
+uuid: 2330e2a3-f9fe-40bf-9d24-b086bd9decd0
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.slideshow_standard
+label: 'Slideshow standard'
+targetEntityType: media
+cache: true

@@ -9,7 +9,7 @@ third_party_settings:
   crop:
     image_field: null
 id: remote
-label: 'Remote video'
+label: Remote
 description: ''
 source: video_embed_field
 queue_thumbnail_downloads: false
