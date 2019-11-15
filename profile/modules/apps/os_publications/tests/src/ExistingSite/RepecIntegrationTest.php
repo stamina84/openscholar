@@ -9,7 +9,7 @@ use Drupal\os_publications\CitationDistributionModes;
  * RepecIntegrationTest.
  *
  * @group kernel
- * @group publications
+ * @group publications-2
  */
 class RepecIntegrationTest extends TestBase {
 

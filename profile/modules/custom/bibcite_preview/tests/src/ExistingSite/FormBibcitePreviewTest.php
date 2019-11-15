@@ -10,7 +10,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Tests bibcite_preview module selector form.
  *
  * @group kernel
- * @group publications
+ * @group publications-2
  */
 class FormBibcitePreviewTest extends OsExistingSiteTestBase {
 
