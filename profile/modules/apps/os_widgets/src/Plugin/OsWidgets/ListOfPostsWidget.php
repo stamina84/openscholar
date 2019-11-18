@@ -5,11 +5,11 @@ namespace Drupal\os_widgets\Plugin\OsWidgets;
 use Drupal\bibcite_entity\Entity\Reference;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
+use Drupal\os_widgets\Helper\ListOfPostsWidgetHelper;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
@@ -33,11 +33,19 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
   private $vsiteContextManager;
 
   /**
+   * LoP helper service.
+   *
+   * @var \Drupal\os_widgets\Helper\ListOfPostsWidgetHelper
+   */
+  protected $lopHelper;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, VsiteContextManagerInterface $vsite_context_manager) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, VsiteContextManagerInterface $vsite_context_manager, ListOfPostsWidgetHelper $lop_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $connection);
     $this->vsiteContextManager = $vsite_context_manager;
+    $this->lopHelper = $lop_helper;
   }
 
   /**
@@ -50,7 +58,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->get('database'),
-      $container->get('vsite.context_manager')
+      $container->get('vsite.context_manager'),
+      $container->get('os_widgets.lop_helper')
     );
   }
 
@@ -59,18 +68,18 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
    */
   public function buildBlock(&$build, $block_content) {
 
-    $contentType = $block_content->field_content_type->value;
+    $fieldData['contentType'] = $block_content->field_content_type->value;
     $displayStyle = $block_content->field_display_style->value;
-    $sortedBy = $block_content->field_sorted_by->value;
+    $fieldData['sortedBy'] = $block_content->field_sorted_by->value;
     $numItems = $block_content->field_number_of_items_to_display->value;
-    $showEvents = $block_content->field_show->value;
+    $fieldData['showEvents'] = $block_content->field_show->value;
     $moreLinkStatus = $block_content->field_show_more_link->value;
     $moreLink = $moreLinkStatus ? $block_content->get('field_url_for_the_more_link')->view(['label' => 'hidden']) : '';
     $showPager = $block_content->field_show_pager->value;
 
     $publicationValues = $block_content->get('field_publication_types')->getValue();
     foreach ($publicationValues as $type) {
-      $publicationTypes[] = $type['value'];
+      $fieldData['publicationTypes'][] = $type['value'];
     }
     $terms = $block_content->get('field_filter_by_vocabulary')->getValue();
     $tids = [];
@@ -79,6 +88,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     }
     $nodes = [];
     $publications = [];
+    $nodesList = NULL;
+    $pubList = NULL;
 
     $node_view_builder = $this->entityTypeManager->getViewBuilder('node');
     $publication_view_builder = $this->entityTypeManager->getViewBuilder('bibcite_reference');
@@ -89,16 +100,17 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $nodeTypes = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
     $nodeTypes = array_keys($nodeTypes);
     // Get nodes and publications for current vsite.
-    if ($contentType === 'all') {
+    if ($fieldData['contentType'] === 'all') {
       foreach ($nodeTypes as $type) {
         $nodes[] = $vsite->getContentEntities("group_node:$type");
       }
       $publications[] = $vsite->getContentEntities("group_entity:bibcite_reference");
     }
-    elseif ($contentType === 'publications') {
+    elseif ($fieldData['contentType'] === 'publications') {
       $publications[] = $vsite->getContentEntities("group_entity:bibcite_reference");
     }
     else {
+      $contentType = $fieldData['contentType'];
       $nodes[] = $vsite->getContentEntities("group_node:$contentType");
     }
 
@@ -116,79 +128,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
     }
 
-    // Filter nodes based on vsite nids and taxonomy terms.
-    $nodesList = $nodesList ?? '';
-    /** @var \Drupal\Core\Database\Query\SelectInterface $nodeQuery */
-    $nodeQuery = $this->connection->select('node_field_data', 'nfd');
-    $nodeQuery->fields('nfd', ['nid', 'created', 'title', 'type'])
-      ->condition('nid', $nodesList, 'IN');
-    if ($tids) {
-      $nodeQuery->join('node__field_taxonomy_terms', 'nftm', 'nfd.nid = nftm.entity_id');
-      $nodeQuery->condition('field_taxonomy_terms_target_id', $tids, 'IN');
-    }
-
-    // If events node is selected then check if only upcoming or past events
-    // need to be shown.
-    if ($contentType === 'events' && $showEvents !== 'all_events') {
-      $eventQuery = clone $nodeQuery;
-      $currentTime = new DrupalDateTime('now');
-      $eventQuery->join('node__field_recurring_date', 'nfrd', 'nfd.nid = nfrd.entity_id');
-      $eventQuery->addField('nfrd', 'field_recurring_date_value');
-      $eventResults = $eventQuery->execute()->fetchAll();
-      foreach ($eventResults as $eventNode) {
-        $dateTime = new DrupalDateTime($eventNode->field_recurring_date_value);
-        switch ($showEvents) {
-          case 'upcoming_events':
-            if ($currentTime >= $dateTime) {
-              continue;
-            }
-            $to_keep[] = $eventNode->nid;
-            break;
-
-          case 'past_events':
-            if ($currentTime >= $dateTime) {
-              $to_keep[] = $eventNode->nid;
-            }
-        }
-      }
-      $nodeQuery->condition('nid', $to_keep, 'IN');
-    }
-
-    // Filter publications based on vsite nids and taxonomy terms.
-    $pubList = $pubList ?? '';
-    /** @var \Drupal\Core\Database\Query\SelectInterface $pubQuery */
-    $pubQuery = $this->connection->select('bibcite_reference', 'pub');
-    $pubQuery->fields('pub', ['id', 'created', 'title', 'type'])
-      ->condition('id', $pubList, 'IN');
-    if ($tids) {
-      $pubQuery->join('bibcite_reference__field_taxonomy_terms', 'pubftm', 'pub.id = pubftm.entity_id');
-      $pubQuery->condition('field_taxonomy_terms_target_id', $tids, 'IN');
-    }
-
-    // Check if only certain publication types are to be displayed.
-    if ($contentType === 'publication') {
-      $pubQuery->condition('type', $publicationTypes, 'IN');
-    }
-
-    // Union of two queries so that we can sort them as one. Join will not work
-    // in our case.
-    $query = $nodeQuery->union($pubQuery, 'UNION ALL');
-
-    if ($sortedBy === 'sort_newest') {
-      $query->orderBy('created', 'DESC');
-    }
-    elseif ($sortedBy === 'sort_oldest') {
-      $query->orderBy('created', 'ASC');
-    }
-    elseif ($sortedBy === 'sort_alpha') {
-      $query->orderBy('title', 'ASC');
-    }
-    elseif ($sortedBy === 'sort_random') {
-      $pubQuery->addExpression('RAND()', 'random_field');
-      $query->orderRandom();
-    }
-
-    $results = $query->execute()->fetchAll();
+    // Get the results which we need to load finally.
+    $results = $this->lopHelper->getResults($fieldData, $nodesList, $pubList, $tids);
 
     // Prepare render array for the template based on type and display styles.
     $renderItems = [];

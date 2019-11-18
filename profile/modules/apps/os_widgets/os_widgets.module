@@ -936,7 +936,7 @@ function os_widgets_allowed_values_lop_form(FieldStorageConfig $definition, Cont
     $options['all'] = t('All');
     $apps = \Drupal::service('os_app_access.user_app_loader')->getAppsForUser(User::load(Drupal::currentUser()->id()));
     foreach ($apps as $app) {
-      $title = $app['title']->__toString();
+      $title = (string) $app['title'];
       $bundle = $app['entityType'] === 'bibcite_reference' ? 'publications' : $app['bundle'][0];
       $options[$bundle] = $title;
     }
