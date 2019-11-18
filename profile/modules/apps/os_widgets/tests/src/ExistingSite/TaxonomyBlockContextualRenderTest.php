@@ -229,7 +229,9 @@ class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
     $this->assertContains($term_blog->label(), $markup->__toString());
     $this->assertContains($term_other->label(), $markup->__toString());
 
-    os_widgets_views_pre_render($view_blog_exec);
+    $view_blog_exec->preExecute();
+    $view_blog_exec->execute();
+    $view_blog_exec->render('page_1');
 
     // Check with active apps.
     $render = $view_builder->view($block_content);
@@ -281,7 +283,9 @@ class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
     foreach ($allowed_publication_views_displays as $display) {
       $this->container->get('os_widgets_context.context')->resetApps();
       $view_exec->setDisplay($display);
-      os_widgets_views_pre_render($view_exec);
+      $view_exec->preExecute();
+      $view_exec->execute();
+      $view_exec->render($display);
       // Check with active apps.
       $render = $view_builder->view($block_content);
       /** @var \Drupal\Core\Render\Markup $markup */
