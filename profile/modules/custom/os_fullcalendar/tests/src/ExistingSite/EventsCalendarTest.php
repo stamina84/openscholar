@@ -15,13 +15,6 @@ use Drupal\Component\Datetime\DateTimePlus;
 class EventsCalendarTest extends EventTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-  }
-
-  /**
    * Tests upcoming events calendar page.
    */
   public function testUpcomingEventsCalendarView(): void {
