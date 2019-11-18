@@ -2,6 +2,7 @@ services:
   vsite.app.manager:
     class: Drupal\vsite\Plugin\AppManager
     parent: default_plugin_manager
+    arguments: ['@os_widgets.context']
   hierarchical.storage:
     class: Drupal\vsite\Config\HierarchicalStorage
     decorates: config.storage

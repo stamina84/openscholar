@@ -45,4 +45,12 @@ interface AppManagerInterface extends PluginManagerInterface {
    */
   public function getViewContentGroupPermissionsForApp(string $app_id): array;
 
+  /**
+   * Get all bundles from active apps.
+   *
+   * @return array
+   *   Return array of bundle keys.
+   */
+  public function getBundlesFromApps(): array;
+
 }
