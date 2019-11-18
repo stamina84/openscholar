@@ -8,7 +8,7 @@ use Drupal\Component\Serialization\Json;
  * Class SlideshowBlockRenderTest.
  *
  * @group kernel
- * @group widgets
+ * @group widgets-1
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\SlideshowWidget
  */
 class SlideshowBlockRenderTest extends OsWidgetsExistingSiteTestBase {
