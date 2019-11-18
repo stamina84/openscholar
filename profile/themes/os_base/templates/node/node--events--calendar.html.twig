@@ -75,23 +75,21 @@
 {% set start_date = content.field_recurring_date[0]['#date']['start_date']['#text'] %}
 
 <article{{ attributes.addClass("node--calendar calendar") }} {{ attributes }}>
-  <div class="start-date">
-    {{ start_date|date("Y M d")|upper }}
+  <div class="event-start">
+    <span class="event-year">{{ start_date|date("Y")|upper }}</span>
+    <span class="event-start-month">{{ start_date|date("M")|upper }}</span>
+    <span class="event-start-day">{{ start_date|date("d")|upper }}</span>
   </div>
-  <div class="teaser--content">
+  <div class="event-content">
     {{ title_prefix }}
     <h2{{ title_attributes }} class="node--title">
-      {{ label }}
+      <a href="{{ url }}">{{ label }}</a>
     </h2>
     {{ title_suffix }}
     {% block content %}
       <div{{ content_attributes }}>
-        {{ content.field_recurring_date }}
-        {{ content.field_location }}
+        {{ content }}
       </div>
     {% endblock %}
-  </div>
-  <div class="events-export">
-    {{ content.os_events }}
   </div>
 </article>

@@ -1,8 +1,5 @@
-.fc-listUpcoming-view,
-.fc-listPast-view {
-  .fc-list-heading {
-    .fc-list-heading-main {
-      @extend %extend_1;
-    }
+.calendar.node--calendar {
+  .event-start {
+    @extend %extend_1;
   }
 }

@@ -170,64 +170,48 @@ aside {
 }
 
 /**** code for upcoming/past events ****/
-.fc-listUpcoming-view, .fc-listPast-view  {
-  border: 0;
-  .fc-scroller {
-    height: auto !important;
-  }
-  tbody {
-    display: flex;
-    flex-wrap: wrap;
-    .fc-list-heading {
-      display: flex;
-      flex: 0 0 10%;
-      .ui-widget-header {
-        background: none;
-        border: 0 none;
-      }
-    }
-    .fc-list-item-parent {
-      display: flex;
-      flex: 1 1 90%;
-      flex-wrap: wrap;
-      flex-direction: column;
-      .content {
-        padding-bottom: 30px;
-        margin-bottom: 30px;
-        border-bottom: 1px solid $color-light-gray;
-      }
-    }
-  }
-  .fc-list-heading {
-    .fc-list-heading-main {
-      width: 55px;
-      height: 67px;
-      background: url(../images/event-shield.png) no-repeat 0 0 transparent;
-      font-weight: normal;
-      text-align: center;
-      span {
-        display: block;
-        font-weight: bold;
-        line-height: 1;
-        &.event-year {
-          padding: 11px 0 0;
-          font-size: 11px;
-        }
-        &.event-start-month {
-          color: $color-gray;
-          font-size: 12px;
-          text-transform: uppercase;
-        }
-        &.event-start-day {
-          color: $color-black;
-          font-size: 18px;
-        }
-      }
-    }
-  }
-}
 .fc-event-future > td {
   width: 100%;
+}
+.calendar.node--calendar {
+  margin: 0 0 20px;
+  padding: 20px 0 40px;
+  border-bottom: 1px solid #ebebeb;
+  .node--title {
+    margin-bottom: 5px;
+  }
+  .event-start {
+    width: 55px;
+    height: 67px;
+    background: url(../images/event-shield.png) no-repeat 0 0 transparent;
+    font-weight: normal;
+    text-align: center;
+    float: left;
+    span {
+      display: block;
+      font-weight: bold;
+      line-height: 1;
+      &.event-year {
+        padding: 11px 0 0;
+        font-size: 11px;
+      }
+      &.event-start-month {
+        color: $color-black;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+      &.event-start-day {
+        color: $color-black;
+        font-size: 18px;
+      }
+    }
+  }
+  .event-content {
+    margin-left: 70px;
+  }
+  button {
+    margin-top: 10px;
+  }
 }
 /**** modal body ****/
 .modal-body {
