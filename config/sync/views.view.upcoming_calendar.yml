@@ -4,8 +4,8 @@ status: true
 dependencies:
   config:
     - core.date_format.medium
+    - core.entity_view_mode.node.calendar
     - core.entity_view_mode.node.rss
-    - core.entity_view_mode.node.teaser
     - field.storage.node.body
     - field.storage.node.field_location
     - field.storage.node.field_recurring_date
@@ -694,7 +694,7 @@ display:
         type: 'entity:node'
         options:
           relationship: none
-          view_mode: teaser
+          view_mode: calendar
       display_description: ''
       filters:
         status:

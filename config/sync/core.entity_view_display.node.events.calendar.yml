@@ -1,0 +1,87 @@
+uuid: 5a771f20-998a-477d-8eb1-f12ed41bc126
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.date_format.os_event_date_format
+    - core.entity_view_mode.node.calendar
+    - field.field.node.events.body
+    - field.field.node.events.field_attached_media
+    - field.field.node.events.field_close_
+    - field.field.node.events.field_location
+    - field.field.node.events.field_open_date
+    - field.field.node.events.field_recurring_date
+    - field.field.node.events.field_send_reminder
+    - field.field.node.events.field_should_send_reminder
+    - field.field.node.events.field_signup
+    - field.field.node.events.field_singup_multiple
+    - field.field.node.events.field_taxonomy_terms
+    - field.field.node.events.rng_capacity
+    - field.field.node.events.rng_registrants_duplicate
+    - field.field.node.events.rng_registrants_maximum
+    - field.field.node.events.rng_registrants_minimum
+    - field.field.node.events.rng_registration_groups
+    - field.field.node.events.rng_registration_type
+    - field.field.node.events.rng_reply_to
+    - field.field.node.events.rng_status
+    - node.type.events
+  module:
+    - date_recur
+    - layout_builder
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: node.events.calendar
+targetEntityType: node
+bundle: events
+mode: calendar
+content:
+  field_location:
+    weight: 1
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_recurring_date:
+    weight: 0
+    label: hidden
+    settings:
+      format_type: os_event_date_format
+      occurrence_format_type: os_event_date_format
+      same_end_date_format_type: os_event_date_format
+      separator: '-'
+      timezone_override: ''
+      interpreter: ''
+      show_next: 5
+      count_per_item: true
+    third_party_settings: {  }
+    type: date_recur_basic_formatter
+    region: content
+  links:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  body: true
+  field_attached_media: true
+  field_close_: true
+  field_open_date: true
+  field_send_reminder: true
+  field_should_send_reminder: true
+  field_signup: true
+  field_singup_multiple: true
+  field_taxonomy_terms: true
+  langcode: true
+  rng_capacity: true
+  rng_registrants_duplicate: true
+  rng_registrants_maximum: true
+  rng_registrants_minimum: true
+  rng_registration_groups: true
+  rng_registration_type: true
+  rng_reply_to: true
+  rng_status: true
