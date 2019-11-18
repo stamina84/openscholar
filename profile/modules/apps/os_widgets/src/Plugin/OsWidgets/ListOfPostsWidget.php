@@ -3,9 +3,12 @@
 namespace Drupal\os_widgets\Plugin\OsWidgets;
 
 use Drupal\bibcite_entity\Entity\Reference;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
@@ -55,6 +58,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
    * {@inheritdoc}
    */
   public function buildBlock(&$build, $block_content) {
+
     $contentType = $block_content->field_content_type->value;
     $displayStyle = $block_content->field_display_style->value;
     $sortedBy = $block_content->field_sorted_by->value;
@@ -62,6 +66,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $showEvents = $block_content->field_show->value;
     $moreLinkStatus = $block_content->field_show_more_link->value;
     $moreLink = $moreLinkStatus ? $block_content->get('field_url_for_the_more_link')->view(['label' => 'hidden']) : '';
+    $showPager = $block_content->field_show_pager->value;
 
     $publicationValues = $block_content->get('field_publication_types')->getValue();
     foreach ($publicationValues as $type) {
@@ -207,20 +212,75 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
     }
 
-    // Pager for the widget.
+    $block_attribute_id = Html::getUniqueId('list-of-posts');
     $total_count = count($renderItems);
     $page = pager_find_page();
     $offset = $numItems * $page;
     $renderItems = array_slice($renderItems, $offset, $numItems);
-    // Now that we have the total number of results, initialize the pager.
-    pager_default_initialize($total_count, $numItems);
-    $build['rendered_posts']['#theme'] = 'os_widgets_list_of_posts';
-    $build['rendered_posts']['#posts'] = $renderItems;
-    $build['rendered_posts']['#more_link'] = $moreLink;
-    $build['rendered_posts']['#attributes'] = ['id' => 'list-of-posts'];
-    $build['rendered_posts']['#pager'] = [
-      '#type' => 'pager',
+
+    // Final build array that will be returned.
+    $build['rendered_posts'] = [
+      '#theme' => 'os_widgets_list_of_posts',
+      '#posts' => $renderItems,
+      '#more_link' => $moreLink,
+      '#attributes' => [
+        'id' => $block_attribute_id,
+      ],
     ];
+
+    if ($showPager) {
+      // Now that we have the total number of results, initialize the pager.
+      $curr_page = pager_default_initialize($total_count, $numItems);
+
+      $block_id = $block_content->id();
+      $next_page = $curr_page + 1;
+      $prev_page = $curr_page - 1;
+      $pager_total = ceil($total_count / $numItems);
+
+      // Prepare next and previous page links displayed as a mini pager.
+      $next_link = '';
+      if ($page != ($pager_total - 1)) {
+        $url_next = Url::fromRoute('os_widgets.widgets_pagination_ajax', [
+          'id' => $block_id,
+          'page' => $next_page,
+          'selector' => $block_attribute_id,
+        ], [
+          'attributes' => [
+            'class' => ['use-ajax'],
+            'title' => $this->t('Go to next page'),
+            'rel' => 'next',
+            'aria-hidden' => 'true',
+          ],
+        ]);
+        $next_link = Link::fromTextAndUrl('››', $url_next);
+      }
+
+      $prev_link = '';
+      if ($prev_page >= 0) {
+        $url_prev = Url::fromRoute('os_widgets.widgets_pagination_ajax', [
+          'id' => $block_id,
+          'page' => $prev_page,
+          'selector' => $block_attribute_id,
+        ], [
+          'attributes' => [
+            'class' => ['use-ajax'],
+            'title' => $this->t('Go to previous page'),
+            'rel' => 'prev',
+            'aria-hidden' => 'true',
+          ],
+        ]);
+        $prev_link = Link::fromTextAndUrl('‹‹', $url_prev)->toRenderable();
+      }
+
+      $build['rendered_posts']['#pager'] = [
+        '#theme' => 'os_widgets_ajax_pager',
+        '#next_link' => $next_link,
+        '#prev_link' => $prev_link,
+        '#pager_total' => $pager_total,
+        '#curr_page' => ($curr_page + 1),
+        '#heading_id' => Html::getUniqueId('pagination-heading'),
+      ];
+    }
   }
 
 }

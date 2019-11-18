@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a os widgets ajax pager.
+ *
+ * Available variables:
+ * - heading_id: Pagination heading ID.
+ * - prev_link: Link for previous page.
+ * - next_link: Link for next page.
+ * - curr_page: Current Page number.
+ * - pager_total: Number of pages.
+ *
+ * @ingroup themeable
+ */
+#}
+{% if prev_link or next_link %}
+  <nav role="navigation" aria-labelledby="{{ heading_id }}">
+    <h4 id="{{ heading_id }}" class="visually-hidden">{{ 'Pagination'|t }}</h4>
+    <ul class="js-pager__items pager-mini">
+      {% if prev_link %}
+        <li>
+          {{ prev_link }}
+          <span class="visually-hidden">{{ 'Previous page'|t }}</span>
+        </li>
+      {% endif %}
+      <li class="current">
+        {% trans %}
+          {{ curr_page }} of {{ pager_total }}
+        {% endtrans %}
+      </li>
+      {% if next_link %}
+        <li>
+          {{ next_link }}
+          <span class="visually-hidden">{{ 'Next page'|t }}</span>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}

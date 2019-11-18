@@ -197,6 +197,15 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'attributes' => [],
       ],
     ],
+    'os_widgets_ajax_pager' => [
+      'variables' => [
+        'prev_link' => '',
+        'next_link' => '',
+        'pager_total' => '',
+        'curr_page' => '',
+        'heading_id' => '',
+      ],
+    ],
     'os_widgets_tabs' => [
       'variables' => [
         'contents' => [],
