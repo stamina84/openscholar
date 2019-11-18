@@ -50,39 +50,6 @@ function os_widgets_preprocess_node(&$variables) {
   if (!empty($variables['elements']['os_widgets_hide_node_title'])) {
     $variables['label']['#access'] = FALSE;
   }
-  if ($variables['page']) {
-    $app_manager = Drupal::service('vsite.app.manager');
-    $app = $app_manager->getAppForBundle('node', $variables['node']->bundle());
-    Drupal::service('os_widgets.context')->addApp($app);
-  }
-}
-
-/**
- * Implements hook_preprocess_bibcite_reference().
- */
-function os_widgets_preprocess_bibcite_reference(&$variables) {
-  $entity = Drupal::requestStack()->getCurrentRequest()->attributes->get('bibcite_reference');
-  // Checking the current request and rendered reference id match.
-  if (!empty($entity) && $entity->id() == $variables['bibcite_reference']->id()) {
-    $app_manager = Drupal::service('vsite.app.manager');
-    $app = $app_manager->getAppForBundle('bibcite_reference', '*');
-    Drupal::service('os_widgets.context')->addApp($app);
-  }
-}
-
-/**
- * Implements hook_views_pre_render().
- */
-function os_widgets_views_pre_render(ViewExecutable $view) {
-  /** @var \Drupal\os_widgets\OsWidgetsContext $os_widget_context */
-  $os_widget_context = Drupal::service('os_widgets.context');
-
-  /** @var \Drupal\vsite\Plugin\AppManager $app_manager */
-  $app_manager = Drupal::service('vsite.app.manager');
-  $apps = $app_manager->getAppsForView($view);
-  foreach ($apps as $app) {
-    $os_widget_context->addApp($app);
-  }
 }
 
 /**

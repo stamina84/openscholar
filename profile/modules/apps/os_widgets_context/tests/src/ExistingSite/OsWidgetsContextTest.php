@@ -2,21 +2,20 @@
 
 namespace Drupal\Tests\os_widgets\Unit;
 
-use Drupal\os_widgets\OsWidgetsContext;
-use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 
 /**
  * Class OsWidgetsContextTest.
  *
  * @group unit
- * @covers \Drupal\os_widgets\OsWidgetsContext
+ * @covers \Drupal\os_widgets_context\OsWidgetsContext
  */
-class OsWidgetsContextTest extends UnitTestCase {
+class OsWidgetsContextTest extends OsExistingSiteTestBase {
 
   /**
    * The object we're testing.
    *
-   * @var \Drupal\os_widgets\OsWidgetsContext
+   * @var \Drupal\os_widgets_context\OsWidgetsContext
    */
   protected $osWidgetsContext;
 
@@ -25,7 +24,7 @@ class OsWidgetsContextTest extends UnitTestCase {
    */
   public function setUp() {
     parent::setUp();
-    $this->osWidgetsContext = new OsWidgetsContext();
+    $this->osWidgetsContext = $this->container->get('os_widgets_context.context');
   }
 
   /**

@@ -4,4 +4,4 @@ core: 8.x
 dependencies:
   - drupal:group
   - drupal:purl
-  - drupal:os_widgets
+  - drupal:os_widgets_context

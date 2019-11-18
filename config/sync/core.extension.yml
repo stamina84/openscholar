@@ -127,6 +127,7 @@ module:
   os_theme_preview: 0
   os_twitter_pull: 0
   os_widgets: 0
+  os_widgets_context: 0
   os_wysiwyg: 0
   page_cache: 0
   pagebreak: 0

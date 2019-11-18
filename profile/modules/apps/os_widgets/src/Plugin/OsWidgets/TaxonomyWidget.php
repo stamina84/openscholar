@@ -17,8 +17,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\cp_taxonomy\CpTaxonomyHelperInterface;
 use Drupal\os_widgets\OsWidgetsBase;
-use Drupal\os_widgets\OsWidgetsContextInterface;
+use Drupal\os_widgets_context\OsWidgetsContextInterface;
 use Drupal\os_widgets\OsWidgetsInterface;
+use Drupal\vsite\Plugin\AppManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -63,9 +64,16 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
   /**
    * Os Widget context interface.
    *
-   * @var \Drupal\os_widgets\OsWidgetsContextInterface
+   * @var \Drupal\os_widgets_context\OsWidgetsContextInterface
    */
   protected $osWidgetsContext;
+
+  /**
+   * Vsite app manager.
+   *
+   * @var \Drupal\vsite\Plugin\AppManagerInterface
+   */
+  protected $vsiteAppManager;
 
   /**
    * Cp Taxonomy Helper.
@@ -77,12 +85,13 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, RequestStack $request_stack, CpTaxonomyHelperInterface $taxonomy_helper, TimeInterface $time, OsWidgetsContextInterface $os_widgets_context) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, RequestStack $request_stack, CpTaxonomyHelperInterface $taxonomy_helper, TimeInterface $time, OsWidgetsContextInterface $os_widgets_context, AppManagerInterface $vsite_app_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $connection);
     $this->requestStack = $request_stack;
     $this->taxonomyHelper = $taxonomy_helper;
     $this->time = $time;
     $this->osWidgetsContext = $os_widgets_context;
+    $this->vsiteAppManager = $vsite_app_manager;
   }
 
   /**
@@ -98,7 +107,8 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $container->get('request_stack'),
       $container->get('cp.taxonomy.helper'),
       $container->get('datetime.time'),
-      $container->get('os_widgets.context')
+      $container->get('os_widgets_context.context'),
+      $container->get('vsite.app.manager')
     );
   }
 
@@ -211,7 +221,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
         break;
 
       case 'contextual':
-        $bundles = $this->taxonomyHelper->getBundlesFromApps();
+        $bundles = $this->vsiteAppManager->getBundlesFromApps();
         // If no context exists, use allowed bundles.
         if (empty($bundles)) {
           $settings = $this->taxonomyHelper->getVocabularySettings($vid);

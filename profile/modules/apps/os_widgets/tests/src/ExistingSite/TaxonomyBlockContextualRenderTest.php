@@ -42,7 +42,7 @@ class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
         'contextual',
       ],
     ]);
-    $os_widgets_context = $this->container->get('os_widgets.context');
+    $os_widgets_context = $this->container->get('os_widgets_context.context');
     $os_widgets_context->addApp('blog');
     $this->createNode([
       'type' => 'blog',
@@ -129,7 +129,7 @@ class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
         'contextual',
       ],
     ]);
-    $os_widgets_context = $this->container->get('os_widgets.context');
+    $os_widgets_context = $this->container->get('os_widgets_context.context');
     $os_widgets_context->addApp('media');
     $this->createMedia([
       'field_taxonomy_terms' => [
@@ -167,7 +167,7 @@ class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
         'contextual',
       ],
     ]);
-    $os_widgets_context = $this->container->get('os_widgets.context');
+    $os_widgets_context = $this->container->get('os_widgets_context.context');
     $os_widgets_context->addApp('publications');
     $this->createReference([
       'field_taxonomy_terms' => [
@@ -279,7 +279,7 @@ class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
     $view = View::load('publications');
     $view_exec = $view->getExecutable();
     foreach ($allowed_publication_views_displays as $display) {
-      $this->container->get('os_widgets.context')->resetApps();
+      $this->container->get('os_widgets_context.context')->resetApps();
       $view_exec->setDisplay($display);
       os_widgets_views_pre_render($view_exec);
       // Check with active apps.

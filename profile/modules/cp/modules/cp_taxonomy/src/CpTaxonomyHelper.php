@@ -47,6 +47,7 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
     $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->vsiteContextManager = $vsite_context_manager;
   }
 
   /**

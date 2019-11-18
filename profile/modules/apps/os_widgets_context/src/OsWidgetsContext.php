@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\os_widgets;
+namespace Drupal\os_widgets_context;
 
 /**
  * Class OsWidgetsContext to handle active apps.

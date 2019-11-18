@@ -5,7 +5,7 @@ namespace Drupal\vsite\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\os_widgets\OsWidgetsContextInterface;
+use Drupal\os_widgets_context\OsWidgetsContextInterface;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -17,7 +17,7 @@ class AppManager extends DefaultPluginManager implements AppManagerInterface {
   /**
    * Os Widget context interface.
    *
-   * @var \Drupal\os_widgets\OsWidgetsContextInterface
+   * @var \Drupal\os_widgets_context\OsWidgetsContextInterface
    */
   protected $osWidgetsContext;
 
@@ -30,7 +30,7 @@ class AppManager extends DefaultPluginManager implements AppManagerInterface {
    *   Cache backend.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   Module handler.
-   * @param \Drupal\os_widgets\OsWidgetsContextInterface $os_widgets_context
+   * @param \Drupal\os_widgets_context\OsWidgetsContextInterface $os_widgets_context
    *   OS Widgets Context.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, OsWidgetsContextInterface $os_widgets_context) {
@@ -144,7 +144,7 @@ class AppManager extends DefaultPluginManager implements AppManagerInterface {
       return $bundles;
     }
     foreach ($active_apps as $app) {
-      $plugin_definition = $this->vsiteAppManager->getDefinition($app);
+      $plugin_definition = $this->getDefinition($app);
       if (empty($plugin_definition['bundle'])) {
         $bundles[] = $plugin_definition['entityType'] . ':*';
         continue;
