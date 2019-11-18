@@ -1,17 +1,15 @@
-.fc-listPast-view {
-  .fc-list-heading {
-    .fc-list-heading-main {
-      @extend %extend_2;
-      span {
-        &.event-start-day {
-          color: $white;
-        }
-        &.event-start-month {
-          color: $white;
-        }
-        &.event-year {
-          padding: 8px 0 2px;
-        }
+.calendar.node--calendar {
+  .event-start {
+    @extend %extend_2;
+    span {
+      &.event-start-day {
+        color: $white;
+      }
+      &.event-start-month {
+        color: $white;
+      }
+      &.event-year {
+        padding: 8px 0 2px;
       }
     }
   }

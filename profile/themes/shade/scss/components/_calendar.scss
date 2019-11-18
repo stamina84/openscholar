@@ -1,16 +1,12 @@
-.fc-listUpcoming-view,
-.fc-past-view {
-  .fc-list-heading {
-    .fc-list-heading-main {
-      @extend %extend_3;
-      span {
-        &.event-start-month {
-          color: $color_gravel_approx;
-        }
-
-        &.event-start-day {
-          color: $color_mexican_red_approx;
-        }
+.calendar.node--calendar {
+  .event-start {
+    @extend %extend_3;
+    span {
+      &.event-start-month {
+        color: $color_gravel_approx;
+      }
+      &.event-start-day {
+        color: $color_mexican_red_approx;
       }
     }
   }
