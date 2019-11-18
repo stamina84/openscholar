@@ -173,13 +173,14 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
     }
 
+    $active_apps = $this->osWidgetsContext->getActiveApps();
     foreach ($terms as $i => $term) {
       // If show_empty_terms is TRUE, we don't unset any items.
       if (!$this->settings['show_empty_terms'] && !in_array($term->tid, $keep_term_tids)) {
         unset($terms[$i]);
         continue;
       }
-      if (!empty($this->osWidgetsContext->getActiveApps()) && $this->settings['taxonomy_behavior'] == 'contextual' && !in_array($term->tid, $keep_term_tids)) {
+      if (!empty($active_apps) && $this->settings['taxonomy_behavior'] == 'contextual' && !in_array($term->tid, $keep_term_tids)) {
         unset($terms[$i]);
         continue;
       }
