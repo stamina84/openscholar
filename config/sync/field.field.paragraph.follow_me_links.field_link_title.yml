@@ -1,0 +1,19 @@
+uuid: 201c592c-3b95-4d9a-ba1a-742b5987ee3b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_link_title
+    - paragraphs.paragraphs_type.follow_me_links
+id: paragraph.follow_me_links.field_link_title
+field_name: field_link_title
+entity_type: paragraph
+bundle: follow_me_links
+label: title
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

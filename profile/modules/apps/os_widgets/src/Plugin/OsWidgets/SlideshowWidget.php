@@ -10,7 +10,7 @@ use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
 
 /**
- * Class EmbedMediaWidget.
+ * Class SlideshowWidget.
  *
  * @OsWidget(
  *   id = "slideshow_widget",
@@ -62,6 +62,10 @@ class SlideshowWidget extends OsWidgetsBase implements OsWidgetsInterface {
     foreach ($build['field_slideshow']['#build']['items'] as &$item) {
       $image_media_values = $item['#paragraph']->get('field_slide_image')->referencedEntities();
       $image_media = reset($image_media_values);
+      if (!$image_media) {
+        // Referenced media might be deleted.
+        continue;
+      }
       /** @var \Drupal\media\MediaSourceInterface $source */
       $source = $image_media->getSource();
       $fid = $source->getSourceFieldValue($image_media);

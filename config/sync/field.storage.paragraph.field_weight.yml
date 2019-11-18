@@ -1,19 +1,19 @@
-uuid: ecbeb6a3-0d13-4b18-82d7-d4d5e7b6fc1e
+uuid: 6b85fde7-0fc7-4380-8c2e-c18c8a2ff31f
 langcode: en
 status: true
 dependencies:
   module:
-    - media
     - paragraphs
-id: paragraph.field_media
-field_name: field_media
+id: paragraph.field_weight
+field_name: field_weight
 entity_type: paragraph
-type: entity_reference
+type: integer
 settings:
-  target_type: media
+  unsigned: false
+  size: normal
 module: core
 locked: false
-cardinality: -1
+cardinality: 1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

@@ -192,6 +192,7 @@
         "drupal/field_tools": "^1.0@alpha",
         "drupal/fullcalendar": "1.x-dev",
         "drupal/google_analytics": "^2.4",
+        "drupal/group": "^1.0-rc4",
         "drupal/group_purl": "1.0-alpha1",
         "drupal/groupmenu": "^1.0-beta4",
         "drupal/image_widget_crop": "^2.2",
@@ -236,6 +237,7 @@
         "npm-asset/slick-carousel": "^1.8",
         "oomphinc/composer-installers-extender": "^1.1",
         "php-ds/php-ds": "^1.2",
+        "rrssb/rrssb-plus": "^0.5.0",
         "swordapp/swordappv2-php-library": "master",
         "twbs/bootstrap-sass": "^3.3.7",
         "twig/extensions": "^1.5",
@@ -350,7 +352,7 @@
                 "'view_path' is set to /views/ajax after second ajax request": "https://www.drupal.org/files/issues/2018-03-14/drupal-views_path_ajax-2866386-10.patch",
                 "Image styles fails with absolute path": "https://www.drupal.org/files/issues/image_styles-2754273-7.patch",
                 "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch",
-                "User context missing when using toUrl in some circumstances": "https://www.drupal.org/files/issues/2019-05-22/3056234-test-fix-4.patch",	
+                "User context missing when using toUrl in some circumstances": "https://www.drupal.org/files/issues/2019-05-22/3056234-test-fix-4.patch",
                 "null route object in big_pipe requests after 8.7.8 upgrade": "https://www.drupal.org/files/issues/2019-10-24/3089913-2.patch"
             },
             "drupal/group_purl": {
@@ -391,7 +393,7 @@
                 "Integrity constraint violation: Duplicate entry for key PRIMARY in node_access": "https://www.drupal.org/files/issues/2018-08-17/group-duplicate-node-access-entries-2892512-15.patch",
                 "New group content created when node edited": "https://www.drupal.org/files/issues/2019-06-04/3059300-3.patch",
                 "Prevent resaving of deleted entities": "https://raw.githubusercontent.com/openscholar/openscholar/ae879229e866cbc96d91d2b2a8273292fa26fd34/patches/group.fix_saving_deleted_entity.patch",
-                "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-05-28/group-support_string_entity_ids-2797793-162.patch",
+                "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-10-17/group-support_string_entity_ids-2797793-171.patch",
                 "Group creator must complete their membership Wizard duplicates membership": "https://www.drupal.org/files/issues/2019-07-09/group_membership_duplication-3016197-10.patch"
             },
             "drupal/shorten": {

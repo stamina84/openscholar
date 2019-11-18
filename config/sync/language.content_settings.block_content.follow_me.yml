@@ -1,0 +1,11 @@
+uuid: 5c64d406-666f-48ec-aa38-b9a9a98113a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.follow_me
+id: block_content.follow_me
+target_entity_type_id: block_content
+target_bundle: follow_me
+default_langcode: site_default
+language_alterable: false
