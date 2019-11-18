@@ -7,7 +7,8 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 /**
  * Class OsWidgetsContextTest.
  *
- * @group unit
+ * @group kernel
+ * @group widgets-1
  * @covers \Drupal\os_widgets_context\OsWidgetsContext
  */
 class OsWidgetsContextTest extends OsExistingSiteTestBase {
