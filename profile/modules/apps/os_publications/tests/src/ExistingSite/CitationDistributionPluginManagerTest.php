@@ -6,7 +6,7 @@ namespace Drupal\Tests\os_publications\ExistingSite;
  * CitationDistributionPluginManagerTest.
  *
  * @group kernel
- * @group publications-2
+ * @group publications-1
  */
 class CitationDistributionPluginManagerTest extends TestBase {
 
