@@ -5,12 +5,10 @@ namespace Drupal\Tests\os_fullcalendar\ExistingSite;
 use Drupal\Component\Datetime\DateTimePlus;
 
 /**
- * Tests mini calendar views.
+ * Tests upcoming calendar pages.
  *
  * @group other
  * @group kernel
- *
- * @covers UpcomingCalendar Events page.
  */
 class EventsCalendarTest extends EventTestBase {
 
