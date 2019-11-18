@@ -68,29 +68,4 @@ class CpCancelButtonTest extends OsExistingSiteJavascriptTestBase {
     $this->assertContains($this->nodePath, $url);
   }
 
-  /**
-   * Test for visit from listing page and press cancel.
-   */
-  public function testNodeDeleteCancelButtonList() {
-    $session = $this->getSession();
-    $web_assert = $this->assertSession();
-
-    // Visit cp browse path.
-    $this->visitViaVsite('cp/content/browse/node', $this->group);
-    $web_assert->statusCodeEquals(200);
-    $page = $this->getCurrentPage();
-    $edit_link = $page->find('css', '.edit-node a');
-    $edit_link->press();
-    // Go to edit path.
-    $page = $this->getCurrentPage();
-    $cancel_button = $page->findLink('Cancel');
-    // Click to cancel.
-    $cancel_button->press();
-    $web_assert->statusCodeEquals(200);
-
-    // Assert url is a browse path with group alias.
-    $url = $session->getCurrentUrl();
-    $this->assertContains($this->vsiteAlias . '/cp/content', $url);
-  }
-
 }
