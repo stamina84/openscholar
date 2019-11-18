@@ -28,6 +28,7 @@ dependencies:
   module:
     - date_recur
     - layout_builder
+    - text
     - user
 third_party_settings:
   layout_builder:
@@ -38,6 +39,14 @@ targetEntityType: node
 bundle: events
 mode: calendar
 content:
+  body:
+    type: text_trimmed
+    weight: 3
+    region: content
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
   field_location:
     weight: 1
     label: inline
@@ -67,7 +76,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  body: true
   field_attached_media: true
   field_close_: true
   field_open_date: true
