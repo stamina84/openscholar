@@ -9,6 +9,7 @@ use Drupal\os_publications\GhostEntity\Repec;
  *
  * @group kernel
  * @group publications-1
+ * @group unique
  * @coversDefaultClass \Drupal\os_publications\Plugin\CitationDistribution\CitationDistributeRepec
  */
 class CitationDistributionRepecPluginTest extends TestBase {
