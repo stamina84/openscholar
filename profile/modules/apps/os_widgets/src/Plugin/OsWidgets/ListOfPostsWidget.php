@@ -114,18 +114,16 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $nodes[] = $vsite->getContentEntities("group_node:$contentType");
     }
 
-    // Extract entity ids from nodes and publications.
+    // Flatten the arrays and extract entity ids from nodes and publications.
     $nodes = array_filter($nodes);
-    foreach ($nodes as $nodeArr) {
-      foreach ($nodeArr as $node) {
-        $nodesList[] = $node->id();
-      }
+    $nodes_flattened = $nodes ? array_merge(...$nodes) : [];
+    foreach ($nodes_flattened as $node) {
+      $nodesList[] = $node->id();
     }
     $publications = array_filter($publications);
-    foreach ($publications as $pubArr) {
-      foreach ($pubArr as $pub) {
-        $pubList[] = $pub->id();
-      }
+    $pub_flattened = $publications ? array_merge(...$publications) : [];
+    foreach ($pub_flattened as $pub) {
+      $pubList[] = $pub->id();
     }
 
     // Get the results which we need to load finally.

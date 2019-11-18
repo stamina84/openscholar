@@ -35,7 +35,7 @@
         }
         else {
           if (typeof nodeMapping[bundle] === 'undefined' ) {
-            $uriField.val('');
+            $uriField.val('/');
           }
           else {
             $uriField.val('/' + nodeMapping[bundle]);

@@ -438,6 +438,9 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['field_url_for_the_more_link']['widget']['0']['#title'] = '';
       $form['field_url_for_the_more_link']['widget']['0']['uri']['#title'] = Html::escape($uri_title);
       $form['field_url_for_the_more_link']['widget']['0']['uri']['#description'] = '';
+      if (!$form['field_url_for_the_more_link']['widget']['0']['uri']['#default_value']) {
+        $form['field_url_for_the_more_link']['widget']['0']['uri']['#default_value'] = '/';
+      }
       $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
       $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
   }
