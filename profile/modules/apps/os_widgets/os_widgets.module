@@ -203,6 +203,7 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'pager_total' => '',
         'curr_page' => '',
         'heading_id' => '',
+        'pager_id' => '',
       ],
     ],
     'os_widgets_tabs' => [

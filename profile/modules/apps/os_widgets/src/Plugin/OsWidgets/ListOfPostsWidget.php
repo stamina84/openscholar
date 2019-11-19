@@ -179,7 +179,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $prev_page = $curr_page - 1;
       $pager_total = ceil($total_count / $numItems);
 
-      $pagination_id = Html::getUniqueId('pagination-heading');
+      $header_id = Html::getUniqueId('pagination-heading');
+      $pager_id = Html::getUniqueId('pager-heading');
 
       // Prepare next and previous page links displayed as a mini pager.
       $next_link = '';
@@ -188,7 +189,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
           'id' => $block_id,
           'page' => $next_page,
           'selector' => $block_attribute_id,
-          'pagerid' => $pagination_id,
+          'pagerid' => $pager_id,
           'moreid' => $moreLinkId,
         ], [
           'attributes' => [
@@ -207,7 +208,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
           'id' => $block_id,
           'page' => $prev_page,
           'selector' => $block_attribute_id,
-          'pagerid' => $pagination_id,
+          'pagerid' => $pager_id,
           'moreid' => $moreLinkId,
         ], [
           'attributes' => [
@@ -226,7 +227,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
         '#prev_link' => $prev_link,
         '#pager_total' => $pager_total,
         '#curr_page' => ($curr_page + 1),
-        '#heading_id' => $pagination_id,
+        '#heading_id' => $header_id,
+        '#pager_id' => $pager_id,
       ];
     }
   }

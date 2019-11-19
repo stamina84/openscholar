@@ -9,12 +9,13 @@
  * - next_link: Link for next page.
  * - curr_page: Current Page number.
  * - pager_total: Number of pages.
+ * - pager_id: Dynamic pager id.
  *
  * @ingroup themeable
  */
 #}
 {% if prev_link or next_link %}
-  <nav role="navigation" aria-labelledby="{{ heading_id }}" id={{ heading_id }}>
+  <nav role="navigation" aria-labelledby="{{ heading_id }}" id={{ pager_id }}>
     <h4 id="{{ heading_id }}" class="visually-hidden">{{ 'Pagination'|t }}</h4>
     <ul class="js-pager__items pager-mini">
       {% if prev_link %}
