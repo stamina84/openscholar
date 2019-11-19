@@ -6,7 +6,7 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
  * Class AddSlideshowAccessCheckTest.
  *
  * @group kernel
- * @group widgets
+ * @group widgets-1
  * @covers \Drupal\os_widgets\Access\AddSlideshowAccessCheck
  */
 class AddSlideshowAccessCheckTest extends OsWidgetsExistingSiteTestBase {
