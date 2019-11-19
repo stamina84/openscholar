@@ -72,13 +72,12 @@
  * @ingroup themeable
  */
 #}
-{% set start_date = content.field_recurring_date[0]['#date']['start_date']['#text'] %}
 
 <article{{ attributes.addClass("node--calendar calendar") }} {{ attributes }}>
   <div class="event-start">
-    <span class="event-year">{{ start_date|date("Y")|upper }}</span>
-    <span class="event-start-month">{{ start_date|date("M")|upper }}</span>
-    <span class="event-start-day">{{ start_date|date("d")|upper }}</span>
+    <span class="event-year">{{ content.start_date.year }}</span>
+    <span class="event-start-month">{{ content.start_date.month }}</span>
+    <span class="event-start-day">{{ content.start_date.day }}</span>
   </div>
   <div class="event-content">
     {{ title_prefix }}
