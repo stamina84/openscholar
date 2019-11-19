@@ -8,7 +8,7 @@ use Drupal\repec\Series\wpaper\Template;
  * Class RepecTemplateFactoryTest.
  *
  * @group kernel
- * @group publications
+ * @group publications-2
  */
 class RepecTemplateFactoryTest extends TestBase {
 

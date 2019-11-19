@@ -6,7 +6,7 @@ namespace Drupal\Tests\os_publications\ExistingSite;
  * Class CitationHelperTest.
  *
  * @group kernel
- * @group publications
+ * @group publications-1
  *
  * @package Drupal\Tests\os_publications\ExistingSite
  */
