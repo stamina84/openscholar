@@ -24,7 +24,6 @@ use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\os_widgets\Helper\FollowMeWidgetHelper;
 use Drupal\Component\Utility\Html;
-use Drupal\user\Entity\User;
 
 /**
  * Implements hook_library_info_alter().
@@ -937,7 +936,7 @@ function os_widgets_allowed_values_lop_form(FieldStorageConfig $definition, Cont
   }
   elseif ($field_name === 'field_content_type') {
     $options['all'] = t('All');
-    $apps = \Drupal::service('os_app_access.user_app_loader')->getAppsForUser(User::load(Drupal::currentUser()->id()));
+    $apps = \Drupal::service('os_app_access.app_loader')->getAppsForUser(Drupal::currentUser());
     foreach ($apps as $app) {
       $title = (string) $app['title'];
       $bundle = $app['entityType'] === 'bibcite_reference' ? 'publications' : $app['bundle'][0];

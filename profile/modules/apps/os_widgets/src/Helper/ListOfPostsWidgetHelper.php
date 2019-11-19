@@ -13,6 +13,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
 
   /**
+   * Database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
    * ListOfPostsWidgetHelper constructor.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -32,19 +39,7 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
   }
 
   /**
-   * Get nodes and publication data.
-   *
-   * @param array $fieldData
-   *   Field Data.
-   * @param array|null $nodesList
-   *   List of nids to load.
-   * @param array|null $pubList
-   *   List of ids to load.
-   * @param array|null $tids
-   *   List of Term ids.
-   *
-   * @return array
-   *   Structured data required for LOP rendering.
+   * {@inheritdoc}
    */
   public function getResults(array $fieldData, array $nodesList = NULL, array $pubList = NULL, array $tids = NULL) : array {
     /** @var \Drupal\Core\Database\Query\SelectInterface $nodeQuery */
@@ -140,7 +135,6 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
    */
   protected function getPublicationQuery(array $fieldData, array $pubList = NULL, array $tids = NULL) : SelectInterface {
     // Filter publications based on vsite ids and taxonomy terms.
-    $pubList = $pubList ?? '';
     /** @var \Drupal\Core\Database\Query\SelectInterface $pubQuery */
     $pubQuery = $this->connection->select('bibcite_reference', 'pub');
     $pubQuery->fields('pub', ['id', 'created', 'title', 'type'])

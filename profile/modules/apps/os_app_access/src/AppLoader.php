@@ -2,8 +2,8 @@
 
 namespace Drupal\os_app_access;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\os_app_access\Access\AppAccess;
-use Drupal\user\UserInterface;
 use Drupal\vsite\Plugin\AppManangerInterface;
 
 /**
@@ -38,7 +38,7 @@ class AppLoader implements AppLoaderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAppsForUser(UserInterface $account): array {
+  public function getAppsForUser(AccountInterface $account): array {
     $allowed_apps = [];
 
     /** @var \Drupal\vsite\AppInterface[] $apps */

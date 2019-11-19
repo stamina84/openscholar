@@ -20,15 +20,7 @@ id: block_content.list_of_posts.default
 targetEntityType: block_content
 bundle: list_of_posts
 mode: default
-content:
-  field_widget_title:
-    weight: 0
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
+content: {  }
 hidden:
   body: true
   field_content_type: true
@@ -41,4 +33,5 @@ hidden:
   field_show_pager: true
   field_sorted_by: true
   field_url_for_the_more_link: true
+  field_widget_title: true
   langcode: true
