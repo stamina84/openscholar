@@ -94,6 +94,7 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
     // If events node is selected then check if only upcoming or past events
     // need to be shown.
     if ($fieldData['contentType'] === 'events' && $fieldData['showEvents'] !== 'all_events') {
+      $to_keep = NULL;
       $eventQuery = clone $nodeQuery;
       $currentTime = new DrupalDateTime('now');
       $eventQuery->join('node__field_recurring_date', 'nfrd', 'nfd.nid = nfrd.entity_id');
