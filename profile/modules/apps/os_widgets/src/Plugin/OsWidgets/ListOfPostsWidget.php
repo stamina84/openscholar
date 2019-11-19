@@ -152,6 +152,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     }
 
     $block_attribute_id = Html::getUniqueId('list-of-posts');
+    $moreLinkId = Html::getUniqueId('node-readmore');
+
     $total_count = count($renderItems);
     $page = pager_find_page();
     $offset = $numItems * $page;
@@ -164,6 +166,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#more_link' => $moreLink,
       '#attributes' => [
         'id' => $block_attribute_id,
+        'more_link_id' => $moreLinkId,
       ],
     ];
 
@@ -176,6 +179,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $prev_page = $curr_page - 1;
       $pager_total = ceil($total_count / $numItems);
 
+      $pagination_id = Html::getUniqueId('pagination-heading');
+
       // Prepare next and previous page links displayed as a mini pager.
       $next_link = '';
       if ($page != ($pager_total - 1)) {
@@ -183,6 +188,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
           'id' => $block_id,
           'page' => $next_page,
           'selector' => $block_attribute_id,
+          'pagerid' => $pagination_id,
+          'moreid' => $moreLinkId,
         ], [
           'attributes' => [
             'class' => ['use-ajax'],
@@ -200,6 +207,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
           'id' => $block_id,
           'page' => $prev_page,
           'selector' => $block_attribute_id,
+          'pagerid' => $pagination_id,
+          'moreid' => $moreLinkId,
         ], [
           'attributes' => [
             'class' => ['use-ajax'],
@@ -217,7 +226,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
         '#prev_link' => $prev_link,
         '#pager_total' => $pager_total,
         '#curr_page' => ($curr_page + 1),
-        '#heading_id' => Html::getUniqueId('pagination-heading'),
+        '#heading_id' => $pagination_id,
       ];
     }
   }

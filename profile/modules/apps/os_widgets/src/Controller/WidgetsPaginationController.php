@@ -3,7 +3,7 @@
 namespace Drupal\os_widgets\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -56,9 +56,13 @@ class WidgetsPaginationController extends ControllerBase {
   public function changePage($id = NULL) {
     $response = new AjaxResponse();
     $selector = $this->request->getCurrentRequest()->query->get('selector');
+    $pageId = $this->request->getCurrentRequest()->query->get('pagerid');
+    $moreId = $this->request->getCurrentRequest()->query->get('moreid');
     $block = $this->entityTypeManager()->getStorage('block_content')->load($id);
     $render = $this->entityTypeManager()->getViewBuilder('block_content')->view($block);
-    $response->addCommand(new HtmlCommand('#' . $selector, $render));
+    $response->addCommand(new ReplaceCommand('#' . $selector, $render));
+    $response->addCommand(new ReplaceCommand('#' . $pageId, ''));
+    $response->addCommand(new ReplaceCommand('#' . $moreId, ''));
     return $response;
   }
 
