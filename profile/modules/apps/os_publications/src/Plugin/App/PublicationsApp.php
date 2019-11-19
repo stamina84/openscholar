@@ -11,6 +11,14 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *   title = @Translation("Publication"),
  *   canDisable = true,
  *   entityType = "bibcite_reference",
+ *   viewsTabs = {
+ *     "publications" = {
+ *       "page_1",
+ *       "page_2",
+ *       "page_3",
+ *       "page_4",
+ *     },
+ *   },
  *   id = "publications"
  * )
  */

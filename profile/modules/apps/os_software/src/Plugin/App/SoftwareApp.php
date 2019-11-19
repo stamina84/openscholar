@@ -16,6 +16,14 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *     "software_project",
  *     "software_release"
  *   },
+ *   viewsTabs = {
+ *     "os_software_projects" = {
+ *       "page_1",
+ *     },
+ *     "os_software_releases" = {
+ *       "page_1",
+ *     },
+ *   },
  *   id = "software"
  * )
  */

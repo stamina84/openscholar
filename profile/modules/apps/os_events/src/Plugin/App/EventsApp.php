@@ -14,6 +14,11 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *   bundle = {
  *     "events"
  *   },
+ *   viewsTabs = {
+ *     "calendar" = {
+ *       "page_1",
+ *     },
+ *   },
  *   id = "event"
  * )
  */
