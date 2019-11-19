@@ -67,7 +67,7 @@ class VsiteMetatagTest extends OsExistingSiteTestBase {
   public function testMetatagsOnVsiteFrontPage(): void {
     $web_assert = $this->assertSession();
 
-    $this->visitViaVsite('test-alias', $this->group);
+    $this->visitViaVsite('', $this->group);
     $web_assert->statusCodeEquals(200);
     $expectedHtmlValue = '<meta name="twitter:image" content="http://apache/sites/default/files/styles/large/public/' . $this->fileLogo->getFilename();
     $this->assertContains($expectedHtmlValue, $this->getCurrentPageContent(), 'HTML head not contains twitter image.');
@@ -77,6 +77,40 @@ class VsiteMetatagTest extends OsExistingSiteTestBase {
     $this->assertContains($expectedHtmlValue, $this->getCurrentPageContent(), 'HTML head not contains og type.');
     $expectedHtmlValue = '<meta name="twitter:description" content="Lorem ipsum dolor" />';
     $this->assertContains($expectedHtmlValue, $this->getCurrentPageContent(), 'HTML head not contains og type.');
+    $expectedHtmlValue = '<title>OpenScholar</title>';
+    $this->assertContains($expectedHtmlValue, $this->getCurrentPageContent(), 'HTML head title not contains extra pipe.');
+  }
+
+  /**
+   * Test head title on vsite frontpage.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function testHeadTitleOnVsiteFrontPage(): void {
+    $web_assert = $this->assertSession();
+    $config = \Drupal::configFactory()->getEditable('os_metatag.settings');
+    $new_title = $this->randomMachineName();
+    $config->set('site_title', $new_title);
+    $config->save();
+
+    $this->visitViaVsite('', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $expectedHtmlValue = '<title>' . $new_title . '</title>';
+    $this->assertContains($expectedHtmlValue, $this->getCurrentPageContent(), 'HTML head title not contains extra pipe.');
+  }
+
+  /**
+   * Test metatags is exists on vsite blog page.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function testHeadTitleOnVsiteBlogPage(): void {
+    $web_assert = $this->assertSession();
+
+    $this->visitViaVsite('blog', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $expectedHtmlValue = '<title>Blog | OpenScholar</title>';
+    $this->assertContains($expectedHtmlValue, $this->getCurrentPageContent(), 'HTML head title not contains extra pipe.');
 
   }
 
