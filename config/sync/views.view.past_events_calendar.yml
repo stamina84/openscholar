@@ -1,9 +1,10 @@
-uuid: c8b4a200-e35f-4c48-bc28-3b0e4b128684
+uuid: a1870ba7-9bd8-4a0b-8bab-b2082692cb03
 langcode: en
 status: true
 dependencies:
   config:
     - core.date_format.medium
+    - core.entity_view_mode.node.calendar
     - core.entity_view_mode.node.rss
     - field.storage.node.body
     - field.storage.node.field_location
@@ -19,8 +20,8 @@ dependencies:
     - text
     - views_ical
     - vsite
-id: calendar
-label: Calendar
+id: past_events_calendar
+label: 'Past events Calendar'
 module: views
 description: ''
 tag: ''
@@ -74,7 +75,7 @@ display:
           times:
             default_date: false
             date: ''
-          left: 'month listWeek listDay'
+          left: 'month listWeek listDay listUpcoming listPast'
           center: 'prev title next'
           right: ''
           timeformat: 'h:mm A'
@@ -247,6 +248,50 @@ display:
             group_items: {  }
           entity_type: group_content
           plugin_id: vsite_current_filter
+        field_recurring_date_value:
+          id: field_recurring_date_value
+          table: node__field_recurring_date
+          field: field_recurring_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '<'
+          value:
+            min: ''
+            max: ''
+            value: now
+            type: offset
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          granularity: minute
+          plugin_id: datetime
       sorts: {  }
       title: Calendar
       header: {  }
@@ -288,388 +333,14 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:field.storage.node.field_recurring_date'
-  block_1:
-    display_plugin: block
-    id: block_1
-    display_title: 'Mini Monthly'
-    position: 2
-    display_options:
-      display_extenders:
-        metatag_display_extender: {  }
-      block_description: 'Mini Monthly'
-      style:
-        type: fullcalendar
-        options:
-          display:
-            defaultView: month
-            firstDay: '0'
-            weekMode: fixed
-          times:
-            default_date: false
-            date: ''
-          left: ''
-          center: 'prev title next'
-          right: ''
-          timeformat: 'h:mm'
-          advanced: false
-          slotLabelFormat: 'h(:mm)a'
-          timeformatMonth: 'h:mm'
-          timeformatWeek: 'h:mm'
-          timeformatDay: 'h:mm'
-          titleformatMonth: 'MMMM YYYY'
-          titleformatWeek: 'MMM D YYYY'
-          titleformatDay: 'MMMM D YYYY'
-          columnformatMonth: ddd
-          columnformatWeek: 'ddd M/D'
-          columnformatDay: dddd
-          theme: true
-          sameWindow: false
-          modalWindow: false
-          contentHeight: 500
-          editable: false
-          fields:
-            title: false
-            title_field: field_recurring_date
-            url: false
-            url_field: field_recurring_date
-            date: false
-            date_field: {  }
-          fullcalendar_options:
-            firstHour: 6
-            minTime: 0
-            maxTime: 24
-            slotMinutes: 30
-            defaultEventMinutes: 120
-            allDaySlot: true
-            weekends: true
-            lazyFetching: true
-            disableDragging: false
-            disableResizing: false
-            dragRevertDuration: 500
-            dayClick: false
-            dayClickView: agendaWeek
-      defaults:
-        style: false
-        row: false
-        title: false
-        filters: false
-        filter_groups: false
-        css_class: false
-      row:
-        type: fields
-        options: {  }
-      display_description: ''
-      allow:
-        items_per_page: false
-      title: 'Monthly Calendar'
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            events: events
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-        field_recurring_date_value:
-          id: field_recurring_date_value
-          table: node__field_recurring_date
-          field: field_recurring_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '<='
-          value:
-            min: ''
-            max: ''
-            value: 'last day of this month'
-            type: offset
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          granularity: month
-          plugin_id: datetime
-        current_vsite_filter:
-          id: current_vsite_filter
-          table: group_content
-          field: current_vsite_filter
-          relationship: group_content
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: ''
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: group_content
-          plugin_id: vsite_current_filter
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      css_class: mini-calendar
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - 'user.node_grants:view'
-      tags:
-        - 'config:field.storage.node.field_recurring_date'
-  block_2:
-    display_plugin: block
-    id: block_2
-    display_title: 'Upcoming Events'
-    position: 2
-    display_options:
-      display_extenders: {  }
-      block_description: 'Upcoming Events'
-      style:
-        type: fullcalendar
-        options:
-          display:
-            defaultView: month
-            firstDay: '0'
-            weekMode: fixed
-          times:
-            default_date: false
-            date: ''
-          left: 'prev,next'
-          center: title
-          right: month
-          timeformat: 'h:mm'
-          advanced: false
-          slotLabelFormat: 'h(:mm)a'
-          timeformatMonth: 'h:mm'
-          timeformatWeek: 'h:mm'
-          timeformatDay: 'h:mm'
-          titleformatMonth: 'MMMM YYYY'
-          titleformatWeek: 'MMM D YYYY'
-          titleformatDay: 'MMMM D YYYY'
-          columnformatMonth: ddd
-          columnformatWeek: 'ddd M/D'
-          columnformatDay: dddd
-          theme: true
-          sameWindow: false
-          modalWindow: false
-          contentHeight: 500
-          editable: false
-          fields:
-            title: false
-            title_field: field_recurring_date
-            url: false
-            url_field: field_recurring_date
-            date: false
-            date_field: {  }
-          fullcalendar_options:
-            firstHour: 6
-            minTime: 0
-            maxTime: 24
-            slotMinutes: 30
-            defaultEventMinutes: 120
-            allDaySlot: true
-            weekends: true
-            lazyFetching: true
-            disableDragging: false
-            disableResizing: false
-            dragRevertDuration: 500
-            dayClick: false
-            dayClickView: agendaWeek
-      defaults:
-        style: false
-        row: false
-        filters: false
-        filter_groups: false
-        title: false
-      row:
-        type: fields
-        options: {  }
-      display_description: ''
-      allow:
-        items_per_page: false
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            events: events
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-        field_recurring_date_value:
-          id: field_recurring_date_value
-          table: node__field_recurring_date
-          field: field_recurring_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '>'
-          value:
-            min: ''
-            max: ''
-            value: now
-            type: offset
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          granularity: minute
-          plugin_id: datetime
-        current_vsite_filter:
-          id: current_vsite_filter
-          table: group_content
-          field: current_vsite_filter
-          relationship: group_content
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: ''
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: group_content
-          plugin_id: vsite_current_filter
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      title: 'Upcoming Events'
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - 'user.node_grants:view'
-      tags:
-        - 'config:field.storage.node.field_recurring_date'
   feed_1:
     display_plugin: feed
     id: feed_1
     display_title: RSS
     position: 3
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender: {  }
       row:
         type: node_rss
         options:
@@ -679,11 +350,9 @@ display:
         type: none
         options:
           offset: 0
-      path: calendar/rss
+      path: calendar/past/rss
       displays:
-        page_1: page_1
         default: '0'
-        block_1: '0'
       defaults:
         link_display: true
         link_url: true
@@ -712,7 +381,7 @@ display:
           separator: ''
           hide_empty: 0
       display_description: ''
-      path: calendar.ics
+      path: past-calendar.ics
       style:
         type: ical
         options:
@@ -725,9 +394,7 @@ display:
         options:
           offset: 0
       displays:
-        page_1: page_1
         default: '0'
-        block_1: '0'
       fields:
         title:
           id: title
@@ -1003,33 +670,149 @@ display:
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.field_location'
         - 'config:field.storage.node.field_recurring_date'
-  page_1:
+  page:
     display_plugin: page
-    id: page_1
-    display_title: Full
-    position: 1
+    id: page
+    display_title: 'Past events calendar'
+    position: 2
     display_options:
       display_extenders:
         metatag_display_extender: {  }
-      path: calendar
+      style:
+        type: default
+        options:
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+      defaults:
+        style: false
+        row: false
+        filters: false
+        filter_groups: false
+        title: false
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: calendar
       display_description: ''
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            events: events
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+        field_recurring_date_value:
+          id: field_recurring_date_value
+          table: node__field_recurring_date
+          field: field_recurring_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '<'
+          value:
+            min: ''
+            max: ''
+            value: now
+            type: offset
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          granularity: minute
+          plugin_id: datetime
+        current_vsite_filter:
+          id: current_vsite_filter
+          table: group_content
+          field: current_vsite_filter
+          relationship: group_content
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: group_content
+          plugin_id: vsite_current_filter
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      title: 'Past Events'
+      path: calendar/past
       menu:
-        type: 'default tab'
-        title: Calendar
-        description: Calendar
-        expanded: true
+        type: tab
+        title: 'Past Events'
+        description: ''
+        expanded: false
         parent: ''
-        weight: 0
+        weight: 1
         context: '0'
         menu_name: main
-      css_class: full-calendar-view
-      defaults:
-        css_class: false
-      tab_options:
-        type: none
-        title: Calendar
-        description: ''
-        weight: 0
     cache_metadata:
       max-age: -1
       contexts:

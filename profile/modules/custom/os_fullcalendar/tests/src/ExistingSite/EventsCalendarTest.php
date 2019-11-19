@@ -42,4 +42,34 @@ class EventsCalendarTest extends EventTestBase {
     $this->assertSession()->pageTextContains('Upcoming test event');
   }
 
+  /**
+   * Tests past events calendar page.
+   */
+  public function testPastEventsCalendarView(): void {
+    $web_assert = $this->assertSession();
+
+    $start = new DateTimePlus('yesterday morning', $this->user->getTimeZone());
+    $end = new DateTimePlus('yesterday midnight', $this->user->getTimeZone());
+
+    /** @var \Drupal\node\NodeInterface $upcoming_event */
+    $past_event = $this->createEvent([
+      'title' => 'Past event',
+      'field_recurring_date' => [
+        'value' => $start->format("Y-m-d\TH:i:s"),
+        'end_value' => $end->format("Y-m-d\TH:i:s"),
+        'rrule' => '',
+        'timezone' => $this->user->getTimeZone(),
+        'infinite' => FALSE,
+      ],
+      'field_location' => 'London',
+      'body' => 'Test body content',
+      'status' => TRUE,
+    ]);
+
+    $this->group->addContent($past_event, "group_node:{$past_event->bundle()}");
+    $this->visit("{$this->group->get('path')->first()->getValue()['alias']}/calendar/past");
+    $web_assert->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Past event');
+  }
+
 }

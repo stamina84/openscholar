@@ -78,7 +78,7 @@ function os_base_preprocess_node(&$variables) {
         'month' => strtoupper(date('M', $date)),
         'day' => date('d', $date),
       ];
-      $variables['content']['start_date'] = $start_date;
+      $variables['start_date'] = $start_date;
     }
   }
 }
