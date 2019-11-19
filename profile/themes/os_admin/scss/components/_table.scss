@@ -2,6 +2,11 @@ thead th {
   background: $color-light-gray3;
   border: solid $color-light-gray2;
 }
+tbody {
+  tr:nth-child(even) {
+    background: $color-light-gray3;
+  }
+}
 /**** ckeditor table cell ****/
 .cke_dialog_contents {
   a.cke_dialog_ui_button.colorChooser {
