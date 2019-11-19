@@ -33,6 +33,19 @@ class ListOfPostsWidgetTest extends OsExistingSiteJavascriptTestBase {
    * @var \Drupal\user\Entity\User|false
    */
   protected $user;
+
+  /**
+   * Vsite context manager service.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManager
+   */
+  protected $vsiteContextManager;
+
+  /**
+   * Widget name.
+   *
+   * @var string
+   */
   protected $widgetName;
 
   /**
@@ -55,9 +68,9 @@ class ListOfPostsWidgetTest extends OsExistingSiteJavascriptTestBase {
   public function testListOfPostsForm() {
     $web_assert = $this->assertSession();
     // Create a Vsite vocabulary.
-    $this->visitViaVsite("cp/taxonomy/add", $this->group);
-    $edit = ['name' => 'TestVocab'];
-    $this->submitform($edit, 'edit-submit');
+    $this->vsiteContextManager = $this->container->get('vsite.context_manager');
+    $this->vsiteContextManager->activateVsite($this->group);
+    $this->vocabulary = $this->createVocabulary();
 
     $this->visitViaVsite("block/add/list_of_posts", $this->group);
     $web_assert->statusCodeEquals(200);
