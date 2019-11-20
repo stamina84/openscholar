@@ -1,0 +1,36 @@
+/**
+ Visual definitions for custom "By the Numbers" widgets.
+ */
+.region-content-bottom h3.stat-heading {
+    font-weight:bold;
+}
+.visitors-cirlce {
+    font-size: 2.5em;
+    margin: 5px auto;
+    width: 120px;
+    padding: 38px 0 35px 0;
+    background: url('../images/sprite.png');
+}
+.grey-label {
+    display: block;
+    font-size: 14px;
+    color: #888 !important;
+}
+.visitors-cirlce .grey-label {
+    margin-top: 4px;
+}
+.stat {
+    font-size: 1.5em;
+}
+.purple-bar_chart {
+    background: url('../images/sprite.png')no-repeat 0 -1564px;
+    width: 30px;
+    height: 30px;
+    margin: 8px auto;
+}
+.teal-bararrow_chart {
+    background: url('../images/sprite.png') no-repeat 0 -253px;
+    width: 108px;
+    height: 108px;
+    margin: 34px auto;
+}
