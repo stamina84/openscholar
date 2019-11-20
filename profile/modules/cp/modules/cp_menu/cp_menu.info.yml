@@ -9,3 +9,4 @@ dependencies:
   - drupal:groupmenu
   - drupal:vsite
   - drupal:menu_ui
+  - druapal:views

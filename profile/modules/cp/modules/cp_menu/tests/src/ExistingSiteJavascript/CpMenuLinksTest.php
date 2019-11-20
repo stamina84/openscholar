@@ -9,6 +9,7 @@ use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTest
  *
  * @group functional-javascript
  * @group cp-menu
+ * @group menu-link-test
  *
  * @package Drupal\Tests\cp_menu\ExistingSiteJavaScript
  */

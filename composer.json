@@ -224,7 +224,7 @@
         "drupal/twig_extensions": "^2.0",
         "drupal/video_embed_field": "^2.0",
         "drupal/views_accordion": "^1.1",
-        "drupal/views_ical": "^2.1",
+        "drupal/views_ical": "2.2",
         "drupal/views_infinite_scroll": "^1.5",
         "drush/drush": "^9.0.0",
         "egulias/email-validator": "^2.0",

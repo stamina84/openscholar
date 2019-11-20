@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a5a52c05566685fec86606041c0eb78",
+    "content-hash": "33ffb6ca1b29f582f20905d0549daa2c",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -1732,6 +1732,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -6824,7 +6825,7 @@
             "description": "Improved Views integration for RNG.",
             "homepage": "https://www.drupal.org/project/rng",
             "support": {
-                "source": "https://git.drupalcode.org/project/rng"
+                "source": "http://cgit.drupalcode.org/rng"
             }
         },
         {
@@ -7774,16 +7775,16 @@
         },
         {
             "name": "drupal/views_ical",
-            "version": "2.1",
+            "version": "2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openscholar/views_ical.git",
-                "reference": "e88461d92a78ca72aba97ba7636d0e1b0c285b9e"
+                "reference": "3227083ccd7b7052f26220ac72da808df67c7d74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openscholar/views_ical/zipball/e88461d92a78ca72aba97ba7636d0e1b0c285b9e",
-                "reference": "e88461d92a78ca72aba97ba7636d0e1b0c285b9e",
+                "url": "https://api.github.com/repos/openscholar/views_ical/zipball/3227083ccd7b7052f26220ac72da808df67c7d74",
+                "reference": "3227083ccd7b7052f26220ac72da808df67c7d74",
                 "shasum": ""
             },
             "require": {
@@ -7795,9 +7796,9 @@
             ],
             "description": "Provides an iCal Views style plugin.",
             "support": {
-                "source": "https://github.com/openscholar/views_ical/tree/2.1"
+                "source": "https://github.com/openscholar/views_ical/tree/2.2"
             },
-            "time": "2019-05-16T10:44:55+00:00"
+            "time": "2019-11-19T10:40:21+00:00"
         },
         {
             "name": "drupal/views_infinite_scroll",
@@ -9638,18 +9639,18 @@
             "authors": [
                 {
                     "name": "Greg Beaver",
-                    "email": "cellog@php.net",
-                    "role": "Helper"
+                    "role": "Helper",
+                    "email": "cellog@php.net"
                 },
                 {
                     "name": "Andrei Zmievski",
-                    "email": "andrei@php.net",
-                    "role": "Lead"
+                    "role": "Lead",
+                    "email": "andrei@php.net"
                 },
                 {
                     "name": "Stig Bakken",
-                    "email": "stig@php.net",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "stig@php.net"
                 }
             ],
             "description": "More info available on: http://pear.php.net/package/Console_Getopt",
@@ -13670,19 +13671,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
+                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "homepage": "http://fabien.potencier.org"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com",
-                    "role": "Project Founder"
+                    "role": "Project Founder",
+                    "email": "armin.ronacher@active-4.com"
                 },
                 {
                     "name": "Twig Team",
-                    "homepage": "https://twig.symfony.com/contributors",
-                    "role": "Contributors"
+                    "role": "Contributors",
+                    "homepage": "https://twig.symfony.com/contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -13790,6 +13791,11 @@
         {
             "name": "webflo/drupal-core-require-dev",
             "version": "8.7.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webflo/drupal-core-require-dev.git",
+                "reference": "593123300b3cf9974fa0742282af90fa72ac06fc"
+            },
             "require": {
                 "behat/mink": "1.7.x-dev",
                 "behat/mink-goutte-driver": "^1.2",
@@ -14599,7 +14605,7 @@
                 },
                 "drupal": {
                     "version": "8.x-2.0",
-                    "datestamp": "1536328684",
+                    "datestamp": "1550236984",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -14611,6 +14617,10 @@
                 "GPL-2.0-or-later"
             ],
             "authors": [
+                {
+                    "name": "Berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
                 {
                     "name": "Dave Reid",
                     "homepage": "https://www.drupal.org/user/53892"
@@ -14632,6 +14642,10 @@
                     "homepage": "https://www.drupal.org/user/77320"
                 },
                 {
+                    "name": "oknate",
+                    "homepage": "https://www.drupal.org/user/471638"
+                },
+                {
                     "name": "samuel.mortenson",
                     "homepage": "https://www.drupal.org/user/2582268"
                 },
@@ -14643,7 +14657,7 @@
             "description": "Entity browser inline entity form integration.",
             "homepage": "https://www.drupal.org/project/entity_browser",
             "support": {
-                "source": "http://cgit.drupalcode.org/entity_browser"
+                "source": "https://git.drupalcode.org/project/entity_browser"
             }
         },
         {
