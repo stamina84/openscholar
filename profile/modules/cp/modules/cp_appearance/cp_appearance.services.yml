@@ -5,3 +5,5 @@ services:
   cp_appearance.theme_selector_builder:
     class: \Drupal\cp_appearance\ThemeSelectorBuilder
     arguments: ['@theme_handler']
+  cp_appearance.custom_theme_installer:
+    class: \Drupal\cp_appearance\CustomThemeInstaller

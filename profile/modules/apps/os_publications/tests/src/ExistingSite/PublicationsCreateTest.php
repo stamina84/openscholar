@@ -6,7 +6,7 @@ namespace Drupal\Tests\os_publications\ExistingSite;
  * PublicationsCreateTest.
  *
  * @group kernel
- * @group publications
+ * @group publications-1
  */
 class PublicationsCreateTest extends TestBase {
 

@@ -8,8 +8,8 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 /**
  * Class PublicationMenusTest.
  *
- * @group publications
  * @group kernel
+ * @group publications-1
  *
  * @package Drupal\Tests\os_publications\ExistingSite
  */

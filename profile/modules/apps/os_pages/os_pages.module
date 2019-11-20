@@ -233,6 +233,8 @@ function os_pages_node_prepare_form(NodeInterface $node, $operation, FormStateIn
  * @see \book_form_node_form_alter
  */
 function os_pages_form_node_page_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $disabled = FALSE;
+  $checked = FALSE;
   /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
   $vsite_context_manager = \Drupal::service('vsite.context_manager');
   /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
@@ -260,13 +262,53 @@ function os_pages_form_node_page_form_alter(&$form, FormStateInterface $form_sta
   $form['book']['bid']['#access'] = $access;
 
   $nid = !$node->isNew() ? $node->id() : 'new';
-  $options = $form['book']['bid']['#options'];
+
   if (($nid === 'new' || ($nid != $node->book['original_bid'])) &&
-    $active_vsite->hasPermission('create new books', $current_user)) {
+  $active_vsite->hasPermission('create new books', $current_user)) {
+    $form['book']['bid']['#access'] = FALSE;
+    $form['book']['pid']['#access'] = FALSE;
+    unset($form['book']['weight']);
+
+    $query = \Drupal::request()->query;
+
     // The node can become a new book, if it is not one already.
-    $options = [$nid => t('- Create a new book -')] + $options;
+    if ($query->get('parent')) {
+      $disabled = TRUE;
+      $checked = TRUE;
+      $parent = $query->get('parent');
+    }
+
+    $form['book']['checkbox'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Allow this page to be part of a book'),
+      '#default_value' => $checked,
+      '#ajax' => [
+        'callback' => 'os_pages_book_custom_form_update',
+      ],
+      '#attributes' => ['disabled' => $disabled],
+    ];
   }
-  $form['book']['bid']['#options'] = $options;
+
+  // Setting bid as parent. New value if its a new book.
+  if (isset($parent)) {
+    $parent_node = Node::load($parent);
+    $bid = ($parent_node->book['pid'] != 0) ? $parent_node->book['pid'] : $parent_node->book['bid'];
+    $pid = $parent;
+    $node->book['bid'] = $bid;
+    $node->book['pid'] = $pid;
+  }
+  else {
+    $bid = $nid;
+    $pid = 0;
+  }
+
+  // Get checkbox value.
+  $new = $form_state->getTriggeringElement();
+  // Add book id if checkbox is triggered.
+  if ($new['#attributes']['data-drupal-selector'] == 'edit-book-checkbox') {
+    $form['book']['bid']['#value'] = $bid;
+    $form['book']['pid']['#value'] = $pid;
+  }
 
   // The "js-hide" class hides submit button when Javascript is enabled.
   $form['book']['pick-book'] = [
@@ -281,6 +323,18 @@ function os_pages_form_node_page_form_alter(&$form, FormStateInterface $form_sta
     ],
   ];
   $form['#entity_builders'][] = 'book_node_builder';
+}
+
+/**
+ * Performs ajax action on checkbox.
+ *
+ * @param array $form
+ *   The form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function os_pages_book_custom_form_update(array $form, FormStateInterface $form_state) {
+  return $form['book']['bid'];
 }
 
 /**
@@ -330,13 +384,16 @@ function os_pages_contextual_links_view_alter(&$element, $items) {
         ];
       }
 
-      $element['#links']['add_subpage'] = [
-        'title' => t('Add Subpage'),
-        'url' => Url::fromRoute('node.add', [
-          'node_type' => 'page',
-          'parent' => $entity->id(),
-        ]),
-      ];
+      // Checking node has book id.
+      if ($entity->book['bid']) {
+        $element['#links']['add_subpage'] = [
+          'title' => t('Add Subpage'),
+          'url' => Url::fromRoute('node.add', [
+            'node_type' => 'page',
+            'parent' => $entity->id(),
+          ]),
+        ];
+      }
     }
   }
 }

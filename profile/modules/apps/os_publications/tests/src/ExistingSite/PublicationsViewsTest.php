@@ -8,7 +8,7 @@ use Drupal\views\Views;
  * Tests publication views.
  *
  * @group kernel
- * @group publications
+ * @group publications-2
  */
 class PublicationsViewsTest extends TestBase {
 
