@@ -74,7 +74,7 @@ display:
           times:
             default_date: false
             date: ''
-          left: 'month listWeek listDay'
+          left: 'today month listWeek listDay'
           center: 'prev title next'
           right: ''
           timeformat: 'h:mm A'

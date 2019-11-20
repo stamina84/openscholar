@@ -84,6 +84,7 @@
           },
         },
         'buttonText': {
+          today: Drupal.t('Today'),
           month: Drupal.t('Month'),
           listWeek: Drupal.t('Week'),
           listDay: Drupal.t('Day'),
