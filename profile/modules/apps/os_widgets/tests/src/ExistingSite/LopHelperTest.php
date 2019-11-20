@@ -9,7 +9,7 @@ use DateTime;
  * Class LopHelperTest.
  *
  * @group kernel
- * @group widgets-2
+ * @group widgets-3
  * @covers \Drupal\os_widgets\Helper\ListOfPostsWidgetHelper
  */
 class LopHelperTest extends OsWidgetsExistingSiteTestBase {

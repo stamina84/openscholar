@@ -8,7 +8,7 @@ use Drupal\Tests\openscholar\Traits\WidgetsTestTrait;
  * Class ListOfPostsBlockRenderTest.
  *
  * @group kernel
- * @group widgets-2
+ * @group widgets-3
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\ListOfPostsBlockRenderTest
  */
 class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
