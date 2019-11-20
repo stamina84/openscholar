@@ -384,6 +384,9 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       array_shift($form['field_sorted_by']['widget']['#options']);
       array_shift($form['field_show']['widget']['#options']);
 
+      // Hide revision information from widget form.
+      $form['revision_information']['#access'] = FALSE;
+
       // Content details group.
       $form['content_details'] = [
         '#type' => 'details',
