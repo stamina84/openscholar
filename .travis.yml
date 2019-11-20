@@ -32,7 +32,7 @@ env:
     - JOB="job:run-kernel-tests os-theme-preview,cp-appearance,profiles"
     - JOB="job:run-kernel-tests publications-1"
     - JOB="job:run-kernel-tests publications-2"
-    - JOB="job:run-kernel-tests redirect,vsite"
+    - JOB="job:run-kernel-tests redirect,vsite,widgets-3"
     - JOB="job:run-kernel-tests os"
     - JOB="job:run-kernel-tests cp"
     - JOB="job:run-kernel-tests other,cp-menu,wysiwyg"
