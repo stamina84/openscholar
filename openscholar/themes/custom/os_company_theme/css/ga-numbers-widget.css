@@ -1,6 +1,12 @@
 /**
  Visual definitions for custom "By the Numbers" widgets.
  */
+.region-four-second .block-boxes-os_boxes_media,
+.four-4x25 .row-2 .region-four-third .region-inner,
+.four-4x25 .row-2 .region-four-fourth .region-inner,
+.four-4x25 .row-1 .region-four-first .region-inner {
+    text-align: center;
+}
 .region-content-bottom h3.stat-heading {
     font-weight:bold;
 }
