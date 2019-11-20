@@ -5,15 +5,11 @@ namespace Drupal\Tests\openscholar\Traits;
 use DateInterval;
 use DateTime;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * Provides a trait for taxonomy and vocab tests.
  */
 trait WidgetsTestTrait {
-
-  use ExistingSiteTestTrait;
-  use NodeCreationTrait;
 
   /**
    * Create multiple content entities for a vsite.
@@ -24,7 +20,7 @@ trait WidgetsTestTrait {
    * @return array
    *   Created entities.
    *
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Exception
    */
   public function createVsiteContent(GroupInterface $vsite) : array {
     $new_datetime = new DateTime();

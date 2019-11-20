@@ -139,6 +139,8 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     // Get nodes and publications for current vsite.
     if ($fieldData['contentType'] === 'all') {
       foreach ($nodeTypes as $type) {
+        // Safe to check for any test modules or newly created content types
+        // which do not have a group node plugin.
         if (!$this->contentEnablerPluginManager->hasDefinition("group_node:$type")) {
           continue;
         }
