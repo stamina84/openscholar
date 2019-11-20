@@ -65,7 +65,6 @@ trait WidgetsTestTrait {
     $date = $new_datetime->getTimestamp();
     $node2->set('created', $date)->save();
 
-
     $vsite->addContent($ref1, 'group_entity:bibcite_reference');
     $vsite->addContent($ref2, 'group_entity:bibcite_reference');
     $vsite->addContent($node1, 'group_node:blog');

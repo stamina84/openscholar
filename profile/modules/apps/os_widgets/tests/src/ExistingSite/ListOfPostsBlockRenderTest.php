@@ -10,7 +10,6 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\ListOfPostsBlockRenderTest
  */
 class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
-
   /**
    * The object we're testing.
    *

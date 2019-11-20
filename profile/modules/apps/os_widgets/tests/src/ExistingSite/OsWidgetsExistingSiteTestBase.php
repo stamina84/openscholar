@@ -13,7 +13,6 @@ use Drupal\Tests\openscholar\Traits\WidgetsTestTrait;
 class OsWidgetsExistingSiteTestBase extends OsExistingSiteTestBase {
 
   use WidgetsTestTrait;
-
   /**
    * The entity type manager service.
    *
@@ -71,4 +70,5 @@ class OsWidgetsExistingSiteTestBase extends OsExistingSiteTestBase {
 
     return $media;
   }
+
 }
