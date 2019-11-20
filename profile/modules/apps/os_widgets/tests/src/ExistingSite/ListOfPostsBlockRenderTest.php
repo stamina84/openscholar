@@ -7,7 +7,7 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
  *
  * @group kernel
  * @group widgets-3
- * @covers \Drupal\os_widgets\Plugin\OsWidgets\ListOfPostsBlockRenderTest
+ * @covers \Drupal\os_widgets\Plugin\OsWidgets\ListOfPostsWidget
  */
 class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
   /**

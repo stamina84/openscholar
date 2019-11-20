@@ -7,8 +7,11 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Url;
+use Drupal\group\Plugin\GroupContentEnablerManager;
 use Drupal\node\Entity\Node;
+use Drupal\os_app_access\AppLoader;
 use Drupal\os_widgets\Helper\ListOfPostsWidgetHelper;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
@@ -40,12 +43,36 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
   protected $lopHelper;
 
   /**
+   * Plugin manager.
+   *
+   * @var \Drupal\group\Plugin\GroupContentEnablerManager
+   */
+  protected $contentEnablerPluginManager;
+
+  /**
+   * App Loader service.
+   *
+   * @var \Drupal\os_app_access\AppLoader
+   */
+  protected $appLoader;
+
+  /**
+   * Current User.
+   *
+   * @var \Drupal\Core\Session\AccountProxy
+   */
+  protected $currentUser;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, VsiteContextManagerInterface $vsite_context_manager, ListOfPostsWidgetHelper $lop_helper) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, VsiteContextManagerInterface $vsite_context_manager, ListOfPostsWidgetHelper $lop_helper, GroupContentEnablerManager $plugin_manager, AppLoader $app_loader, AccountProxy $account) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $connection);
     $this->vsiteContextManager = $vsite_context_manager;
     $this->lopHelper = $lop_helper;
+    $this->contentEnablerPluginManager = $plugin_manager;
+    $this->appLoader = $app_loader;
+    $this->currentUser = $account;
   }
 
   /**
@@ -59,7 +86,10 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $container->get('entity_type.manager'),
       $container->get('database'),
       $container->get('vsite.context_manager'),
-      $container->get('os_widgets.lop_helper')
+      $container->get('os_widgets.lop_helper'),
+      $container->get('plugin.manager.group_content_enabler'),
+      $container->get('os_app_access.app_loader'),
+      $container->get('current_user')
     );
   }
 
@@ -97,11 +127,21 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $vsite = $this->vsiteContextManager->getActiveVsite();
     $pubTypes = $this->entityTypeManager->getStorage('bibcite_reference_type')->loadMultiple();
     $pubTypes = array_keys($pubTypes);
-    $nodeTypes = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
-    $nodeTypes = array_keys($nodeTypes);
+
+    $apps = $this->appLoader->getAppsForUser($this->currentUser);
+    foreach ($apps as $app) {
+      if ($app['entityType'] === 'media' || $app['entityType'] === 'bibcite_reference') {
+        continue;
+      }
+      $nodeTypes[] = $app['bundle'][0];
+    }
+
     // Get nodes and publications for current vsite.
     if ($fieldData['contentType'] === 'all') {
       foreach ($nodeTypes as $type) {
+        if (!$this->contentEnablerPluginManager->hasDefinition("group_node:$type")) {
+          continue;
+        }
         $nodes[] = $vsite->getContentEntities("group_node:$type");
       }
       $publications[] = $vsite->getContentEntities("group_entity:bibcite_reference");
@@ -111,7 +151,9 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     }
     else {
       $contentType = $fieldData['contentType'];
-      $nodes[] = $vsite->getContentEntities("group_node:$contentType");
+      if ($this->contentEnablerPluginManager->hasDefinition("group_node:$contentType")) {
+        $nodes[] = $vsite->getContentEntities("group_node:$contentType");
+      }
     }
 
     // Flatten the arrays and extract entity ids from nodes and publications.
