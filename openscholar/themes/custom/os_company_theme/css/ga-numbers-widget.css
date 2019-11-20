@@ -1,40 +1,40 @@
 /**
  Visual definitions for custom "By the Numbers" widgets.
  */
-.region-four-second .block-boxes-os_boxes_media,
-.four-4x25 .row-2 .region-four-third .region-inner,
-.four-4x25 .row-2 .region-four-fourth .region-inner,
-.four-4x25 .row-1 .region-four-first .region-inner {
+.ga-by-numbers .region-four-second .block-boxes-os_boxes_media,
+.ga-by-numbers .four-4x25 .row-2 .region-four-third .region-inner,
+.ga-by-numbers .four-4x25 .row-2 .region-four-fourth .region-inner,
+.ga-by-numbers .four-4x25 .row-1 .region-four-first .region-inner {
     text-align: center;
 }
-.region-content-bottom h3.stat-heading {
+.ga-by-numbers h3.stat-heading {
     font-weight:bold;
 }
-.visitors-cirlce {
+.ga-by-numbers .visitors-cirlce {
     font-size: 2.5em;
     margin: 5px auto;
     width: 120px;
     padding: 38px 0 35px 0;
     background: url('../images/sprite.png');
 }
-.grey-label {
+.ga-by-numbers .grey-label {
     display: block;
     font-size: 14px;
     color: #888 !important;
 }
-.visitors-cirlce .grey-label {
+.ga-by-numbers .visitors-cirlce .grey-label {
     margin-top: 4px;
 }
-.stat {
+.ga-by-numbers .stat {
     font-size: 1.5em;
 }
-.purple-bar_chart {
+.ga-by-numbers .purple-bar_chart {
     background: url('../images/sprite.png')no-repeat 0 -1564px;
     width: 30px;
     height: 30px;
     margin: 8px auto;
 }
-.teal-bararrow_chart {
+.ga-by-numbers .teal-bararrow_chart {
     background: url('../images/sprite.png') no-repeat 0 -253px;
     width: 108px;
     height: 108px;
