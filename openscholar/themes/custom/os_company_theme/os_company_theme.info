@@ -21,6 +21,7 @@
 
 ;----------// Stylesheets
 
+  stylesheets[screen][] = css/ga-numbers-widget.css
   ;----------//stylesheets[screen][] = css/garyking.layout.css
   ;----------//stylesheets[screen][] = css/garyking.css
   ;----------//stylesheets[screen][] = css/responsive.garyking.css
