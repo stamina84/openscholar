@@ -11,7 +11,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Tests bibcite_preview module convert.
  *
  * @group kernel
- * @group publications
+ * @group publications-2
  */
 class ConverterBibcitePreviewTest extends OsExistingSiteTestBase {
 

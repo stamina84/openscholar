@@ -1,0 +1,4 @@
+name: Widgets context
+description: 'Handle active widgets.'
+type: module
+core: 8.x

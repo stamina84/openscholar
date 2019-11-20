@@ -4,7 +4,7 @@ namespace Drupal\os_app_access\Plugin\Deriver;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
-use Drupal\vsite\Plugin\AppManangerInterface;
+use Drupal\vsite\Plugin\AppManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,14 +17,14 @@ class OsAppAccessMenuLink extends DeriverBase implements ContainerDeriverInterfa
   /**
    * Manager for the app plugins.
    *
-   * @var \Drupal\vsite\Plugin\AppManangerInterface
+   * @var \Drupal\vsite\Plugin\AppManagerInterface
    */
   protected $appManager;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(AppManangerInterface $appManager) {
+  public function __construct(AppManagerInterface $appManager) {
     $this->appManager = $appManager;
   }
 

@@ -1,0 +1,8 @@
+services:
+  os.dummy.commands:
+    class: Drupal\os\Commands\CircularDependencyDetectorCommands
+    arguments:
+      - '@extension.list.module'
+    tags:
+      -
+        name: drush.command

@@ -65,9 +65,9 @@ function os_app_access_node_access(NodeInterface $node, $op, AccountInterface $a
 function _os_app_access_node_type_access(AccountInterface $account, $node_type) {
   /** @var \Drupal\os_app_access\Access\AppAccess $app_access */
   $app_access = \Drupal::service('os_app_access.app_access');
-  /** @var \Drupal\vsite\Plugin\AppManangerInterface $app_manager */
+  /** @var \Drupal\vsite\Plugin\AppManagerInterface $app_manager */
   $app_manager = Drupal::service('vsite.app.manager');
-  $app = $app_manager->getAppForBundle($node_type);
+  $app = $app_manager->getAppForBundle('node', $node_type);
   if ($app) {
     return $app_access->access($account, $app);
   }
@@ -93,7 +93,7 @@ function os_app_access_bibcite_reference_access(ReferenceInterface $entity, $ope
  * @throws \Drupal\Component\Plugin\Exception\PluginException
  */
 function os_app_access_publications_access(AccountInterface $account): AccessResultInterface {
-  /** @var \Drupal\vsite\Plugin\AppManangerInterface $app_manager */
+  /** @var \Drupal\vsite\Plugin\AppManagerInterface $app_manager */
   $app_manager = Drupal::service('vsite.app.manager');
   /** @var \Drupal\vsite\AppInterface $app */
   $app = $app_manager->createInstance('publications');

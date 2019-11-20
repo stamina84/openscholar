@@ -1,0 +1,4 @@
+services:
+  os_widgets_context.context:
+    class: Drupal\os_widgets_context\OsWidgetsContext
+    parent: default_plugin_manager

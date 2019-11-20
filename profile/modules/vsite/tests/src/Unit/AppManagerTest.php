@@ -3,6 +3,7 @@
 namespace Drupal\Tests\vsite\Unit;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\os_widgets_context\OsWidgetsContextInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\vsite\Plugin\AppManager;
 
@@ -38,6 +39,13 @@ class AppManagerTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
+   * Os Widgets Context mock.
+   *
+   * @var \PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $osWidgetsContext;
+
+  /**
    * Plugin definitions we will using in the tests.
    *
    * @var array
@@ -63,7 +71,9 @@ class AppManagerTest extends UnitTestCase {
 
     $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
 
-    $this->appManager = new TestAppManager(new \ArrayObject(), $this->cache, $this->moduleHandler);
+    $this->osWidgetsContext = $this->createMock(OsWidgetsContextInterface::class);
+
+    $this->appManager = new TestAppManager(new \ArrayObject(), $this->cache, $this->moduleHandler, $this->osWidgetsContext);
 
     $discovery = $this->createMock('\Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $discovery->method('getDefinitions')

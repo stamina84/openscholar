@@ -14,6 +14,12 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *   bundle = {
  *    "news"
  *   },
+ *   viewsTabs = {
+ *     "news" = {
+ *       "page_1",
+ *       "page_2",
+ *     },
+ *   },
  *   id = "news"
  * )
  */

@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\os_app_access\AppAccessLevels;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
-use Drupal\vsite\Plugin\AppManangerInterface;
+use Drupal\vsite\Plugin\AppManagerInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
@@ -33,7 +33,7 @@ class AppAccess extends AccessPluginBase {
   /**
    * App manager.
    *
-   * @var \Drupal\vsite\Plugin\AppManangerInterface
+   * @var \Drupal\vsite\Plugin\AppManagerInterface
    */
   protected $appManager;
 
@@ -74,14 +74,14 @@ class AppAccess extends AccessPluginBase {
    *   Plugin id.
    * @param mixed $plugin_definition
    *   Plugin definition.
-   * @param \Drupal\vsite\Plugin\AppManangerInterface $app_manager
+   * @param \Drupal\vsite\Plugin\AppManagerInterface $app_manager
    *   App manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config factory.
    * @param \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager
    *   Vsite context manager.
    */
-  public function __construct(array $configuration, string $plugin_id, $plugin_definition, AppManangerInterface $app_manager, ConfigFactoryInterface $config_factory, VsiteContextManagerInterface $vsite_context_manager) {
+  public function __construct(array $configuration, string $plugin_id, $plugin_definition, AppManagerInterface $app_manager, ConfigFactoryInterface $config_factory, VsiteContextManagerInterface $vsite_context_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->appManager = $app_manager;
     $this->configFactory = $config_factory;

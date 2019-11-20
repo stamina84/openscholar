@@ -8,7 +8,7 @@ use Drupal\Core\Cache\Cache;
  * Class PublicationYearsWidget.
  *
  * @group kernel
- * @group widgets-1
+ * @group widgets-3
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\PublicationYearsWidget
  */
 class PublicationYearsBlockRenderTest extends OsWidgetsExistingSiteTestBase {

@@ -9,7 +9,7 @@ use DateTime;
  * Class LopHelperTest.
  *
  * @group kernel
- * @group widgets-2
+ * @group widgets-3
  * @covers \Drupal\os_widgets\Helper\ListOfPostsWidgetHelper
  */
 class LopHelperTest extends OsWidgetsExistingSiteTestBase {
@@ -72,7 +72,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
       ['bibcite_reference:*', 'node:blog', 'node:news'])->save(TRUE);
 
     // Create entities and get ids.
-    $entities = $this->createVsiteContent();
+    $entities = $this->createVsiteContent($this->group);
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     foreach ($entities as $entity) {
       if ($entity->getEntityTypeId() !== 'bibcite_reference') {
@@ -91,17 +91,16 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
 
     $data['sortedBy'] = 'sort_newest';
     $data['contentType'] = 'all';
-    // $data['showEvents'] = '';.
     $data['publicationTypes'] = ['artwork', 'book'];
 
     // Tests Newest Sort.
     $results = $this->lopHelper->getResults($data, $this->nids, $this->pids);
-    $this->assertNotEmpty($results);
+    $this->assertEquals('News', $results[0]->title);
 
     // Test oldest sort.
     $data['sortedBy'] = 'sort_oldest';
     $results = $this->lopHelper->getResults($data, $this->nids, $this->pids);
-    $this->assertNotEmpty($results);
+    $this->assertEquals('Publication1', $results[0]->title);
 
     // Test alphabetical sort.
     $data['sortedBy'] = 'sort_alpha';
@@ -120,7 +119,6 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
   public function testLopHelperGetResultsTermFiltering() : void {
     $data['sortedBy'] = 'sort_newest';
     $data['contentType'] = 'all';
-    // $data['showEvents'] = '';.
     $data['publicationTypes'] = ['artwork', 'book'];
 
     $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
