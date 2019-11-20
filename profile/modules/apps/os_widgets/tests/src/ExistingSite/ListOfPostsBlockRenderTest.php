@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\os_widgets\ExistingSite;
 
-use Drupal\Tests\openscholar\Traits\WidgetsTestTrait;
-
 /**
  * Class ListOfPostsBlockRenderTest.
  *
