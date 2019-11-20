@@ -5,6 +5,7 @@
  * OS widgets.
  */
 
+use Drupal\views\Plugin\views\filter\Bundle;
 use Drupal\block_content\BlockContentForm;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;

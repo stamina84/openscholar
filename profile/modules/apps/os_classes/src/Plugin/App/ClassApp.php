@@ -14,6 +14,11 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *   bundle = {
  *    "class"
  *   },
+ *   viewsTabs = {
+ *     "os_classes" = {
+ *       "page_1",
+ *     },
+ *   },
  *   id = "class"
  * )
  */

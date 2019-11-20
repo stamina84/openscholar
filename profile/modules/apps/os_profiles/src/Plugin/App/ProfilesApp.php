@@ -14,6 +14,11 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *   bundle = {
  *     "person"
  *   },
+ *   viewsTabs = {
+ *     "people" = {
+ *       "page_1",
+ *     },
+ *   },
  *   id = "profiles"
  * )
  */

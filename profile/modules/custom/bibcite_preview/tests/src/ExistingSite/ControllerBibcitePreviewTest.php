@@ -9,7 +9,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Tests bibcite_preview module controller.
  *
  * @group kernel
- * @group publications
+ * @group publications-2
  */
 class ControllerBibcitePreviewTest extends OsExistingSiteTestBase {
 

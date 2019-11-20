@@ -11,3 +11,5 @@ dependencies:
   - "drupal:os_mailchimp"
   - "drupal:paragraphs"
   - "drupal:slick"
+  - "drupal:vsite"
+  - "drupal:os_widgets_context"
