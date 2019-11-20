@@ -5,11 +5,14 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
 use Drupal\media\Entity\Media;
 use Drupal\media\MediaInterface;
 use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
+use Drupal\Tests\openscholar\Traits\WidgetsTestTrait;
 
 /**
  * Base class for os_widgets tests.
  */
 class OsWidgetsExistingSiteTestBase extends OsExistingSiteTestBase {
+
+  use WidgetsTestTrait;
 
   /**
    * The entity type manager service.
@@ -68,35 +71,4 @@ class OsWidgetsExistingSiteTestBase extends OsExistingSiteTestBase {
 
     return $media;
   }
-
-  /**
-   * Create content for vsites.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  protected function createVsiteContent() : array {
-    $ref1 = $this->createReference([
-      'type' => 'artwork',
-      'html_title' => 'Publication1',
-    ]);
-    $ref2 = $this->createReference([
-      'type' => 'book',
-      'html_title' => 'Publication2',
-    ]);
-    $node1 = $this->createNode([
-      'type' => 'blog',
-      'title' => 'Blog',
-    ]);
-    $node2 = $this->createNode([
-      'type' => 'news',
-      'title' => 'News',
-    ]);
-    $this->group->addContent($ref1, 'group_entity:bibcite_reference');
-    $this->group->addContent($ref2, 'group_entity:bibcite_reference');
-    $this->group->addContent($node1, 'group_node:blog');
-    $this->group->addContent($node2, 'group_node:news');
-
-    return [$ref1, $ref2, $node1, $node2];
-  }
-
 }

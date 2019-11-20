@@ -146,7 +146,7 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
     }
 
     // Check if only certain publication types are to be displayed.
-    if ($fieldData['contentType'] === 'publication') {
+    if ($fieldData['contentType'] === 'publications') {
       $pubQuery->condition('type', $fieldData['publicationTypes'], 'IN');
     }
     return $pubQuery;

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\os_widgets\ExistingSite;
 
+use Drupal\Tests\openscholar\Traits\WidgetsTestTrait;
+
 /**
  * Class ListOfPostsBlockRenderTest.
  *
@@ -46,14 +48,14 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'field_number_of_items_to_display' => 6,
     ]);
 
-    $this->createVsiteContent();
+    $this->createVsiteContent($this->group);
 
     $render = $this->viewBuilder->view($block_content);
     $renderer = $this->container->get('renderer');
 
     /** @var \Drupal\Core\Render\Markup $markup_array */
     $markup = $renderer->renderRoot($render);
-    $this->assertContains('<ul  id="list-of-posts">', $markup->__toString());
+    $this->assertContains('<ul  id="list-of-posts"', $markup->__toString());
     $this->assertContains('Blog</a></li>', $markup->__toString());
     $this->assertContains('News</a></li>', $markup->__toString());
     $this->assertContains('Publication1</a></li>', $markup->__toString());
@@ -73,7 +75,7 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     ]);
     $block_id = $block_content->id();
 
-    $this->createVsiteContent();
+    $this->createVsiteContent($this->group);
 
     $render = $this->viewBuilder->view($block_content);
     $renderer = $this->container->get('renderer');
@@ -97,7 +99,7 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'field_number_of_items_to_display' => 6,
     ]);
 
-    $this->createVsiteContent();
+    $this->createVsiteContent($this->group);
 
     $render = $this->viewBuilder->view($block_content);
     $renderer = $this->container->get('renderer');
@@ -119,7 +121,7 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'field_number_of_items_to_display' => 6,
     ]);
 
-    $this->createVsiteContent();
+    $this->createVsiteContent($this->group);
 
     $render = $this->viewBuilder->view($block_content);
     $renderer = $this->container->get('renderer');
@@ -128,6 +130,50 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $markup = $renderer->renderRoot($render);
     $this->assertContains('<article role="article"', $markup->__toString());
     $this->assertContains('blog/blog" class="default blog">', $markup->__toString());
+  }
+
+  /**
+   * Test listing for Artwork Publication content type.
+   */
+  public function testBuildListingWithContentTypeFilterPublication() {
+    $block_content = $this->createBlockContent([
+      'type' => 'list_of_posts',
+      'field_display_style' => 'title',
+      'field_content_type' => 'publications',
+      'field_number_of_items_to_display' => 6,
+    ]);
+
+    $this->createVsiteContent($this->group);
+
+    $render = $this->viewBuilder->view($block_content);
+    $renderer = $this->container->get('renderer');
+
+    /** @var \Drupal\Core\Render\Markup $markup_array */
+    $markup = $renderer->renderRoot($render);
+    $this->assertContains('Publication1</a></li>', $markup->__toString());
+    $this->assertContains('Publication2</a></li>', $markup->__toString());
+  }
+
+  /**
+   * Test full content listing for Publication content type.
+   */
+  public function testBuildListingWithFullContentPublication() {
+    $block_content = $this->createBlockContent([
+      'type' => 'list_of_posts',
+      'field_display_style' => 'default',
+      'field_content_type' => 'publications',
+      'field_number_of_items_to_display' => 6,
+    ]);
+
+    $this->createVsiteContent($this->group);
+
+    $render = $this->viewBuilder->view($block_content);
+    $renderer = $this->container->get('renderer');
+
+    /** @var \Drupal\Core\Render\Markup $markup_array */
+    $markup = $renderer->renderRoot($render);
+    $this->assertContains('<article class="bibcite-reference">', $markup->__toString());
+    $this->assertContains('publications/publication1', $markup->__toString());
   }
 
 }

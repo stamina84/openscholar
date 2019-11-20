@@ -4,7 +4,7 @@ namespace Drupal\os_app_access;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\os_app_access\Access\AppAccess;
-use Drupal\vsite\Plugin\AppManangerInterface;
+use Drupal\vsite\Plugin\AppManager;
 
 /**
  * Class AppLoader.
@@ -16,7 +16,7 @@ class AppLoader implements AppLoaderInterface {
   /**
    * App manager.
    *
-   * @var \Drupal\vsite\Plugin\AppManangerInterface
+   * @var \Drupal\vsite\Plugin\AppManager
    */
   protected $appManager;
 
@@ -30,7 +30,7 @@ class AppLoader implements AppLoaderInterface {
   /**
    * Creates new AppAccessForm object.
    */
-  public function __construct(AppManangerInterface $app_manager, AppAccess $app_access) {
+  public function __construct(AppManager $app_manager, AppAccess $app_access) {
     $this->appManager = $app_manager;
     $this->appAccess = $app_access;
   }

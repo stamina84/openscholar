@@ -55,9 +55,11 @@ class WidgetsPaginationController extends ControllerBase {
    */
   public function changePage($id = NULL) {
     $response = new AjaxResponse();
-    $selector = $this->request->getCurrentRequest()->query->get('selector');
-    $pageId = $this->request->getCurrentRequest()->query->get('pagerid');
-    $moreId = $this->request->getCurrentRequest()->query->get('moreid');
+    /** @var \Symfony\Component\HttpFoundation\Request $current_request */
+    $current_request = $this->request->getCurrentRequest();
+    $selector = $current_request->query->get('selector');
+    $pageId = $current_request->query->get('pagerid');
+    $moreId = $current_request->query->get('moreid');
     $block = $this->entityTypeManager()->getStorage('block_content')->load($id);
     $render = $this->entityTypeManager()->getViewBuilder('block_content')->view($block);
     $response->addCommand(new ReplaceCommand('#' . $selector, $render));
