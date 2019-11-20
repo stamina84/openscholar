@@ -5,12 +5,14 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
 use Drupal\media\Entity\Media;
 use Drupal\media\MediaInterface;
 use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
+use Drupal\Tests\openscholar\Traits\WidgetsTestTrait;
 
 /**
  * Base class for os_widgets tests.
  */
 class OsWidgetsExistingSiteTestBase extends OsExistingSiteTestBase {
 
+  use WidgetsTestTrait;
   /**
    * The entity type manager service.
    *

@@ -1,0 +1,8 @@
+uuid: 33724aa5-b1c2-4909-a4f4-6d53d1749b5e
+langcode: en
+status: true
+dependencies: {  }
+id: list_of_posts
+label: 'List of Posts'
+revision: 1
+description: ''

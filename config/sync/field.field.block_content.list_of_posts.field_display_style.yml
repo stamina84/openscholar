@@ -1,0 +1,21 @@
+uuid: a86bf225-6bd0-45b4-b0a4-bec9637e4642
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.storage.block_content.field_display_style
+  module:
+    - options
+id: block_content.list_of_posts.field_display_style
+field_name: field_display_style
+entity_type: block_content
+bundle: list_of_posts
+label: 'Display style'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

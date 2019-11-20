@@ -1,8 +1,8 @@
 minimum_single: 20
 minimum_multiple: 20
 disable_search_threshold: 0
-minimum_width: 0
-use_relative_width: false
+minimum_width: 50
+use_relative_width: true
 jquery_selector: '.field--name-field-taxonomy-terms select'
 search_contains: false
 disable_search: false
@@ -14,6 +14,7 @@ disabled_themes:
   seven: '0'
   adams: '0'
   blue_sky: '0'
+  branded_theme: '0'
   cabot: '0'
   clean: '0'
   clean_blue: '0'

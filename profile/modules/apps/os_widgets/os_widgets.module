@@ -7,7 +7,10 @@
 
 use Drupal\views\Plugin\views\filter\Bundle;
 use Drupal\block_content\BlockContentForm;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\os_widgets\Plugin\DisplayVariant\PlaceBlockPageVariant;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -186,6 +189,24 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'title' => NULL,
       ],
     ],
+    'os_widgets_list_of_posts' => [
+      'variables' => [
+        'posts' => '',
+        'pager' => '',
+        'more_link' => '',
+        'attributes' => [],
+      ],
+    ],
+    'os_widgets_ajax_pager' => [
+      'variables' => [
+        'prev_link' => '',
+        'next_link' => '',
+        'pager_total' => '',
+        'curr_page' => '',
+        'heading_id' => '',
+        'pager_id' => '',
+      ],
+    ],
     'os_widgets_tabs' => [
       'variables' => [
         'contents' => [],
@@ -349,6 +370,83 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
     case 'block_content_addthis_edit_form':
       $form['addthis_description']['#markup'] = \Drupal::token()->replace('[os_widgets:addthis_display_style_description]');
       break;
+
+    case 'block_content_list_of_posts_form':
+    case 'block_content_list_of_posts_edit_form':
+
+      $form['#attached']['library'][] = 'os_widgets/lopwidgetForm';
+      $mappings = \Drupal::service('vsite.form_delete_destination')::REDIRECT_MAPPING;
+      $form['#attached']['drupalSettings']['pathMapping'] = $mappings;
+
+      // Remove None option from select lists.
+      array_shift($form['field_content_type']['widget']['#options']);
+      array_shift($form['field_display_style']['widget']['#options']);
+      array_shift($form['field_sorted_by']['widget']['#options']);
+      array_shift($form['field_show']['widget']['#options']);
+
+      // Hide revision information from widget form.
+      $form['revision_information']['#access'] = FALSE;
+
+      // Content details group.
+      $form['content_details'] = [
+        '#type' => 'details',
+        '#title' => '',
+        '#group' => 'content',
+        '#weight' => 2,
+        '#open' => TRUE,
+        '#attributes' => [
+          'class' => ['lop-details'],
+        ],
+      ];
+      $form['field_content_type']['#group'] = 'content_details';
+      $form['field_display_style']['#group'] = 'content_details';
+      $form['field_sorted_by']['#group'] = 'content_details';
+      $form['field_show']['#group'] = 'content_details';
+
+      $form['field_url_for_the_more_link']['#states'] = [
+        'visible' => [
+          ':input[name="field_show_more_link[value]"]' => ['checked' => TRUE],
+        ],
+      ];
+      $form['field_show']['#states'] = [
+        'visible' => [
+          ':input[name="field_content_type"]' => ['value' => 'events'],
+        ],
+      ];
+
+      // Publication type form element changes.
+      $form['field_publication_types']['#type'] = 'details';
+      $form['field_publication_types']['#title'] = t('Publication Types');
+      $form['field_publication_types']['widget']['#title'] = t('Select publication types to display');
+      $form['field_publication_types']['#group'] = 'content_details';
+      $form['field_publication_types']['#states'] = [
+        'visible' => [
+          'select[name="field_content_type"]' => ['value' => 'publications'],
+        ],
+      ];
+      $form['field_publication_types']['#collapsible'] = TRUE;
+      $form['field_publication_types']['#collapsed'] = TRUE;
+      // Pager details group.
+      $form['pager_details'] = [
+        '#type' => 'details',
+        '#title' => '',
+        '#group' => 'content',
+        '#weight' => 5,
+        '#open' => TRUE,
+      ];
+      $form['field_show_more_link']['#group'] = 'pager_details';
+      $form['field_show_pager']['#group'] = 'pager_details';
+      $form['field_url_for_the_more_link']['#group'] = 'pager_details';
+      $form['field_number_of_items_to_display']['#group'] = 'pager_details';
+      $uri_title = $form['field_url_for_the_more_link']['widget']['0']['#title'];
+      $form['field_url_for_the_more_link']['widget']['0']['#title'] = '';
+      $form['field_url_for_the_more_link']['widget']['0']['uri']['#title'] = Html::escape($uri_title);
+      $form['field_url_for_the_more_link']['widget']['0']['uri']['#description'] = '';
+      if (!$form['field_url_for_the_more_link']['widget']['0']['uri']['#default_value']) {
+        $form['field_url_for_the_more_link']['widget']['0']['uri']['#default_value'] = '/';
+      }
+      $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
+      $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
   }
 }
 
@@ -810,4 +908,79 @@ function os_widgets_field_mailing_list_options() {
   }
 
   return $options;
+}
+
+/**
+ * Set dynamic allowed values for the fields.
+ *
+ * @param \Drupal\field\Entity\FieldStorageConfig $definition
+ *   The field definition.
+ * @param \Drupal\Core\Entity\ContentEntityInterface|null $entity
+ *   The entity being created if applicable.
+ * @param bool $cacheable
+ *   Boolean indicating if the results are cacheable.
+ *
+ * @return array
+ *   An array of possible key and value options.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ *
+ * @see options_allowed_values()
+ */
+function os_widgets_allowed_values_lop_form(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+  $field_name = $definition->get('field_name');
+
+  $options['all'] = t('Select All');
+  if ($field_name === 'field_publication_types') {
+    $options['all'] = t('Select All');
+    $publication_types = \Drupal::entityTypeManager()->getStorage('bibcite_reference_type')->loadMultiple();
+    foreach ($publication_types as $id => $type) {
+      $options[$id] = $type->get('label');
+    }
+  }
+  elseif ($field_name === 'field_content_type') {
+    $options['all'] = t('All');
+    $apps = \Drupal::service('os_app_access.app_loader')->getAppsForUser(Drupal::currentUser());
+    foreach ($apps as $app) {
+      if ($app['entityType'] === 'media') {
+        continue;
+      }
+      $title = (string) $app['title'];
+      $bundle = $app['entityType'] === 'bibcite_reference' ? 'publications' : $app['bundle'][0];
+      $options[$bundle] = $title;
+    }
+  }
+  return $options;
+}
+
+/**
+ * Sets the default value for the fields.
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   The entity being created.
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
+ *   The field definition.
+ *
+ * @return array
+ *   An array of default value keys with each entry keyed with the “value” key.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ *
+ * @see \Drupal\Core\Field\FieldConfigBase::getDefaultValue()
+ */
+function os_widgets_default_values_lop_form(ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
+  $field_name = $definition->getName();
+
+  $default[] = ['value' => 'all'];
+  if ($field_name === 'field_publication_types') {
+    $publication_types = \Drupal::entityTypeManager()->getStorage('bibcite_reference_type')->loadMultiple();
+    foreach ($publication_types as $type) {
+      $default[] = [
+        'value' => $type->id(),
+      ];
+    }
+  }
+  return $default;
 }

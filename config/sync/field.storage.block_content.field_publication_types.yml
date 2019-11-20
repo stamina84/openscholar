@@ -1,0 +1,21 @@
+uuid: 33761194-ca82-489c-b53b-fbf4c7cf1342
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - options
+id: block_content.field_publication_types
+field_name: field_publication_types
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values: {  }
+  allowed_values_function: os_widgets_allowed_values_lop_form
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

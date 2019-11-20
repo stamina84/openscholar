@@ -1,0 +1,23 @@
+uuid: 53d537ce-2044-43da-8882-7ba63e5515fa
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.storage.block_content.field_show
+  module:
+    - options
+id: block_content.list_of_posts.field_show
+field_name: field_show
+entity_type: block_content
+bundle: list_of_posts
+label: Show
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: upcoming_events
+default_value_callback: ''
+settings: {  }
+field_type: list_string
