@@ -4,58 +4,22 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
 
 use DateTime;
 use DateInterval;
-use Drupal\block_content\BlockContentInterface;
 
 /**
- * Class TaxonomyWidget.
+ * Class TaxonomyBlockRenderTest.
  *
  * @group kernel
  * @group widgets-2
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\TaxonomyWidget
  */
-class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
-
-  /**
-   * The object we're testing.
-   *
-   * @var \Drupal\os_widgets\Plugin\OsWidgets\TaxonomyWidget
-   */
-  protected $taxonomyWidget;
-
-  /**
-   * Test vocabulary.
-   *
-   * @var \Drupal\taxonomy\Entity\Vocabulary
-   */
-  protected $vocabulary;
-
-  /**
-   * Config.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $config;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-    $this->taxonomyWidget = $this->osWidgets->createInstance('taxonomy_widget');
-    $this->vocabulary = $this->createVocabulary();
-    $this->config = $this->container->get('config.factory');
-    // Reset vocabulary allowed values.
-    $config_vocab = $this->config->getEditable('taxonomy.vocabulary.' . $this->vocabulary->id());
-    $config_vocab->set('allowed_vocabulary_reference_types', [])
-      ->save(TRUE);
-  }
+class TaxonomyBlockRenderTest extends TaxonomyBlockRenderTestBase {
 
   /**
    * Test basic listing test without count.
    */
   public function testBuildListingTaxonomyTermsWithoutCount() {
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2']);
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary);
 
     $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
@@ -81,7 +45,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test empty term without count if show count is enabled.
    */
   public function testBuildTaxonomyTermsWithoutCountEnableShowCount() {
-    $term = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
+    $term = $this->createTerm($this->vocabulary);
 
     $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
@@ -105,8 +69,8 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test listing test with depth.
    */
   public function testBuildListingTaxonomyTermsWithDepth() {
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2', 'parent' => $term1->id()]);
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary, ['parent' => $term1->id()]);
 
     $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
@@ -151,8 +115,8 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test listing test unchecked show children.
    */
   public function testBuildListingTaxonomyTermsUncheckedShowChildren() {
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2', 'parent' => $term1->id()]);
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary, ['parent' => $term1->id()]);
 
     $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
@@ -181,11 +145,11 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test listing with max number on top level.
    */
   public function testBuildListingWithMaxNumberTopLevel() {
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2']);
-    $term3 = $this->createTerm($this->vocabulary, ['name' => 'Lorem3', 'parent' => $term2->id()]);
-    $term4 = $this->createTerm($this->vocabulary, ['name' => 'Lorem4', 'parent' => $term2->id()]);
-    $term5 = $this->createTerm($this->vocabulary, ['name' => 'Lorem5']);
+    $term1 = $this->createTerm($this->vocabulary, ['weight' => 0]);
+    $term2 = $this->createTerm($this->vocabulary, ['weight' => 1]);
+    $term3 = $this->createTerm($this->vocabulary, ['weight' => 2, 'parent' => $term2->id()]);
+    $term4 = $this->createTerm($this->vocabulary, ['weight' => 3, 'parent' => $term2->id()]);
+    $term5 = $this->createTerm($this->vocabulary, ['weight' => 4]);
 
     $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
@@ -214,18 +178,15 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test listing with max number and offset on top level.
    */
   public function testBuildListingWithMaxNumberAndOffsetTopLevel() {
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2', 'parent' => $term1->id()]);
-    $term3 = $this->createTerm($this->vocabulary, ['name' => 'Lorem3']);
-    $term4 = $this->createTerm($this->vocabulary, ['name' => 'Lorem4', 'parent' => $term3->id()]);
-    $term5 = $this->createTerm($this->vocabulary, ['name' => 'Lorem5']);
-    $term6 = $this->createTerm($this->vocabulary, ['name' => 'Lorem6']);
+    $term1 = $this->createTerm($this->vocabulary, ['weight' => 0]);
+    $term2 = $this->createTerm($this->vocabulary, ['weight' => 1, 'parent' => $term1->id()]);
+    $term3 = $this->createTerm($this->vocabulary, ['weight' => 2]);
+    $term4 = $this->createTerm($this->vocabulary, ['weight' => 3, 'parent' => $term3->id()]);
+    $term5 = $this->createTerm($this->vocabulary, ['weight' => 4]);
+    $term6 = $this->createTerm($this->vocabulary, ['weight' => 5]);
 
     $block_content = $this->createTaxonomyBlockContent([
       'type' => 'taxonomy',
-      'field_taxonomy_vocabulary' => [
-        $this->vocabulary->id(),
-      ],
       'field_taxonomy_offset' => [
         1,
       ],
@@ -252,7 +213,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test listing description visibility.
    */
   public function testBuildListingDescriptionVisibility() {
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
+    $term1 = $this->createTerm($this->vocabulary);
 
     // Hide description.
     $block_content = $this->createTaxonomyBlockContent([
@@ -305,9 +266,9 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
         'node:taxonomy_test_1',
       ])
       ->save(TRUE);
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2', 'parent' => $term1->id()]);
-    $term3 = $this->createTerm($this->vocabulary, ['name' => 'Lorem3', 'parent' => $term2->id()]);
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary, ['parent' => $term1->id()]);
+    $term3 = $this->createTerm($this->vocabulary, ['parent' => $term2->id()]);
     // Use cp_taxonomy_test's content type.
     $this->createNode([
       'type' => 'taxonomy_test_1',
@@ -348,9 +309,9 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
         'node:taxonomy_test_1',
       ])
       ->save(TRUE);
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2', 'parent' => $term1->id()]);
-    $term3 = $this->createTerm($this->vocabulary, ['name' => 'Lorem3', 'parent' => $term2->id()]);
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary, ['parent' => $term1->id()]);
+    $term3 = $this->createTerm($this->vocabulary, ['parent' => $term2->id()]);
     // Use cp_taxonomy_test's content type.
     $this->createNode([
       'type' => 'taxonomy_test_1',
@@ -394,9 +355,9 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
         'node:taxonomy_test_1',
       ])
       ->save(TRUE);
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2', 'parent' => $term1->id()]);
-    $term3 = $this->createTerm($this->vocabulary, ['name' => 'Lorem3', 'parent' => $term2->id()]);
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary, ['parent' => $term1->id()]);
+    $term3 = $this->createTerm($this->vocabulary, ['parent' => $term2->id()]);
     // Use cp_taxonomy_test's content type.
     $this->createNode([
       'type' => 'taxonomy_test_1',
@@ -442,7 +403,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
         'bibcite_reference:artwork',
       ])
       ->save(TRUE);
-    $term = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
+    $term = $this->createTerm($this->vocabulary);
     // Create nodes.
     $this->createNode([
       'type' => 'taxonomy_test_1',
@@ -516,7 +477,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
         'node:taxonomy_test_1',
       ])
       ->save(TRUE);
-    $term = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
+    $term = $this->createTerm($this->vocabulary);
     // Create nodes.
     $this->createNode([
       'type' => 'taxonomy_test_1',
@@ -589,7 +550,7 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test behavior values.
    */
   public function testBuildBehaviorValuesTheme() {
-    $term = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
+    $term = $this->createTerm($this->vocabulary);
     // Create node.
     $this->createNode([
       'type' => 'taxonomy_test_1',
@@ -652,8 +613,8 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
         'node:past_events',
       ])
       ->save(TRUE);
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2']);
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary);
     // Create past event.
     $new_datetime = new DateTime();
     $date_interval = new DateInterval('P2D');
@@ -703,8 +664,8 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
         'node:upcoming_events',
       ])
       ->save(TRUE);
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2']);
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary);
     // Create future event.
     $new_datetime = new DateTime();
     $date_interval = new DateInterval('P2D');
@@ -754,8 +715,8 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
         'node:upcoming_events',
       ])
       ->save(TRUE);
-    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
-    $term2 = $this->createTerm($this->vocabulary, ['name' => 'Lorem2']);
+    $term1 = $this->createTerm($this->vocabulary);
+    $term2 = $this->createTerm($this->vocabulary);
     // Create both events.
     $new_datetime = new DateTime();
     $date_interval = new DateInterval('P2D');
@@ -809,28 +770,6 @@ class TaxonomyBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $markup = $renderer->renderRoot($render);
     $this->assertContains($term1->label() . ' (1)', $markup->__toString());
     $this->assertContains($term2->label() . ' (1)', $markup->__toString());
-  }
-
-  /**
-   * Creates a taxonomy block content.
-   *
-   * @param array $values
-   *   (optional) The values used to create the entity.
-   *
-   * @return \Drupal\block_content\BlockContentInterface
-   *   The created block content entity.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  protected function createTaxonomyBlockContent(array $values = []): BlockContentInterface {
-    // Add default required fields.
-    $values += [
-      'field_taxonomy_behavior' => ['--all--'],
-      'field_taxonomy_vocabulary' => [$this->vocabulary->id()],
-      'field_taxonomy_tree_depth' => [0],
-      'field_taxonomy_display_type' => ['classic'],
-    ];
-    return $this->createBlockContent($values);
   }
 
 }

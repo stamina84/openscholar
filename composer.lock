@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "33ffb6ca1b29f582f20905d0549daa2c",
+    "content-hash": "f19a5aa098944539827e40936d0653b1",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -1732,6 +1732,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -8116,16 +8117,16 @@
         },
         {
             "name": "eluceo/ical",
-            "version": "0.15.0",
+            "version": "0.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/markuspoerschke/iCal.git",
-                "reference": "add0ca99aa1f77f134a2e8b071f2ebc22b115139"
+                "reference": "bdd24747587f6f9b10770a7b873a13e273f85f39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/markuspoerschke/iCal/zipball/add0ca99aa1f77f134a2e8b071f2ebc22b115139",
-                "reference": "add0ca99aa1f77f134a2e8b071f2ebc22b115139",
+                "url": "https://api.github.com/repos/markuspoerschke/iCal/zipball/bdd24747587f6f9b10770a7b873a13e273f85f39",
+                "reference": "bdd24747587f6f9b10770a7b873a13e273f85f39",
                 "shasum": ""
             },
             "require": {
@@ -8163,7 +8164,7 @@
                 "ics",
                 "php calendar"
             ],
-            "time": "2019-01-13T22:00:58+00:00"
+            "time": "2019-08-06T20:33:43+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -15098,6 +15099,89 @@
                 "ui"
             ],
             "time": "2018-06-28T20:32:51+00:00"
+        },
+        {
+            "name": "sweetchuck/cdd",
+            "version": "v0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sweetchuck/cdd.git",
+                "reference": "54426dee762f4e87333f0f28c9fca5c6f0a86511"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sweetchuck/cdd/zipball/54426dee762f4e87333f0f28c9fca5c6f0a86511",
+                "reference": "54426dee762f4e87333f0f28c9fca5c6f0a86511",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0",
+                "squizlabs/php_codesniffer": "^3.3",
+                "sweetchuck/git-hooks": "^0.0",
+                "sweetchuck/robo-git": "^0.0",
+                "sweetchuck/robo-phpcs": "^0.0",
+                "sweetchuck/robo-phpmd": "^0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sweetchuck\\cdd\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "description": "Circular dependency detector",
+            "time": "2018-11-30T22:36:58+00:00"
+        },
+        {
+            "name": "sweetchuck/robo-cdd",
+            "version": "v0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sweetchuck/robo-cdd.git",
+                "reference": "8ccd3cf4290cfcd22b0bdf524a26f774e8f5a865"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sweetchuck/robo-cdd/zipball/8ccd3cf4290cfcd22b0bdf524a26f774e8f5a865",
+                "reference": "8ccd3cf4290cfcd22b0bdf524a26f774e8f5a865",
+                "shasum": ""
+            },
+            "require": {
+                "consolidation/robo": "^1.0",
+                "php": ">=7.1",
+                "sweetchuck/cdd": "^0.0"
+            },
+            "require-dev": {
+                "codeception/codeception": "^2.3",
+                "danielstjules/stringy": "^3.0",
+                "phpmetrics/phpmetrics": "^2.4",
+                "squizlabs/php_codesniffer": "^3.3",
+                "sweetchuck/codeception-module-robo-task-runner": "^0.0",
+                "sweetchuck/git-hooks": "^0.0",
+                "sweetchuck/robo-git": "^0.0",
+                "sweetchuck/robo-phpcs": "^0.0",
+                "sweetchuck/robo-phpmd": "^0.0",
+                "symfony/finder": "^3.2 || ^4.0",
+                "webmozart/path-util": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sweetchuck\\Robo\\cdd\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "description": "Robo task wrapper for the Circular Dependency Detector",
+            "time": "2018-12-01T09:39:02+00:00"
         },
         {
             "name": "textalk/websocket",

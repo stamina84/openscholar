@@ -84,6 +84,19 @@ class TaxonomyTermsWidgetHelperTest extends TestBase {
   }
 
   /**
+   * Test widget select on node form.
+   */
+  public function testTaxonomyTermWidgetSelectEmptyForm() {
+    $vid = $this->randomMachineName();
+    $this->createGroupVocabulary($this->group, $vid, ['node:class'], CpTaxonomyHelper::WIDGET_TYPE_OPTIONS_SELECT);
+
+    $form = $this->buildNodeForm($this->unSavedNode);
+    $this->assertNotEmpty($form['field_taxonomy_terms']['widget'][$vid], 'Select widget is not exists.');
+    $widget_element = $form['field_taxonomy_terms']['widget'][$vid];
+    $this->assertArrayNotHasKey('#options', $widget_element, 'Elements are exist.');
+  }
+
+  /**
    * Test widget checkboxes on node form.
    */
   public function testTaxonomyTermWidgetCheckboxesForm() {
