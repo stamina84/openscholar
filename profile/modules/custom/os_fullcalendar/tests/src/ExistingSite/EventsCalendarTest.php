@@ -67,7 +67,7 @@ class EventsCalendarTest extends EventTestBase {
     ]);
 
     $this->group->addContent($past_event, "group_node:{$past_event->bundle()}");
-    $this->visit("{$this->group->get('path')->first()->getValue()['alias']}/calendar/past");
+    $this->visit("{$this->group->get('path')->first()->getValue()['alias']}/calendar/past_events");
     $web_assert->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Past event');
   }

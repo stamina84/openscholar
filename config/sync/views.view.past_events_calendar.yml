@@ -350,7 +350,7 @@ display:
         type: none
         options:
           offset: 0
-      path: calendar/past/rss
+      path: calendar/past_events/rss
       displays:
         default: '0'
       defaults:
@@ -381,7 +381,7 @@ display:
           separator: ''
           hide_empty: 0
       display_description: ''
-      path: past-calendar.ics
+      path: past-events-calendar.ics
       style:
         type: ical
         options:
@@ -803,7 +803,7 @@ display:
         groups:
           1: AND
       title: 'Past Events'
-      path: calendar/past
+      path: calendar/past_events
       menu:
         type: tab
         title: 'Past Events'
