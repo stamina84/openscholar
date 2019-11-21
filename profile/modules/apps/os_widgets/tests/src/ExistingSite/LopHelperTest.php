@@ -4,6 +4,7 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
 
 use DateInterval;
 use DateTime;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Class LopHelperTest.
@@ -128,7 +129,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $this->group->addContent($term2, 'group_entity:taxonomy_term');
 
     foreach ([$term1, $term2] as $term) {
-      $tids[] = $term->id();
+      $tids[$term->bundle()][] = $term->id();
     }
 
     // Tests when no terms attached no results are returned.
@@ -205,6 +206,78 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     // Test all events that all are returned.
     $data['showEvents'] = 'all_events';
     $results = $this->lopHelper->getResults($data, [$eventNode1->id(), $eventNode2->id()]);
+    $this->assertCount(2, $results);
+  }
+
+  /**
+   * Test no Duplicates and (AND)/(OR) filtering by vocabs.
+   */
+  public function testLopHelperGetResultsVocabAndFiltering() : void {
+    $data['sortedBy'] = 'sort_newest';
+    $data['contentType'] = 'all';
+    $data['publicationTypes'] = ['artwork', 'book'];
+
+    $vocabulary2 = $this->createVocabulary();
+
+    $term1 = $this->createTerm($this->vocabulary, ['name' => 'Lorem1']);
+    $term2 = $this->createTerm($vocabulary2, ['name' => 'Lorem2']);
+    $term3 = $this->createTerm($vocabulary2, ['name' => 'Lorem2']);
+
+    $this->group->addContent($term1, 'group_entity:taxonomy_term');
+    $this->group->addContent($term2, 'group_entity:taxonomy_term');
+    $this->group->addContent($term3, 'group_entity:taxonomy_term');
+
+    $blog_with_single_term = $this->createNode([
+      'title' => 'Blog1',
+      'type' => 'blog',
+      'status' => 1,
+      'field_taxonomy_terms' => [
+        $term1->id(),
+      ],
+    ]);
+
+    $blog_with_multiple_terms = $this->createNode([
+      'title' => 'Blog2',
+      'type' => 'blog',
+      'status' => 1,
+      'field_taxonomy_terms' => [
+        $term1->id(),
+        $term2->id(),
+      ],
+    ]);
+
+    $blog_with_single_term2 = $this->createNode([
+      'title' => 'Blog3',
+      'type' => 'blog',
+      'status' => 1,
+      'field_taxonomy_terms' => [
+        $term2->id(),
+      ],
+    ]);
+
+    array_push($this->nids, $blog_with_single_term->id());
+    array_push($this->nids, $blog_with_multiple_terms->id());
+    array_push($this->nids, $blog_with_single_term2->id());
+    $this->group->addContent($blog_with_single_term, 'group_node:blog');
+    $this->group->addContent($blog_with_multiple_terms, 'group_node:blog');
+    $this->group->addContent($blog_with_single_term2, 'group_node:blog');
+
+    // Tests AND between Vocabs.
+    foreach ([$term1, $term2] as $term) {
+      $tids[$term->bundle()][] = $term->id();
+    }
+    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids, $tids);
+    // Assert No duplicates.
+    $this->assertCount(1, $results);
+    // Assert only nid with both vocab terms (AND) is returned.
+    $this->assertEquals('Blog2', $results[0]->title);
+
+    // Tests OR within a Vocab.
+    foreach ([$term2, $term3] as $term) {
+      $termIds[$term->bundle()][] = $term->id();
+    }
+    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids, $termIds);
+    // Assert both nids are returned confirming OR.
     $this->assertCount(2, $results);
   }
 

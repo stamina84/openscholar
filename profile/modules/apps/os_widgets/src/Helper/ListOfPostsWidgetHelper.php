@@ -86,9 +86,13 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
     $nodeQuery = $this->connection->select('node_field_data', 'nfd');
     $nodeQuery->fields('nfd', ['nid', 'created', 'title', 'type'])
       ->condition('nid', $nodesList, 'IN');
+
     if ($tids) {
-      $nodeQuery->join('node__field_taxonomy_terms', 'nftm', 'nfd.nid = nftm.entity_id');
-      $nodeQuery->condition('field_taxonomy_terms_target_id', $tids, 'IN');
+      // And condition for vocabs.
+      foreach ($tids as $vid => $terms) {
+        $nodeQuery->join('node__field_taxonomy_terms', $vid, "nfd.nid = $vid.entity_id");
+        $nodeQuery->condition("$vid.field_taxonomy_terms_target_id", $terms, 'IN');
+      }
     }
 
     // If events node is selected then check if only upcoming or past events
@@ -118,7 +122,7 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
       }
       $nodeQuery->condition('nid', $to_keep, 'IN');
     }
-    return $nodeQuery;
+    return $nodeQuery->distinct(TRUE);
   }
 
   /**
@@ -141,15 +145,17 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
     $pubQuery->fields('pub', ['id', 'created', 'title', 'type'])
       ->condition('id', $pubList, 'IN');
     if ($tids) {
-      $pubQuery->join('bibcite_reference__field_taxonomy_terms', 'pubftm', 'pub.id = pubftm.entity_id');
-      $pubQuery->condition('field_taxonomy_terms_target_id', $tids, 'IN');
+      // And condition for vocabs.
+      foreach ($tids as $vid => $terms) {
+        $pubQuery->join('bibcite_reference__field_taxonomy_terms', $vid, "pub.id = $vid.entity_id");
+        $pubQuery->condition("$vid.field_taxonomy_terms_target_id", $terms, 'IN');
+      }
     }
-
     // Check if only certain publication types are to be displayed.
     if ($fieldData['contentType'] === 'publications') {
       $pubQuery->condition('type', $fieldData['publicationTypes'], 'IN');
     }
-    return $pubQuery;
+    return $pubQuery->distinct(TRUE);
   }
 
 }

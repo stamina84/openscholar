@@ -15,6 +15,7 @@ use Drupal\os_app_access\AppLoader;
 use Drupal\os_widgets\Helper\ListOfPostsWidgetHelper;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -114,8 +115,10 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $terms = $block_content->get('field_filter_by_vocabulary')->getValue();
     $tids = [];
     foreach ($terms as $tid) {
-      $tids[] = $tid['target_id'];
+      $vid = Term::load($tid['target_id'])->bundle();
+      $tids[$vid][] = $tid['target_id'];
     }
+
     $nodes = [];
     $publications = [];
     $nodesList = NULL;
