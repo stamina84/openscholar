@@ -115,8 +115,10 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $terms = $block_content->get('field_filter_by_vocabulary')->getValue();
     $tids = [];
     foreach ($terms as $tid) {
-      $vid = Term::load($tid['target_id'])->bundle();
-      $tids[$vid][] = $tid['target_id'];
+      if ($term = Term::load($tid['target_id'])) {
+        $vid = $term->bundle();
+        $tids[$vid][] = $tid['target_id'];
+      }
     }
 
     $nodes = [];
