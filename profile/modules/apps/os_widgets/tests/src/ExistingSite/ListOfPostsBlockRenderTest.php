@@ -126,7 +126,7 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     /** @var \Drupal\Core\Render\Markup $markup_array */
     $markup = $renderer->renderRoot($render);
     $this->assertContains('<article role="article"', $markup->__toString());
-    $this->assertContains('blog/blog" class="default blog">', $markup->__toString());
+    $this->assertContains('blog/blog', $markup->__toString());
   }
 
   /**
