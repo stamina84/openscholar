@@ -1,15 +1,18 @@
-.fc-listUpcoming-view .fc-list-heading {
-  .fc-list-heading-main {
+.calendar.node--calendar {
+  .event-start {
     @extend %extend_1;
     .event-year {
       padding: 8px 0 0;
     }
-    span.event-year {
-      font-size: 13px;
+    span {
+      color: $white;
+      &.event-year {
+        font-size: 13px;
+      }
+      &.event-start-month, &.event-start-day {
+        color: $white;
+      }
     }
-  }
-  span.fc-list-heading-main span {
-    color: $white;
   }
 }
 .fc-header-toolbar h3 {
