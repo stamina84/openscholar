@@ -75,7 +75,6 @@ dependencies:
   - drupal:os_app_access
   - drupal:os_classes
   - drupal:os_fullcalendar
-  - drupal:os_links
   - drupal:os_mailchimp
   - drupal:os_media_gallery
   - drupal:os_metatag
