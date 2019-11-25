@@ -245,3 +245,10 @@ aside {
   display: flex;
   width: 100%;
 }
+/**** today view full calendar ****/
+.fc-today-view {
+  .fc-event-default, a {
+    background: none;
+    border: 0;
+  }
+}
