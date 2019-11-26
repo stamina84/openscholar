@@ -79,13 +79,13 @@ class CpMenuLinksTest extends OsExistingSiteJavascriptTestBase {
     $this->visit('/test-menu/cp/build/menu');
     $session = $this->assertSession();
     $page = $this->getCurrentPage();
-    $session->elementExists('css', '#cp-build-menu-table .Calendar');
-    $link = $page->find('css', '.Calendar #delete_menu_link');
+    $session->elementExists('css', '#cp-build-menu-table .News');
+    $link = $page->find('css', '.News #delete_menu_link');
     $link->click();
     $session->waitForElementVisible('css', '.cp-delete-menu-link');
     $this->submitForm([], 'Confirm');
     $session->waitForElementVisible('css', '#cp-build-menu-table');
-    $session->elementNotExists('css', '#cp-build-menu-table .Calendar');
+    $session->elementNotExists('css', '#cp-build-menu-table .News');
   }
 
 }
