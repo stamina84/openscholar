@@ -45,6 +45,7 @@ cd ..
 git clone --branch 8.x-1.x-dev https://github.com/openscholar/openscholar.git some-dir
 cd some-dir
 cp defaults/.env .
+mkdir -p web/sites/default
 cp defaults/settings.local.php web/sites/default
 cp defaults/settings.php web/sites/default
 docker-compose up -d
