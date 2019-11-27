@@ -133,3 +133,66 @@ ul.nav-tabs {
   margin-left: 0;
   margin-bottom: 10px;
 }
+/**** widget tabs ****/
+.block--type-tabs {
+  .nav-tabs {
+    display: flex;
+    margin-bottom: 0;
+    > li {
+      flex: 1 1 auto;
+      a {
+        background: $color-light-gray4;
+        color: $color-black1;
+        border-color: $color-light-gray6;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 0.1em;
+        padding: 25px 12px;
+        text-transform: uppercase;
+        border-bottom: 0 none;
+        border-right: 0;
+        border-radius: 0;
+        margin: 0;
+        .field {
+          margin-bottom: 0;
+        }
+      }
+      &:last-child {
+        a {
+          border-right: 1px solid $color-light-gray6;
+        }
+      }
+      &.active {
+        a {
+          background: $color-white;
+          &:hover, &:focus {
+            border-color:$color-light-gray6;
+            border-bottom: transparent;
+            border-right: 0;
+          }
+        }
+        &:last-child {
+          a {
+            &:hover, &:focus {
+              border-right: 1px solid $color-light-gray6;
+            }
+          }
+        }
+      }
+    }
+  }
+  .tab-content {
+    border: 1px solid $color-light-gray6;
+    border-top: 0;
+    margin-top: 0;
+    color: $color-black1;
+    padding: 10px;
+  }
+  //contexual filter overlap fixes
+  .tab-pane {
+    .contextual {
+      top: 35px;
+    }
+  }
+}

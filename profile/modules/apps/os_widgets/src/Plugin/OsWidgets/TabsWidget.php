@@ -5,7 +5,6 @@ namespace Drupal\os_widgets\Plugin\OsWidgets;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
-use Drupal\Core\Entity\EntityTypeManager;
 
 /**
  * Class TabsWidget.
@@ -23,12 +22,21 @@ class TabsWidget extends OsWidgetsBase implements OsWidgetsInterface {
   public function buildBlock(&$build, $block_content) {
     $contents = [];
     $add_widgets = $block_content->get('field_widget_collection')->getValue();
-
     foreach ($add_widgets as $widget) {
       $bid = $widget['target_id'];
       $block = BlockContent::load($bid);
       $render = $this->entityTypeManager->getViewBuilder('block_content')->view($block);
-      $contents[$bid] = $render;
+      $contextual_link_placeholder = [
+        '#type' => 'contextual_links_placeholder',
+        '#id' => _contextual_links_to_id($render['#contextual_links']),
+      ];
+      $section_title = $widget['section_title'];
+
+      $contents[$bid] = [
+        'widget' => $render,
+        'contextual_link' => $contextual_link_placeholder,
+        'section_title' => $section_title,
+      ];
     }
 
     $build['tabs'] = [

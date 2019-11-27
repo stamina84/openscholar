@@ -14,3 +14,4 @@ dependencies:
   - "drupal:vsite"
   - "drupal:os_widgets_context"
   - "drupal:os_app_access"
+  - "drupal:field"

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\os_media\Plugin\Field\FieldWidget;
+namespace Drupal\os_widgets\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -30,7 +30,7 @@ use Drupal\vsite\Plugin\VsiteContextManagerInterface;
  *   id = "list_collection_widget",
  *   label = @Translation("List Collection"),
  *   field_types = {
- *     "entity_reference"
+ *     "entity_reference_with_value"
  *   }
  * )
  */
@@ -87,15 +87,13 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $field_settings = $this
-      ->getFieldSettings();
     $referenced_entities = $items->referencedEntities();
     $widget_title = '';
     $entity = NULL;
-
     if (isset($referenced_entities[$delta])) {
       $entity = $referenced_entities[$delta];
       $widget_title = $entity->field_widget_title->getString();
+      $section_title = $items[$delta]->section_title;
     }
 
     if ($entity) {
@@ -105,7 +103,7 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
           '#type' => 'value',
           '#value' => $entity->id(),
         ],
-        'widget_title' => $field_settings['widget_title'] ?? $widget_title,
+        'section_title' => $section_title ?? $widget_title,
       ];
     }
     return $element;
@@ -138,9 +136,6 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
             $values[$key] += $value['target_id'];
           }
         }
-      }
-      else {
-        unset($values[$key]);
       }
 
     }
@@ -198,7 +193,6 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
         '#type' => 'container',
         'select_input' => [
           '#title' => $title,
-          '#description' => $description,
           '#type' => 'select',
           '#options' => $this->getOptions($items->getEntity()),
           '#default_value' => NULL,
@@ -218,6 +212,11 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
               'add-button',
             ],
           ],
+        ],
+        'description' => [
+          '#markup' => $description,
+          '#prefix' => '<div class="description">',
+          '#suffix' => '</div>',
         ],
       ],
 
@@ -267,9 +266,9 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
           '#attributes' => ['class' => ['widget-table-order-weight']],
         ];
 
-        $widget_table[$delta]['widget_title_input'] = [
+        $widget_table[$delta]['section_title'] = [
           '#type' => 'textfield',
-          '#default_value' => $element['widget_title'],
+          '#default_value' => $element['section_title'],
         ];
 
         $widget_table[$delta]['remove'] = [
