@@ -22,26 +22,17 @@
       return $.extend({
         eventRender: function (event, element) {
           makeTodaybtnActive();
-          if (element.hasClass('fc-event-future') && !element.hasClass('fc-day-grid-event')) {
-            let userOffsetInSeconds = drupalSettings['os_events']['offsetInM']/3600;
-            let userOffsetInHM = drupalSettings['os_events']['offsetInHm'];
-            let dateString = event['start']['_i'] + userOffsetInHM;
-            let date = new Date(dateString).getTime()/1000;
-            let eventDate = (date - (userOffsetInSeconds*3600));
-            let nid = event.eid;
-            element.html(drupalSettings['os_events']['node'][nid]);
-            element.find('#events_signup_modal_form').attr('href', '/events/signup/' + nid + '/' + eventDate);
-          }
-          else if (element.hasClass('fc-event-past') && !element.hasClass('fc-day-grid-event')) {
-            let nid = event.eid;
-            element.html(drupalSettings[nid]);
-          }
         },
         eventAfterAllRender: function (view) {
           makeTodaybtnActive();
           if(view.name == 'today') {
             $('.fullcalendar').fullCalendar('today');
             makeTodaybtnActive();
+            $('.fc-prev-button').hide();
+            $('.fc-next-button').hide();
+          } else {
+            $('.fc-prev-button').show();
+            $('.fc-next-button').show();
           }
         },
         views: {
