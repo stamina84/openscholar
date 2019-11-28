@@ -72,4 +72,36 @@ abstract class OsExistingSiteTestBase extends ExistingSiteBase {
     $this->group->delete();
   }
 
+  /**
+   * Get formatter instance.
+   *
+   * @param string $entity_type_id
+   *   Entity type id.
+   * @param string $bundle
+   *   Bundle.
+   * @param string $field_name
+   *   Field name value.
+   * @param string $formatter
+   *   Formatter id.
+   * @param array $settings
+   *   Formatter settings.
+   *
+   * @return \Drupal\Core\Field\FormatterInterface
+   *   Formatter instance.
+   */
+  public function getFormatterInstance(string $entity_type_id, string $bundle, string $field_name, string $formatter, array $settings) {
+    $field_definitions = $this->container->get('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle);
+    $formatter_plugin_manager = $this->container->get('plugin.manager.field.formatter');
+
+    $options = [
+      'field_definition' => $field_definitions[$field_name],
+      'configuration' => [
+        'type' => $formatter,
+        'settings' => $settings,
+      ],
+      'view_mode' => 'default',
+    ];
+    return $formatter_plugin_manager->getInstance($options);
+  }
+
 }

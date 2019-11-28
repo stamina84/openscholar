@@ -54,6 +54,7 @@ slideshowWidget:
   js:
     js/os_widgets.slideshow.js: { weight: -1 }
   dependencies:
+    - core/drupal.dialog.ajax
     - slick/slick.load
 lopwidgetForm:
   js:

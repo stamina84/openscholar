@@ -212,6 +212,12 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'contents' => [],
       ],
     ],
+    'os_slideshow_formatter' => [
+      'variables' => [
+        'image' => NULL,
+        'url' => NULL,
+      ],
+    ],
     'os_widgets_accordion' => [
       'variables' => [
         'bid' => NULL,

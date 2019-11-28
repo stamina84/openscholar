@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a formatted slideshow image.
+ *
+ * Available variables:
+ * - image: A collection of image data.
+ * - url: An optional URL the image can be linked to.
+ *
+ * @ingroup themeable
+ */
+#}
+{% if url %}
+  {{ link(image, url) }}
+{% else %}
+  {{ image }}
+{% endif %}

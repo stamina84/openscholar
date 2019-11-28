@@ -24,17 +24,22 @@
   };
 
   Drupal.osWidgetsSlideshow.replaceResponsiveImage = function(event, slick, breakpoint, element) {
-    if (breakpoint === null) {
-      return;
-    }
-    $.each(element.find('.paragraph'), function () {
+    $.each(element.find('img.slideshow-image'), function () {
       breakpoint_uri = $(this).data('breakpoint_uri');
+      // If breakpoint null, that means larger than 768px.
+      if (breakpoint === null && breakpoint_uri['large'] !== undefined) {
+        // Set back to default large.
+        $(this).attr('src', breakpoint_uri['large'].uri);
+        return;
+      } else if (breakpoint === null) {
+        // We have no large option.
+        return;
+      }
       if (!(breakpoint in breakpoint_uri)) {
         console.log('Invalid key in breakpoint_uri array: ' + breakpoint);
         return;
       }
-      var img = $(this).find('.field--name-field-media-image img');
-      img.attr('src', breakpoint_uri[breakpoint].uri);
+      $(this).attr('src', breakpoint_uri[breakpoint].uri);
     });
   }
 

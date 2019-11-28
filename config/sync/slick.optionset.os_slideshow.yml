@@ -13,10 +13,10 @@ label: 'Os slideshow'
 weight: -10
 group: ''
 skin: default
-breakpoints: 3
+breakpoints: 2
 optimized: false
 options:
-  options__active_tab: edit-options-responsives
+  options__active_tab: edit-options-settings
   settings:
     mobileFirst: false
     asNavFor: ''
@@ -72,7 +72,7 @@ options:
   responsives:
     responsive:
       -
-        breakpoint: 300
+        breakpoint: 576
         unslick: false
         settings:
           adaptiveHeight: false
@@ -109,44 +109,7 @@ options:
           verticalSwiping: false
           waitForAnimate: true
       -
-        breakpoint: 600
-        unslick: false
-        settings:
-          adaptiveHeight: false
-          autoplay: false
-          autoplaySpeed: 3000
-          pauseOnHover: false
-          pauseOnDotsHover: false
-          pauseOnFocus: false
-          arrows: true
-          centerMode: false
-          centerPadding: 50px
-          dots: false
-          draggable: true
-          fade: false
-          focusOnSelect: false
-          infinite: true
-          initialSlide: 0
-          respondTo: slider
-          rows: 1
-          slidesPerRow: 1
-          slidesToShow: 1
-          slidesToScroll: 1
-          speed: 500
-          swipe: true
-          swipeToSlide: false
-          edgeFriction: 0.35000000000002
-          touchMove: true
-          touchThreshold: 5
-          cssEase: ease
-          cssEaseBezier: ''
-          cssEaseOverride: ''
-          variableWidth: false
-          vertical: false
-          verticalSwiping: false
-          waitForAnimate: true
-      -
-        breakpoint: 900
+        breakpoint: 768
         unslick: false
         settings:
           adaptiveHeight: false
