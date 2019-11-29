@@ -33,40 +33,27 @@ composer require drupal/devel:~1.0
 
 1. [Docker](https://docs.docker.com/install)
 2. Add `127.0.0.1 home.d8.theopenscholar.com` to your hosts file.
+3. Create a GitHub token for Composer - refer https://www.previousnext.com.au/blog/managing-composer-github-access-personal-access-tokens for creating the token, and save it somewhere.
 
 After that:
 
 ```bash
 
-git clone https://github.com/jaybeaton/traefik-helper.git traefik-helper
+git clone https://github.com/subhojit777/traefik-helper.git traefik-helper
 cd traefik-helper
 ./traefik-helper.sh up -d
 cd ..
 git clone --branch 8.x-1.x-dev https://github.com/openscholar/openscholar.git some-dir
 cd some-dir
 cp defaults/.env .
-cp defaults/settings.local.php web/sites/default
-cp defaults/settings.php web/sites/default
+vi .env # Use the GitHub token created before in GITHUB_TOKEN variable.
 docker-compose up -d
 docker-compose exec php composer install
+cp defaults/settings.local.php web/sites/default
+cp defaults/settings.php web/sites/default
 ./drush.sh site-install openscholar -vvv -y --db-url=mysql://osd8dev:drupal@mariadb/osd8dev --existing-config --account-pass=ADMIN_PASSWORD
-./drush.sh updb -y
-./drush.sh entup -y
-./drush.sh cim -y
 make
 ./drush.sh cr
 ```
 
 Access your development setup from http://home.d8.theopenscholar.com
-
-## Note:
-As the Docker image traefik has a new release, if you have downloaded the latest traefik-helper, then it needs modification.
-In traefik-helper.yml file (path: `/tmp/traefik-helper.yml`), if you find image is using latest traefik version like shown below:
-```
-version: '2'
-
-services:
-  traefik:
-    image: traefik
-```
-modify it to use the 1.7 verson as `image: traefik:1.7` to fix Docker errors.
