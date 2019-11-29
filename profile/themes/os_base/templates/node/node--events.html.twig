@@ -79,16 +79,31 @@
     <span class="event-start-month">{{ start_date.month }}</span>
     <span class="event-start-day">{{ start_date.day }}</span>
   </div>
-  <div class="event-content">
-    {{ title_prefix }}
-    <h2{{ title_attributes }} class="node--title">
-      <a href="{{ url }}">{{ label }}</a>
-    </h2>
-    {{ title_suffix }}
-    {% block content %}
-      <div{{ content_attributes }}>
-        {{ content }}
+  <div class="event-content clearfix">
+    {% if view_mode == 'slide_teaser' %}
+      {{ title_prefix }}
+      {% if not page %}
+        <h2{{ title_attributes }}>
+          <a data-toggle="collapse" href="#collapse-node-{{ node.id }}" role="link" aria-expanded="false" aria-controls="collapse-node-{{ node.id }}">{{ node.label }}</a>
+        </h2>
+      {% endif %}
+      {{ title_suffix }}
+      <div{{ content_attributes.addClass('content collapse') }} id="collapse-node-{{ node.id }}">
+        <div class="card card-body">
+          {{ content }}
+        </div>
       </div>
-    {% endblock %}
+    {% else %}
+      {{ title_prefix }}
+      <h2{{ title_attributes }} class="node--title">
+        <a href="{{ url }}">{{ label }}</a>
+      </h2>
+      {{ title_suffix }}
+      {% block content %}
+        <div{{ content_attributes }}>
+          {{ content }}
+        </div>
+      {% endblock %}
+    {% endif %}
   </div>
 </article>

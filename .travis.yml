@@ -31,7 +31,7 @@ env:
     - JOB="job:run-kernel-tests widgets-2"
     - JOB="job:run-kernel-tests widgets-3"
     - JOB="job:run-kernel-tests os-theme-preview,cp-appearance,profiles"
-    - JOB="job:run-kernel-tests publications-1,redirect"
+    - JOB="job:run-kernel-tests publications-1,redirect,widgets-4"
     - JOB="job:run-kernel-tests publications-2,wysiwyg"
     - JOB="job:run-kernel-tests vsite"
     - JOB="job:run-kernel-tests os"

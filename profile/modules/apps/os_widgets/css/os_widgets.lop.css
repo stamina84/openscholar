@@ -1,8 +1,12 @@
-.lop-details .panel-body>div {
-  display: inline-block;
-  width: 24%;
+.lop-details .form-group.form-wrapper {
+  display: flex;
+  flex-wrap: wrap;
 }
-.lop-details .panel-body .field--name-field-publication-types {
+.lop-details .form-group.form-wrapper > .form-wrapper {
+  padding-right: 10px;
+  width: 25%;
+}
+.lop-details .panel-body .form-group.form-wrapper .field--name-field-publication-types {
   width: 100%;
 }
 .block-list-of-posts-form .chosen-container {

@@ -12,6 +12,21 @@ type: list_string
 settings:
   allowed_values:
     -
+      value: year_of_publication
+      label: 'Year of Publication'
+    -
+      value: sort_event_asc
+      label: 'Event Date Ascending (Past to Future)'
+    -
+      value: sort_event_desc
+      label: 'Event Date Descending (Future to Past)'
+    -
+      value: news_date
+      label: 'News Date'
+    -
+      value: recently_presented
+      label: 'Recently Presented'
+    -
       value: sort_newest
       label: 'Newest Post'
     -

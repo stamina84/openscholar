@@ -110,7 +110,7 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
           $visibility_settings[] = ['value' => str_replace('node:', '', $type)];
         }
         elseif (strpos($type, 'bibcite_reference') !== FALSE) {
-          $visibility_settings[] = ['value' => 'publication'];
+          $visibility_settings[] = ['value' => 'publications'];
         }
       }
       $element['terms_container'][$vid] = [

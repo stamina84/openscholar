@@ -69,4 +69,65 @@ trait WidgetsTestTrait {
     return [$ref1, $ref2, $node1, $node2];
   }
 
+  /**
+   * Creates Events needed for various tests.
+   */
+  public function createVsiteEvents(GroupInterface $vsite) : array {
+    // For case when 30 minutes have not passed.
+    $timezone = drupal_get_user_timezone();
+    $new_datetime = new DateTime('now', new \DateTimeZone($timezone));
+    $date_interval = new DateInterval('PT25M');
+    $date_interval->invert = 1;
+    $new_datetime->add($date_interval);
+    $date = $new_datetime->format("Y-m-d\TH:i:s");
+    $eventNode1 = $this->createNode([
+      'type' => 'events',
+      'status' => 1,
+      'field_recurring_date' => [
+        'value' => $date,
+        'end_value' => $date,
+        'timezone' => $timezone,
+        'infinite' => 0,
+      ],
+    ]);
+
+    // For case when 30 minutes have passed.
+    $new_datetime = new DateTime('now', new \DateTimeZone($timezone));
+    $date_interval = new DateInterval('PT31M');
+    $date_interval->invert = 1;
+    $new_datetime->add($date_interval);
+    $date = $new_datetime->format("Y-m-d\TH:i:s");
+    $eventNode2 = $this->createNode([
+      'type' => 'events',
+      'status' => 1,
+      'field_recurring_date' => [
+        'value' => $date,
+        'end_value' => $date,
+        'timezone' => $timezone,
+        'infinite' => 0,
+      ],
+    ]);
+
+    // For when End of Day has passed.
+    $new_datetime = new DateTime('now', new \DateTimeZone($timezone));
+    $date_interval = new DateInterval('P1D');
+    $date_interval->invert = 1;
+    $new_datetime->add($date_interval);
+    $date = $new_datetime->format("Y-m-d\TH:i:s");
+    $end_datetime = new DateTime('now', new \DateTimeZone($timezone));
+    $end_date = $end_datetime->add(new DateInterval('P1D'))->format("Y-m-d\TH:i:s");
+    $eventNode3 = $this->createNode([
+      'type' => 'events',
+      'status' => 1,
+      'field_recurring_date' => [
+        'value' => $date,
+        'end_value' => $end_date,
+        'timezone' => $timezone,
+        'infinite' => 0,
+      ],
+    ]);
+
+    return [$eventNode1, $eventNode2, $eventNode3];
+  }
+
 }

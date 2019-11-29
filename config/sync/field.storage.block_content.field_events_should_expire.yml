@@ -1,0 +1,30 @@
+uuid: f99b9116-3cc9-40c1-bfb5-269cbc8d5248
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - options
+id: block_content.field_events_should_expire
+field_name: field_events_should_expire
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: after_event_start
+      label: '30 minutes after an event starts'
+    -
+      value: end_of_day
+      label: 'At the end of the day'
+    -
+      value: end_of_event
+      label: 'When the event ends'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

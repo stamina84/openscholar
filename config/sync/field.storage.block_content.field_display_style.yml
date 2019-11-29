@@ -13,13 +13,25 @@ settings:
   allowed_values:
     -
       value: default
-      label: 'Full Post'
+      label: 'Full Content'
+    -
+      value: title
+      label: Title
     -
       value: teaser
       label: Teaser
     -
-      value: title
-      label: Title
+      value: slide_teaser
+      label: 'Slide Teaser'
+    -
+      value: links
+      label: Links
+    -
+      value: sidebar_teaser
+      label: 'Sidebar Teaser'
+    -
+      value: no_image_teaser
+      label: 'No image teaser'
   allowed_values_function: ''
 module: options
 locked: false

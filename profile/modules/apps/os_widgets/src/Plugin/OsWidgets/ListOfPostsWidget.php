@@ -107,6 +107,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $moreLinkStatus = $block_content->field_show_more_link->value;
     $moreLink = $moreLinkStatus ? $block_content->get('field_url_for_the_more_link')->view(['label' => 'hidden']) : '';
     $showPager = $block_content->field_show_pager->value;
+    $fieldData['eventExpireAppear'] = $block_content->field_events_should_expire->value;
 
     $publicationValues = $block_content->get('field_publication_types')->getValue();
     foreach ($publicationValues as $type) {
@@ -219,7 +220,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       ],
     ];
 
-    if ($showPager) {
+    if ($showPager && $renderItems) {
       // Now that we have the total number of results, initialize the pager.
       $curr_page = pager_default_initialize($total_count, $numItems);
 

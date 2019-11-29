@@ -396,6 +396,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       array_shift($form['field_display_style']['widget']['#options']);
       array_shift($form['field_sorted_by']['widget']['#options']);
       array_shift($form['field_show']['widget']['#options']);
+      array_shift($form['field_events_should_expire']['widget']['#options']);
 
       // Hide revision information from widget form.
       $form['revision_information']['#access'] = FALSE;
@@ -405,16 +406,47 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
         '#type' => 'details',
         '#title' => '',
         '#group' => 'content',
-        '#weight' => 2,
+        '#weight' => 1,
         '#open' => TRUE,
         '#attributes' => [
           'class' => ['lop-details'],
         ],
       ];
-      $form['field_content_type']['#group'] = 'content_details';
-      $form['field_display_style']['#group'] = 'content_details';
-      $form['field_sorted_by']['#group'] = 'content_details';
-      $form['field_show']['#group'] = 'content_details';
+
+      $display_style_options = $form['field_display_style']['widget']['#options'];
+
+      $content_default_value = $form['field_content_type']['widget']['#default_value'];
+      $type_selected = array_shift($content_default_value);
+      $type_value = $form_state->getValue('field_content_type');
+      if ($type_value) {
+        $type_selected = array_shift($type_value)['value'];
+      }
+      $form['field_display_style']['widget']['#options'] = os_widgets_display_style_options_lop($type_selected, $display_style_options);
+
+      $sorted_by_options = $form['field_sorted_by']['widget']['#options'];
+      $form['field_sorted_by']['widget']['#options'] = os_widgets_sort_by_options_lop($type_selected, $sorted_by_options);
+
+      $form['dynamic_fields_container'] = [
+        '#type' => 'container',
+        '#prefix' => '<div id="dynamic-option-fields-lop">',
+        '#suffix' => '</div>',
+        '#group' => 'content_details',
+        '#weight' => 2,
+      ];
+
+      $form['field_events_should_expire']['#prefix'] = '<div id="events-should-appear-expire-wrapper">';
+      $form['field_events_should_expire']['#suffix'] = '</div>';
+
+      $form['field_content_type']['#group'] = 'dynamic_fields_container';
+      $form['field_display_style']['#group'] = 'dynamic_fields_container';
+      $form['field_sorted_by']['#group'] = 'dynamic_fields_container';
+      $form['field_show']['#group'] = 'dynamic_fields_container';
+      $form['field_events_should_expire']['#group'] = 'dynamic_fields_container';
+
+      $form['field_content_type']['widget']['#ajax'] = [
+        'callback' => 'os_widgets_dynamic_options_lop_callback',
+        'wrapper' => 'dynamic-option-fields-lop',
+      ];
 
       $form['field_url_for_the_more_link']['#states'] = [
         'visible' => [
@@ -431,10 +463,10 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['field_publication_types']['#type'] = 'details';
       $form['field_publication_types']['#title'] = t('Publication Types');
       $form['field_publication_types']['widget']['#title'] = t('Select publication types to display');
-      $form['field_publication_types']['#group'] = 'content_details';
+      $form['field_publication_types']['#group'] = 'dynamic_fields_container';
       $form['field_publication_types']['#states'] = [
         'visible' => [
-          'select[name="field_content_type"]' => ['value' => 'publications'],
+          ':input[name="field_content_type"]' => ['value' => 'publications'],
         ],
       ];
       $form['field_publication_types']['#collapsible'] = TRUE;
@@ -465,6 +497,116 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
     case 'block_content_tabs_edit_form':
 
   }
+}
+
+/**
+ * Dynamic form field options for LOP.
+ */
+function os_widgets_dynamic_options_lop_callback(&$form, FormStateInterface $form_state) {
+  return $form['dynamic_fields_container'];
+}
+
+/**
+ * Display style options callback LOP.
+ */
+function os_widgets_display_style_options_lop($type_selected, $options) {
+  $display_style_common = ['all', 'faq', 'presentation'];
+  if (in_array($type_selected, $display_style_common)) {
+    unset(
+      $options['slide_teaser'],
+      $options['links'],
+      $options['sidebar_teaser'],
+      $options['no_image_teaser']
+    );
+  }
+  $display_style_common1 = [
+    'blog',
+    'class',
+    'page',
+    'publications',
+    'software_project',
+  ];
+  if (in_array($type_selected, $display_style_common1)) {
+    unset(
+      $options['links'],
+      $options['sidebar_teaser'],
+      $options['no_image_teaser']
+    );
+  }
+  if ($type_selected === 'events' || $type_selected === 'news') {
+    unset(
+      $options['links'],
+      $options['no_image_teaser']
+    );
+  }
+  if ($type_selected === 'link') {
+    unset(
+      $options['slide_teaser'],
+      $options['sidebar_teaser'],
+      $options['no_image_teaser']
+    );
+  }
+  if ($type_selected === 'person') {
+    unset($options['links']);
+  }
+  return $options;
+}
+
+/**
+ * Sort by options callback.
+ */
+function os_widgets_sort_by_options_lop($type_selected, $options) {
+  $sorted_by_common = [
+    'all',
+    'blog',
+    'class',
+    'faq',
+    'link',
+    'page',
+    'person',
+    'software_project',
+  ];
+  if (in_array($type_selected, $sorted_by_common)) {
+    unset(
+      $options['year_of_publication'],
+      $options['news_date'],
+      $options['recently_presented'],
+      $options['sort_event_asc'],
+      $options['sort_event_desc']
+    );
+  }
+  if ($type_selected === 'events') {
+    unset(
+      $options['year_of_publication'],
+      $options['news_date'],
+      $options['recently_presented']
+    );
+  }
+  if ($type_selected === 'news') {
+    unset(
+      $options['year_of_publication'],
+      $options['recently_presented'],
+      $options['sort_event_asc'],
+      $options['sort_event_desc']
+    );
+  }
+  if ($type_selected === 'presentation') {
+    unset(
+      $options['year_of_publication'],
+      $options['news_date'],
+      $options['sort_event_asc'],
+      $options['sort_event_desc']
+    );
+  }
+  if ($type_selected === 'publications') {
+    unset(
+      $options['recently_presented'],
+      $options['news_date'],
+      $options['sort_event_asc'],
+      $options['sort_event_desc']
+    );
+  }
+  return $options;
 }
 
 /**

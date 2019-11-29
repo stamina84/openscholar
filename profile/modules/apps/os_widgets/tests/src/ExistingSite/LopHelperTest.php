@@ -112,6 +112,58 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $data['sortedBy'] = 'sort_random';
     $results = $this->lopHelper->getResults($data, $this->nids, $this->pids);
     $this->assertNotEmpty($results);
+
+    // Test News Date sort.
+    $news1 = $this->createNode([
+      'type' => 'news',
+      'title' => 'News1',
+      'field_date' => '20/06/2019',
+    ]);
+    $news2 = $this->createNode([
+      'type' => 'news',
+      'title' => 'News2',
+      'field_date' => '20/07/2019',
+    ]);
+    $data['contentType'] = 'news';
+    $data['sortedBy'] = 'news_date';
+    $results = $this->lopHelper->getResults($data, [$news1->id(), $news2->id()]);
+    $this->assertNotEmpty($results);
+    $this->assertEquals('News2', $results[0]->title);
+
+    // Test Year Of Publication sort.
+    $ref1 = $this->createReference([
+      'type' => 'artwork',
+      'html_title' => 'Publication1',
+      'bibcite_year' => 2019,
+    ]);
+    $ref2 = $this->createReference([
+      'type' => 'book',
+      'html_title' => 'Publication2',
+      'bibcite_year' => 2017,
+    ]);
+    $data['contentType'] = 'publications';
+    $data['sortedBy'] = 'year_of_publication';
+    $results = $this->lopHelper->getResults($data, NULL, [$ref1->id(), $ref2->id()]);
+    $this->assertNotEmpty($results);
+    $this->assertEquals($ref1->id(), $results[0]->nid);
+
+    // Test Recently Presented sort.
+    $presentation1 = $this->createNode([
+      'type' => 'presentation',
+      'title' => 'Presentation1',
+      'field_presentation_date' => '20/06/2019',
+    ]);
+    $presentation2 = $this->createNode([
+      'type' => 'presentation',
+      'title' => 'Presentation2',
+      'field_presentation_date' => '20/07/2019',
+    ]);
+    $data['contentType'] = 'presentation';
+    $data['sortedBy'] = 'recently_presented';
+    $results = $this->lopHelper->getResults($data, [$presentation1->id(), $presentation2->id()]);
+    $this->assertNotEmpty($results);
+    $this->assertEquals('Presentation2', $results[0]->title);
+
   }
 
   /**
@@ -207,6 +259,68 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $data['showEvents'] = 'all_events';
     $results = $this->lopHelper->getResults($data, [$eventNode1->id(), $eventNode2->id()]);
     $this->assertCount(2, $results);
+  }
+
+  /**
+   * Tests upcoming events filtering and sorting.
+   *
+   * @throws \Exception
+   */
+  public function testEventsUpcomingFilteringSorting(): void {
+
+    $eventsArray = $this->createVsiteEvents($this->group);
+
+    // Test 30 minutes after event start.
+    $data['contentType'] = 'events';
+    $data['sortedBy'] = 'sort_event_asc';
+    $data['showEvents'] = 'upcoming_events';
+    $data['eventExpireAppear'] = 'after_event_start';
+    $results = $this->lopHelper->getResults($data, [$eventsArray[0]->id(), $eventsArray[1]->id()]);
+    $this->assertCount(1, $results);
+    $this->assertEquals($eventsArray[0]->id(), $results[0]->nid);
+
+    // Test End of Day.
+    $data['eventExpireAppear'] = 'end_of_day';
+    $results = $this->lopHelper->getResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
+    $this->assertCount(1, $results);
+    $this->assertEquals($eventsArray[1]->id(), $results[0]->nid);
+
+    // Test End of Event.
+    $data['eventExpireAppear'] = 'end_of_event';
+    $results = $this->lopHelper->getResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
+    $this->assertCount(1, $results);
+    $this->assertEquals($eventsArray[2]->id(), $results[0]->nid);
+  }
+
+  /**
+   * Tests past events filtering and sorting.
+   *
+   * @throws \Exception
+   */
+  public function testEventsPastFilteringSorting(): void {
+
+    $eventsArray = $this->createVsiteEvents($this->group);
+
+    // Test 30 minutes after event start.
+    $data['contentType'] = 'events';
+    $data['sortedBy'] = 'sort_event_desc';
+    $data['showEvents'] = 'past_events';
+    $data['eventExpireAppear'] = 'after_event_start';
+    $results = $this->lopHelper->getResults($data, [$eventsArray[0]->id(), $eventsArray[1]->id()]);
+    $this->assertCount(1, $results);
+    $this->assertEquals($eventsArray[1]->id(), $results[0]->nid);
+
+    // Test End of Day.
+    $data['eventExpireAppear'] = 'end_of_day';
+    $results = $this->lopHelper->getResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
+    $this->assertCount(1, $results);
+    $this->assertEquals($eventsArray[2]->id(), $results[0]->nid);
+
+    // Test End of Event.
+    $data['eventExpireAppear'] = 'end_of_event';
+    $results = $this->lopHelper->getResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
+    $this->assertCount(1, $results);
+    $this->assertEquals($eventsArray[1]->id(), $results[0]->nid);
   }
 
   /**

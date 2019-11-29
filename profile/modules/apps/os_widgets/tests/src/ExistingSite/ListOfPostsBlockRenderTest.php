@@ -6,7 +6,7 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
  * Class ListOfPostsBlockRenderTest.
  *
  * @group kernel
- * @group widgets-3
+ * @group widgets-4
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\ListOfPostsWidget
  */
 class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
@@ -42,6 +42,7 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'type' => 'list_of_posts',
       'field_display_style' => 'title',
       'field_content_type' => 'all',
+      'field_sorted_by' => 'sort_newest',
       'field_number_of_items_to_display' => 6,
     ]);
 
@@ -94,6 +95,7 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'field_display_style' => 'title',
       'field_content_type' => 'blog',
       'field_number_of_items_to_display' => 6,
+      'field_sorted_by' => 'sort_newest',
     ]);
 
     $this->createVsiteContent($this->group);
@@ -110,11 +112,12 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
   /**
    * Test full content listing for Blog content type.
    */
-  public function testBuildListingWithFullContent() {
+  public function testBuildListingWithFullContentMode() {
     $block_content = $this->createBlockContent([
       'type' => 'list_of_posts',
       'field_display_style' => 'default',
       'field_content_type' => 'blog',
+      'field_sorted_by' => 'sort_newest',
       'field_number_of_items_to_display' => 6,
     ]);
 
@@ -130,6 +133,80 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
   }
 
   /**
+   * Test Slide Teaser mode listing for Blog content type.
+   */
+  public function testBuildListingWithSlideTeaserMode() {
+    $block_content = $this->createBlockContent([
+      'type' => 'list_of_posts',
+      'field_display_style' => 'slide_teaser',
+      'field_content_type' => 'blog',
+      'field_sorted_by' => 'sort_newest',
+      'field_number_of_items_to_display' => 6,
+    ]);
+
+    $this->createVsiteContent($this->group);
+
+    $render = $this->viewBuilder->view($block_content);
+    $renderer = $this->container->get('renderer');
+
+    /** @var \Drupal\Core\Render\Markup $markup_array */
+    $markup = $renderer->renderRoot($render);
+    $this->assertContains('<article role="article"', $markup->__toString());
+    $this->assertContains('slide_teaser blog', $markup->__toString());
+  }
+
+  /**
+   * Test Sidebar Teaser mode listing for News content type.
+   */
+  public function testBuildListingWithSidebarTeaserMode() {
+    $block_content = $this->createBlockContent([
+      'type' => 'list_of_posts',
+      'field_display_style' => 'sidebar_teaser',
+      'field_content_type' => 'news',
+      'field_sorted_by' => 'sort_newest',
+      'field_number_of_items_to_display' => 6,
+    ]);
+
+    $this->createVsiteContent($this->group);
+
+    $render = $this->viewBuilder->view($block_content);
+    $renderer = $this->container->get('renderer');
+
+    /** @var \Drupal\Core\Render\Markup $markup_array */
+    $markup = $renderer->renderRoot($render);
+    $this->assertContains('<article role="article"', $markup->__toString());
+    $this->assertContains('news sidebar-teaser', $markup->__toString());
+  }
+
+  /**
+   * Test No Image Teaser mode listing for Person content type.
+   */
+  public function testBuildListingWithNoImageMode() {
+    $block_content = $this->createBlockContent([
+      'type' => 'list_of_posts',
+      'field_display_style' => 'no_image_teaser',
+      'field_content_type' => 'person',
+      'field_sorted_by' => 'sort_newest',
+      'field_number_of_items_to_display' => 6,
+    ]);
+
+    $person = $this->createNode([
+      'type' => 'person',
+      'title' => 'Mr Person Test',
+    ]);
+
+    $this->group->addContent($person, 'group_node:person');
+
+    $render = $this->viewBuilder->view($block_content);
+    $renderer = $this->container->get('renderer');
+
+    /** @var \Drupal\Core\Render\Markup $markup_array */
+    $markup = $renderer->renderRoot($render);
+    $this->assertContains('<article role="article"', $markup->__toString());
+    $this->assertContains('person no-image-teaser', $markup->__toString());
+  }
+
+  /**
    * Test listing for Artwork Publication content type.
    */
   public function testBuildListingWithContentTypeFilterPublication() {
@@ -137,6 +214,7 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'type' => 'list_of_posts',
       'field_display_style' => 'title',
       'field_content_type' => 'publications',
+      'field_sorted_by' => 'sort_newest',
       'field_number_of_items_to_display' => 6,
     ]);
 
@@ -159,6 +237,7 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'type' => 'list_of_posts',
       'field_display_style' => 'default',
       'field_content_type' => 'publications',
+      'field_sorted_by' => 'sort_newest',
       'field_number_of_items_to_display' => 6,
     ]);
 

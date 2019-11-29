@@ -9,19 +9,16 @@ dependencies:
     - field.field.node.news.field_photo
     - field.field.node.news.field_redirect_to_source
     - field.field.node.news.field_taxonomy_terms
+    - image.style.gallery
     - image.style.os_news_full
     - node.type.news
   module:
     - cp_taxonomy
     - datetime
     - image
-    - layout_builder
     - os_media
     - text
     - user
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: node.news.default
 targetEntityType: node
 bundle: news
@@ -51,7 +48,6 @@ content:
       media_switch: ''
       view_mode: default
       ratio: ''
-      iframe_lazy: '1'
       image: ''
       title: ''
       link: ''

@@ -1,0 +1,59 @@
+uuid: 7c4ea44e-1615-4f3c-a0fd-b0db39a01a3c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.slide_teaser
+    - field.field.node.software_project.body
+    - field.field.node.software_project.field_attached_media
+    - field.field.node.software_project.field_packaging
+    - field.field.node.software_project.field_taxonomy_terms
+    - node.type.software_project
+  module:
+    - cp_taxonomy
+    - layout_builder
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: node.software_project.slide_teaser
+targetEntityType: node
+bundle: software_project
+mode: slide_teaser
+content:
+  body:
+    label: visually_hidden
+    type: text_trimmed
+    weight: 0
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  field_attached_media:
+    type: entity_reference_entity_view
+    weight: 1
+    label: visually_hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_taxonomy_terms:
+    weight: 3
+    label: visually_hidden
+    settings:
+      label: 'See also'
+      number_of_characters: 94
+    third_party_settings: {  }
+    type: cp_taxonomy_comma_separator
+    region: content
+  links:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_packaging: true
+  langcode: true

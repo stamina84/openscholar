@@ -6,16 +6,13 @@ dependencies:
     - field.field.node.blog.body
     - field.field.node.blog.field_attached_media
     - field.field.node.blog.field_taxonomy_terms
+    - image.style.gallery
     - node.type.blog
   module:
     - cp_taxonomy
-    - layout_builder
     - os_media
     - text
     - user
-third_party_settings:
-  layout_builder:
-    sections: {  }
 _core:
   default_config_hash: 0hDxYJnR24A-c4B5jDgfFIg-grxi_6bNcyxH0WSy-Go
 id: node.blog.default
@@ -47,7 +44,6 @@ content:
       media_switch: ''
       view_mode: default
       ratio: ''
-      iframe_lazy: '1'
       image: ''
       title: ''
       link: ''

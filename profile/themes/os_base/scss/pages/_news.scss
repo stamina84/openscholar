@@ -8,10 +8,15 @@
     margin-top: 0;
   }
 }
-.path-node {
-  .field--name-field-photo {
-    float: right;
-    margin-left: 1em;
-    margin-bottom: 1em;
+.page-node-type-news {
+  .region-content {
+    .field--name-field-photo {
+      float: right;
+      margin-left: 1em;
+      margin-bottom: 1em;
+    }
+    .field--name-body {
+      overflow: hidden;
+    }
   }
 }

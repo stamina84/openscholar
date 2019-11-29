@@ -78,22 +78,34 @@
     'blog'
   ]
 %}
-
 <article{{ attributes.addClass(classes) }}>
-
-  {{ title_prefix }}
-  {% if not page %}
-    <h2{{ title_attributes }}>
-      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-    </h2>
+{% set createdDate = node.getCreatedTime|format_date('os_date_format') %}
+  {% if view_mode == 'slide_teaser' %}
+    {{ title_prefix }}
+    {% if not page %}
+      <h2{{ title_attributes }}>
+        <a data-toggle="collapse" href="#collapse-node-{{ node.id }}" role="link" aria-expanded="false" aria-controls="collapse-node-{{ node.id }}">{{ node.label }}</a>
+      </h2>
+      <div class="date field">{{ createdDate }}</div>
+    {% endif %}
+    {{ title_suffix }}
+      <div{{ content_attributes.addClass('content collapse') }} id="collapse-node-{{ node.id }}">
+      <div class="card card-body">
+        {{ content }}
+        <a href="{{ url }}">{{ 'Read More'|t }}</a>
+      </div>
+    </div>
+  {% else %}
+    {{ title_prefix }}
+    {% if not page %}
+      <h2{{ title_attributes }}>
+        <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+      </h2>
+    {% endif %}
+    {{ title_suffix }}
+    <div class="date field">{{ createdDate }}</div>
+    <div{{ content_attributes }}>
+      {{ content }}
+    </div>
   {% endif %}
-  {{ title_suffix }}
-
-  {% set createdDate = node.getCreatedTime|format_date('os_date_format') %}
-  <div class="date field">{{ createdDate }}</div>
-
-  <div{{ content_attributes }}>
-    {{ content }}
-  </div>
-
 </article>

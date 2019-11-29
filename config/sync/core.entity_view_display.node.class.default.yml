@@ -10,19 +10,16 @@ dependencies:
     - field.field.node.class.field_semester
     - field.field.node.class.field_taxonomy_terms
     - field.field.node.class.field_year_offered
+    - image.style.gallery
     - node.type.class
   module:
     - cp_taxonomy
     - entity_reference_revisions
-    - layout_builder
     - link
     - options
     - os_media
     - text
     - user
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: node.class.default
 targetEntityType: node
 bundle: class
@@ -52,7 +49,6 @@ content:
       media_switch: ''
       view_mode: default
       ratio: ''
-      iframe_lazy: '1'
       image: ''
       title: ''
       link: ''
