@@ -1,0 +1,16 @@
+os_rss.list_rss:
+  path: '/rss'
+  defaults:
+    _controller: '\Drupal\os_rss\Controller\RssListingController::render'
+    vsite: ''
+  requirements:
+    # RSS Listing to be accessible to anonymous users.
+    _access: 'TRUE'
+os_rss.rss_xml:
+  path: '/rss.xml'
+  defaults:
+    _controller: '\Drupal\os_rss\Controller\RssXmlController::render'
+    vsite: ''
+  requirements:
+    # RSS Listing to be accessible to anonymous users.
+    _access: 'TRUE'

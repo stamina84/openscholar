@@ -1,0 +1,7 @@
+name: "OpenScholar: RSS"
+description: 'RSS Listing page for Openscholar.'
+type: module
+core: 8.x
+dependencies:
+  - "drupal:node"
+  - drupal:vsite
