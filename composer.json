@@ -187,6 +187,7 @@
         "drupal/core": "^8.7.8",
         "drupal/date_recur": "^2.0",
         "drupal/date_recur_modular": "^1.0@alpha",
+        "drupal/disqus": "^1.0",
         "drupal/easy_breadcrumb": "^1.8",
         "drupal/entity_reference_revisions": "^1.6",
         "drupal/field_tools": "^1.0@alpha",
