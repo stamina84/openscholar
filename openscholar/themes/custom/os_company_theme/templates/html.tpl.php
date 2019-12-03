@@ -22,6 +22,11 @@
   var os_c = document.createElement;os_c('header');os_c('nav');os_c('section');os_c('article');os_c('aside');os_c('footer');os_c('hgroup');os_c('figure');
 </script>
   <![endif]-->
+<?php
+if (!empty($head_bottom_markup)) {
+  print $head_bottom_markup;
+}
+?>
 </head>
 <body class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <div id="skip-link">
