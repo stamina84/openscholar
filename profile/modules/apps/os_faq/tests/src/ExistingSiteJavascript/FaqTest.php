@@ -3,6 +3,7 @@
 namespace Drupal\Tests\os_faq\ExistingSiteJavascript;
 
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
+use Drupal\views\Entity\View;
 
 /**
  * FaqTest.
@@ -51,12 +52,17 @@ class FaqTest extends OsExistingSiteJavascriptTestBase {
     ]);
     $this->addGroupContent($faq_sticky, $this->group);
 
-    $this->visitViaVsite('faq', $this->group);
-    $this->assertSession()->statusCodeEquals(200);
+    $view = View::load('os_faq');
+    $view_exec = $view->getExecutable();
+    $view_exec->setDisplay('page_1');
+    $view_exec->preExecute();
+    $view_exec->execute();
+    $build = $view_exec->render('page_1');
+    $rows = $build['#rows']['#rows'][0]['#rows'];
+
     // Get first views-row.
-    $this->assertSession()->waitForElementVisible('css', '.view-os-faq .views-row');
-    $first_row = $this->getCurrentPage()->find('css', '.view-os-faq .views-row');
-    $this->assertContains($faq_sticky->getTitle(), $first_row->getHtml(), 'Sticky faq is not the first.');
+    $first_row = $rows[0]['#row']->_entity;
+    $this->assertContains($faq_sticky->getTitle(), $first_row->getTitle(), 'Sticky faq is not the first.');
   }
 
   /**
