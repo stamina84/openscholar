@@ -163,10 +163,13 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
     }
     if ($type === 'presentation') {
       $nodeQuery->join('node__field_presentation_date', 'nfpd', "nfd.nid = nfpd.entity_id");
+      $nodeQuery->addField('nfpd', 'field_presentation_date_value');
       $nodeQuery->condition('nfpd.field_presentation_date_value', '', '!=');
     }
     if ($type === 'news') {
       $nodeQuery->join('node__field_date', 'nfdate', "nfd.nid = entity_id");
+      $nodeQuery->addField('nfdate', 'field_date_value');
+      $nodeQuery->condition('nfdate.field_date_value', '', '!=');
     }
     return $nodeQuery->distinct(TRUE);
   }
