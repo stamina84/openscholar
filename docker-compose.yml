@@ -33,6 +33,31 @@ services:
     volumes:
       - ./:/var/www/html:cached
 
+  elasticsearch:
+    image: wodby/elasticsearch:latest
+    container_name: "${PROJECT_NAME}_elasticsearch"
+    environment:
+      ES_JAVA_OPTS: "-Xms500m -Xmx500m"
+    ports:
+      - "9200:9200"
+    labels:
+      - 'traefik.backend=${PROJECT_NAME}_elasticsearch'
+      - 'traefik.port=9200'
+      - 'traefik.frontend.rule=Host:elastic.php.docker.localhost'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  kibana:
+    image: wodby/kibana:latest
+    depends_on:
+      - elasticsearch
+    labels:
+      - 'traefik.backend=${PROJECT_NAME}_kibana'
+      - 'traefik.port=5601'
+      - 'traefik.frontend.rule=Host:kibana.php.docker.localhost'
+
   apache:
     image: wodby/apache:2.4
     container_name: "${PROJECT_NAME}_apache"
