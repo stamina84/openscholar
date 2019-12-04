@@ -40,7 +40,7 @@ env:
     - JOB="job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,analytics,cp-menu,publications,cp-appearance,redirect,twitter,vsite_favicon"
     - JOB="job:run-functional-tests os,vsite"
     - JOB="job:run-functional-javascript-tests classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
-    - JOB="job:run-functional-javascript-tests events,os,vsite,os-theme-preview,widgets,blog,faq,news"
+    - JOB="job:run-functional-javascript-tests events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
 #    - JOB=job:run-behat-tests
 
 before_install:
