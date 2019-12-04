@@ -1,6 +1,16 @@
 version: "2.2"
 
 services:
+  elasticsearch:
+    image: elasticsearch:7.1.1 # Pinned 7.1.1 because that's what we have in AWS
+    environment:
+      discovery.type: single-node
+      cluster.name: docker-cluster
+      bootstrap.memory_lock: 'false'
+      xpack.security.enabled: 'false'
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    mem_limit: 1g
+
   mariadb:
     image: wodby/mariadb:10.1-2.3.3
     container_name: "${PROJECT_NAME}_mariadb"
