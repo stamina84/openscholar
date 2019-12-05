@@ -25,6 +25,7 @@ use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\os_widgets\Helper\FollowMeWidgetHelper;
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_library_info_alter().
@@ -476,7 +477,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
         '#type' => 'details',
         '#title' => '',
         '#group' => 'content',
-        '#weight' => 5,
+        '#weight' => 10,
         '#open' => TRUE,
       ];
       $form['field_show_more_link']['#group'] = 'pager_details';
@@ -815,6 +816,7 @@ function os_widgets_contextual_links_view_alter(&$element, $items) {
     $element['#links']['block-contentblock-edit']['attributes'] = [
       'class' => ['use-ajax'],
       'data-dialog-type' => 'modal',
+      'data-dialog-options' => Json::encode(['width' => 1000, 'dialogClass' => 'widget-popup']),
     ];
   }
 }

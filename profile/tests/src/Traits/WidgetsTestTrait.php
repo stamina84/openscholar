@@ -28,6 +28,7 @@ trait WidgetsTestTrait {
     $ref1 = $this->createReference([
       'type' => 'artwork',
       'html_title' => 'Publication1',
+      'is_sticky' => 0,
     ]);
     $date_interval = new DateInterval('P1D');
     $new_datetime->add($date_interval);
@@ -37,6 +38,7 @@ trait WidgetsTestTrait {
     $ref2 = $this->createReference([
       'type' => 'book',
       'html_title' => 'Publication2',
+      'is_sticky' => 0,
     ]);
     $date_interval = new DateInterval('P2D');
     $new_datetime->add($date_interval);
