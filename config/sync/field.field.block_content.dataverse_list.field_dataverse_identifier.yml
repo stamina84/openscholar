@@ -1,0 +1,19 @@
+uuid: 91a76274-5d40-4228-8ffe-8f6d9f875ba6
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_list
+    - field.storage.block_content.field_dataverse_identifier
+id: block_content.dataverse_list.field_dataverse_identifier
+field_name: field_dataverse_identifier
+entity_type: block_content
+bundle: dataverse_list
+label: 'Dataverse Identifier'
+description: "Need help finding your Dataset Persistent Identifier? Learn how to here: <a href=\"https://help.theopenscholar.com/dataverse-search-box\">https://help.theopenscholar.com/dataverse-search-box</a>. Note: this widget should be placed in the main content area, not in sidebar.\r\n"
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

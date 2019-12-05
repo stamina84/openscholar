@@ -4,6 +4,12 @@ addthis:
 rss_feed_copy:
   js:
     js/os_widgets_rss_feed_copy.js: { }
+dataverse_search_box:
+  js:
+    js/os_widgets_dataverse_search_box.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
 layout:
   css:
     component:

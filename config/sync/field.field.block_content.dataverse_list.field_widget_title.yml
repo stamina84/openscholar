@@ -1,0 +1,19 @@
+uuid: 0e0079fb-b37d-4b30-a109-20ccb4f6ca15
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_list
+    - field.storage.block_content.field_widget_title
+id: block_content.dataverse_list.field_widget_title
+field_name: field_widget_title
+entity_type: block_content
+bundle: dataverse_list
+label: 'Widget Title'
+description: 'The title of the widget that is seen by your visitors.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -226,6 +226,12 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'collapsible' => NULL,
       ],
     ],
+    'os_widgets_dataverse_list_widget' => [
+      'variables' => [
+        'embed_url' => '',
+        'embed_height' => '',
+      ],
+    ],
   ];
 }
 
@@ -493,9 +499,12 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       }
       $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
       $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
+      break;
 
-    case 'block_content_tabs_form':
-    case 'block_content_tabs_edit_form':
+    case 'block_content_dataverse_list_form':
+    case 'block_content_dataverse_list_edit_form':
+      $form['field_dataverse_identifier']['widget'][0]['value']['#field_prefix'] = 'https://dataverse.harvard.edu/dataverse/';
+      break;
 
   }
 }
