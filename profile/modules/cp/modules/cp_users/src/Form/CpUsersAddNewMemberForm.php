@@ -153,6 +153,12 @@ class CpUsersAddNewMemberForm extends CpUsersAddMemberFormBase {
         ],
       ]);
 
+      // Check if site owner option is set.
+      if ($form_state_values['site_owner']) {
+        $this->activeVsite->setOwnerId($account->get('uid')->value);
+        $this->activeVsite->save();
+      }
+
       $this->mailManager->mail('cp_users', CpUsersHelper::CP_USERS_NEW_USER, $account->getEmail(), LanguageInterface::LANGCODE_DEFAULT, [
         'user' => $account,
         'role' => $role,

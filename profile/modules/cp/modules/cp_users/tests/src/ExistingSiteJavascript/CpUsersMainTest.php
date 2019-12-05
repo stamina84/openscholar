@@ -141,6 +141,180 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $page->pressButton('Confirm');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertTrue($page->hasContent('Member ' . $username . ' has been removed from ' . $this->group->label()), "Username $username has not removed.");
+
+  }
+
+  /**
+   * Tests adding of existing user as vsite owner by vsite owner.
+   *
+   * @covers \Drupal\cp_users\Controller\CpUserMainController::main
+   * @covers \Drupal\cp_users\Form\CpUsersAddExistingUserMemberForm
+   * @covers \Drupal\cp_users\Controller\CpUserMainController::existingUserAutocomplete
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testVsiteAddExistingUserSiteOwner(): void {
+
+    // Add Vsite owner.
+    $vsite_owner = $this->createUser();
+    $this->addGroupAdmin($vsite_owner, $this->group);
+    $this->group->setOwner($vsite_owner)->save();
+
+    // Vsite owner add existing user as site owner.
+    $username_1 = $this->randomMachineName();
+    $user1 = $this->createUser([], $username_1);
+
+    $this->drupalLogin($vsite_owner);
+    $this->visitViaVsite('cp/users', $this->group);
+
+    $page = $this->getCurrentPage();
+    $page->clickLink('Add a member');
+    $this->assertSession()->waitForElement('css', '#drupal-modal--content');
+
+    $page->fillField('user', substr($username_1, 0, 3));
+    $this->assertSession()->waitOnAutocomplete();
+    $this->assertSession()->responseContains($username_1);
+    $this->getSession()->getPage()->find('css', 'ul.ui-autocomplete li:first-child')->click();
+    $page->checkField("site_owner");
+    $page->selectFieldOption('role', 'personal-administrator');
+    $page->pressButton('Save');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertVsiteOwnershipChange($this->group, $user1);
+
+    $this->drupalLogout();
+
+  }
+
+  /**
+   * Tests adding of existing user as vsite owner by super admin.
+   *
+   * @covers \Drupal\cp_users\Controller\CpUserMainController::main
+   * @covers \Drupal\cp_users\Form\CpUsersAddExistingUserMemberForm
+   * @covers \Drupal\cp_users\Controller\CpUserMainController::existingUserAutocomplete
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testSuperAddExistingUserSiteOwner(): void {
+
+    // Super user add existing user as site owner.
+    $super_account = $this->createUser([
+      'bypass group access',
+    ]);
+    $username_2 = $this->randomMachineName();
+    $user2 = $this->createUser([], $username_2);
+
+    $this->drupalLogin($super_account);
+    $this->visitViaVsite('cp/users', $this->group);
+
+    $page = $this->getCurrentPage();
+    $page->clickLink('Add a member');
+    $this->assertSession()->waitForElement('css', '#drupal-modal--content');
+
+    $page->fillField('user', substr($username_2, 0, 3));
+    $this->assertSession()->waitOnAutocomplete();
+    $this->assertSession()->responseContains($username_2);
+    $this->getSession()->getPage()->find('css', 'ul.ui-autocomplete li:first-child')->click();
+    $page->checkField("site_owner");
+    $page->selectFieldOption('role', 'personal-administrator');
+    $page->pressButton('Save');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertVsiteOwnershipChange($this->group, $user2);
+
+    $this->drupalLogout();
+  }
+
+  /**
+   * Tests for adding a new user as vsite owner by vsite owner.
+   *
+   * @covers \Drupal\cp_users\Controller\CpUserMainController::main
+   * @covers \Drupal\cp_users\Form\CpUsersAddNewMemberForm
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+   * @throws \Behat\Mink\Exception\DriverException
+   */
+  public function testVsiteNewUserSiteOwner(): void {
+
+    // Add Vsite owner.
+    $vsite_owner = $this->createUser();
+    $this->addGroupAdmin($vsite_owner, $this->group);
+    $this->group->setOwner($vsite_owner)->save();
+
+    // Vsite owner add new user as site owner.
+    $this->drupalLogin($vsite_owner);
+    $this->visitViaVsite('cp/users', $this->group);
+
+    $page = $this->getCurrentPage();
+    $page->clickLink('Add a member');
+    $this->assertSession()->waitForElement('css', '#drupal-modal--content');
+    $page->pressButton('Create a new member');
+    $this->waitForAjaxToFinish();
+    $page->fillField('First Name', 'test');
+    $page->fillField('Last Name', 'user');
+    $page->fillField('Username', 'test-site-user');
+    $page->fillField('E-mail Address', 'test-site-user@localhost.com');
+    $page->checkField("site_owner");
+    $page->selectFieldOption('role', 'personal-administrator');
+    $page->pressButton('Save');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    $user = user_load_by_name('test-site-user');
+    $this->assertVsiteOwnershipChange($this->group, $user);
+    $this->markEntityForCleanup($user);
+
+    $this->drupalLogout();
+
+  }
+
+  /**
+   * Tests for adding a new user as vsite owner by vsite owner.
+   *
+   * @covers \Drupal\cp_users\Controller\CpUserMainController::main
+   * @covers \Drupal\cp_users\Form\CpUsersAddNewMemberForm
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+   * @throws \Behat\Mink\Exception\DriverException
+   */
+  public function testSuperNewUserSiteOwner(): void {
+
+    // Super user add new user as site owner.
+    $super_account = $this->createUser([
+      'bypass group access',
+    ]);
+
+    // Super user add new user as site owner.
+    $this->drupalLogin($super_account);
+    $this->visitViaVsite('cp/users', $this->group);
+
+    $page = $this->getCurrentPage();
+    $page->clickLink('Add a member');
+    $this->assertSession()->waitForElement('css', '#drupal-modal--content');
+    $page->pressButton('Create a new member');
+    $this->waitForAjaxToFinish();
+    $page->fillField('First Name', 'test1');
+    $page->fillField('Last Name', 'user');
+    $page->fillField('Username', 'test1-site-user');
+    $page->fillField('E-mail Address', 'test1-site-user@localhost.com');
+    $page->checkField("site_owner");
+    $page->selectFieldOption('role', 'personal-administrator');
+    $page->pressButton('Save');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    $user_1 = user_load_by_name('test1-site-user');
+    $this->assertVsiteOwnershipChange($this->group, $user_1);
+    $this->markEntityForCleanup($user_1);
+
+    $this->drupalLogout();
+
   }
 
   /**

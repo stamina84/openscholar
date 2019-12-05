@@ -3,6 +3,7 @@
 namespace Drupal\Tests\cp_users\ExistingSite;
 
 use Drupal\group\Entity\GroupRole;
+use Drupal\group\Entity\Group;
 
 /**
  * ChangeRoleForm test.
@@ -20,6 +21,13 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
   protected $cpRolesHelper;
 
   /**
+   * Cp Users helper service.
+   *
+   * @var \Drupal\cp_users\CpUsersHelper
+   */
+  protected $cpUsersHelper;
+
+  /**
    * Group member.
    *
    * @var \Drupal\user\Entity\User
@@ -32,6 +40,13 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $groupAdmin;
+
+  /**
+   * Entity Type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
 
   /**
    * {@inheritdoc}
@@ -52,6 +67,8 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
     $this->drupalLogin($this->groupAdmin);
 
     $this->cpRolesHelper = $this->container->get('cp_users.cp_roles_helper');
+    $this->cpUsersHelper = $this->container->get('cp_users.cp_users_helper');
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
 
   }
 
@@ -84,6 +101,73 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
     $group_membership = $this->group->getMember($this->member);
     $updated_roles = $group_membership->getRoles();
     $this->assertInstanceOf(GroupRole::class, $updated_roles["personal-{$this->group->id()}_cprolechange"]);
+  }
+
+  /**
+   * Tests change site owner functionality as vsite owner.
+   *
+   * @covers \Drupal\cp_users\Form\ChangeRoleForm
+   *
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   */
+  public function testVsiteRoleChangeSiteOwner(): void {
+
+    $web = $this->assertSession();
+    // Create vsite owner.
+    $vsite_owner = $this->createUser();
+    $this->addGroupAdmin($vsite_owner, $this->group);
+    $this->group->setOwner($vsite_owner)->save();
+
+    // Test change site owner using site owner.
+    $this->drupalLogin($vsite_owner);
+    $this->visitViaVsite('cp/users/change-role/' . $this->member->id(), $this->group);
+    $web->pageTextContains('Change role');
+
+    $this->drupalPostForm(NULL, [
+      'roles' => "personal-administrator",
+      'site_owner' => 1,
+    ], 'Save');
+    $web->pageTextContains('Manage Users');
+    $web->elementContains('css', '.messages--status', 'Role successfully updated.');
+
+    $this->group = Group::load($this->group->id());
+    $this->assertTrue($this->cpUsersHelper->isVsiteOwner($this->group, $this->member));
+    $this->drupalLogout();
+
+  }
+
+  /**
+   * Tests change site owner functionality as super admin.
+   *
+   * @covers \Drupal\cp_users\Form\ChangeRoleForm
+   *
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   */
+  public function testSuperRoleChangeSiteOwner(): void {
+
+    $web = $this->assertSession();
+    // Test change site owner using super admin.
+    $super_account = $this->createUser([
+      'bypass group access',
+    ]);
+    $member_1 = $this->createUser();
+    $this->group->addMember($member_1);
+    $this->drupalLogin($super_account);
+    $this->visitViaVsite('cp/users/change-role/' . $member_1->id(), $this->group);
+    $web->pageTextContains('Change role');
+
+    $this->drupalPostForm(NULL, [
+      'roles' => "personal-administrator",
+      'site_owner' => 1,
+    ], 'Save');
+    $web->pageTextContains('Manage Users');
+    $web->elementContains('css', '.messages--status', 'Role successfully updated.');
+
+    $this->entityTypeManager->getStorage('group')->resetCache([$this->group->id()]);
+    $this->group = Group::load($this->group->id());
+    $this->assertTrue($this->cpUsersHelper->isVsiteOwner($this->group, $member_1));
+    $this->drupalLogout();
+
   }
 
   /**
