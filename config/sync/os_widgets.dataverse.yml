@@ -1,0 +1,4 @@
+listing_base_url: 'https://dataverse.harvard.edu/dataverse/'
+search_base_url: 'https://dataverse.harvard.edu/dataverse.xhtml'
+_core:
+  default_config_hash: EeRhfSM7-Ep3qDbb6hUkf0A0OU7I7A7F56uYuwL39zA

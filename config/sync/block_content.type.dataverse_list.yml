@@ -1,0 +1,8 @@
+uuid: c59ce979-9728-41e0-b49f-416dbf6d25bc
+langcode: en
+status: true
+dependencies: {  }
+id: dataverse_list
+label: 'Dataverse List'
+revision: 1
+description: 'The dataverse list widget allows you to display your dataverse information based on your Dataset Persistent Identifier by either the DOI or the HDL.'

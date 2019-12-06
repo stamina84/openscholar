@@ -3,6 +3,7 @@
 namespace Drupal\Tests\os_blog\ExistingSiteJavascript;
 
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
+use Drupal\views\Entity\View;
 
 /**
  * BlogTest.
@@ -75,11 +76,17 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     ]);
     $this->addGroupContent($blog_sticky, $this->group);
 
-    $this->visitViaVsite('blog', $this->group);
-    $this->assertSession()->statusCodeEquals(200);
+    $view = View::load('blog');
+    $view_exec = $view->getExecutable();
+    $view_exec->setDisplay('page_1');
+    $view_exec->preExecute();
+    $view_exec->execute();
+    $build = $view_exec->render('page_1');
+    $rows = $build['#rows'][0]['#rows'];
+
     // Get first views-row.
-    $first_row = $this->getCurrentPage()->find('css', '.view-blog .views-row');
-    $this->assertContains($blog_sticky->getTitle(), $first_row->getHtml(), 'Sticky blog is not the first.');
+    $first_row = $rows[0]['#node'];
+    $this->assertContains($blog_sticky->getTitle(), $first_row->getTitle(), 'Sticky blog is not the first.');
   }
 
   /**

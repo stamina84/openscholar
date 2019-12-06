@@ -1,0 +1,26 @@
+uuid: 8f5eabd6-078c-4d83-953f-9c81bc59bbe7
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_list
+    - field.field.block_content.dataverse_list.field_dataverse_identifier
+    - field.field.block_content.dataverse_list.field_embed_height
+    - field.field.block_content.dataverse_list.field_widget_title
+id: block_content.dataverse_list.default
+targetEntityType: block_content
+bundle: dataverse_list
+mode: default
+content:
+  field_widget_title:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_dataverse_identifier: true
+  field_embed_height: true
+  langcode: true

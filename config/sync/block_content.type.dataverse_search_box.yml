@@ -1,0 +1,8 @@
+uuid: 95739487-bacf-49c1-88b3-22dcace886d6
+langcode: en
+status: true
+dependencies: {  }
+id: dataverse_search_box
+label: 'Dataverse Search Box'
+revision: 1
+description: "This widget places a Dataverse Search From on the page, in which a user can enter a search query and be taken to a Dataverse search page in a new tab. \t\r\n"

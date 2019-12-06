@@ -23,3 +23,13 @@ os_widgets.layout_context.*:
     data:
       type: mapping
       label: 'Data'
+os_widgets.dataverse:
+  type: config_entity
+  label: 'Dataverse'
+  mapping:
+    listing_base_url:
+      type: string
+      label: 'Listing base URL'
+    search_base_url:
+      type: string
+      label: 'Search base URL'

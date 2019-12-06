@@ -292,7 +292,20 @@ display:
             group_items: {  }
           granularity: minute
           plugin_id: datetime
-      sorts: {  }
+      sorts:
+        field_recurring_date_value:
+          id: field_recurring_date_value
+          table: node__field_recurring_date
+          field: field_recurring_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: datetime
       title: Calendar
       header: {  }
       footer: {  }
@@ -810,7 +823,7 @@ display:
         description: ''
         expanded: false
         parent: ''
-        weight: 1
+        weight: 2
         context: '0'
         menu_name: main
     cache_metadata:

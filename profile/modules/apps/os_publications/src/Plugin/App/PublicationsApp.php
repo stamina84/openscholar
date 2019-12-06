@@ -38,7 +38,7 @@ class PublicationsApp extends AppPluginBase {
     return [
       'publication' => [
         'menu_name' => 'control-panel',
-        'route_name' => 'entity.bibcite_reference.add_page',
+        'route_name' => 'os_publications.redirect_bibcite_reference_bundles_form',
         'parent' => 'cp.content.add',
         'title' => $this->getTitle(),
       ],

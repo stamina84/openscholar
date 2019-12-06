@@ -1,0 +1,68 @@
+uuid: 00532c30-53d7-4e39-bc82-5bf2cc456d0e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_search_box
+    - field.field.block_content.dataverse_search_box.field_dataverse_identifier
+    - field.field.block_content.dataverse_search_box.field_search_placeholder_text
+    - field.field.block_content.dataverse_search_box.field_widget_title
+  module:
+    - content_moderation
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.dataverse_search_box.default
+targetEntityType: block_content
+bundle: dataverse_search_box
+mode: default
+content:
+  field_dataverse_identifier:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_search_placeholder_text:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_widget_title:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 4
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 5
+    settings: {  }
+    region: content
+    third_party_settings: {  }
+hidden: {  }

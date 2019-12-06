@@ -56,10 +56,7 @@
       }
 
       // Keep the field hidden and disabled when form loads based on dependent fields.
-      if ($sortedBy.val() !== 'sort_event_asc' && $sortedBy.val() !== 'sort_event_desc') {
-        $eventAppearExpireWrapper.hide();
-        $eventAppearExpireSelect.attr('disabled', 'disabled');
-      }
+      eventsFieldChanges();
 
       // Attach on change behaviour to dependent fields.
       $sortedBy.once('sorted-by-field').on('change', function () {

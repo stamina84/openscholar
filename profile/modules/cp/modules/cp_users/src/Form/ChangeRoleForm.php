@@ -2,6 +2,7 @@
 
 namespace Drupal\cp_users\Form;
 
+use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -9,6 +10,7 @@ use Drupal\cp_users\CpRolesHelperInterface;
 use Drupal\group\Entity\GroupRoleInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\cp_users\Access\ChangeOwnershipAccessCheck;
 
 /**
  * Changes role for a member.
@@ -37,12 +39,20 @@ final class ChangeRoleForm extends FormBase {
   protected $cpRolesHelper;
 
   /**
+   * ChangeOwnershipAccessCheck service.
+   *
+   * @var \Drupal\cp_users\Access\ChangeOwnershipAccessCheck
+   */
+  protected $changeOwnershipAccessChecker;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('vsite.context_manager'),
-      $container->get('cp_users.cp_roles_helper')
+      $container->get('cp_users.cp_roles_helper'),
+      $container->get('cp_users.change_ownership_access_check')
     );
   }
 
@@ -53,11 +63,14 @@ final class ChangeRoleForm extends FormBase {
    *   Vsite context manager.
    * @param \Drupal\cp_users\CpRolesHelperInterface $cp_roles_helper
    *   Cp roles helper instacne.
+   * @param \Drupal\cp_users\Access\ChangeOwnershipAccessCheck $change_ownership_access_check
+   *   Change Ownership access checker.
    */
-  public function __construct(VsiteContextManagerInterface $vsite_context_manager, CpRolesHelperInterface $cp_roles_helper) {
+  public function __construct(VsiteContextManagerInterface $vsite_context_manager, CpRolesHelperInterface $cp_roles_helper, ChangeOwnershipAccessCheck $change_ownership_access_check) {
     $this->vsiteContextManager = $vsite_context_manager;
     $this->cpRolesHelper = $cp_roles_helper;
     $this->activeGroup = $vsite_context_manager->getActiveVsite();
+    $this->changeOwnershipAccessChecker = $change_ownership_access_check;
   }
 
   /**
@@ -102,6 +115,16 @@ final class ChangeRoleForm extends FormBase {
       '#default_value' => $existing_role->id(),
     ];
 
+    $current_user = $this->currentUser();
+    $can_change_ownership = ($this->changeOwnershipAccessChecker->access($current_user) instanceof AccessResultAllowed);
+    $form['site_owner'] = [
+      '#type' => 'checkbox',
+      '#access' => $can_change_ownership,
+      '#title' => $this->t('Set as site owner'),
+      '#description' => $this->t('Make') . " " . $user->getAccountName() . " " . $this->t("the site owner."),
+      '#weight' => 100,
+    ];
+
     $form['actions'] = [
       '#type' => 'actions',
     ];
@@ -128,6 +151,12 @@ final class ChangeRoleForm extends FormBase {
     $group_content->set('group_roles', [
       'target_id' => $form_state->getValue('roles'),
     ])->save();
+
+    // Change site owner.
+    if ($form_state->getValue('site_owner')) {
+      $this->activeGroup->setOwnerId($account->get('uid')->value);
+      $this->activeGroup->save();
+    }
 
     $this->messenger()->addMessage($this->t('Role successfully updated.'));
 

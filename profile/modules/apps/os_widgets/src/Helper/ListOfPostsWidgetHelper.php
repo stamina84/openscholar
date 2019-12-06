@@ -101,6 +101,8 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
    *   Query with sorting applied.
    */
   protected function sortQuery(SelectInterface $query, string $sortedBy, SelectInterface $pubQuery = NULL) : SelectInterface {
+    // Sticky should take preference.
+    $query->orderBy('sticky', 'DESC');
     if ($sortedBy === 'sort_newest') {
       $query->orderBy('created', 'DESC');
     }
@@ -151,7 +153,7 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
     // Filter nodes based on vsite nids and taxonomy terms.
     /** @var \Drupal\Core\Database\Query\SelectInterface $nodeQuery */
     $nodeQuery = $this->connection->select('node_field_data', 'nfd');
-    $nodeQuery->fields('nfd', ['nid', 'created', 'title', 'type'])
+    $nodeQuery->fields('nfd', ['nid', 'created', 'title', 'type', 'sticky'])
       ->condition('nid', $nodesList, 'IN');
 
     if ($tids) {
@@ -163,10 +165,13 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
     }
     if ($type === 'presentation') {
       $nodeQuery->join('node__field_presentation_date', 'nfpd', "nfd.nid = nfpd.entity_id");
+      $nodeQuery->addField('nfpd', 'field_presentation_date_value');
       $nodeQuery->condition('nfpd.field_presentation_date_value', '', '!=');
     }
     if ($type === 'news') {
-      $nodeQuery->join('node__field_date', 'nfdate', "nfd.nid = entity_id");
+      $nodeQuery->join('node__field_date', 'nfdate', "nfd.nid = nfdate.entity_id");
+      $nodeQuery->addField('nfdate', 'field_date_value');
+      $nodeQuery->condition('nfdate.field_date_value', '', '!=');
     }
     return $nodeQuery->distinct(TRUE);
   }
@@ -279,8 +284,9 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
     // Filter publications based on vsite ids and taxonomy terms.
     /** @var \Drupal\Core\Database\Query\SelectInterface $pubQuery */
     $pubQuery = $this->connection->select('bibcite_reference', 'pub');
-    $pubQuery->fields('pub', ['id', 'created', 'title', 'type'])
-      ->condition('id', $pubList, 'IN');
+    $pubQuery->fields('pub', ['id', 'created', 'title', 'type']);
+    $pubQuery->addField('pub', 'is_sticky', 'sticky');
+    $pubQuery->condition('id', $pubList, 'IN');
     if ($tids) {
       // And condition for vocabs.
       foreach ($tids as $vid => $terms) {

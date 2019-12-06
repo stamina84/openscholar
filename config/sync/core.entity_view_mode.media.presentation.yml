@@ -1,0 +1,10 @@
+uuid: 4fb3ab52-a851-4bfc-81ce-e996977fef22
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.presentation
+label: Presentation
+targetEntityType: media
+cache: true

@@ -98,6 +98,19 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $results = $this->lopHelper->getResults($data, $this->nids, $this->pids);
     $this->assertEquals('News', $results[0]->title);
 
+    // Test Sticky takes preference.
+    $presentation1 = $this->createNode([
+      'type' => 'presentation',
+      'title' => 'Presentation1',
+      'field_presentation_date' => '20/06/2019',
+      'sticky' => 1,
+    ]);
+    $nids = $this->nids;
+    array_push($nids, $presentation1->id());
+    $results = $this->lopHelper->getResults($data, $nids);
+    $this->assertNotEmpty($results);
+    $this->assertEquals('Presentation1', $results[0]->title);
+
     // Test oldest sort.
     $data['sortedBy'] = 'sort_oldest';
     $results = $this->lopHelper->getResults($data, $this->nids, $this->pids);

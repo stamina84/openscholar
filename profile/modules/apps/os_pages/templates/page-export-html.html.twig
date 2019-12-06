@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a page in a printer-friendly outline.
+ *
+ * Available variables:
+ * - node: Fully loaded node.
+ * - title: Node title.
+ * - content: Node content.
+ *
+ * * @see template_preprocess_page_export_html()
+ *
+ * @ingroup themeable
+ */
+#}
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+<head>
+  <title>{{content['#node'].label}}</title>
+  <base href="{{ base_url }}" />
+  <link type="text/css" rel="stylesheet" href="{{ css_path }}/os_pages.print.css"/>
+</head>
+<body>
+<article class="page-export">
+  <h1>{{content['#node'].label}}</h1>
+  {{ content }}
+</article>
+</body>
+</html>

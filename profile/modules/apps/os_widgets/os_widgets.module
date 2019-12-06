@@ -25,6 +25,7 @@ use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\os_widgets\Helper\FollowMeWidgetHelper;
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_library_info_alter().
@@ -225,6 +226,12 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'collapsible' => NULL,
       ],
     ],
+    'os_widgets_dataverse_list_widget' => [
+      'variables' => [
+        'embed_url' => '',
+        'embed_height' => '',
+      ],
+    ],
   ];
 }
 
@@ -398,9 +405,6 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       array_shift($form['field_show']['widget']['#options']);
       array_shift($form['field_events_should_expire']['widget']['#options']);
 
-      // Hide revision information from widget form.
-      $form['revision_information']['#access'] = FALSE;
-
       // Content details group.
       $form['content_details'] = [
         '#type' => 'details',
@@ -476,7 +480,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
         '#type' => 'details',
         '#title' => '',
         '#group' => 'content',
-        '#weight' => 5,
+        '#weight' => 10,
         '#open' => TRUE,
       ];
       $form['field_show_more_link']['#group'] = 'pager_details';
@@ -492,9 +496,12 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       }
       $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
       $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
+      break;
 
-    case 'block_content_tabs_form':
-    case 'block_content_tabs_edit_form':
+    case 'block_content_dataverse_list_form':
+    case 'block_content_dataverse_list_edit_form':
+      $form['field_dataverse_identifier']['widget'][0]['value']['#field_prefix'] = 'https://dataverse.harvard.edu/dataverse/';
+      break;
 
   }
 }
@@ -794,6 +801,8 @@ function os_widgets_form_block_content_form_alter(&$form, FormStateInterface &$f
       ],
     ];
   }
+  // Disable revision information for widgets.
+  $form['revision_information']['#access'] = FALSE;
 }
 
 /**
@@ -815,6 +824,7 @@ function os_widgets_contextual_links_view_alter(&$element, $items) {
     $element['#links']['block-contentblock-edit']['attributes'] = [
       'class' => ['use-ajax'],
       'data-dialog-type' => 'modal',
+      'data-dialog-options' => Json::encode(['width' => 1000, 'dialogClass' => 'widget-popup']),
     ];
   }
 }

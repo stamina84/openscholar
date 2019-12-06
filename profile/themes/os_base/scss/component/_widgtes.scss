@@ -9,7 +9,7 @@
   border: 1px solid $color-light-gray10;
   transition: top .3s ease;
   width: 240px;
-  z-index: 9999;
+  z-index: 999;
   height: calc(100% - 40px);
   font-family: Arial, Helvetica, sans-serif;
   &:after {
@@ -260,6 +260,16 @@
       }
     }
   }
+}
+.modal-content {
+  margin: auto;
+  max-width: 600px;
+  &.widget-popup {
+    max-width: none;
+  }
+}
+.modal-dialog {
+  width: auto;
 }
 /**** widget dropbutton ****/
 .layout {
