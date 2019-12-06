@@ -405,9 +405,6 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       array_shift($form['field_show']['widget']['#options']);
       array_shift($form['field_events_should_expire']['widget']['#options']);
 
-      // Hide revision information from widget form.
-      $form['revision_information']['#access'] = FALSE;
-
       // Content details group.
       $form['content_details'] = [
         '#type' => 'details',
@@ -804,6 +801,8 @@ function os_widgets_form_block_content_form_alter(&$form, FormStateInterface &$f
       ],
     ];
   }
+  // Disable revision information for widgets.
+  $form['revision_information']['#access'] = FALSE;
 }
 
 /**
