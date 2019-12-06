@@ -1,0 +1,18 @@
+os_pages.book_outline:
+  path: '/node/{node}/book-outline'
+  defaults:
+    _entity_form: 'node.book_outline'
+    _title: 'Outline'
+  requirements:
+    _group_permission: 'add content to books'
+    _entity_access: 'node.view'
+    node: \d+
+  options:
+    _node_operation_route: TRUE
+os_pages.export:
+  path: '/export/{node}'
+  defaults:
+    _controller: '\Drupal\os_pages\Controller\PageController::pageExport'
+  requirements:
+    _entity_access: 'node.view'
+    node: \d+
