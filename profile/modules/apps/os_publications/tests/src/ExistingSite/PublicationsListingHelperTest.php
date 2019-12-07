@@ -103,4 +103,12 @@ class PublicationsListingHelperTest extends TestBase {
     $this->assertNull($new_redirect);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->listingHelper);
+  }
+
 }

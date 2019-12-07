@@ -59,4 +59,13 @@ class GoogleScholarMappingTest extends TestBase {
 
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->admin);
+    unset($this->user);
+  }
+
 }

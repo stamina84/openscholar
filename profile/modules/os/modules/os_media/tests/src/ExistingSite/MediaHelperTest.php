@@ -109,4 +109,12 @@ class MediaHelperTest extends ExistingSiteBase {
     $this->assertNotEmpty($this->mediaHelper->getLocalThumbnailUri($resource), 'thumbnail path is returned.');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->mediaHelper);
+  }
+
 }

@@ -184,6 +184,12 @@ class CitationDistributionBatchModeTest extends TestBase {
     parent::tearDown();
 
     $this->queue->getBackend()->deleteQueue();
+    unset($this->repec);
+    unset($this->queue);
+    unset($this->configFactory);
+    unset($this->defaultPublicationsSettings);
+    unset($this->databaseConnection);
+    unset($this->processor);
   }
 
 }

@@ -93,4 +93,13 @@ class GroupEntityDeriverTest extends ExistingSiteBase {
     $this->assertEquals($term->id(), $saved_terms[0]->id());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->groupContentEnabler);
+    unset($this->groupType);
+  }
+
 }

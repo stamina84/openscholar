@@ -152,4 +152,12 @@ class PublicationAuthorsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $this->assertSame('block_content_entity_vsite:' . $this->group->id(), $tag);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->publicationAuthorsWidget);
+  }
+
 }

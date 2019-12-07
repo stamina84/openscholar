@@ -45,4 +45,12 @@ class ControllerBibcitePreviewTest extends OsExistingSiteTestBase {
     $this->assertEquals($this->reference->label(), $title);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->reference);
+  }
+
 }

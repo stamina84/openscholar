@@ -230,4 +230,14 @@ class AppAccessTest extends AppAccessTestBase {
     $this->assertContains('vsite', $os_app_access_service->accessFromRouteMatch($this->nonGroupMember, 'blog')->getCacheContexts());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->groupAdmin);
+    unset($this->groupMember);
+    unset($this->nonGroupMember);
+  }
+
 }

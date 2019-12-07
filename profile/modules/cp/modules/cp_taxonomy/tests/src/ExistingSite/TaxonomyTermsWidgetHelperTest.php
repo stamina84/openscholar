@@ -155,4 +155,12 @@ class TaxonomyTermsWidgetHelperTest extends TestBase {
     return $this->container->get('form_builder')->getForm($form);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->unSavedNode);
+  }
+
 }

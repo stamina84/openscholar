@@ -80,4 +80,13 @@ class OsSoftwareProjectReleaseBlocksFunctionalTest extends OsExistingSiteTestBas
     $web_assert->pageTextNotContains('Recommended Releases');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->projectNode);
+    unset($this->media);
+  }
+
 }

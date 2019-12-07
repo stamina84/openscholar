@@ -94,4 +94,15 @@ class CustomRolePermissionCalculatorTest extends CpUsersExistingSiteTestBase {
     $this->assertContains('update any group_node:faq entity', $item->getPermissions());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->permissionCalculator);
+    unset($this->groupMember);
+    unset($this->groupRole);
+    unset($this->vsiteContextManager);
+  }
+
 }

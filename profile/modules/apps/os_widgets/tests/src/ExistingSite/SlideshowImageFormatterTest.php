@@ -139,4 +139,13 @@ class SlideshowImageFormatterTest extends OsWidgetsExistingSiteTestBase {
     $this->assertSame($slideshow_paragraph->get('field_slide_link')->getString(), $elements[0]['image']['#url']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->formatterSettings);
+    unset($this->slideshowParagraph);
+  }
+
 }

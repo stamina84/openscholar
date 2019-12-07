@@ -70,4 +70,12 @@ class CustomTextHtmlBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $this->assertSame('_23456', $build['#extra_classes'][4]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->customTextHtmlWidget);
+  }
+
 }

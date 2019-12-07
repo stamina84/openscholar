@@ -87,4 +87,12 @@ class WidgetHelperTest extends ExistingSiteBase {
 
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->widgetHelper);
+  }
+
 }

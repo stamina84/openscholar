@@ -139,4 +139,12 @@ class FeaturedPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $this->assertFalse(array_key_exists('#access', $build['field_featured_posts'][$randomDeltaId]));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->featuredPostsWidget);
+  }
+
 }

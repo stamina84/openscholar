@@ -95,4 +95,14 @@ class AddSoftwareReleaseLinkFunctionalTest extends OsExistingSiteTestBase {
     $web_assert->fieldValueEquals('field_software_project[0][target_id]', '');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->projectNode);
+    unset($this->media);
+    unset($this->groupAdmin);
+  }
+
 }

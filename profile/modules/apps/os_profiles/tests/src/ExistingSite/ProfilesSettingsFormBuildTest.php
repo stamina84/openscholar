@@ -131,4 +131,13 @@ class ProfilesSettingsFormBuildTest extends OsExistingSiteTestBase {
     $this->assertTrue($profiles_config->get('disable_default_image'));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    unset($this->config);
+    unset($this->profileSettings);
+  }
+
 }
