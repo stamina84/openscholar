@@ -37,8 +37,8 @@ env:
     - JOB="job:run-kernel-tests os"
     - JOB="job:run-kernel-tests cp"
     - JOB="job:run-kernel-tests other,cp-menu"
-    - JOB="job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,analytics,cp-menu,publications,cp-appearance,redirect,twitter,vsite_favicon"
-    - JOB="job:run-functional-tests os,vsite"
+    - JOB="job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
+    - JOB="job:run-functional-tests analytics,publications,cp-appearance,redirect,twitter,os,vsite"
     - JOB="job:run-functional-javascript-tests classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
     - JOB="job:run-functional-javascript-tests events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
 #    - JOB=job:run-behat-tests
