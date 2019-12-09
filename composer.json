@@ -192,6 +192,7 @@
         "drupal/field_tools": "^1.0@alpha",
         "drupal/fullcalendar": "1.x-dev",
         "drupal/google_analytics": "^2.4",
+        "drupal/google_tag": "^1.2",
         "drupal/group": "^1.0-rc4",
         "drupal/group_purl": "1.0-alpha1",
         "drupal/groupmenu": "^1.0-beta4",
