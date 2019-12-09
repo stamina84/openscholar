@@ -1,0 +1,19 @@
+uuid: eb19b293-4859-4c60-81d7-3846df7fbc5b
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_dataset
+    - field.storage.block_content.field_dataset_persistent_id
+id: block_content.dataverse_dataset.field_dataset_persistent_id
+field_name: field_dataset_persistent_id
+entity_type: block_content
+bundle: dataverse_dataset
+label: 'Dataset Persistent Identifier'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

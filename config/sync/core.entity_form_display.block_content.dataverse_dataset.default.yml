@@ -1,0 +1,67 @@
+uuid: a0e1646a-e2c1-45d4-94b8-8c1020bc063b
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_dataset
+    - field.field.block_content.dataverse_dataset.field_dataset_persistent_id
+    - field.field.block_content.dataverse_dataset.field_dataset_persistent_type
+    - field.field.block_content.dataverse_dataset.field_embed_height
+    - field.field.block_content.dataverse_dataset.field_widget_title
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.dataverse_dataset.default
+targetEntityType: block_content
+bundle: dataverse_dataset
+mode: default
+content:
+  field_dataset_persistent_id:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_dataset_persistent_type:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_embed_height:
+    weight: 26
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_widget_title:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

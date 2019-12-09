@@ -226,6 +226,11 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'collapsible' => NULL,
       ],
     ],
+    'os_widgets_dataverse_dataset' => [
+      'variables' => [
+        'js_url' => '',
+      ],
+    ],
     'os_widgets_dataverse_list_widget' => [
       'variables' => [
         'embed_url' => '',

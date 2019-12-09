@@ -1,0 +1,27 @@
+uuid: a92a33a0-140c-4a24-8349-9942409e7c7c
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - options
+id: block_content.field_dataset_persistent_type
+field_name: field_dataset_persistent_type
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: doi
+      label: DOI
+    -
+      value: hdl
+      label: HDL
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
