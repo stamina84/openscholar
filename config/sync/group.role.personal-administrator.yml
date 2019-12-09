@@ -120,6 +120,7 @@ permissions:
   - 'update own group_node:presentation entity'
   - 'update own group_node:software_project entity'
   - 'update own group_node:software_release entity'
+  - 'url redirect group user'
   - 'view group'
   - 'view group_entity:bibcite_reference entity'
   - 'view group_entity:block_content entity'
