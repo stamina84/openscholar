@@ -104,6 +104,8 @@ function os_media_media_insert(EntityInterface $entity) {
     $media_helper = \Drupal::service('os_media.media_helper');
     $resource = $media_helper->fetchEmbedlyResource($entity->field_media_oembed_content->value);
     $entity->name->value = $resource['title'];
+    // Alt text for thumbnails.
+    $entity->thumbnail->alt = $resource['title'];
     $entity->save();
   }
 }

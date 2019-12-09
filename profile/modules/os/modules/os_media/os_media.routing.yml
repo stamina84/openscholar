@@ -11,3 +11,10 @@ os_media.embedly_config:
     _title: Embedly Api Settings
   requirements:
     _permission: 'administer site configuration'
+os_media_entity.download:
+  path: '/media/{media}/download'
+  defaults:
+    _controller: '\Drupal\os_media\Controller\OsMediaDownloadController::download'
+    _title: 'Download Media'
+  requirements:
+    _group_permission: 'download media file'

@@ -15,3 +15,4 @@ dependencies:
   - "drupal:os_widgets_context"
   - "drupal:os_app_access"
   - "drupal:field"
+  - "drupal:os_media"

@@ -4,7 +4,7 @@ os_redirect.list:
     _controller: '\Drupal\os_redirect\Controller\RedirectListController::listing'
     _title: 'URL redirects'
   requirements:
-    _permission: 'administer control panel redirects'
+    _group_permission: 'url redirect group user'
 
 os_redirect.add:
   path: '/cp/redirects/add'
@@ -12,7 +12,7 @@ os_redirect.add:
     _form: '\Drupal\os_redirect\Form\OsRedirectForm'
     _title: 'Add URL redirect'
   requirements:
-    _permission: 'administer control panel redirects'
+    _group_permission: 'url redirect group user'
 
 os_redirect.delete:
   path: '/cp/redirects/delete/{redirect}'
@@ -20,4 +20,4 @@ os_redirect.delete:
     _form: '\Drupal\os_redirect\Form\OsRedirectDeleteForm'
     _title: 'Delete URL redirect'
   requirements:
-    _permission: 'administer control panel redirects'
+    _group_permission: 'url redirect group user'

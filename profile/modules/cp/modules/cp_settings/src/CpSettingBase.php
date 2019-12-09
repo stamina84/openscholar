@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,6 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Base class for cp settings.
  */
 abstract class CpSettingBase extends PluginBase implements CpSettingInterface, ContainerFactoryPluginInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Vsite context manager.

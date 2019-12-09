@@ -1,0 +1,187 @@
+<?php
+
+/**
+ * @file
+ * Os Google Tag manager.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function os_google_tag_manager_page_attachments(array &$attachments) {
+  if (!os_google_tag_manager_insert_snippet()) {
+    return;
+  }
+
+  // Add script snippets to head.
+  $attachments['#attached']['html_head'][] = [
+      [
+        '#type' => 'html_tag',
+        '#tag' => 'script',
+        '#value' => os_google_tag_manager_script_snippet(),
+        '#weight' => 9,
+      ],
+    "google_tag_script_tag",
+  ];
+}
+
+/**
+ * Returns JavaScript script snippet.
+ *
+ * @return array
+ *   The script snippet.
+ */
+function os_google_tag_manager_script_snippet() {
+  // Gather data.
+  $container_id = \Drupal::config('os_gtm.settings')->get('container_id');
+  $data_layer = os_google_tag_manager_variable_clean('data_layer');
+  $query = os_google_tag_manager_environment_query();
+  $compact = \Drupal::config('google_tag.settings')->get('compact_snippet');
+
+  // Build script snippet.
+  $script = <<<EOS
+(function(w,d,s,l,i){
+
+  w[l]=w[l]||[];
+  w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+  var f=d.getElementsByTagName(s)[0];
+  var j=d.createElement(s);
+  var dl=l!='dataLayer'?'&l='+l:'';
+  j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl+'$query';
+  j.async=true;
+  f.parentNode.insertBefore(j,f);
+
+})(window,document,'script','$data_layer','$container_id');
+EOS;
+  if ($compact) {
+    $script = str_replace(["\n", '  '], '', $script);
+  }
+  /*
+  $script = <<<EOS
+  <!-- Google Tag Manager -->
+  $script
+  <!-- End Google Tag Manager -->
+  EOS;
+   */
+  return $script;
+}
+
+/**
+ * Implements hook_page_top().
+ */
+function os_google_tag_manager_page_top(&$page) {
+  if (!os_google_tag_manager_insert_snippet()) {
+    return;
+  }
+
+  // Add noscript snippet to page_top region.
+  $contents = os_google_tag_manager_noscript_snippet();
+
+  // Note: depending on the theme, this may not place the snippet immediately
+  // after the body tag but should be close and it can be altered.
+  // @see https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/group/theme_render/8.2.x
+  // The markup is passed through \Drupal\Component\Utility\Xss::filterAdmin()
+  // which strips known vectors while allowing a permissive list of HTML tags
+  // that are not XSS vectors. (e.g., <script> and <style> are not allowed.)
+  // As markup, core removes the 'style' attribute from the noscript snippet.
+  // With the inline template type, core does not alter the noscript snippet.
+  if ($contents) {
+    $page['google_tag_noscript_tag'] = [
+      '#type' => 'inline_template',
+      '#template' => $contents,
+      '#weight' => -10,
+    ];
+  }
+}
+
+/**
+ * Returns JavaScript noscript snippet.
+ *
+ * @return array
+ *   The noscript snippet.
+ */
+function os_google_tag_manager_noscript_snippet() {
+  // Gather data.
+  $container_id = \Drupal::config('os_gtm.settings')->get('container_id');
+  $query = os_google_tag_manager_environment_query();
+  $compact = \Drupal::config('google_tag.settings')->get('compact_snippet');
+
+  // Build noscript snippet.
+  $noscript = <<<EOS
+<noscript aria-hidden="true"><iframe src="https://www.googletagmanager.com/ns.html?id=$container_id$query"
+ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+EOS;
+  if ($compact) {
+    $noscript = str_replace("\n", '', $noscript);
+  }
+  /*
+  $noscript = <<<EOS
+  <!-- Google Tag Manager -->
+  $noscript
+  <!-- End Google Tag Manager -->
+  EOS;
+   */
+  return $noscript;
+}
+
+/**
+ * Returns a query string with the environment parameters.
+ *
+ * @return string
+ *   The query string.
+ */
+function os_google_tag_manager_environment_query() {
+  $config = \Drupal::config('google_tag.settings');
+  if (!$config->get('include_environment')) {
+    return '';
+  }
+
+  // Gather data.
+  $environment_id = os_google_tag_manager_variable_clean('environment_id');
+  $environment_token = os_google_tag_manager_variable_clean('environment_token');
+
+  // Build query string.
+  return "&gtm_auth=$environment_token&gtm_preview=$environment_id&gtm_cookies_win=x";
+}
+
+/**
+ * Returns a cleansed variable.
+ *
+ * @param string $variable
+ *   The variable name.
+ *
+ * @return string
+ *   The cleansed variable.
+ */
+function os_google_tag_manager_variable_clean($variable) {
+  $config = \Drupal::config('google_tag.settings');
+  return trim(json_encode($config->get("_default_container.$variable")), '"');
+}
+
+/**
+ * If we need to insert gtm script or not.
+ */
+function os_google_tag_manager_insert_snippet() {
+  $config = \Drupal::config('os_gtm.settings');
+  $exclude_paths = \Drupal::config('google_tag.settings')->get('_default_container.path_list');
+
+  /** @var \Drupal\Core\Path\CurrentPathStack $current_path */
+  $current_path = \Drupal::service('path.current');
+  /** @var \Drupal\Core\Path\AliasManager $alias_manager */
+  $alias_manager = \Drupal::service('path.alias_manager');
+  /** @var \Drupal\Core\Path\PathMatcher $path_matcher */
+  $path_matcher = \Drupal::service('path.matcher');
+
+  // Compare the lowercase path alias (if any) and internal path.
+  $path = $current_path->getPath(\Drupal::request());
+  $path_alias = mb_strtolower($alias_manager->getAliasByPath($path));
+  $should_exclude = $path_matcher->matchPath($path_alias, $exclude_paths) || (($path != $path_alias) && $path_matcher->matchPath($path, $exclude_paths));
+
+  if ($config) {
+    $id = $config->get('container_id');
+    if ($id && !$should_exclude) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}

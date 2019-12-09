@@ -1,0 +1,85 @@
+/**** list of files code ****/
+.block--type-list-of-files {
+  .block-content{
+    > ul {
+      li {
+        border-bottom: 1px solid rgb(204, 204, 204);
+        padding: 10px 0px;
+      }
+      &.title-lof {
+        li {
+          border-bottom: 0;
+        }
+      }
+    }
+  }
+  .lof-grid {
+    display: flex;
+    flex-wrap: wrap;
+    &.lof-grid-2 {
+      > div {
+        flex: 0 0 50%;
+      }
+    }
+    &.lof-grid-3 {
+      >div {
+        flex: 0 0 33.333%;
+      }
+    }
+    &.lof-grid-4 {
+      >div {
+        flex: 0 0 25%;
+      }
+    }
+    &.lof-grid-5 {
+      >div {
+        flex: 0 0 20%;
+      }
+    }
+      > div {
+        padding: 10px 0;
+        .field {
+          padding-right: 10px;
+        }
+    }
+    .lof-down {
+      max-width: 320px;
+    }
+  }
+  //file icons
+  .file-icon {
+    display: inline-block;
+    width: 20px;
+    padding: 0;
+    margin-right: 2px;
+  }
+  //download link
+  a.download-link {
+    text-decoration: underline;
+    font-size: 11px;
+  }
+  //teaser
+  .field--mode-teaser {
+    float: left;
+    margin-right: 15px;
+  }
+    //thumbnail mode
+  .thumbnail-lof {
+    .lof-down {
+      display: none;
+    }
+    .field--mode-thumbnail {
+      img {
+        padding: 4px;
+        background-color: white;
+        border: 1px solid #ADADAD;
+        margin: 0 5px 5px 0;
+      }
+    }
+  }
+}
+.lof-media {
+  .field--name-name {
+    display: none;
+  }
+}

@@ -1,0 +1,10 @@
+uuid: 93a3f175-81e7-44c6-8e97-5f952f0ac9e4
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.grid_thumbnail
+label: 'Grid Thumbnail'
+targetEntityType: media
+cache: true

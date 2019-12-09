@@ -48,6 +48,7 @@ permissions:
   - 'delete own group_node:presentation entity'
   - 'delete own group_node:software_project entity'
   - 'delete own group_node:software_release entity'
+  - 'download media file'
   - 'leave group'
   - 'promote nodes'
   - 'publish nodes'

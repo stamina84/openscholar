@@ -1,0 +1,35 @@
+uuid: 8372a940-dd23-4442-9ca6-5d1bbe0d61cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+    - field.field.block_content.list_of_files.body
+    - field.field.block_content.list_of_files.field_columns
+    - field.field.block_content.list_of_files.field_display_style_lof
+    - field.field.block_content.list_of_files.field_file_type
+    - field.field.block_content.list_of_files.field_layout
+    - field.field.block_content.list_of_files.field_number_of_items_to_display
+    - field.field.block_content.list_of_files.field_show_more_link
+    - field.field.block_content.list_of_files.field_show_pager
+    - field.field.block_content.list_of_files.field_sorted_by_lof
+    - field.field.block_content.list_of_files.field_url_for_the_more_link
+    - field.field.block_content.list_of_files.field_widget_title
+id: block_content.list_of_files.default
+targetEntityType: block_content
+bundle: list_of_files
+mode: default
+content: {  }
+hidden:
+  body: true
+  field_columns: true
+  field_display_style_lof: true
+  field_file_type: true
+  field_layout: true
+  field_number_of_items_to_display: true
+  field_show_more_link: true
+  field_show_pager: true
+  field_sorted_by_lof: true
+  field_url_for_the_more_link: true
+  field_widget_title: true
+  langcode: true

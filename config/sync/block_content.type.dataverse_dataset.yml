@@ -1,0 +1,8 @@
+uuid: 10f44d26-24f6-46eb-b9a3-f78c7628a191
+langcode: en
+status: true
+dependencies: {  }
+id: dataverse_dataset
+label: 'Dataverse Dataset'
+revision: 1
+description: ''

@@ -1,0 +1,23 @@
+uuid: fe14cd6a-fbd7-4f4b-a3dc-4c58afe14cfd
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+    - field.storage.block_content.field_columns
+  module:
+    - options
+id: block_content.list_of_files.field_columns
+field_name: field_columns
+entity_type: block_content
+bundle: list_of_files
+label: Columns
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: '3'
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -6,13 +6,11 @@ use Drupal\bibcite_entity\Entity\Reference;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Session\AccountProxy;
-use Drupal\Core\Url;
 use Drupal\group\Plugin\GroupContentEnablerManager;
 use Drupal\node\Entity\Node;
 use Drupal\os_app_access\AppLoader;
-use Drupal\os_widgets\Helper\ListOfPostsWidgetHelper;
+use Drupal\os_widgets\Helper\ListWidgetsHelper;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
 use Drupal\taxonomy\Entity\Term;
@@ -39,7 +37,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
   /**
    * LoP helper service.
    *
-   * @var \Drupal\os_widgets\Helper\ListOfPostsWidgetHelper
+   * @var \Drupal\os_widgets\Helper\ListWidgetsHelper
    */
   protected $lopHelper;
 
@@ -67,7 +65,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, VsiteContextManagerInterface $vsite_context_manager, ListOfPostsWidgetHelper $lop_helper, GroupContentEnablerManager $plugin_manager, AppLoader $app_loader, AccountProxy $account) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, VsiteContextManagerInterface $vsite_context_manager, ListWidgetsHelper $lop_helper, GroupContentEnablerManager $plugin_manager, AppLoader $app_loader, AccountProxy $account) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $connection);
     $this->vsiteContextManager = $vsite_context_manager;
     $this->lopHelper = $lop_helper;
@@ -87,7 +85,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $container->get('entity_type.manager'),
       $container->get('database'),
       $container->get('vsite.context_manager'),
-      $container->get('os_widgets.lop_helper'),
+      $container->get('os_widgets.list_widgets_helper'),
       $container->get('plugin.manager.group_content_enabler'),
       $container->get('os_app_access.app_loader'),
       $container->get('current_user')
@@ -102,7 +100,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $fieldData['contentType'] = $block_content->field_content_type->value;
     $displayStyle = $block_content->field_display_style->value;
     $fieldData['sortedBy'] = $block_content->field_sorted_by->value;
-    $numItems = $block_content->field_number_of_items_to_display->value;
+    $pager['numItems'] = $block_content->field_number_of_items_to_display->value;
     $fieldData['showEvents'] = $block_content->field_show->value;
     $moreLinkStatus = $block_content->field_show_more_link->value;
     $moreLink = $moreLinkStatus ? $block_content->get('field_url_for_the_more_link')->view(['label' => 'hidden']) : '';
@@ -177,7 +175,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
     }
 
     // Get the results which we need to load finally.
-    $results = $this->lopHelper->getResults($fieldData, $nodesList, $pubList, $tids);
+    $results = $this->lopHelper->getLopResults($fieldData, $nodesList, $pubList, $tids);
 
     // Prepare render array for the template based on type and display styles.
     $renderItems = [];
@@ -201,85 +199,28 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
     }
 
-    $block_attribute_id = Html::getUniqueId('list-of-posts');
-    $moreLinkId = Html::getUniqueId('node-readmore');
+    $blockData['block_attribute_id'] = Html::getUniqueId('list-of-posts');
+    $blockData['moreLinkId'] = Html::getUniqueId('node-readmore');
+    $blockData['block_id'] = $block_content->id();
 
-    $total_count = count($renderItems);
-    $page = pager_find_page();
-    $offset = $numItems * $page;
-    $renderItems = array_slice($renderItems, $offset, $numItems);
+    $pager['total_count'] = count($renderItems);
+    $pager['page'] = pager_find_page();
+    $pager['offset'] = $pager['numItems'] * $pager['page'];
+    $renderItems = array_slice($renderItems, $pager['offset'], $pager['numItems']);
 
     // Final build array that will be returned.
-    $build['rendered_posts'] = [
+    $build['render_content'] = [
       '#theme' => 'os_widgets_list_of_posts',
       '#posts' => $renderItems,
       '#more_link' => $moreLink,
       '#attributes' => [
-        'id' => $block_attribute_id,
-        'more_link_id' => $moreLinkId,
+        'id' => $blockData['block_attribute_id'],
+        'more_link_id' => $blockData['moreLinkId'],
       ],
     ];
 
     if ($showPager && $renderItems) {
-      // Now that we have the total number of results, initialize the pager.
-      $curr_page = pager_default_initialize($total_count, $numItems);
-
-      $block_id = $block_content->id();
-      $next_page = $curr_page + 1;
-      $prev_page = $curr_page - 1;
-      $pager_total = ceil($total_count / $numItems);
-
-      $header_id = Html::getUniqueId('pagination-heading');
-      $pager_id = Html::getUniqueId('pager-heading');
-
-      // Prepare next and previous page links displayed as a mini pager.
-      $next_link = '';
-      if ($page != ($pager_total - 1)) {
-        $url_next = Url::fromRoute('os_widgets.widgets_pagination_ajax', [
-          'id' => $block_id,
-          'page' => $next_page,
-          'selector' => $block_attribute_id,
-          'pagerid' => $pager_id,
-          'moreid' => $moreLinkId,
-        ], [
-          'attributes' => [
-            'class' => ['use-ajax'],
-            'title' => $this->t('Go to next page'),
-            'rel' => 'next',
-            'aria-hidden' => 'true',
-          ],
-        ]);
-        $next_link = Link::fromTextAndUrl('››', $url_next);
-      }
-
-      $prev_link = '';
-      if ($prev_page >= 0) {
-        $url_prev = Url::fromRoute('os_widgets.widgets_pagination_ajax', [
-          'id' => $block_id,
-          'page' => $prev_page,
-          'selector' => $block_attribute_id,
-          'pagerid' => $pager_id,
-          'moreid' => $moreLinkId,
-        ], [
-          'attributes' => [
-            'class' => ['use-ajax'],
-            'title' => $this->t('Go to previous page'),
-            'rel' => 'prev',
-            'aria-hidden' => 'true',
-          ],
-        ]);
-        $prev_link = Link::fromTextAndUrl('‹‹', $url_prev)->toRenderable();
-      }
-
-      $build['rendered_posts']['#pager'] = [
-        '#theme' => 'os_widgets_ajax_pager',
-        '#next_link' => $next_link,
-        '#prev_link' => $prev_link,
-        '#pager_total' => $pager_total,
-        '#curr_page' => ($curr_page + 1),
-        '#heading_id' => $header_id,
-        '#pager_id' => $pager_id,
-      ];
+      $this->lopHelper->addWidgetMiniPager($build, $pager, $blockData);
     }
   }
 

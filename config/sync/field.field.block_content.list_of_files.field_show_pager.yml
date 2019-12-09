@@ -1,0 +1,23 @@
+uuid: ccc688fb-fce0-4000-ab08-7ad5614b4bd3
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+    - field.storage.block_content.field_show_pager
+id: block_content.list_of_files.field_show_pager
+field_name: field_show_pager
+entity_type: block_content
+bundle: list_of_files
+label: 'Show Pager'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

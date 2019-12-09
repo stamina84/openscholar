@@ -1,0 +1,28 @@
+uuid: bd188d32-4e17-4cdb-8e13-e597bb0c1147
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_dataset
+    - field.field.block_content.dataverse_dataset.field_dataset_persistent_id
+    - field.field.block_content.dataverse_dataset.field_dataset_persistent_type
+    - field.field.block_content.dataverse_dataset.field_embed_height
+    - field.field.block_content.dataverse_dataset.field_widget_title
+id: block_content.dataverse_dataset.default
+targetEntityType: block_content
+bundle: dataverse_dataset
+mode: default
+content:
+  field_widget_title:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_dataset_persistent_id: true
+  field_dataset_persistent_type: true
+  field_embed_height: true
+  langcode: true

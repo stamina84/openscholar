@@ -24,9 +24,7 @@ class CpSettingsOsRedirectTest extends OsExistingSiteJavascriptTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->groupAdmin = $this->createUser([
-      'administer control panel redirects',
-    ]);
+    $this->groupAdmin = $this->createUser();
     $this->addGroupAdmin($this->groupAdmin, $this->group);
     $this->drupalLogin($this->groupAdmin);
   }

@@ -1,0 +1,44 @@
+uuid: d901a30d-ecad-4c0b-a6a4-b8be5ebc1e00
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.full
+    - field.field.media.oembed.field_media_oembed_content
+    - field.field.media.oembed.field_taxonomy_terms
+    - media.type.oembed
+  module:
+    - layout_builder
+    - os_media
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.oembed.full
+targetEntityType: media
+bundle: oembed
+mode: full
+content:
+  field_media_oembed_content:
+    type: 'media:embed'
+    weight: 0
+    label: visually_hidden
+    settings:
+      max_width: 100%
+      max_height: '701'
+    third_party_settings: {  }
+    region: content
+  name:
+    type: string
+    weight: 1
+    region: content
+    label: visually_hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_taxonomy_terms: true
+  langcode: true
+  thumbnail: true
+  uid: true

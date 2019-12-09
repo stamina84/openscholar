@@ -6,28 +6,24 @@ dependencies:
     - core.entity_view_mode.media.teaser
     - field.field.media.document.field_media_file
     - field.field.media.document.field_taxonomy_terms
-    - image.style.thumbnail
     - media.type.document
-  module:
-    - image
 id: media.document.teaser
 targetEntityType: media
 bundle: document
 mode: teaser
 content:
-  thumbnail:
-    type: image
+  name:
+    type: string
     weight: 0
-    label: hidden
-    settings:
-      image_style: thumbnail
-      image_link: ''
     region: content
+    label: visually_hidden
+    settings:
+      link_to_entity: true
     third_party_settings: {  }
 hidden:
   created: true
   field_media_file: true
   field_taxonomy_terms: true
   langcode: true
-  name: true
+  thumbnail: true
   uid: true
