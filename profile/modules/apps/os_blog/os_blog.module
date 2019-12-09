@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * OS Blog and Disqus alterations.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function os_blog_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['field_disqus_comments'])) {
+    $form['field_disqus_comments']['#access'] = FALSE;
+    $form['field_disqus_comments']['widget'][0]['status']['#default_value'] = 0;
+    $blog_comments_config = \Drupal::config('os_blog.settings');
+    if ($blog_comments_config->get('comment_type') == 'disqus_comments') {
+      $form['field_disqus_comments']['#access'] = TRUE;
+      $form['field_disqus_comments']['widget'][0]['status']['#default_value'] = 1;
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function os_blog_node_view_alter(array &$build, $entity, $display) {
+  $blog_comments_config = \Drupal::config('os_blog.settings');
+  if ($blog_comments_config->get('comment_type') == 'disqus_comments') {
+    // Do something.
+  }
+  else {
+    unset($build['field_disqus_comments']);
+  }
+}
