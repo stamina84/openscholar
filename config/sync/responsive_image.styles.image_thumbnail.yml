@@ -1,0 +1,11 @@
+uuid: 00012a01-70a0-4d2a-8431-c9f298932109
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.media_thumbnail
+id: image_thumbnail
+label: 'Image Thumbnail'
+image_style_mappings: {  }
+breakpoint_group: responsive_image
+fallback_image_style: media_thumbnail

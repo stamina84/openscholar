@@ -1,0 +1,15 @@
+uuid: 24ff3d42-8201-45a7-947f-c58164140008
+langcode: en
+status: true
+dependencies: {  }
+name: os_image_large
+label: 'OS Image Large'
+effects:
+  5590a14f-0996-4198-a10f-4912725149dc:
+    uuid: 5590a14f-0996-4198-a10f-4912725149dc
+    id: image_scale
+    weight: 1
+    data:
+      width: 600
+      height: 600
+      upscale: false

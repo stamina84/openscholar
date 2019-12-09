@@ -1,0 +1,11 @@
+uuid: fcbd8a3f-bd31-49db-89ee-971c3138cdb7
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+id: block_content.list_of_files
+target_entity_type_id: block_content
+target_bundle: list_of_files
+default_langcode: site_default
+language_alterable: false

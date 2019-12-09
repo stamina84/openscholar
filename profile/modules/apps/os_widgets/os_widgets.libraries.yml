@@ -62,9 +62,15 @@ slideshowWidget:
   dependencies:
     - core/drupal.dialog.ajax
     - slick/slick.load
-lopwidgetForm:
+lopWidgetForm:
   js:
-    js/os_widgets_form.js: {}
+    js/os_lop_widget_form.js: {}
   css:
     component:
       css/os_widgets.lop.css: {}
+lofWidgetForm:
+  js:
+    js/os_lof_widget_form.js: {}
+  css:
+    component:
+      css/os_widgets.lof.css: {}

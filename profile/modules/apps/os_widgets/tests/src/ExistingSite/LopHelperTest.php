@@ -11,7 +11,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @group kernel
  * @group widgets-3
- * @covers \Drupal\os_widgets\Helper\ListOfPostsWidgetHelper
+ * @covers \Drupal\os_widgets\Helper\ListWidgetsHelper
  */
 class LopHelperTest extends OsWidgetsExistingSiteTestBase {
 
@@ -25,7 +25,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
   /**
    * View builder service.
    *
-   * @var \Drupal\os_widgets\Helper\ListOfPostsWidgetHelperInterface
+   * @var \Drupal\os_widgets\Helper\ListWidgetsHelperInterface
    */
   protected $lopHelper;
 
@@ -62,7 +62,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->lopHelper = $this->container->get('os_widgets.lop_helper');
+    $this->lopHelper = $this->container->get('os_widgets.list_widgets_helper');
 
     // Activate vsite and create a vocabulary.
     $this->vsiteContextManager->activateVsite($this->group);
@@ -95,7 +95,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $data['publicationTypes'] = ['artwork', 'book'];
 
     // Tests Newest Sort.
-    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids);
+    $results = $this->lopHelper->getLopResults($data, $this->nids, $this->pids);
     $this->assertEquals('News', $results[0]->title);
 
     // Test Sticky takes preference.
@@ -107,23 +107,23 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     ]);
     $nids = $this->nids;
     array_push($nids, $presentation1->id());
-    $results = $this->lopHelper->getResults($data, $nids);
+    $results = $this->lopHelper->getLopResults($data, $nids);
     $this->assertNotEmpty($results);
     $this->assertEquals('Presentation1', $results[0]->title);
 
     // Test oldest sort.
     $data['sortedBy'] = 'sort_oldest';
-    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids);
+    $results = $this->lopHelper->getLopResults($data, $this->nids, $this->pids);
     $this->assertEquals('Publication1', $results[0]->title);
 
     // Test alphabetical sort.
     $data['sortedBy'] = 'sort_alpha';
-    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids);
+    $results = $this->lopHelper->getLopResults($data, $this->nids, $this->pids);
     $this->assertEquals('Blog', $results[0]->title);
 
     // Test random sort.
     $data['sortedBy'] = 'sort_random';
-    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids);
+    $results = $this->lopHelper->getLopResults($data, $this->nids, $this->pids);
     $this->assertNotEmpty($results);
 
     // Test News Date sort.
@@ -139,7 +139,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     ]);
     $data['contentType'] = 'news';
     $data['sortedBy'] = 'news_date';
-    $results = $this->lopHelper->getResults($data, [$news1->id(), $news2->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$news1->id(), $news2->id()]);
     $this->assertNotEmpty($results);
     $this->assertEquals('News2', $results[0]->title);
 
@@ -156,7 +156,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     ]);
     $data['contentType'] = 'publications';
     $data['sortedBy'] = 'year_of_publication';
-    $results = $this->lopHelper->getResults($data, NULL, [$ref1->id(), $ref2->id()]);
+    $results = $this->lopHelper->getLopResults($data, NULL, [$ref1->id(), $ref2->id()]);
     $this->assertNotEmpty($results);
     $this->assertEquals($ref1->id(), $results[0]->nid);
 
@@ -173,7 +173,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     ]);
     $data['contentType'] = 'presentation';
     $data['sortedBy'] = 'recently_presented';
-    $results = $this->lopHelper->getResults($data, [$presentation1->id(), $presentation2->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$presentation1->id(), $presentation2->id()]);
     $this->assertNotEmpty($results);
     $this->assertEquals('Presentation2', $results[0]->title);
 
@@ -198,7 +198,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     }
 
     // Tests when no terms attached no results are returned.
-    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids, $tids);
+    $results = $this->lopHelper->getLopResults($data, $this->nids, $this->pids, $tids);
     $this->assertEmpty($results);
 
     // Tests when a term is attached this node is returned.
@@ -211,7 +211,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     ]);
     array_push($this->nids, $blog_with_term->id());
     $this->group->addContent($blog_with_term, 'group_node:blog');
-    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids, $tids);
+    $results = $this->lopHelper->getLopResults($data, $this->nids, $this->pids, $tids);
     $this->assertCount(1, $results);
   }
 
@@ -260,17 +260,17 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $this->group->addContent($eventNode2, 'group_node:events');
 
     // Test upcoming events that only future event is returned.
-    $results = $this->lopHelper->getResults($data, [$eventNode1->id(), $eventNode2->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$eventNode1->id(), $eventNode2->id()]);
     $this->assertEquals($eventNode1->id(), $results[0]->nid);
 
     // Test past events that only past is returned.
     $data['showEvents'] = 'past_events';
-    $results = $this->lopHelper->getResults($data, [$eventNode1->id(), $eventNode2->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$eventNode1->id(), $eventNode2->id()]);
     $this->assertEquals($eventNode2->id(), $results[0]->nid);
 
     // Test all events that all are returned.
     $data['showEvents'] = 'all_events';
-    $results = $this->lopHelper->getResults($data, [$eventNode1->id(), $eventNode2->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$eventNode1->id(), $eventNode2->id()]);
     $this->assertCount(2, $results);
   }
 
@@ -288,19 +288,19 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $data['sortedBy'] = 'sort_event_asc';
     $data['showEvents'] = 'upcoming_events';
     $data['eventExpireAppear'] = 'after_event_start';
-    $results = $this->lopHelper->getResults($data, [$eventsArray[0]->id(), $eventsArray[1]->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$eventsArray[0]->id(), $eventsArray[1]->id()]);
     $this->assertCount(1, $results);
     $this->assertEquals($eventsArray[0]->id(), $results[0]->nid);
 
     // Test End of Day.
     $data['eventExpireAppear'] = 'end_of_day';
-    $results = $this->lopHelper->getResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
     $this->assertCount(1, $results);
     $this->assertEquals($eventsArray[1]->id(), $results[0]->nid);
 
     // Test End of Event.
     $data['eventExpireAppear'] = 'end_of_event';
-    $results = $this->lopHelper->getResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
     $this->assertCount(1, $results);
     $this->assertEquals($eventsArray[2]->id(), $results[0]->nid);
   }
@@ -319,19 +319,19 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $data['sortedBy'] = 'sort_event_desc';
     $data['showEvents'] = 'past_events';
     $data['eventExpireAppear'] = 'after_event_start';
-    $results = $this->lopHelper->getResults($data, [$eventsArray[0]->id(), $eventsArray[1]->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$eventsArray[0]->id(), $eventsArray[1]->id()]);
     $this->assertCount(1, $results);
     $this->assertEquals($eventsArray[1]->id(), $results[0]->nid);
 
     // Test End of Day.
     $data['eventExpireAppear'] = 'end_of_day';
-    $results = $this->lopHelper->getResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
     $this->assertCount(1, $results);
     $this->assertEquals($eventsArray[2]->id(), $results[0]->nid);
 
     // Test End of Event.
     $data['eventExpireAppear'] = 'end_of_event';
-    $results = $this->lopHelper->getResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
+    $results = $this->lopHelper->getLopResults($data, [$eventsArray[1]->id(), $eventsArray[2]->id()]);
     $this->assertCount(1, $results);
     $this->assertEquals($eventsArray[1]->id(), $results[0]->nid);
   }
@@ -393,7 +393,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     foreach ([$term1, $term2] as $term) {
       $tids[$term->bundle()][] = $term->id();
     }
-    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids, $tids);
+    $results = $this->lopHelper->getLopResults($data, $this->nids, $this->pids, $tids);
     // Assert No duplicates.
     $this->assertCount(1, $results);
     // Assert only nid with both vocab terms (AND) is returned.
@@ -403,7 +403,7 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     foreach ([$term2, $term3] as $term) {
       $termIds[$term->bundle()][] = $term->id();
     }
-    $results = $this->lopHelper->getResults($data, $this->nids, $this->pids, $termIds);
+    $results = $this->lopHelper->getLopResults($data, $this->nids, $this->pids, $termIds);
     // Assert both nids are returned confirming OR.
     $this->assertCount(2, $results);
   }

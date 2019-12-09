@@ -1,0 +1,46 @@
+uuid: 2977170c-9990-4388-ab18-6058fcd1747a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.full
+    - field.field.media.html.field_media_html
+    - field.field.media.html.field_media_html_description
+    - field.field.media.html.field_taxonomy_terms
+    - media.type.html
+  module:
+    - layout_builder
+    - os_media
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.html.full
+targetEntityType: media
+bundle: html
+mode: full
+content:
+  field_media_html:
+    weight: 1
+    label: visually_hidden
+    settings:
+      max_width: 100%
+      max_height: '701'
+    third_party_settings: {  }
+    type: 'media:embed'
+    region: content
+  name:
+    type: string
+    weight: 0
+    region: content
+    label: visually_hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_html_description: true
+  field_taxonomy_terms: true
+  langcode: true
+  thumbnail: true
+  uid: true

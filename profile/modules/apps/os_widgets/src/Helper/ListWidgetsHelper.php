@@ -2,15 +2,22 @@
 
 namespace Drupal\os_widgets\Helper;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
+use Drupal\media\Entity\Media;
 
 /**
  * Helper class for merging views with different entity types.
  */
-class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
+class ListWidgetsHelper implements ListWidgetsHelperInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Database service.
@@ -20,28 +27,29 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
   protected $connection;
 
   /**
+   * Entity Type Manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
    * ListOfPostsWidgetHelper constructor.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   Connection instance.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_manager
+   *   Entity type manager instance.
    */
-  public function __construct(Connection $database) {
+  public function __construct(Connection $database, EntityTypeManager $entity_manager) {
     $this->connection = $database;
+    $this->entityTypeManager = $entity_manager;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('database')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getResults(array $fieldData, array $nodesList = NULL, array $pubList = NULL, array $tids = NULL) : array {
+  public function getLopResults(array $fieldData, array $nodesList = NULL, array $pubList = NULL, array $tids = NULL) : array {
 
     // If events node is selected then check if only upcoming or past events
     // need to be shown with additional sorting.
@@ -85,6 +93,136 @@ class ListOfPostsWidgetHelper implements ListOfPostsWidgetHelperInterface {
 
     $query = $this->sortQuery($query, $fieldData['sortedBy'], $pubQuery);
     return $query->execute()->fetchAll();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLofResults($mids, $sortedBy) : array {
+    $mediaQuery = $this->connection->select('media_field_data', 'mfd');
+    $mediaQuery->fields('mfd', ['mid', 'created', 'name', 'bundle'])
+      ->condition('mid', $mids, 'IN');
+
+    if ($sortedBy === 'sort_newest') {
+      $mediaQuery->orderBy('created', 'DESC');
+    }
+    elseif ($sortedBy === 'sort_oldest') {
+      $mediaQuery->orderBy('created', 'ASC');
+    }
+    elseif ($sortedBy === 'sort_alpha') {
+      $mediaQuery->orderBy('name', 'ASC');
+    }
+    elseif ($sortedBy === 'sort_random') {
+      $mediaQuery->orderRandom();
+    }
+    return $mediaQuery->execute()->fetchAll();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMediaIcon(Media $media, $mapping) : string {
+
+    $bundle = $media->bundle();
+    $icon_type = 'text-x-generic.svg';
+    if ($bundle === 'oembed') {
+      $icon_type = 'video-x-generic.svg';
+    }
+    // Map media types with respective icons.
+    $haveIcons = ['image', 'document', 'audio', 'executable'];
+    if (in_array($bundle, $haveIcons)) {
+      $fid = $media->get($mapping[$bundle])->getValue()[0]['target_id'];
+      if ($file = $this->entityTypeManager->getStorage('file')->load($fid)) {
+        $fileType = $file->get('filemime')->getValue()[0]['value'];
+        if (strpos($fileType, 'image') !== FALSE) {
+          $icon_type = 'image-x-generic.svg';
+        }
+        elseif (strpos($fileType, 'pdf') !== FALSE) {
+          $icon_type = 'application-pdf.svg';
+        }
+        elseif (strpos($fileType, 'audio') !== FALSE) {
+          $icon_type = 'audio-x-generic.svg';
+        }
+        elseif (strpos($fileType, 'sheet') !== FALSE || strpos($fileType, 'excel') !== FALSE) {
+          $icon_type = 'x-office-spreadsheet.svg';
+        }
+        elseif (strpos($fileType, 'zip') !== FALSE) {
+          $icon_type = 'package-x-generic.svg';
+        }
+        elseif (strpos($fileType, 'word') !== FALSE) {
+          $icon_type = 'x-office-document.svg';
+        }
+        elseif (strpos($fileType, 'presentation') !== FALSE || strpos($fileType, 'powerpoint') !== FALSE) {
+          $icon_type = 'x-office-presentation.svg';
+        }
+      }
+    }
+    return $icon_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addWidgetMiniPager(array &$build, array $pager, array $blockData): void {
+    // Now that we have the total number of results, initialize the pager.
+    $curr_page = pager_default_initialize($pager['total_count'], $pager['numItems']);
+
+    $block_id = $blockData['block_id'];
+    $next_page = $curr_page + 1;
+    $prev_page = $curr_page - 1;
+    $pager_total = ceil($pager['total_count'] / $pager['numItems']);
+
+    $header_id = Html::getUniqueId('pagination-heading');
+    $pager_id = Html::getUniqueId('pager-heading');
+
+    // Prepare next and previous page links displayed as a mini pager.
+    $next_link = '';
+    if ($pager['page'] != ($pager_total - 1)) {
+      $url_next = Url::fromRoute('os_widgets.widgets_pagination_ajax', [
+        'id' => $block_id,
+        'page' => $next_page,
+        'selector' => $blockData['block_attribute_id'],
+        'pagerid' => $pager_id,
+        'moreid' => $blockData['moreLinkId'],
+      ], [
+        'attributes' => [
+          'class' => ['use-ajax'],
+          'title' => $this->t('Go to next page'),
+          'rel' => 'next',
+          'aria-hidden' => 'true',
+        ],
+      ]);
+      $next_link = Link::fromTextAndUrl('››', $url_next);
+    }
+
+    $prev_link = '';
+    if ($prev_page >= 0) {
+      $url_prev = Url::fromRoute('os_widgets.widgets_pagination_ajax', [
+        'id' => $block_id,
+        'page' => $prev_page,
+        'selector' => $blockData['block_attribute_id'],
+        'pagerid' => $pager_id,
+        'moreid' => $blockData['moreLinkId'],
+      ], [
+        'attributes' => [
+          'class' => ['use-ajax'],
+          'title' => $this->t('Go to previous page'),
+          'rel' => 'prev',
+          'aria-hidden' => 'true',
+        ],
+      ]);
+      $prev_link = Link::fromTextAndUrl('‹‹', $url_prev)->toRenderable();
+    }
+
+    $build['render_content']['#pager'] = [
+      '#theme' => 'os_widgets_ajax_pager',
+      '#next_link' => $next_link,
+      '#prev_link' => $prev_link,
+      '#pager_total' => $pager_total,
+      '#curr_page' => ($curr_page + 1),
+      '#heading_id' => $header_id,
+      '#pager_id' => $pager_id,
+    ];
   }
 
   /**

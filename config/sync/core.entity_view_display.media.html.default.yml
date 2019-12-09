@@ -8,11 +8,7 @@ dependencies:
     - field.field.media.html.field_taxonomy_terms
     - media.type.html
   module:
-    - layout_builder
     - os_media
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: media.html.default
 targetEntityType: media
 bundle: html

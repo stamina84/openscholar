@@ -213,6 +213,19 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'contents' => [],
       ],
     ],
+    'os_widgets_list_of_files' => [
+      'variables' => [
+        'files' => '',
+        'pager' => '',
+        'more_link' => '',
+        'attributes' => [],
+        'grid' => FALSE,
+        'link_without_icon' => FALSE,
+        'link_with_icon' => FALSE,
+        'only_title' => FALSE,
+        'icon_path' => '',
+      ],
+    ],
     'os_slideshow_formatter' => [
       'variables' => [
         'image' => NULL,
@@ -399,7 +412,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
     case 'block_content_list_of_posts_form':
     case 'block_content_list_of_posts_edit_form':
 
-      $form['#attached']['library'][] = 'os_widgets/lopwidgetForm';
+      $form['#attached']['library'][] = 'os_widgets/lopWidgetForm';
       $mappings = \Drupal::service('vsite.form_delete_destination')::REDIRECT_MAPPING;
       $form['#attached']['drupalSettings']['pathMapping'] = $mappings;
 
@@ -409,6 +422,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       array_shift($form['field_sorted_by']['widget']['#options']);
       array_shift($form['field_show']['widget']['#options']);
       array_shift($form['field_events_should_expire']['widget']['#options']);
+      unset($form['field_number_of_items_to_display']['widget']['#options']['_none']);
 
       // Content details group.
       $form['content_details'] = [
@@ -423,7 +437,6 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       ];
 
       $display_style_options = $form['field_display_style']['widget']['#options'];
-
       $content_default_value = $form['field_content_type']['widget']['#default_value'];
       $type_selected = array_shift($content_default_value);
       $type_value = $form_state->getValue('field_content_type');
@@ -617,6 +630,41 @@ function os_widgets_sort_by_options_lop($type_selected, $options) {
       $options['sort_event_asc'],
       $options['sort_event_desc']
     );
+  }
+  return $options;
+}
+
+/**
+ * Ajax callback.
+ */
+function os_widgets_dynamic_options_lof(array &$form, FormStateInterface $form_state) {
+  return $form['dynamic_fields_container_lof'];
+}
+
+/**
+ * Display style options callback LOF.
+ */
+function os_widgets_display_style_options_lof($type_selected, $options, $layout = NULL) {
+  $display_style_common = [
+    'all',
+    'oembed',
+    'audio',
+    'document',
+    'executable',
+    'html',
+  ];
+  if (in_array($type_selected, $display_style_common)) {
+    unset($options['thumbnail']);
+  }
+  if (($type_selected === 'image' || $type_selected === 'oembed') && $layout === 'grid') {
+    unset(
+      $options['full'],
+      $options['link'],
+      $options['link_icon']
+    );
+  }
+  if ($type_selected === 'oembed' && $layout === 'grid') {
+    $options['thumbnail'] = t('Thumbnail');
   }
   return $options;
 }
@@ -1085,7 +1133,7 @@ function os_widgets_field_mailing_list_options() {
 }
 
 /**
- * Set dynamic allowed values for the fields.
+ * Set dynamic allowed values for the LOP form.
  *
  * @param \Drupal\field\Entity\FieldStorageConfig $definition
  *   The field definition.
@@ -1102,10 +1150,9 @@ function os_widgets_field_mailing_list_options() {
  *
  * @see options_allowed_values()
  */
-function os_widgets_allowed_values_lop_form(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+function os_widgets_allowed_values_lop_widget_form(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
   $field_name = $definition->get('field_name');
-
-  $options['all'] = t('Select All');
+  $options = [];
   if ($field_name === 'field_publication_types') {
     $options['all'] = t('Select All');
     $publication_types = \Drupal::entityTypeManager()->getStorage('bibcite_reference_type')->loadMultiple();
@@ -1124,6 +1171,45 @@ function os_widgets_allowed_values_lop_form(FieldStorageConfig $definition, Cont
       $bundle = $app['entityType'] === 'bibcite_reference' ? 'publications' : $app['bundle'][0];
       $options[$bundle] = $title;
     }
+  }
+  return $options;
+}
+
+/**
+ * Set dynamic allowed values for LOF form fields.
+ *
+ * @param \Drupal\field\Entity\FieldStorageConfig $definition
+ *   The field definition.
+ * @param \Drupal\Core\Entity\ContentEntityInterface|null $entity
+ *   The entity being created if applicable.
+ * @param bool $cacheable
+ *   Boolean indicating if the results are cacheable.
+ *
+ * @return array
+ *   An array of possible key and value options.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ *
+ * @see options_allowed_values()
+ */
+function os_widgets_allowed_values_lof_widget_form(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+  $options['all'] = t('All');
+  /* @var \Drupal\media\MediaTypeInterface[] $media_types */
+  $media_types = \Drupal::entityTypeManager()->getStorage('media_type')->loadMultiple();
+  /* @var \Drupal\os_media\MediaEntityHelperInterface $media_helper */
+  $media_helper = \Drupal::service('os_media.media_helper');
+
+  foreach ($media_types as $id => $type) {
+    if (in_array($id, $media_helper::ALLOWED_TYPES)) {
+      $options[$id] = $type->get('label');
+    }
+  }
+  // Sorting to show Images and Embeds above any other media as per current
+  // setup.
+  if (count($options) === 7) {
+    $options_spliced = array_splice($options, 1, 4);
+    $options = $options + $options_spliced;
   }
   return $options;
 }
@@ -1157,4 +1243,131 @@ function os_widgets_default_values_lop_form(ContentEntityInterface $entity, Fiel
     }
   }
   return $default;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_widgets_form_block_content_list_of_files_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  os_widgets_alter_list_of_files_block_form($form, $form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_widgets_form_block_content_list_of_files_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  os_widgets_alter_list_of_files_block_form($form, $form_state);
+}
+
+/**
+ * Alters list of files widget block form.
+ *
+ * @param array $form
+ *   The form to alter.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function os_widgets_alter_list_of_files_block_form(array &$form, FormStateInterface $form_state) {
+  $form['#attached']['library'][] = 'os_widgets/lofwidgetForm';
+
+  // Hide revision information from widget form.
+  // TODO Remove when it is implemented for all widgets collectively.
+  $form['revision_information']['#access'] = FALSE;
+
+  $form['#attached']['library'][] = 'os_widgets/lofWidgetForm';
+
+  // Remove None option from select lists.
+  array_shift($form['field_file_type']['widget']['#options']);
+  array_shift($form['field_display_style_lof']['widget']['#options']);
+  array_shift($form['field_sorted_by_lof']['widget']['#options']);
+  array_shift($form['field_layout']['widget']['#options']);
+  unset($form['field_columns']['widget']['#options']['_none']);
+  unset($form['field_number_of_items_to_display']['widget']['#options']['_none']);
+
+  // File details group.
+  $form['file_details'] = [
+    '#type' => 'details',
+    '#title' => '',
+    '#group' => 'content',
+    '#weight' => 2,
+    '#open' => TRUE,
+    '#attributes' => [
+      'class' => ['lof-details'],
+    ],
+  ];
+
+  $display_style_options = $form['field_display_style_lof']['widget']['#options'];
+  $file_default_value = $form['field_file_type']['widget']['#default_value'];
+  $type_selected = array_shift($file_default_value);
+  $type_value = $form_state->getValue('field_file_type');
+  if ($type_value) {
+    $type_selected = array_shift($type_value)['value'];
+  }
+
+  $field_layout = $form['field_layout']['widget']['#default_value'];
+  $layout_selected = array_shift($field_layout);
+  $layout_value = $form_state->getValue('field_layout');
+  if ($layout_value) {
+    $layout_selected = array_shift($layout_value)['value'];
+  }
+  $form['field_display_style_lof']['widget']['#options'] = os_widgets_display_style_options_lof($type_selected, $display_style_options, $layout_selected);
+
+  $form['dynamic_fields_container_lof'] = [
+    '#type' => 'container',
+    '#prefix' => '<div id="dynamic-option-fields-lof">',
+    '#suffix' => '</div>',
+    '#group' => 'file_details',
+    '#weight' => 2,
+  ];
+
+  $form['field_file_type']['#group'] = 'dynamic_fields_container_lof';
+  $form['field_layout']['#group'] = 'dynamic_fields_container_lof';
+  $form['field_columns']['#group'] = 'dynamic_fields_container_lof';
+  $form['field_display_style_lof']['#group'] = 'dynamic_fields_container_lof';
+  $form['field_sorted_by_lof']['#group'] = 'dynamic_fields_container_lof';
+
+  $form['field_file_type']['widget']['#ajax'] = [
+    'callback' => 'os_widgets_dynamic_options_lof',
+    'wrapper' => 'dynamic-option-fields-lof',
+  ];
+
+  $form['field_layout']['widget']['#ajax'] = [
+    'callback' => 'os_widgets_dynamic_options_lof',
+    'wrapper' => 'dynamic-option-fields-lof',
+  ];
+
+  $form['field_layout']['#states'] = [
+    'visible' => [
+      ':input[name="field_file_type"]' => [['value' => 'image'], ['value' => 'oembed']],
+    ],
+  ];
+
+  // Pager details group.
+  $form['pager_details'] = [
+    '#type' => 'details',
+    '#title' => '',
+    '#group' => 'content',
+    '#weight' => 5,
+    '#open' => TRUE,
+  ];
+  $form['field_show_more_link']['#group'] = 'pager_details';
+  $form['field_show_pager']['#group'] = 'pager_details';
+  $form['field_url_for_the_more_link']['#group'] = 'pager_details';
+  $form['field_number_of_items_to_display']['#group'] = 'pager_details';
+
+  $form['field_url_for_the_more_link']['#states'] = [
+    'visible' => [
+      ':input[name="field_show_more_link[value]"]' => ['checked' => TRUE],
+    ],
+  ];
+
+  $uri_title = $form['field_url_for_the_more_link']['widget']['0']['#title'];
+  $form['field_url_for_the_more_link']['widget']['0']['#title'] = '';
+  $form['field_url_for_the_more_link']['widget']['0']['uri']['#title'] = Html::escape($uri_title);
+  $form['field_url_for_the_more_link']['widget']['0']['uri']['#description'] = '';
+  if (!$form['field_url_for_the_more_link']['widget']['0']['uri']['#default_value']) {
+    $form['field_url_for_the_more_link']['widget']['0']['uri']['#default_value'] = '/';
+  }
+  $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
+  $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
 }

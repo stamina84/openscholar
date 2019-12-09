@@ -1,0 +1,23 @@
+uuid: 8f420432-4974-4f11-9694-fbdbaf1d87a7
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+    - field.storage.block_content.field_show_more_link
+id: block_content.list_of_files.field_show_more_link
+field_name: field_show_more_link
+entity_type: block_content
+bundle: list_of_files
+label: 'Show "more" link'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

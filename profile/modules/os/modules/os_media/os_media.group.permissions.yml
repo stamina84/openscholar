@@ -1,0 +1,4 @@
+download media file:
+  title: 'Download Media File'
+  description: 'Allow to download the media file.'
+  section: 'Permission'

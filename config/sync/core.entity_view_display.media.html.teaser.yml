@@ -1,0 +1,37 @@
+uuid: c95ddc8e-b8c6-49bf-85a0-29407423a3cf
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.teaser
+    - field.field.media.html.field_media_html
+    - field.field.media.html.field_media_html_description
+    - field.field.media.html.field_taxonomy_terms
+    - media.type.html
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.html.teaser
+targetEntityType: media
+bundle: html
+mode: teaser
+content:
+  name:
+    type: string
+    weight: 0
+    region: content
+    label: visually_hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_html: true
+  field_media_html_description: true
+  field_taxonomy_terms: true
+  langcode: true
+  thumbnail: true
+  uid: true
