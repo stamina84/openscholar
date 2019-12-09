@@ -78,8 +78,8 @@ class OswysiwygPurifyHtmlTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->filter);
-    unset($this->helper);
+    $this->filter = NULL;
+    $this->helper = NULL;
   }
 
 }

@@ -64,8 +64,8 @@ class GoogleScholarMappingTest extends TestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->admin);
-    unset($this->user);
+    $this->admin = NULL;
+    $this->user = NULL;
   }
 
 }

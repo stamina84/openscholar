@@ -122,9 +122,9 @@ class CpTaxonomySettingsTest extends TestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->group);
-    unset($this->configTaxonomy);
-    unset($this->renderer);
+    $this->group = NULL;
+    $this->configTaxonomy = NULL;
+    $this->renderer = NULL;
   }
 
 }

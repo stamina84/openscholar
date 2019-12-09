@@ -136,8 +136,8 @@ class ProfilesSettingsFormBuildTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->config);
-    unset($this->profileSettings);
+    $this->config = NULL;
+    $this->profileSettings = NULL;
   }
 
 }

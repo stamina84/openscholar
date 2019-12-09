@@ -100,9 +100,9 @@ class AddSoftwareReleaseLinkFunctionalTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->projectNode);
-    unset($this->media);
-    unset($this->groupAdmin);
+    $this->projectNode = NULL;
+    $this->media = NULL;
+    $this->groupAdmin = NULL;
   }
 
 }

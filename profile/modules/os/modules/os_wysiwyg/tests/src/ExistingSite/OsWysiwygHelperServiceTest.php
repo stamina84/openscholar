@@ -100,7 +100,7 @@ class OsWysiwygHelperServiceTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->osLinkHelper);
+    $this->osLinkHelper = NULL;
   }
 
 }

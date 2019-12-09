@@ -64,7 +64,7 @@ class OsSoftwareHelperTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->helper);
+    $this->helper = NULL;
   }
 
 }

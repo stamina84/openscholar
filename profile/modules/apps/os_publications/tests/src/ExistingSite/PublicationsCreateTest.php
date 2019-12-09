@@ -57,7 +57,7 @@ class PublicationsCreateTest extends TestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->aliasManager);
+    $this->aliasManager = NULL;
   }
 
 }

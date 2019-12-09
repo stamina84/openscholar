@@ -85,8 +85,8 @@ class OsSoftwareProjectReleaseBlocksFunctionalTest extends OsExistingSiteTestBas
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->projectNode);
-    unset($this->media);
+    $this->projectNode = NULL;
+    $this->media = NULL;
   }
 
 }

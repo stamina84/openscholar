@@ -257,8 +257,8 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->lopWidget);
-    unset($this->viewBuilder);
+    $this->lopWidget = NULL;
+    $this->viewBuilder = NULL;
   }
 
 }

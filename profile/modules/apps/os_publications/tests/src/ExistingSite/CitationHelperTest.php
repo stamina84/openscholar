@@ -110,8 +110,8 @@ class CitationHelperTest extends TestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->citationHelper);
-    unset($this->ref1);
+    $this->citationHelper = NULL;
+    $this->ref1 = NULL;
   }
 
 }

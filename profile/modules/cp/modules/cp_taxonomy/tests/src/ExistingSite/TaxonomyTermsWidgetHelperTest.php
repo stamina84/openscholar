@@ -160,7 +160,7 @@ class TaxonomyTermsWidgetHelperTest extends TestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->unSavedNode);
+    $this->unSavedNode = NULL;
   }
 
 }

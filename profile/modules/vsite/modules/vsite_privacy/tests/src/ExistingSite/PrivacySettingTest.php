@@ -139,9 +139,9 @@ class PrivacySettingTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->vsiteContextManager);
-    unset($this->group);
-    unset($this->groupAdmin);
+    $this->vsiteContextManager = NULL;
+    $this->group = NULL;
+    $this->groupAdmin = NULL;
   }
 
 }

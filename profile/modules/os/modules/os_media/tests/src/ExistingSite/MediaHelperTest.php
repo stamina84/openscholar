@@ -114,7 +114,7 @@ class MediaHelperTest extends ExistingSiteBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->mediaHelper);
+    $this->mediaHelper = NULL;
   }
 
 }

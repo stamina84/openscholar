@@ -75,7 +75,7 @@ class CustomTextHtmlBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->customTextHtmlWidget);
+    $this->customTextHtmlWidget = NULL;
   }
 
 }

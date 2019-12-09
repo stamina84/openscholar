@@ -144,7 +144,7 @@ class FeaturedPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->featuredPostsWidget);
+    $this->featuredPostsWidget = NULL;
   }
 
 }

@@ -486,9 +486,9 @@ class PublicationsViewsTest extends TestBase {
       ->save();
 
     parent::tearDown();
-    unset($this->defaultFilterPublicationTypeSettings);
-    unset($this->defaultSortOrder);
-    unset($this->configFactory);
+    $this->defaultFilterPublicationTypeSettings = NULL;
+    $this->defaultSortOrder = NULL;
+    $this->configFactory = NULL;
   }
 
 }

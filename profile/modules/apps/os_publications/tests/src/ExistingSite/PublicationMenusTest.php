@@ -137,12 +137,12 @@ class PublicationMenusTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->groupAdmin);
-    unset($this->group);
-    unset($this->menuLink);
-    unset($this->database);
-    unset($this->menuHelper);
-    unset($this->reference);
+    $this->groupAdmin = NULL;
+    $this->group = NULL;
+    $this->menuLink = NULL;
+    $this->database = NULL;
+    $this->menuHelper = NULL;
+    $this->reference = NULL;
   }
 
 }

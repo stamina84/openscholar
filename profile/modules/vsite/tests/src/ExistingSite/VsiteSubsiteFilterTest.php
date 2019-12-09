@@ -84,8 +84,8 @@ class VsiteSubsiteFilterTest extends VsiteExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->groupHidden);
-    unset($this->groupOther);
+    $this->groupHidden = NULL;
+    $this->groupOther = NULL;
   }
 
 }

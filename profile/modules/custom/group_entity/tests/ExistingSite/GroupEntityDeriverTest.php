@@ -98,8 +98,8 @@ class GroupEntityDeriverTest extends ExistingSiteBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->groupContentEnabler);
-    unset($this->groupType);
+    $this->groupContentEnabler = NULL;
+    $this->groupType = NULL;
   }
 
 }

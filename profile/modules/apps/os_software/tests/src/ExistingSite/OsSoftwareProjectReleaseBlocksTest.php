@@ -105,9 +105,9 @@ class OsSoftwareProjectReleaseBlocksTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->entityTypeManager);
-    unset($this->projectNode);
-    unset($this->renderer);
+    $this->entityTypeManager = NULL;
+    $this->projectNode = NULL;
+    $this->renderer = NULL;
   }
 
 }

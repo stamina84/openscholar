@@ -132,7 +132,7 @@ class CpTaxonomyHelperTest extends TestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->helper);
+    $this->helper = NULL;
   }
 
 }

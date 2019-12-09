@@ -575,7 +575,7 @@ class RepecIntegrationTest extends TestBase {
     $publications_settings_mut->save(TRUE);
 
     parent::tearDown();
-    unset($this->defaultPublicationSettings);
+    $this->defaultPublicationSettings = NULL;
   }
 
 }

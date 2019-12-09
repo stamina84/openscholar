@@ -144,8 +144,8 @@ class SlideshowImageFormatterTest extends OsWidgetsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->formatterSettings);
-    unset($this->slideshowParagraph);
+    $this->formatterSettings = NULL;
+    $this->slideshowParagraph = NULL;
   }
 
 }

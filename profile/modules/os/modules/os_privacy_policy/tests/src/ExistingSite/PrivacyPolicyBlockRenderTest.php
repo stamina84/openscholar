@@ -66,7 +66,7 @@ class PrivacyPolicyBlockRenderTest extends OsExistingSiteTestBase {
   public function tearDown() {
     $this->config->getEditable('os_privacy_policy.settings')->delete();
     parent::tearDown();
-    unset($this->config);
+    $this->config = NULL;
   }
 
 }

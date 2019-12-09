@@ -46,7 +46,7 @@ class OsOfficeEmbedFormatterTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->document);
+    $this->document = NULL;
   }
 
 }

@@ -139,7 +139,7 @@ class PublicationTypesBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->publicationTypesWidget);
+    $this->publicationTypesWidget = NULL;
   }
 
 }

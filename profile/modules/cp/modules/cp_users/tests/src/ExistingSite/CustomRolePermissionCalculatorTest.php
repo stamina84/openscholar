@@ -99,10 +99,10 @@ class CustomRolePermissionCalculatorTest extends CpUsersExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->permissionCalculator);
-    unset($this->groupMember);
-    unset($this->groupRole);
-    unset($this->vsiteContextManager);
+    $this->permissionCalculator = NULL;
+    $this->groupMember = NULL;
+    $this->groupRole = NULL;
+    $this->vsiteContextManager = NULL;
   }
 
 }

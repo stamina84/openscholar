@@ -78,8 +78,8 @@ class CheckingFieldsTest extends TestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->entityFieldManager);
-    unset($this->entityManager);
+    $this->entityFieldManager = NULL;
+    $this->entityManager = NULL;
   }
 
 }

@@ -130,11 +130,11 @@ class CpMenuVsiteTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->group);
-    unset($this->groupAdmin);
-    unset($this->database);
-    unset($this->menuLink);
-    unset($this->menuHelper);
+    $this->group = NULL;
+    $this->groupAdmin = NULL;
+    $this->database = NULL;
+    $this->menuLink = NULL;
+    $this->menuHelper = NULL;
   }
 
 }

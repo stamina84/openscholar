@@ -65,9 +65,9 @@ class RepecTemplateFactoryTest extends TestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->configFactory);
-    unset($this->templateFactory);
-    unset($this->reference);
+    $this->configFactory = NULL;
+    $this->templateFactory = NULL;
+    $this->reference = NULL;
   }
 
 }

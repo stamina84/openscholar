@@ -248,8 +248,8 @@ class MailNotificationsTest extends ExistingSiteBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->entityTypeManager);
-    unset($this->event);
+    $this->entityTypeManager = NULL;
+    $this->event = NULL;
   }
 
 }

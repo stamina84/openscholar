@@ -157,7 +157,7 @@ class PublicationAuthorsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->publicationAuthorsWidget);
+    $this->publicationAuthorsWidget = NULL;
   }
 
 }

@@ -128,7 +128,7 @@ class PublicationYearsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->publicationYearsWidget);
+    $this->publicationYearsWidget = NULL;
   }
 
 }

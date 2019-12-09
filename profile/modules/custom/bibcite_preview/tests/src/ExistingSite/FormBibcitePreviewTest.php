@@ -71,9 +71,9 @@ class FormBibcitePreviewTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->reference);
-    unset($this->form);
-    unset($this->formBuilder);
+    $this->reference = NULL;
+    $this->form = NULL;
+    $this->formBuilder = NULL;
   }
 
 }

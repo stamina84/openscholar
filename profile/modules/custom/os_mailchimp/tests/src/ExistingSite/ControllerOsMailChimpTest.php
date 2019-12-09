@@ -76,7 +76,7 @@ class ControllerOsMailChimpTest extends ExistingSiteBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->user);
+    $this->user = NULL;
   }
 
 }

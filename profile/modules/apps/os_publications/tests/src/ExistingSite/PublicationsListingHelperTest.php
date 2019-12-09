@@ -108,7 +108,7 @@ class PublicationsListingHelperTest extends TestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->listingHelper);
+    $this->listingHelper = NULL;
   }
 
 }

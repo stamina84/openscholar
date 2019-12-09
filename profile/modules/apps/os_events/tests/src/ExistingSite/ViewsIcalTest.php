@@ -227,7 +227,7 @@ class ViewsIcalTest extends EventsTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->user);
+    $this->user = NULL;
   }
 
 }

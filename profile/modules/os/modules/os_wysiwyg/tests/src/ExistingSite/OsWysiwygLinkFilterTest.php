@@ -146,7 +146,7 @@ class OsWysiwygLinkFilterTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->adminUser);
+    $this->adminUser = NULL;
   }
 
 }

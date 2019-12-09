@@ -50,7 +50,7 @@ class ControllerBibcitePreviewTest extends OsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->reference);
+    $this->reference = NULL;
   }
 
 }

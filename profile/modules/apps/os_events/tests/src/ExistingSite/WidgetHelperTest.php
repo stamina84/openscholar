@@ -92,7 +92,7 @@ class WidgetHelperTest extends ExistingSiteBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->widgetHelper);
+    $this->widgetHelper = NULL;
   }
 
 }

@@ -202,9 +202,9 @@ class AppAccessFunctionalTest extends AppAccessTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->groupAdmin);
-    unset($this->groupMember);
-    unset($this->nonGroupMember);
+    $this->groupAdmin = NULL;
+    $this->groupMember = NULL;
+    $this->nonGroupMember = NULL;
   }
 
 }

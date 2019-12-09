@@ -413,13 +413,12 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
    */
   public function tearDown() {
     parent::tearDown();
-    unset($this->lopWidget);
-    unset($this->lopHelper);
-    unset($this->viewBuilder);
-    unset($this->vocabulary);
-    unset($this->nids);
-    unset($this->pids);
-    unset($this->config);
+    $this->lopWidget = NULL;
+    $this->lopHelper = NULL;
+    $this->vocabulary = NULL;
+    $this->nids = NULL;
+    $this->pids = NULL;
+    $this->config = NULL;
   }
 
 }
