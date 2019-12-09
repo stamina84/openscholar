@@ -1,0 +1,32 @@
+uuid: 837f925f-0f8a-4365-a2fd-13c153cae5c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.os_search_index
+id: search
+label: Search
+path: search
+clean_url: true
+show_all_when_no_keys: true
+index: os_search_index
+limit: 10
+searched_fields:
+  body: body
+style: view_modes
+view_mode_configuration:
+  'entity:node':
+    default: default
+    overrides:
+      blog: ''
+      class: ''
+      events: ''
+      faq: ''
+      news: ''
+      page: ''
+      person: ''
+      presentation: ''
+      software_project: ''
+      software_release: ''
+show_search_form: true
+parse_mode: direct
