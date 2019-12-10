@@ -27,10 +27,19 @@ function os_blog_form_node_form_alter(&$form, FormStateInterface $form_state, $f
  */
 function os_blog_node_view_alter(array &$build, $entity, $display) {
   $blog_comments_config = \Drupal::config('os_blog.settings');
-  if ($blog_comments_config->get('comment_type') == 'disqus_comments') {
-    // Do something.
-  }
-  else {
+  if ($blog_comments_config->get('comment_type') == 'no_comments') {
     unset($build['field_disqus_comments']);
+  }
+}
+
+/**
+ * Implements hook_entity_load().
+ */
+function os_blog_entity_load(array $entities, $entity_type_id) {
+  $blog_comments_config = \Drupal::config('os_blog.settings');
+  if ($blog_comments_config->get('comment_type') == 'disqus_comments') {
+    $vSite_domain = $blog_comments_config->get('disqus_shortname');
+    $config = \Drupal::service('config.factory')->getEditable('disqus.settings');
+    $config->set('disqus_domain', $vSite_domain)->save();
   }
 }
