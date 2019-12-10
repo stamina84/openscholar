@@ -100,6 +100,10 @@
             $eventAppearExpireSelect.attr('disabled', true);
           }
         }
+        else {
+          $eventAppearExpireWrapper.hide();
+          $eventAppearExpireSelect.attr('disabled', true);
+        }
       }
     }
   };
