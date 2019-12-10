@@ -1,0 +1,21 @@
+uuid: 302ac8f7-b7e1-4e9d-aaca-91c60c8237f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+    - field.storage.block_content.field_display_style_lof
+  module:
+    - options
+id: block_content.list_of_files.field_display_style_lof
+field_name: field_display_style_lof
+entity_type: block_content
+bundle: list_of_files
+label: 'Display Style'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -38,7 +38,7 @@ class SlideshowImageFormatter extends FormatterBase implements ContainerFactoryP
   protected $imageStylePrefix;
 
   /**
-   * Constructs a EntityReferenceEntityFormatter instance.
+   * Constructs a SlideshowImageFormatter instance.
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.

@@ -19,9 +19,8 @@ class CreateRedirectTest extends OsRedirectTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->siteUser = $this->createUser([
-      'administer control panel redirects',
-    ]);
+    $this->siteUser = $this->createUser();
+    $this->addGroupAdmin($this->siteUser, $this->group);
   }
 
   /**

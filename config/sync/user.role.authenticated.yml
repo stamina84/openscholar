@@ -11,6 +11,7 @@ is_admin: false
 permissions:
   - 'access content'
   - 'access contextual links'
+  - 'access printer-friendly version'
   - 'access toolbar'
   - 'create personal group'
   - 'delete bibcite_reference artwork revisions'

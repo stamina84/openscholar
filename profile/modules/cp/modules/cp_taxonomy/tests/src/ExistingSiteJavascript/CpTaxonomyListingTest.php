@@ -84,6 +84,20 @@ class CpTaxonomyListingTest extends CpTaxonomyExistingSiteJavascriptTestBase {
   }
 
   /**
+   * Test cp taxonomy term listing page.
+   */
+  public function testCpTaxonomyTermListingPage() {
+    $web_assert = $this->assertSession();
+    $this->visitViaVsite("cp/taxonomy/vocab_group_1", $this->group);
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('Add term');
+    $this->getCurrentPage()->clickLink('Add term');
+    $web_assert->statusCodeEquals(200);
+    $url = $this->getUrl();
+    $this->assertContains($this->groupAlias . '/cp/taxonomy/vocab_group_1/add', $url);
+  }
+
+  /**
    * Assert contains term on page even if not visible.
    */
   protected function assertContainTaxonomyTermOnPage() {

@@ -1,0 +1,31 @@
+uuid: e41d045a-7960-403f-947a-e3cde6dfadfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_search_box
+    - field.field.block_content.dataverse_search_box.field_dataverse_identifier
+    - field.field.block_content.dataverse_search_box.field_search_placeholder_text
+    - field.field.block_content.dataverse_search_box.field_widget_title
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    sections: {  }
+id: block_content.dataverse_search_box.default
+targetEntityType: block_content
+bundle: dataverse_search_box
+mode: default
+content:
+  field_widget_title:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_dataverse_identifier: true
+  field_search_placeholder_text: true
+  langcode: true

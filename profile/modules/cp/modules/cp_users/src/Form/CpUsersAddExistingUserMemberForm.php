@@ -7,16 +7,10 @@ use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Mail\MailManagerInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\cp_users\CpRolesHelperInterface;
 use Drupal\cp_users\CpUsersHelper;
-use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -32,27 +26,6 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
   protected $formBuilder;
 
   /**
-   * Creates a new CpUsersAddExistingUserMemberForm object.
-   *
-   * @param \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager
-   *   Vsite context manager.
-   * @param \Drupal\cp_users\CpRolesHelperInterface $cp_roles_helper
-   *   Cp roles helper.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   Entity type manager.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   Current user.
-   * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
-   *   Mail manager.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
-   *   Form builder service.
-   */
-  public function __construct(VsiteContextManagerInterface $vsite_context_manager, CpRolesHelperInterface $cp_roles_helper, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, MailManagerInterface $mail_manager, FormBuilderInterface $form_builder) {
-    parent::__construct($vsite_context_manager, $cp_roles_helper, $entity_type_manager, $current_user, $mail_manager);
-    $this->formBuilder = $form_builder;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -62,6 +35,7 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
       $container->get('entity_type.manager'),
       $container->get('current_user'),
       $container->get('plugin.manager.mail'),
+      $container->get('cp_users.change_ownership_access_check'),
       $container->get('form_builder')
     );
   }
@@ -156,6 +130,12 @@ class CpUsersAddExistingUserMemberForm extends CpUsersAddMemberFormBase {
           $role,
         ],
       ]);
+
+      // Check if site owner option is set.
+      if ($form_state_values['site_owner']) {
+        $this->activeVsite->setOwnerId($account->get('uid')->value);
+        $this->activeVsite->save();
+      }
 
       $this->mailManager->mail('cp_users', CpUsersHelper::CP_USERS_ADD_TO_GROUP, $account->getEmail(), LanguageInterface::LANGCODE_DEFAULT, [
         'user' => $account,

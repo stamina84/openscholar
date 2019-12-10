@@ -8,11 +8,7 @@ dependencies:
     - field.field.media.image.field_taxonomy_terms
     - media.type.image
   module:
-    - layout_builder
     - responsive_image
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: media.image.default
 targetEntityType: media
 bundle: image

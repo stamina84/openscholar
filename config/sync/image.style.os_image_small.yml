@@ -1,0 +1,15 @@
+uuid: 8695de51-1037-410f-a9e4-f070b868c2f8
+langcode: en
+status: true
+dependencies: {  }
+name: os_image_small
+label: 'OS Image Small'
+effects:
+  155f99ef-fcc3-4ed8-8f22-cc6b3f4a2852:
+    uuid: 155f99ef-fcc3-4ed8-8f22-cc6b3f4a2852
+    id: image_scale
+    weight: 1
+    data:
+      width: 200
+      height: 200
+      upscale: false

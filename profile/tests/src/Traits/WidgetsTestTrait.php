@@ -28,6 +28,7 @@ trait WidgetsTestTrait {
     $ref1 = $this->createReference([
       'type' => 'artwork',
       'html_title' => 'Publication1',
+      'is_sticky' => 0,
     ]);
     $date_interval = new DateInterval('P1D');
     $new_datetime->add($date_interval);
@@ -37,6 +38,7 @@ trait WidgetsTestTrait {
     $ref2 = $this->createReference([
       'type' => 'book',
       'html_title' => 'Publication2',
+      'is_sticky' => 0,
     ]);
     $date_interval = new DateInterval('P2D');
     $new_datetime->add($date_interval);
@@ -128,6 +130,74 @@ trait WidgetsTestTrait {
     ]);
 
     return [$eventNode1, $eventNode2, $eventNode3];
+  }
+
+  /**
+   * Create some media items for testing.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $vsite
+   *   Current vsite.
+   *
+   * @return array
+   *   Array of media entities.
+   *
+   * @throws \Exception
+   */
+  public function createVsiteMedia(GroupInterface $vsite) : array {
+    $new_datetime = new DateTime();
+
+    $items['image1'] = $this->createMediaImage([
+      'name' => [
+        'value' => 'MediaImage1',
+      ],
+    ]);
+    $date_interval = new DateInterval('P1D');
+    $date_interval->invert = 1;
+    $new_datetime->add($date_interval);
+    $date = $new_datetime->getTimestamp();
+    $items['image1']->set('created', $date)->save();
+
+    $items['image2'] = $this->createMediaImage([
+      'name' => [
+        'value' => 'MediaImage2',
+      ],
+    ]);
+    $date_interval = new DateInterval('P2D');
+    $new_datetime->add($date_interval);
+    $date = $new_datetime->getTimestamp();
+    $items['image2']->set('created', $date)->save();
+
+    $items['document1'] = $this->createMedia([
+      'name' => [
+        'value' => 'Document1',
+      ],
+    ]);
+    $date_interval = new DateInterval('P3D');
+    $new_datetime->add($date_interval);
+    $date = $new_datetime->getTimestamp();
+    $items['document1']->set('created', $date)->save();
+
+    $items['document2'] = $this->createMedia([
+      'name' => [
+        'value' => 'Document2',
+      ],
+    ]);
+    $items['audio1'] = $this->createMedia([
+      'bundle' => [
+        'target_id' => 'audio',
+      ],
+      'name' => [
+        'value' => 'Audio1',
+      ],
+    ]);
+
+    $vsite->addContent($items['image1'], 'group_entity:media');
+    $vsite->addContent($items['image2'], 'group_entity:media');
+    $vsite->addContent($items['document1'], 'group_entity:media');
+    $vsite->addContent($items['document2'], 'group_entity:media');
+    $vsite->addContent($items['audio1'], 'group_entity:media');
+
+    return $items;
   }
 
 }

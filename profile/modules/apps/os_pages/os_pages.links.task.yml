@@ -1,0 +1,5 @@
+entity.node.book_outline_form:
+  route_name: os_pages.book_outline
+  base_route: entity.node.canonical
+  title: Outline
+  weight: 2

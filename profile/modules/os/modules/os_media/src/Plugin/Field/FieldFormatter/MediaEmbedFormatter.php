@@ -155,8 +155,8 @@ class MediaEmbedFormatter extends OEmbedFormatter implements ContainerFactoryPlu
               ];
             }
             else {
-              $max['width'] = $item->width;
-              $max['height'] = $item->height;
+              $max['width'] = $item->width ?? $max['width'];
+              $max['height'] = $item->height ?? $max['height'];
               $max = $this->mediaHelper->getOEmbedDimensions($resource, $max);
               // Display rich content and videos inside an Iframe.
               $element[$delta] = $this->mediaHelper->iFrameData($value, $max, $domain);

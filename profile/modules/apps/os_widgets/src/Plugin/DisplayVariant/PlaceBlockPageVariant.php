@@ -180,8 +180,9 @@ class PlaceBlockPageVariant extends OriginalVariant {
           'class' => ['use-ajax'],
           'data-dialog-type' => 'modal',
           'data-dialog-options' => Json::encode([
-            'width' => 800,
+            'width' => 1000,
             'autoOpen' => TRUE,
+            'dialogClass' => 'widget-popup',
           ]),
         ],
       ];

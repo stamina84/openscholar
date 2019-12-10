@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Theme implementation for List of Files widget.
+ *
+ * Available variables:
+ * - files: A list of posts to display.
+ * - pager : Pager for the content.
+ * - more_link : More display link.
+ * - grid: Tells if grid display or not.
+ * - link_with_icon: Link with icon mode or not.
+ * - only_title: Title only mode or not
+#}
+{%  set base_url = url('<front>')  %}
+{% if grid %}
+  <div {{ attributes|without('more_link_id') }}>
+  {% for file in files %}
+    <div class="lof-media clearfix">{{ file.item }}<div class="lof-down"><a href="{{base_url}}media/{{file.item['#media'].mid.value}}"> {{ file.item['#media'].label }}</a> {{ file.download }}</div></div>
+  {% endfor %}
+  </div>
+{% else %}
+<ul {{ attributes|without('more_link_id') }}>
+  {% for file in files %}
+    {% if link_with_icon %}
+      <li><img class="file-icon" alt="icon-{{file.icon_type}}" src="/{{ icon_path }}/{{ file.icon_type }}">{{ file.item }}</li>
+    {% elseif only_title %}
+      <li {{ attributes.addClass('title-only')|without('id', 'more_link_id') }}>{{ file.item }}</li>
+    {% else %}
+      <li><div class="lof-media clearfix">{{ file.item }}<div class="lof-down">
+      <a href="{{base_url}}media/{{file.item['#media'].mid.value}}"> {{ file.item['#media'].label }}</a> {{ file.download }}</div></div></li>
+    {% endif %}
+  {% endfor %}
+</ul>
+{% endif %}
+{{ pager }}
+<div class="node-readmore" id={{ attributes.more_link_id }}>{{ more_link }}</div>

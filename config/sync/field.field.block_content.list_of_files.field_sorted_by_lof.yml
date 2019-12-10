@@ -1,0 +1,21 @@
+uuid: 0e226b9d-2cb6-49d8-9359-620987d61b1f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+    - field.storage.block_content.field_sorted_by_lof
+  module:
+    - options
+id: block_content.list_of_files.field_sorted_by_lof
+field_name: field_sorted_by_lof
+entity_type: block_content
+bundle: list_of_files
+label: 'Sorted By'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

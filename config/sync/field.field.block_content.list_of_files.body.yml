@@ -1,0 +1,22 @@
+uuid: 260f9826-d8e5-4427-859d-f125b200de61
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.list_of_files.body
+field_name: body
+entity_type: block_content
+bundle: list_of_files
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: text_with_summary

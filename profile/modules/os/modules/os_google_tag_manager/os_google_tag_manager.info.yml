@@ -1,0 +1,6 @@
+name: OS Google Tag Manager
+core: 8.x
+type: module
+description: Google Tag Manager for OpenScholar
+dependencies:
+  - drupal:google_tag
