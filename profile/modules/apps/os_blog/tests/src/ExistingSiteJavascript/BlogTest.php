@@ -139,4 +139,34 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->pageTextNotContains($blog->getTitle());
   }
 
+  /**
+   * Test if vsite Disqus domain show on blog page.
+   */
+  public function testDisqusOnBlogPage() {
+    $group_admin = $this->createUser();
+    $this->addGroupAdmin($group_admin, $this->group);
+    $this->drupalLogin($group_admin);
+    $disqus_domain = 'testing-disqus';
+    $this->visitViaVsite('cp/settings/global-settings/blog_setting', $this->group);
+    // Dummy disqus domain id.
+    $edit = [
+      'edit-comment-type-disqus-comments' => 'disqus_comments',
+      'edit-disqus-shortname' => $disqus_domain,
+    ];
+    $this->submitForm($edit, 'edit-submit');
+    $this->assertSession()->fieldValueEquals('edit-disqus-shortname', $disqus_domain);
+    // Creating blog type node.
+    $title = 'Disqus comments testing';
+    $this->visitViaVsite('node/add/blog', $this->group);
+    $this->getSession()->getPage()->fillField('title[0][value]', $title);
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
+    // Asserting disqus comments iframe added to blog.
+    $this->assertSession()->waitForElementVisible('css', '.field--name-field-disqus-comments');
+    $this->assertSession()->waitForElementVisible('css', '.field--name-field-disqus-comments');
+    $this->assertSession()->waitForElementVisible('css', 'iframe');
+    $this->assertSession()->elementExists('css', '.field--name-field-disqus-comments');
+    $this->assertSession()->elementAttributeContains('css', 'iframe', 'src', $disqus_domain);
+  }
+
 }
