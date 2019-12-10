@@ -7,7 +7,9 @@ dependencies:
     - search_api.server.os_search
   module:
     - search_api
+    - os_search
     - node
+    - bibcite_entity
 id: os_search_index
 name: 'OS Search Index'
 description: 'Main OS Search Index'
@@ -22,6 +24,10 @@ field_settings:
       config:
         - field.storage.node.body
 datasource_settings:
+  'entity:bibcite_reference':
+    bundles:
+      default: true
+      selected: {  }
   'entity:node':
     bundles:
       default: true
@@ -30,10 +36,64 @@ datasource_settings:
       default: true
       selected: {  }
 processor_settings:
+  add_group_as_text: {  }
   add_url: {  }
   aggregated_field: {  }
+  entity_status: {  }
+  highlight:
+    highlight: always
+    highlight_partial: true
+    excerpt: true
+    excerpt_length: 256
+    exclude_fields: {  }
+    prefix: '<strong>'
+    suffix: '</strong>'
+    weights:
+      postprocess_query: 0
+  html_filter:
+    all_fields: true
+    fields:
+      - body
+    title: true
+    alt: true
+    tags:
+      b: 2
+      h1: 5
+      h2: 3
+      h3: 2
+      strong: 2
+    weights:
+      preprocess_index: -15
+      preprocess_query: -15
+  ignorecase:
+    all_fields: true
+    fields:
+      - body
+    weights:
+      preprocess_index: -20
+      preprocess_query: -20
   language_with_fallback: {  }
   rendered_item: {  }
+  stemmer:
+    all_fields: true
+    fields:
+      - body
+    exceptions:
+      mexican: mexic
+      texan: texa
+    weights:
+      preprocess_index: 0
+      preprocess_query: 0
+  tokenizer:
+    all_fields: true
+    fields:
+      - body
+    spaces: ''
+    overlap_cjk: 1
+    minimum_word_size: '3'
+    weights:
+      preprocess_index: -6
+      preprocess_query: -6
 tracker_settings:
   default:
     indexing_order: fifo
