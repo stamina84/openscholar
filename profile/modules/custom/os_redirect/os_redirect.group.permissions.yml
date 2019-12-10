@@ -1,0 +1,4 @@
+url redirect group user:
+  title: 'Url Redirect'
+  description: 'Permission to access URL redirect menu.'
+  section: 'Permission'

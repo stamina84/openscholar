@@ -1,3 +1,4 @@
+base_url: 'https://dataverse.harvard.edu/'
 listing_base_url: 'https://dataverse.harvard.edu/dataverse/'
 search_base_url: 'https://dataverse.harvard.edu/dataverse.xhtml'
 _core:

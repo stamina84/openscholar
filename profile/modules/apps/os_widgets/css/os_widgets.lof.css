@@ -1,0 +1,7 @@
+.lof-details #dynamic-option-fields-lof >.form-wrapper.form-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+.lof-details #dynamic-option-fields-lof > .form-wrapper.form-group>div {
+  padding-right: 10px;
+}

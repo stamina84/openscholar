@@ -1,0 +1,35 @@
+uuid: c68af772-f251-4461-ae9d-4aed8d33f770
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.full
+    - field.field.media.executable.field_media_file
+    - field.field.media.executable.field_taxonomy_terms
+    - media.type.executable
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.executable.full
+targetEntityType: media
+bundle: executable
+mode: full
+content:
+  name:
+    type: string
+    weight: 0
+    region: content
+    label: visually_hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_file: true
+  field_taxonomy_terms: true
+  langcode: true
+  thumbnail: true
+  uid: true

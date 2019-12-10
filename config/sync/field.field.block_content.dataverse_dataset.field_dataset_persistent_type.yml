@@ -1,0 +1,21 @@
+uuid: 07c3e81d-a54b-49ff-a346-398924738fc4
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_dataset
+    - field.storage.block_content.field_dataset_persistent_type
+  module:
+    - options
+id: block_content.dataverse_dataset.field_dataset_persistent_type
+field_name: field_dataset_persistent_type
+entity_type: block_content
+bundle: dataverse_dataset
+label: 'Dataset Persistent Type'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

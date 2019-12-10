@@ -7,11 +7,7 @@ dependencies:
     - field.field.media.oembed.field_taxonomy_terms
     - media.type.oembed
   module:
-    - layout_builder
     - os_media
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: media.oembed.default
 targetEntityType: media
 bundle: oembed

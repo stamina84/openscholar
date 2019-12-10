@@ -1,0 +1,10 @@
+uuid: d009d507-4e34-43ae-9c84-4daefb8e6f12
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.grid_teaser
+label: 'Grid Teaser'
+targetEntityType: media
+cache: true

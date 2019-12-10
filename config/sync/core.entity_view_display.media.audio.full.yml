@@ -1,0 +1,35 @@
+uuid: a39c411d-213e-424f-be66-bc32c0d2249e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.full
+    - field.field.media.audio.field_media_file
+    - field.field.media.audio.field_taxonomy_terms
+    - media.type.audio
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.audio.full
+targetEntityType: media
+bundle: audio
+mode: full
+content:
+  name:
+    type: string
+    weight: 0
+    region: content
+    label: visually_hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_file: true
+  field_taxonomy_terms: true
+  langcode: true
+  thumbnail: true
+  uid: true

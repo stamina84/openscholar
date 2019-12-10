@@ -1,0 +1,23 @@
+uuid: 9f1103a9-ea24-42db-b392-883c1b9d91cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+    - field.storage.block_content.field_file_type
+  module:
+    - options
+id: block_content.list_of_files.field_file_type
+field_name: field_file_type
+entity_type: block_content
+bundle: list_of_files
+label: 'File Type'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: all
+default_value_callback: ''
+settings: {  }
+field_type: list_string

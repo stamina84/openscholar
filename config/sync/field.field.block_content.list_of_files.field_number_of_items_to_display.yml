@@ -1,0 +1,23 @@
+uuid: 7fa7b0fc-e170-421e-8811-5567dcb21c03
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_files
+    - field.storage.block_content.field_number_of_items_to_display
+  module:
+    - options
+id: block_content.list_of_files.field_number_of_items_to_display
+field_name: field_number_of_items_to_display
+entity_type: block_content
+bundle: list_of_files
+label: 'Number of items to display'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 6
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

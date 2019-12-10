@@ -1,11 +1,12 @@
 /**
- * Toggle functionality for Select all field under publication types for LOP widget
- * form. Also adds Show More link dynamically based on content selection.
+ * Helper code for widget forms such LOP,LOF.
  */
 
 (function ($, Drupal) {
 
-  Drupal.behaviors.osWidgetsForm = {
+  'use strict';
+
+  Drupal.behaviors.osLopWidgetForm = {
     attach: function (ctx, drupalSettings) {
 
       // Select All option for publication types.
@@ -28,14 +29,14 @@
       let nodeMapping = drupalSettings.pathMapping.node;
       let pubMapping = drupalSettings.pathMapping.bibcite_reference;
 
-      $contentType.once('content-type-field').on('change', function () {
+      $contentType.on('change', function () {
         let bundle = $contentType.val();
         if ($contentType.val() === 'publications') {
           bundle = '*';
           $uriField.val('/' + pubMapping[bundle]);
         }
         else {
-          if (typeof nodeMapping[bundle] === 'undefined' ) {
+          if (!nodeMapping[bundle] ) {
             $uriField.val('/');
           }
           else {
@@ -96,13 +97,15 @@
           }
           else {
             $eventAppearExpireWrapper.hide();
-            $eventAppearExpireSelect.attr('disabled', false);
+            $eventAppearExpireSelect.attr('disabled', true);
           }
         }
+        else {
+          $eventAppearExpireWrapper.hide();
+          $eventAppearExpireSelect.attr('disabled', true);
+        }
       }
-
-
     }
-  }
+  };
 
 })(jQuery, Drupal);
