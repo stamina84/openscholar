@@ -73,7 +73,7 @@ class CustomThemeTest extends TestBase {
     $this->assertFileExists($theme_libraries_info_file_location);
     $theme_libraries_info_file_data = Yaml::parseFile($theme_libraries_info_file_location);
     $this->assertNotNull($theme_libraries_info_file_data[CustomTheme::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE]);
-    $this->assertEquals('VERSION', $theme_libraries_info_file_data[CustomTheme::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE]['version']);
+    $this->assertEquals(-1, $theme_libraries_info_file_data[CustomTheme::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE]['version']);
     $this->assertNotNull($theme_libraries_info_file_data[CustomTheme::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE]['css']['theme'][CustomTheme::CUSTOM_THEMES_STYLE_LOCATION]);
     $this->assertNotNull($theme_libraries_info_file_data[CustomTheme::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE]['js'][CustomTheme::CUSTOM_THEMES_SCRIPT_LOCATION]);
 

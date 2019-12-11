@@ -10,7 +10,7 @@ os_publications.redirect_bibcite_reference_bundles_form:
   defaults:
     _form: '\Drupal\os_publications\Form\RedirectEntityBundlesForm'
   requirements:
-    _group_permission: 'create bibcite_reference'
+    _group_permission: 'create publications'
 os_publictions.citation_export:
   path: '/citation/export/{bibcite_format}/{bibcite_reference}'
   defaults:
