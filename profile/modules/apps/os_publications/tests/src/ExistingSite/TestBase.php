@@ -204,12 +204,6 @@ abstract class TestBase extends OsExistingSiteTestBase {
       $expected_result[$key] = $row;
     }
 
-    $this->verbose('<pre style="white-space: pre-wrap;">'
-      . "\n\nQuery:\n" . $view->build_info['query']
-      . "\n\nQuery arguments:\n" . var_export($view->build_info['query']->getArguments(), TRUE)
-      . "\n\nActual result:\n" . var_export($result, TRUE)
-      . "\n\nExpected result:\n" . var_export($expected_result, TRUE));
-
     // Reset the numbering of the arrays.
     $result = array_values($result);
     $expected_result = array_values($expected_result);
