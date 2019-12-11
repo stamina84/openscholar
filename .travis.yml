@@ -24,16 +24,34 @@ env:
     - DRUPAL_BASE_URL="http://127.0.0.1:8080"
     - PATH="$PATH:$HOME/.composer/vendor/bin"
     - TRAVIS_NODE_VERSION="4"
-  matrix:
-    - JOB=job:check-coding-standards
-    - JOB=job:run-unit-tests
-    - JOB="job:run-kernel-tests widgets-2,widgets-3,os-theme-preview,cp-appearance,profiles,publications-1,redirect,widgets-4"
-    - JOB="job:run-kernel-tests widgets-1,publications-2,wysiwyg,vsite,os,cp,other,cp-menu"
-    - JOB="job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
-    - JOB="job:run-functional-tests analytics,publications,cp-appearance,redirect,twitter,os,vsite"
-    - JOB="job:run-functional-javascript-tests classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
-    - JOB="job:run-functional-javascript-tests events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
-#    - JOB=job:run-behat-tests
+matrix:
+  include:
+    -
+      if: commit_message ~ /(8.x merge)/
+      env: PHP_XDEBUG_ENABLED=1
+      - JOB=job:run-unit-tests
+      - JOB="job:run-kernel-tests widgets-1"
+      - JOB="job:run-kernel-tests widgets-2"
+      - JOB="job:run-kernel-tests widgets-3"
+      - JOB="job:run-kernel-tests widgets-4"
+      - JOB="job:run-kernel-tests os-theme-preview,cp-appearance,profiles"
+      - JOB="job:run-kernel-tests publications-1,redirect,vsite"
+      - JOB="job:run-kernel-tests publications-2,wysiwyg"
+      - JOB="job:run-kernel-tests os"
+      - JOB="job:run-kernel-tests cp"
+      - JOB="job:run-kernel-tests other,cp-menu"
+  exclude:
+    -
+      if: branch = 8.x-1.x-dev
+      - JOB=job:check-coding-standards
+      - JOB=job:run-unit-tests
+      - JOB="job:run-kernel-tests widgets-2,widgets-3,os-theme-preview,cp-appearance,profiles,publications-1,redirect,widgets-4"
+      - JOB="job:run-kernel-tests widgets-1,publications-2,wysiwyg,vsite,os,cp,other,cp-menu"
+      - JOB="job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
+      - JOB="job:run-functional-tests analytics,publications,cp-appearance,redirect,twitter,os,vsite"
+      - JOB="job:run-functional-javascript-tests classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
+      - JOB="job:run-functional-javascript-tests events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
+
 
 before_install:
   - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
