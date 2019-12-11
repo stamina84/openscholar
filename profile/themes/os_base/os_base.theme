@@ -64,3 +64,10 @@ function os_base_preprocess_block(&$variables) {
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_bootstarp_dropdown() for split.
+ */
+function os_base_preprocess_bootstrap_dropdown(&$var) {
+  $var['toggle']['#split'] = TRUE;
+}

@@ -31,6 +31,7 @@ permissions:
   - 'create group_node:software_project entity'
   - 'create group_node:software_release entity'
   - 'create new books'
+  - 'create publications'
   - 'create url aliases'
   - 'delete own group_entity:bibcite_reference entity'
   - 'delete own group_entity:media entity'

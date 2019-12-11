@@ -3,3 +3,7 @@ administer bibcite_reference:
   description: 'Allow to access the administration form to configure Reference entities.'
   restrict access: true
   section: 'Permission'
+create publications:
+  title: 'Create new Reference entity of any type'
+  description: 'Allow members to create new Reference entity of any type.'
+  section: 'Permission'
