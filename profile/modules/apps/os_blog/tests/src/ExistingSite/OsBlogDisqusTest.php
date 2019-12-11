@@ -8,7 +8,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Class OsBlogDisqusTest.
  *
  * @group functional
- * @group analytics
+ * @group os
  *
  * @package Drupal\Tests\os_blog\ExistingSite
  */
@@ -35,9 +35,6 @@ class OsBlogDisqusTest extends OsExistingSiteTestBase {
     ]);
     $this->groupAdmin = $this->createUser();
     $this->addGroupAdmin($this->groupAdmin, $group);
-    $this->adminUser = $this->createUser([], '', TRUE);
-    $this->entityTypeManager = $this->container->get('entity_type.manager');
-    $this->vsiteContextManager = $this->container->get('vsite.context_manager');
   }
 
   /**

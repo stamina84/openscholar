@@ -117,7 +117,7 @@ content:
     region: content
   field_disqus_comments:
     weight: 4
-    label: hidden
+    label: visually_hidden
     settings: {  }
     third_party_settings: {  }
     type: disqus_comment

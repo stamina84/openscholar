@@ -8,17 +8,34 @@
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
-function os_blog_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (isset($form['field_disqus_comments'])) {
-    $form['field_disqus_comments']['#access'] = FALSE;
-    $form['field_disqus_comments']['widget'][0]['status']['#default_value'] = 0;
-    $blog_comments_config = \Drupal::config('os_blog.settings');
-    if ($blog_comments_config->get('comment_type') == 'disqus_comments') {
-      $form['field_disqus_comments']['#access'] = TRUE;
-      $form['field_disqus_comments']['widget'][0]['status']['#default_value'] = 1;
-    }
+function os_blog_form_node_blog_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  os_blog_node_blog_alter($form, $form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_blog_form_node_blog_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  os_blog_node_blog_alter($form, $form_state);
+}
+
+/**
+ * Alters node blog form.
+ *
+ * @param array $form
+ *   The form to alter.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function os_blog_node_blog_alter(array &$form, FormStateInterface $form_state) {
+  $form['field_disqus_comments']['#access'] = FALSE;
+  $form['field_disqus_comments']['widget'][0]['status']['#default_value'] = 0;
+  $blog_comments_config = \Drupal::config('os_blog.settings');
+  if ($blog_comments_config->get('comment_type') == 'disqus_comments') {
+    $form['field_disqus_comments']['#access'] = TRUE;
+    $form['field_disqus_comments']['widget'][0]['status']['#default_value'] = 1;
   }
 }
 
@@ -33,13 +50,9 @@ function os_blog_node_view_alter(array &$build, $entity, $display) {
 }
 
 /**
- * Implements hook_entity_load().
+ * Implements hook_element_info_alter().
  */
-function os_blog_entity_load(array $entities, $entity_type_id) {
-  $blog_comments_config = \Drupal::config('os_blog.settings');
-  if ($blog_comments_config->get('comment_type') == 'disqus_comments') {
-    $vSite_domain = $blog_comments_config->get('disqus_shortname');
-    $config = \Drupal::service('config.factory')->getEditable('disqus.settings');
-    $config->set('disqus_domain', $vSite_domain)->save();
-  }
+function os_blog_element_info_alter(array &$info) {
+  unset($info['disqus']['#pre_render']);
+  $info['disqus']['#pre_render'][] = 'Drupal\os_blog\Element\DisqusOverride::generatePlaceholder';
 }
