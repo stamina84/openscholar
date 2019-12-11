@@ -630,7 +630,7 @@ class TaxonomyBlockRenderTest extends TaxonomyBlockRenderTestBase {
       'field_recurring_date' => [
         'value' => $date,
         'end_value' => $date,
-        'timezone' => 'America/Anguilla',
+        'timezone' => 'America/New_York',
         'infinite' => 0,
       ],
     ]);
@@ -680,7 +680,7 @@ class TaxonomyBlockRenderTest extends TaxonomyBlockRenderTestBase {
       'field_recurring_date' => [
         'value' => $date,
         'end_value' => $date,
-        'timezone' => 'America/Anguilla',
+        'timezone' => 'America/New_York',
         'infinite' => 0,
       ],
     ]);
@@ -731,7 +731,7 @@ class TaxonomyBlockRenderTest extends TaxonomyBlockRenderTestBase {
       'field_recurring_date' => [
         'value' => $date,
         'end_value' => $date,
-        'timezone' => 'America/Anguilla',
+        'timezone' => 'America/New_York',
         'infinite' => 0,
       ],
     ]);
@@ -749,7 +749,7 @@ class TaxonomyBlockRenderTest extends TaxonomyBlockRenderTestBase {
       'field_recurring_date' => [
         'value' => $date,
         'end_value' => $date,
-        'timezone' => 'America/Anguilla',
+        'timezone' => 'America/New_York',
         'infinite' => 0,
       ],
     ]);
