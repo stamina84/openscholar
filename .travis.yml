@@ -27,8 +27,9 @@ env:
   matrix:
     - JOB=job:check-coding-standards
     - JOB=job:run-unit-tests
-    - JOB="job:run-kernel-tests widgets-2,widgets-3,os-theme-preview,cp-appearance,profiles,publications-1,redirect,widgets-4"
-    - JOB="job:run-kernel-tests widgets-1,publications-2,wysiwyg,vsite,os,cp,other,cp-menu"
+    - JOB="job:run-kernel-tests widgets-1,widgets-2,widgets-3,widgets-4,os-theme-preview,cp-appearance"
+    - JOB="job:run-kernel-tests publications-1,wysiwyg,vsite,os"
+    - JOB="job:run-kernel-tests cp,other,cp-menu,profiles,publications-2,redirect"
     - JOB="job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
     - JOB="job:run-functional-tests analytics,publications,cp-appearance,redirect,twitter,os,vsite"
     - JOB="job:run-functional-javascript-tests classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
