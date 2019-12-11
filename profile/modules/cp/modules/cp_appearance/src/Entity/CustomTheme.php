@@ -61,7 +61,7 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
 
   public const CUSTOM_THEME_LIBRARIES_INFO_TEMPLATE = [
     self::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE => [
-      'version' => 'VERSION',
+      'version' => -1,
       'css' => [
         'theme' => [
           self::CUSTOM_THEMES_STYLE_LOCATION => [],
