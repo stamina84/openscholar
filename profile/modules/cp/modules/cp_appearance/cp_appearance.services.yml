@@ -7,3 +7,8 @@ services:
     arguments: ['@theme_handler']
   cp_appearance.custom_theme_installer:
     class: \Drupal\cp_appearance\CustomThemeInstaller
+  cp_appearance.init_custom_theme_subscriber:
+    class: \Drupal\cp_appearance\EventSubscriber\InitCustomThemeSubscriber
+    arguments: ['@config.factory', '@theme.manager', '@theme.initialization']
+    tags:
+      - {name: event_subscriber}
