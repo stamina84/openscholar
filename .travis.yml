@@ -24,7 +24,7 @@ env:
     - DRUPAL_BASE_URL="http://127.0.0.1:8080"
     - PATH="$PATH:$HOME/.composer/vendor/bin"
     - TRAVIS_NODE_VERSION="4"
-matrix:
+jobs:
   include:
     -
       if: commit_message ~ /(8.x merge)/
@@ -40,9 +40,7 @@ matrix:
       - JOB="job:run-kernel-tests os"
       - JOB="job:run-kernel-tests cp"
       - JOB="job:run-kernel-tests other,cp-menu"
-  exclude:
-    -
-      if: branch = 8.x-1.x-dev
+    - if: branch = 8.x-1.x-dev
       - JOB=job:check-coding-standards
       - JOB=job:run-unit-tests
       - JOB="job:run-kernel-tests widgets-2,widgets-3,os-theme-preview,cp-appearance,profiles,publications-1,redirect,widgets-4"
