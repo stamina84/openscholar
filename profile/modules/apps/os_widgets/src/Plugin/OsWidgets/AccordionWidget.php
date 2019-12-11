@@ -23,6 +23,7 @@ class AccordionWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $contents = [];
     $add_widgets = $block_content->get('field_widget_collection')->getValue();
     $collapsible = $block_content->get('field_all_panels_closed')->getValue();
+    $count = 0;
     foreach ($add_widgets as $widget) {
       $bid = $widget['target_id'];
       $block = BlockContent::load($bid);
@@ -33,11 +34,12 @@ class AccordionWidget extends OsWidgetsBase implements OsWidgetsInterface {
       ];
       $section_title = $widget['section_title'];
 
-      $contents[$bid] = [
+      $contents[$count . '-' . $bid] = [
         'widget' => $render,
         'contextual_link' => $contextual_link_placeholder,
         'section_title' => $section_title,
       ];
+      $count++;
     }
 
     $build['accordion'] = [
@@ -46,6 +48,7 @@ class AccordionWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#contents' => $contents,
       '#collapsible' => $collapsible[0]['value'],
     ];
+    $build['#attached']['library'][] = 'os_base/accordion';
   }
 
 }

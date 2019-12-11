@@ -26,6 +26,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\os_widgets\Helper\FollowMeWidgetHelper;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Serialization\Json;
+use Drupal\block_content\Entity\BlockContent;
 
 /**
  * Implements hook_library_info_alter().
@@ -1370,4 +1371,37 @@ function os_widgets_alter_list_of_files_block_form(array &$form, FormStateInterf
   }
   $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
   $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ *
+ * Deleting the block_ids stored in field_widget_collection field
+ * is implemented considering that block is deleted from a vSite.
+ */
+function os_widgets_block_delete(EntityInterface $entity) {
+  if (strpos($entity->id(), 'block_content|') !== FALSE) {
+    $block_uuid = str_replace('block_content|', '', $entity->id());
+    // Fetching bid as its replaced with UUID in OsWidgetsBlockRepository.php.
+    $block = \Drupal::service('entity.repository')->loadEntityByUuid('block_content', $block_uuid);
+    $bid = $block->id();
+    // EntityQuery to fetch all blocks that are referencing above block.
+    $query = Drupal::service('entity.query')
+      ->get('block_content')
+      ->condition('field_widget_collection', $bid);
+    $entity_ids = $query->execute();
+    if (!empty($entity_ids)) {
+      foreach ($entity_ids as $entity_id) {
+        $block = BlockContent::load($entity_id);
+        $tabs = $block->get('field_widget_collection')->getValue();
+        foreach ($tabs as $key => $targets) {
+          if ($targets['target_id'] == $bid) {
+            unset($tabs[$key]);
+          }
+        }
+        $block->set('field_widget_collection', $tabs);
+        $block->save();
+      }
+    }
+  }
 }

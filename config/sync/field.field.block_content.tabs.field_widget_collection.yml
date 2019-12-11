@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - block_content.type.accordion
     - block_content.type.addthis
     - block_content.type.basic
     - block_content.type.custom_text_html
@@ -37,6 +38,7 @@ settings:
   handler: 'default:block_content'
   handler_settings:
     target_bundles:
+      accordion: accordion
       addthis: addthis
       basic: basic
       custom_text_html: custom_text_html

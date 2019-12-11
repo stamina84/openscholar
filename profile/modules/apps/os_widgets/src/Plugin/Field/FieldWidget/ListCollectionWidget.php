@@ -161,6 +161,7 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
    *   Returns field element in an array.
    */
   protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
+    $target_bundles = $this->getFieldSetting('handler_settings')['target_bundles'];
     $field_name = $this->fieldDefinition->getName();
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()
       ->getCardinality();
@@ -194,7 +195,7 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
         'select_input' => [
           '#title' => $title,
           '#type' => 'select',
-          '#options' => $this->getOptions($items->getEntity()),
+          '#options' => $this->getOptions($items->getEntity(), $target_bundles),
           '#default_value' => NULL,
         ],
         'add' => [
@@ -470,18 +471,22 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
    *
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which to return options.
+   * @param array $target_bundles
+   *   Reference types that field can reference to.
    *
    * @return array
    *   The array of options for the widget.
    */
-  protected function getOptions(FieldableEntityInterface $entity) {
+  protected function getOptions(FieldableEntityInterface $entity, array $target_bundles) {
     $options = [];
     if ($vsite = $this->vsiteContextManager->getActiveVsite()) {
       $vSiteBlocks = $vsite->getContent('group_entity:block_content');
       foreach ($vSiteBlocks as $vSiteBlock) {
         /** @var \Drupal\block_content\BlockContentInterface $block_content */
         $block_content = $vSiteBlock->getEntity();
-        $options[$block_content->id()] = $block_content->label();
+        if (in_array($block_content->bundle(), $target_bundles)) {
+          $options[$block_content->id()] = $block_content->label();
+        }
       }
     }
 
