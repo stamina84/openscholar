@@ -10,6 +10,7 @@ dependencies:
     - group
     - node
     - os_app_access
+    - os_classes
     - vsite
     - vsite_infinite_scroll
 id: os_classes
@@ -186,6 +187,30 @@ display:
           entity_type: group_content
           plugin_id: vsite_current_filter
       sorts:
+        field_year_offered_value:
+          id: field_year_offered_value
+          table: node__field_year_offered
+          field: field_year_offered_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: standard
+        semester_order:
+          id: semester_order
+          table: node__field_semester
+          field: semester_order
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: os_classes_class_semester_order
         created:
           id: created
           table: node_field_data
