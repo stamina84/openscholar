@@ -222,12 +222,4 @@ class ViewsIcalTest extends EventsTestBase {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->user = NULL;
-  }
-
 }

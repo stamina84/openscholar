@@ -105,13 +105,4 @@ class CitationHelperTest extends TestBase {
     $this->assertContains('Edited By', $data['editor'][0]['given']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->citationHelper = NULL;
-    $this->ref1 = NULL;
-  }
-
 }

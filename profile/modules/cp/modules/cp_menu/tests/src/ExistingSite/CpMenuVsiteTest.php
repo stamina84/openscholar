@@ -42,13 +42,6 @@ class CpMenuVsiteTest extends OsExistingSiteTestBase {
   protected $menuLink;
 
   /**
-   * Menu helper service.
-   *
-   * @var \Drupal\cp_menu\MenuHelperInterface
-   */
-  protected $menuHelper;
-
-  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -123,18 +116,6 @@ class CpMenuVsiteTest extends OsExistingSiteTestBase {
     $this->menuHelper->resetVsiteMenus($this->group, TRUE);
     $menuCount = $this->menuLink->countMenuLinks("menu-secondary-$this->id");
     $this->assertEquals('0', $menuCount);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->group = NULL;
-    $this->groupAdmin = NULL;
-    $this->database = NULL;
-    $this->menuLink = NULL;
-    $this->menuHelper = NULL;
   }
 
 }

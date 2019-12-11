@@ -79,13 +79,4 @@ class VsiteSubsiteFilterTest extends VsiteExistingSiteTestBase {
     $this->assertSession()->pageTextNotContains('HiddenSite');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->groupHidden = NULL;
-    $this->groupOther = NULL;
-  }
-
 }

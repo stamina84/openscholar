@@ -84,8 +84,6 @@ abstract class OsExistingSiteJavascriptTestBase extends ExistingSiteWebDriverTes
     foreach ($this->cleanUpConfigs as $config_entity) {
       $config_entity->delete();
     }
-    unset($this->group);
-    unset($this->groupAlias);
   }
 
 }

@@ -59,12 +59,4 @@ class OsSoftwareHelperTest extends OsExistingSiteTestBase {
     $this->assertEquals('Project Release v1.1.2', $title);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->helper = NULL;
-  }
-
 }

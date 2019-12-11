@@ -127,12 +127,4 @@ class CpTaxonomyHelperTest extends TestBase {
     $this->assertSame('term 3', array_values($options_tree[$vid])[4]->__toString());
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->helper = NULL;
-  }
-
 }

@@ -117,14 +117,4 @@ class CpTaxonomySettingsTest extends TestBase {
     $this->assertNotContains($term->label(), $markup->__toString());
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->group = NULL;
-    $this->configTaxonomy = NULL;
-    $this->renderer = NULL;
-  }
-
 }

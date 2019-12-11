@@ -134,12 +134,4 @@ class PublicationTypesBlockRenderTest extends OsWidgetsExistingSiteTestBase {
                 </a>', $markup->__toString());
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->publicationTypesWidget = NULL;
-  }
-
 }

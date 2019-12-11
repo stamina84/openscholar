@@ -66,14 +66,4 @@ class FormBibcitePreviewTest extends OsExistingSiteTestBase {
     // Should assert redirect value, but can't access cause programmed is true.
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->reference = NULL;
-    $this->form = NULL;
-    $this->formBuilder = NULL;
-  }
-
 }

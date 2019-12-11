@@ -408,17 +408,4 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $this->assertCount(2, $results);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->lopWidget = NULL;
-    $this->lopHelper = NULL;
-    $this->vocabulary = NULL;
-    $this->nids = NULL;
-    $this->pids = NULL;
-    $this->config = NULL;
-  }
-
 }

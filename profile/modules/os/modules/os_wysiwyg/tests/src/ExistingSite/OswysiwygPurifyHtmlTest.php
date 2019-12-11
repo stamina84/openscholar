@@ -73,13 +73,4 @@ class OswysiwygPurifyHtmlTest extends OsExistingSiteTestBase {
     $this->assertContains('style', $processed);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->filter = NULL;
-    $this->helper = NULL;
-  }
-
 }

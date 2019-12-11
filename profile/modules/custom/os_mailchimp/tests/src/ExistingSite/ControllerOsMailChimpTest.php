@@ -71,12 +71,4 @@ class ControllerOsMailChimpTest extends ExistingSiteBase {
     $this->assertContains($email, $form_data_output, 'Users email not found.');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->user = NULL;
-  }
-
 }

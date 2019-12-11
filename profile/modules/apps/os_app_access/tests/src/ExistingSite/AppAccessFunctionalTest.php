@@ -197,14 +197,4 @@ class AppAccessFunctionalTest extends AppAccessTestBase {
     $this->assertSession()->statusCodeEquals(403);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->groupAdmin = NULL;
-    $this->groupMember = NULL;
-    $this->nonGroupMember = NULL;
-  }
-
 }

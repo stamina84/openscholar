@@ -132,17 +132,4 @@ class PublicationMenusTest extends OsExistingSiteTestBase {
     $this->assertFalse($query->execute()->fetchAssoc());
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->groupAdmin = NULL;
-    $this->group = NULL;
-    $this->menuLink = NULL;
-    $this->database = NULL;
-    $this->menuHelper = NULL;
-    $this->reference = NULL;
-  }
-
 }

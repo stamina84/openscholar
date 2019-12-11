@@ -123,12 +123,4 @@ class PublicationYearsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $this->assertContains('<div class="views-row"><span class="views-field views-field-bibcite-year"><span class="field-content"><a href="/publications/year/2001">2001</a></span></span><span class="views-field views-field-id"><span class="field-content views-field-display-count">(2)</span></span></div>', $markup->__toString());
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->publicationYearsWidget = NULL;
-  }
-
 }

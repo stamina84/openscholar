@@ -100,14 +100,4 @@ class OsSoftwareProjectReleaseBlocksTest extends OsExistingSiteTestBase {
     $this->assertNotContains('Recommended Releases', $markup->__toString());
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->entityTypeManager = NULL;
-    $this->projectNode = NULL;
-    $this->renderer = NULL;
-  }
-
 }

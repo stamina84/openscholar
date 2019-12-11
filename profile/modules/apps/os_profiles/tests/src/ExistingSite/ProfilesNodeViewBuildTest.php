@@ -156,15 +156,4 @@ class ProfilesNodeViewBuildTest extends OsExistingSiteTestBase {
     return $markup;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->config = NULL;
-    $this->personNode = NULL;
-    $this->renderer = NULL;
-    $this->viewBuilder = NULL;
-  }
-
 }

@@ -70,10 +70,6 @@ abstract class OsExistingSiteTestBase extends ExistingSiteBase {
       }
     }
     $this->group->delete();
-
-    unset($this->pluginManager);
-    unset($this->group);
-    unset($this->groupAlias);
   }
 
   /**

@@ -141,12 +141,4 @@ class OsWysiwygLinkFilterTest extends OsExistingSiteTestBase {
     $this->assertContains('title="Test" href="http://apache/sites/default/files/photos/example.jpg"', $output->__toString());
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->adminUser = NULL;
-  }
-
 }

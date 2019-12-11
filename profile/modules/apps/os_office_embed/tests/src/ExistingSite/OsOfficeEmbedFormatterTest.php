@@ -41,12 +41,4 @@ class OsOfficeEmbedFormatterTest extends OsExistingSiteTestBase {
     $this->assertSame($entities[0]->getFileName(), $build[0]['#filename']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->document = NULL;
-  }
-
 }

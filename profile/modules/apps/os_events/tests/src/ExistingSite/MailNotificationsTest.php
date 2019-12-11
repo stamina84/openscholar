@@ -243,13 +243,4 @@ class MailNotificationsTest extends ExistingSiteBase {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->entityTypeManager = NULL;
-    $this->event = NULL;
-  }
-
 }

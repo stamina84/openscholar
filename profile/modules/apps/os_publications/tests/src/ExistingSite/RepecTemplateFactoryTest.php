@@ -60,14 +60,4 @@ class RepecTemplateFactoryTest extends TestBase {
     $this->assertInstanceOf(Template::class, $template_class);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->configFactory = NULL;
-    $this->templateFactory = NULL;
-    $this->reference = NULL;
-  }
-
 }

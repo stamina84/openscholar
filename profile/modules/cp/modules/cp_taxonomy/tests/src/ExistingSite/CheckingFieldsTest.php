@@ -73,13 +73,4 @@ class CheckingFieldsTest extends TestBase {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->entityFieldManager = NULL;
-    $this->entityManager = NULL;
-  }
-
 }

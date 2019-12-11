@@ -95,12 +95,4 @@ class OsWysiwygHelperServiceTest extends OsExistingSiteTestBase {
     $this->assertEquals('', $url);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->osLinkHelper = NULL;
-  }
-
 }

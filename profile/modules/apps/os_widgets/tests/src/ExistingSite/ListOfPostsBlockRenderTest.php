@@ -252,13 +252,4 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $this->assertContains('publications/publication1', $markup->__toString());
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->lopWidget = NULL;
-    $this->viewBuilder = NULL;
-  }
-
 }

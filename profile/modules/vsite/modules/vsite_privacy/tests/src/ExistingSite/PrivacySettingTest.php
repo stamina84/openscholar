@@ -134,14 +134,4 @@ class PrivacySettingTest extends OsExistingSiteTestBase {
     // $this->assertSession()->responseContains('noindex');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->vsiteContextManager = NULL;
-    $this->group = NULL;
-    $this->groupAdmin = NULL;
-  }
-
 }

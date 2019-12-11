@@ -52,12 +52,4 @@ class PublicationsCreateTest extends TestBase {
     $this->assertSame($alias, '/publications/velvet-underground');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown() {
-    parent::tearDown();
-    $this->aliasManager = NULL;
-  }
-
 }
