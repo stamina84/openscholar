@@ -1,6 +1,5 @@
 language: php
 dist: trusty
-sudo: false
 
 cache:
   directories:
@@ -24,18 +23,57 @@ env:
     - DRUPAL_BASE_URL="http://127.0.0.1:8080"
     - PATH="$PATH:$HOME/.composer/vendor/bin"
     - TRAVIS_NODE_VERSION="4"
-  matrix:
-    - JOB=job:check-coding-standards
-    - JOB=job:run-unit-tests
-    - JOB="job:run-kernel-tests widgets-1,widgets-2,widgets-3"
-    - JOB="job:run-kernel-tests publications-1,wysiwyg,vsite,os,os-theme-preview"
-    - JOB="job:run-kernel-tests cp,other,cp-menu,profiles,redirect,cp-appearance"
-    - JOB="job:run-kernel-tests widgets-4,publications-2"
-    - JOB="job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
-    - JOB="job:run-functional-tests analytics,publications,cp-appearance,redirect,twitter,os,vsite"
-    - JOB="job:run-functional-javascript-tests classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
-    - JOB="job:run-functional-javascript-tests events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
-#    - JOB=job:run-behat-tests
+
+stages:
+  - test
+  - name: deploy
+    if: branch = 8.x-1.x-dev
+
+jobs:
+  include:
+    - script: robo job:check-coding-standards
+    - script: robo job:run-unit-tests
+    - script: robo "job:run-kernel-tests widgets-1,widgets-2,widgets-3"
+    - script: robo "job:run-kernel-tests publications-1,wysiwyg,vsite,os,os-theme-preview"
+    - script: robo "job:run-kernel-tests cp,other,cp-menu,profiles,redirect,cp-appearance"
+    - script: robo "job:run-kernel-tests widgets-4,publications-2"
+    - script: robo "job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
+    - script: robo "job:run-functional-tests analytics,publications,cp-appearance,redirect,twitter,os,vsite"
+    - script: robo "job:run-functional-javascript-tests classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
+    - script: robo "job:run-functional-javascript-tests events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo job:run-unit-tests
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests widgets-1"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests widgets-2"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests widgets-3"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests widgets-4"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests os-theme-preview,cp-appearance,profiles"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests publications-1,redirect,vsite"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests publications-2,wysiwyg"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests os"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests cp"
+    - stage: deploy
+      env: PHP_XDEBUG_ENABLED=1
+      script: robo "job:run-kernel-tests other,cp-menu"
 
 before_install:
   - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
@@ -45,9 +83,6 @@ install:
 
 before_script:
   - cp .travis/RoboFile.php .
-
-script:
-  - robo $JOB
 
 after_failure:
   - artifacts upload
