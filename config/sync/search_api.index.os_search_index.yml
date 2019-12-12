@@ -6,9 +6,9 @@ dependencies:
     - field.storage.node.body
     - search_api.server.os_search
   module:
+    - node
     - search_api
     - os_search
-    - node
     - bibcite_entity
 id: os_search_index
 name: 'OS Search Index'
@@ -23,6 +23,18 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.body
+  custom_search_group:
+    label: 'Group (text)'
+    property_path: custom_search_group
+    type: integer
+  type:
+    label: 'Content type'
+    datasource_id: 'entity:node'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - node
 datasource_settings:
   'entity:bibcite_reference':
     bundles:
@@ -54,6 +66,7 @@ processor_settings:
     all_fields: true
     fields:
       - body
+      - type
     title: true
     alt: true
     tags:
@@ -69,6 +82,7 @@ processor_settings:
     all_fields: true
     fields:
       - body
+      - type
     weights:
       preprocess_index: -20
       preprocess_query: -20

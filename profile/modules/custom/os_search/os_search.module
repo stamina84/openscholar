@@ -4,3 +4,14 @@
  * @file
  * Hook implementations for the os_search module.
  */
+
+use Drupal\search_api\Query\QueryInterface;
+
+/**
+ * Implements hook_search_api_query_alter().
+ */
+function os_search_search_api_query_alter(QueryInterface &$query) {
+  // TODO: Get Group ID dynamically.
+  $group_id = (int) rand(1, 2);
+  $query->addCondition('custom_search_group', $group_id, '=');
+}

@@ -42,5 +42,6 @@ hidden:
   field_media_html_description: true
   field_taxonomy_terms: true
   langcode: true
+  search_api_excerpt: true
   thumbnail: true
   uid: true

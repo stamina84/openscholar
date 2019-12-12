@@ -34,7 +34,7 @@ class AddGroupAsText extends ProcessorPluginBase {
       $definition = [
         'label' => $this->t('Group (text)'),
         'description' => $this->t('Group for entity.'),
-        'type' => 'integer',
+        'type' => 'keyword',
         'processor_id' => $this->getPluginId(),
       ];
       $properties['custom_search_group'] = new ProcessorProperty($definition);
