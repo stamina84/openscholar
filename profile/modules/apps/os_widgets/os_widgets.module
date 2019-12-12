@@ -5,6 +5,7 @@
  * OS widgets.
  */
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\views\Plugin\views\filter\Bundle;
 use Drupal\block_content\BlockContentForm;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -515,6 +516,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       }
       $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
       $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
+      array_unshift($form['actions']['submit']['#submit'], 'os_widgets_submit_more_url');
       break;
 
     case 'block_content_dataverse_list_form':
@@ -1269,12 +1271,6 @@ function os_widgets_form_block_content_list_of_files_edit_form_alter(&$form, For
  *   The form state.
  */
 function os_widgets_alter_list_of_files_block_form(array &$form, FormStateInterface $form_state) {
-  $form['#attached']['library'][] = 'os_widgets/lofwidgetForm';
-
-  // Hide revision information from widget form.
-  // TODO Remove when it is implemented for all widgets collectively.
-  $form['revision_information']['#access'] = FALSE;
-
   $form['#attached']['library'][] = 'os_widgets/lofWidgetForm';
 
   // Remove None option from select lists.
@@ -1371,6 +1367,42 @@ function os_widgets_alter_list_of_files_block_form(array &$form, FormStateInterf
   }
   $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
   $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
+  array_unshift($form['actions']['submit']['#submit'], 'os_widgets_submit_more_url');
+}
+
+/**
+ * Common submit handler for all widgets which need to handle show more link.
+ *
+ * @param array $form
+ *   Form itself.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Form state.
+ */
+function os_widgets_submit_more_url(array $form, FormStateInterface $form_state) {
+  $url_field = $form_state->getValue('field_url_for_the_more_link');
+  $url_field = array_shift($url_field);
+  $uri = $url_field['uri'];
+
+  // Don't do anything if external url.
+  if (UrlHelper::isExternal($uri)) {
+    return;
+  }
+
+  // If purl attached then do not do anything if not prepend current vsite purl.
+  // We are not doing any additional validations as it will be handled by url
+  // field's element_validate and we can only prepend current vsite purl to any
+  // url entered if it does not carry active/curent vsite's purl.
+  $uri_raw = str_replace('internal:/', '', $uri);
+  $uri_raw = str_replace('entity:', '', $uri_raw);
+  $uri = \Drupal::service('os_widgets.list_widgets_helper')->prependPurl($uri, $uri_raw);
+
+  $form_state->setValue('field_url_for_the_more_link', [[
+    'uri' => $uri,
+    'title' => $url_field['title'],
+    'attributes' => $url_field['attributes'],
+  ],
+  ]
+  );
 }
 
 /**

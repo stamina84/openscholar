@@ -35,7 +35,7 @@ content:
     type: options_select
     region: content
   field_display_style_lof:
-    weight: 26
+    weight: 9
     settings: {  }
     third_party_settings: {  }
     type: options_select
@@ -53,33 +53,33 @@ content:
     type: options_select
     region: content
   field_number_of_items_to_display:
-    weight: 10
+    weight: 8
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_show_more_link:
-    weight: 7
+    weight: 5
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_show_pager:
-    weight: 8
+    weight: 7
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_sorted_by_lof:
-    weight: 27
+    weight: 10
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_url_for_the_more_link:
-    weight: 9
+    weight: 6
     settings:
       placeholder_url: ''
       placeholder_title: ''

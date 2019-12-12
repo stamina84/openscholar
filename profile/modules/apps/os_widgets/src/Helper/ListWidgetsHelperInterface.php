@@ -64,4 +64,17 @@ interface ListWidgetsHelperInterface {
    */
   public function addWidgetMiniPager(array &$build, array $pager, array $blockData): void;
 
+  /**
+   * Prepend purl to user entered internal urls which may or may not exist.
+   *
+   * @param string $value
+   *   Field Value.
+   * @param string $uri_raw
+   *   Raw uri value.
+   *
+   * @return string
+   *   Url to save.
+   */
+  public function prependPurl(string $value, string $uri_raw) : string;
+
 }
