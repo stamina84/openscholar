@@ -48,6 +48,21 @@ class RoboFile extends \Robo\Tasks
     }
 
     /**
+     * Runs unit tests and generates code coverage report.
+     *
+     * @return \Robo\Result
+     *   The result of the collection of tasks.
+     */
+    public function jobRunUnitTestsCodeCoverage($groups = '')
+    {
+        $collection = $this->collectionBuilder();
+        $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->enableXDebug());
+        $collection->addTaskList($this->runUnitTests($groups));
+        return $collection->run();
+    }
+
+    /**
      * Command to check coding standards.
      *
      * @return \Robo\Result
@@ -61,18 +76,35 @@ class RoboFile extends \Robo\Tasks
         return $collection->run();
     }
 
-  /**
-   * Command to run kernel tests.
-   *
-   * @return \Robo\Result
-   *   The result of the collection of tasks.
-   */
+    /**
+     * Command to run kernel tests.
+     *
+     * @return \Robo\Result
+     *   The result of the collection of tasks.
+     */
     public function jobRunKernelTests($groups = '')
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildEnvironment());
         $collection->addTaskList($this->installDrupal());
         $collection->addTaskList($this->installTestConfigs());
+        $collection->addTaskList($this->runKernelTests($groups));
+        return $collection->run();
+    }
+
+    /**
+     * Runs kernel tests with code coverage report.
+     *
+     * @return \Robo\Result
+     *   The result of the collection of tasks.
+     */
+    public function jobRunKernelTestsCodeCoverage($groups = '')
+    {
+        $collection = $this->collectionBuilder();
+        $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->installTestConfigs());
+        $collection->addTaskList($this->enableXDebug());
         $collection->addTaskList($this->runKernelTests($groups));
         return $collection->run();
     }
@@ -174,6 +206,21 @@ class RoboFile extends \Robo\Tasks
         $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config/phpunit.xml web/core/phpunit.xml');
         $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config//bootstrap.php web/core/tests/bootstrap.php');
         $tasks[] = $this->taskExec('docker-compose exec -T php mkdir -p web/sites/simpletest');
+        return $tasks;
+    }
+
+    /**
+     * Enables xdebug in the Docker environment.
+     *
+     * @return \Robo\Task\Base\Exec[]
+     *   Array of tasks.
+     */
+    protected function enableXDebug()
+    {
+        $tasks[] = $this->taskExecStack()
+            ->exec('echo PHP_XDEBUG_ENABLED=1 >> .env')
+            ->exec('docker-compose up -d');
+
         return $tasks;
     }
 

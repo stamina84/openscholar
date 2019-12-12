@@ -33,47 +33,36 @@ jobs:
   include:
     - script: robo job:check-coding-standards
     - script: robo job:run-unit-tests
-    - script: robo "job:run-kernel-tests widgets-1,widgets-2,widgets-3"
-    - script: robo "job:run-kernel-tests publications-1,wysiwyg,vsite,os,os-theme-preview"
-    - script: robo "job:run-kernel-tests cp,other,cp-menu,profiles,redirect,cp-appearance"
-    - script: robo "job:run-kernel-tests widgets-4,publications-2"
-    - script: robo "job:run-functional-tests classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
-    - script: robo "job:run-functional-tests analytics,publications,cp-appearance,redirect,twitter,os,vsite"
-    - script: robo "job:run-functional-javascript-tests classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
-    - script: robo "job:run-functional-javascript-tests events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
+    - script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3"
+    - script: robo job:run-kernel-tests "publications-1,wysiwyg,vsite,os,os-theme-preview"
+    - script: robo job:run-kernel-tests "cp,other,cp-menu,profiles,redirect,cp-appearance"
+    - script: robo job:run-kernel-tests "widgets-4,publications-2"
+    - script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
+    - script: robo job:run-functional-tests "analytics,publications,cp-appearance,redirect,twitter,os,vsite"
+    - script: robo job:run-functional-javascript-tests "classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
+    - script: robo job:run-functional-javascript-tests "events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo job:run-unit-tests
+      script: robo job:run-unit-tests-code-coverage
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests widgets-1"
+      script: robo job:run-kernel-tests-code-coverage "widgets-1"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests widgets-2"
+      script: robo job:run-kernel-tests-code-coverage "widgets-2"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests widgets-3"
+      script: robo job:run-kernel-tests-code-coverage "widgets-3"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests widgets-4"
+      script: robo job:run-kernel-tests-code-coverage "widgets-4"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests os-theme-preview,cp-appearance,profiles"
+      script: robo job:run-kernel-tests-code-coverage "os-theme-preview,cp-appearance,profiles"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests publications-1,redirect,vsite"
+      script: robo job:run-kernel-tests-code-coverage "publications-1,redirect,vsite"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests publications-2,wysiwyg"
+      script: robo job:run-kernel-tests-code-coverage "publications-2,wysiwyg"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests os"
+      script: robo job:run-kernel-tests-code-coverage "os"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests cp"
+      script: robo job:run-kernel-tests-code-coverage "cp"
     - stage: deploy
-      env: PHP_XDEBUG_ENABLED=1
-      script: robo "job:run-kernel-tests other,cp-menu"
+      script: robo job:run-kernel-tests-code-coverage "other,cp-menu"
 
 before_install:
   - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
