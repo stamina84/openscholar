@@ -26,27 +26,10 @@ class OsBlogDisqusTest extends OsExistingSiteTestBase {
    */
   public function setUp() {
     parent::setUp();
-
-    $group = $this->createGroup([
-      'type' => 'personal',
-      'path' => [
-        'alias' => '/test-alias',
-      ],
-    ]);
     $this->groupAdmin = $this->createUser();
-    $this->addGroupAdmin($this->groupAdmin, $group);
-  }
-
-  /**
-   * Test Setting form route.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   */
-  public function testBlogSettingsPath() {
-
-    $this->drupalLogin($this->groupAdmin);
-    $this->drupalGet('test-alias/cp/settings/global-settings/blog_setting');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
+    $this->groupMember = $this->CreateUser();
+    $this->addGroupEnhancedMember($this->groupMember, $this->group);
   }
 
   /**
@@ -57,7 +40,8 @@ class OsBlogDisqusTest extends OsExistingSiteTestBase {
   public function testBlogSettingsForm() {
 
     $this->drupalLogin($this->groupAdmin);
-    $this->drupalGet('test-alias/cp/settings/global-settings/blog_setting');
+    $this->visitViaVsite('cp/settings/global-settings/blog_setting', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
     // Dummy disqus domain id.
     $edit = [
       'edit-comment-type-disqus-comments' => 'disqus_comments',
