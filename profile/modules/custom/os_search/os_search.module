@@ -4,23 +4,3 @@
  * @file
  * Hook implementations for the os_search module.
  */
-
-use Drupal\group\Entity\GroupContent;
-
-/**
- * Implements hook_entity_load().
- */
-function os_search_entity_load($entities, $entity_type) {
-  foreach ($entities as $entity) {
-    $entity->groups = _add_group_to_entity($entity);
-  }
-}
-
-/**
- * Function to generate Group of an entity.
- */
-function _add_group_to_entity($entity) {
-  $groups = GroupContent::loadByEntity($entity);
-
-  return $groups;
-}

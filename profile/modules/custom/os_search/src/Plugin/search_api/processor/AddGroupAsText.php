@@ -6,6 +6,7 @@ use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
+use Drupal\group\Entity\GroupContent;
 
 /**
  * Adds the item's Group to the indexed data.
@@ -33,7 +34,7 @@ class AddGroupAsText extends ProcessorPluginBase {
       $definition = [
         'label' => $this->t('Group (text)'),
         'description' => $this->t('Group for entity.'),
-        'type' => 'string',
+        'type' => 'integer',
         'processor_id' => $this->getPluginId(),
       ];
       $properties['custom_search_group'] = new ProcessorProperty($definition);
@@ -48,7 +49,18 @@ class AddGroupAsText extends ProcessorPluginBase {
   public function addFieldValues(ItemInterface $item) {
 
     $node = $item->getOriginalObject()->getValue();
-    ksm($node);
+    $groups = GroupContent::loadByEntity($node);
+
+    if ($groups) {
+      $groups = array_reverse($groups);
+      $group = array_pop($groups);
+      $group_id = (int) $group->getGroup()->id();
+      $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_search_group');
+
+      foreach ($fields as $field) {
+        $field->addValue($group_id);
+      }
+    }
   }
 
 }

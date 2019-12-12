@@ -7097,13 +7097,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-<<<<<<< HEAD
                     "version": "8.x-1.15",
                     "datestamp": "1573122785",
-=======
-                    "version": "8.x-1.13",
-                    "datestamp": "1557244685",
->>>>>>> 8.x-1.x-dev
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
