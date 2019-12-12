@@ -23,6 +23,20 @@ class OsRssFunctionalTest extends OsExistingSiteTestBase {
   protected $vid;
 
   /**
+   * Test term.
+   *
+   * @var \Drupal\taxonomy\Entity\Term
+   */
+  protected $term1;
+
+  /**
+   * Test term.
+   *
+   * @var \Drupal\taxonomy\Entity\Term
+   */
+  protected $term2;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -33,7 +47,9 @@ class OsRssFunctionalTest extends OsExistingSiteTestBase {
 
     // Create test vocabulary.
     $this->vid = $this->randomMachineName();
-    $this->createGroupVocabulary($this->group, $this->vid);
+    $this->createGroupVocabulary($this->group, $this->vid, ['node:blog']);
+    $this->term1 = $this->createGroupTerm($this->group, $this->vid, []);
+    $this->term2 = $this->createGroupTerm($this->group, $this->vid, []);
   }
 
   /**
@@ -56,11 +72,11 @@ class OsRssFunctionalTest extends OsExistingSiteTestBase {
     // Check apps, publications and vocabulary section.
     $web->pageTextContains('Content Types');
     $web->pageTextContains('Categories');
+    $web->pageTextContains($this->vid);
 
     // Check apps, publications and vocabulary rss links.
     $web->linkByHrefExists("{$this->groupAlias}/rss.xml?type=blog");
-    $web->linkByHrefExists("{$this->groupAlias}/rss.xml?type=artwork");
-    $web->linkByHrefExists("{$this->groupAlias}/rss.xml?term=" . $this->vid);
+    $web->linkByHrefExists("{$this->groupAlias}/rss.xml?type=publications");
   }
 
   /**
@@ -76,37 +92,46 @@ class OsRssFunctionalTest extends OsExistingSiteTestBase {
 
     $web = $this->assertSession();
 
-    // Create taxonomy terms.
-    $term1 = $this->createGroupTerm($this->group, $this->vid, []);
-    $term2 = $this->createGroupTerm($this->group, $this->vid, []);
-
-    // Visit term rss feeds.
-    $this->visitViaVsite("rss.xml?term=" . $this->vid, $this->group);
-
-    // Check Term label and url for vocabulary.
-    $web->responseContains($term1->label());
-    $web->responseContains($term1->toUrl()->setAbsolute()->toString());
-    $web->responseContains($term2->label());
-    $web->responseContains($term2->toUrl()->setAbsolute()->toString());
-
     // Create blog node.
-    $node = $this->createNode([
+    $node1 = $this->createNode([
       'type' => 'blog',
+      'field_taxonomy_terms' => [
+        $this->term1->id(),
+      ],
+      'status' => 1,
     ]);
+    $this->group->addContent($node1, 'group_node:blog');
 
     // Visit apps rss feed.
     $this->visitViaVsite("rss.xml?type=blog", $this->group);
-    $web->responseContains($node->get('title')->value);
-    $web->responseContains($node->toUrl()->setAbsolute()->toString());
+    $web->responseContains($node1->get('title')->value);
+    $web->responseContains($node1->toUrl()->setAbsolute()->toString());
+
+    $node2 = $this->createNode([
+      'type' => 'blog',
+      'field_taxonomy_terms' => [
+        $this->term2->id(),
+      ],
+      'status' => 1,
+    ]);
+    $this->group->addContent($node2, 'group_node:blog');
+
+    $this->visitViaVsite("rss.xml?term=" . $this->term1->id(), $this->group);
+    $web->responseContains($node1->get('title')->value);
+    $web->responseContains($node1->toUrl()->setAbsolute()->toString());
+    $this->visitViaVsite("rss.xml?term=" . $this->term2->id(), $this->group);
+    $web->responseContains($node2->get('title')->value);
+    $web->responseContains($node2->toUrl()->setAbsolute()->toString());
 
     // Create bibcite_reference.
     $title = $this->randomMachineName();
     $reference = $this->createReference([
       'html_title' => $title,
     ]);
+    $this->group->addContent($reference, 'group_entity:bibcite_reference');
 
     // Visit bibcite_reference rss feed.
-    $this->visitViaVsite("rss.xml?type=artwork", $this->group);
+    $this->visitViaVsite("rss.xml?type=publications", $this->group);
     $web->responseContains($title);
     $web->responseContains($reference->toUrl()->setAbsolute()->toString());
   }

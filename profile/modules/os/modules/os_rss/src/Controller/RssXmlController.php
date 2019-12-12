@@ -13,6 +13,7 @@ use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Controller\TitleResolver;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Path\AliasManager;
+use Drupal\vsite\Plugin\VsiteContextManager;
 
 /**
  * Controller that renders rss feed.
@@ -111,6 +112,13 @@ class RssXmlController extends ControllerBase {
   protected $baseUrl;
 
   /**
+   * The active vsite.
+   *
+   * @var \Drupal\group\Entity\GroupInterface
+   */
+  protected $activeGroup = NULL;
+
+  /**
    * The xml elements metadata used in RSS Feeds.
    */
   const DCELEMENTS = 'http://purl.org/dc/elements/1.1/';
@@ -132,14 +140,15 @@ class RssXmlController extends ControllerBase {
       $container->get('current_route_match'),
       $container->get('title_resolver'),
       $container->get('date.formatter'),
-      $container->get('path.alias_manager')
+      $container->get('path.alias_manager'),
+      $container->get('vsite.context_manager')
     );
   }
 
   /**
    * Constructor to get this object.
    */
-  public function __construct(AppLoader $app_loader, Serializer $serializer, RequestStack $request_stack, CurrentPathStack $current_path, CurrentRouteMatch $route_match, TitleResolver $title_resolver, DateFormatter $date_formatter, AliasManager $alias_manager) {
+  public function __construct(AppLoader $app_loader, Serializer $serializer, RequestStack $request_stack, CurrentPathStack $current_path, CurrentRouteMatch $route_match, TitleResolver $title_resolver, DateFormatter $date_formatter, AliasManager $alias_manager, VsiteContextManager $vsite_manager) {
     $this->appLoader = $app_loader;
     $this->serializer = $serializer;
     $this->requestStack = $request_stack;
@@ -152,6 +161,7 @@ class RssXmlController extends ControllerBase {
     $this->userStorage = $this->entityTypeManager()->getStorage('user');
     $this->nodeStorage = $this->entityTypeManager()->getStorage('node');
     $this->publicationStorage = $this->entityTypeManager()->getStorage('bibcite_reference');
+    $this->activeGroup = $vsite_manager->getActiveVsite();
   }
 
   /**
@@ -165,22 +175,24 @@ class RssXmlController extends ControllerBase {
     $request = $this->requestStack->getCurrentRequest();
     $this->baseUrl = $request->getSchemeAndHttpHost();
 
-    // Load all content of particular type.
-    $type = $request->query->get('type');
-    if ($type) {
-      $item = $this->prepareNodes($type);
-    }
+    if ($this->activeGroup) {
+      // Load all content of particular type.
+      $type = $request->query->get('type');
+      if ($type && $type != 'publications') {
+        $item = $this->prepareNodes($type);
+      }
 
-    // Load all terms of particular vocabulary.
-    $machine_name = $request->query->get('term');
-    if ($machine_name) {
-      $item = array_merge($item, $this->prepareTerms($machine_name));
-    }
+      // Load all terms of particular vocabulary.
+      $machine_name = $request->query->get('term');
+      if ($machine_name) {
+        $item = array_merge($item, $this->prepareTerms($machine_name));
+      }
 
-    // Return publication items required by RSS Feeds.
-    $pub_type = $request->query->get('type');
-    if ($pub_type) {
-      $item = array_merge($item, $this->preparePublications($pub_type));
+      // Return publication items required by RSS Feeds.
+      $pub_type = $request->query->get('type');
+      if ($pub_type && $type == 'publications') {
+        $item = array_merge($item, $this->preparePublications());
+      }
     }
 
     $path = $this->currentPath->getPath();
@@ -218,12 +230,42 @@ class RssXmlController extends ControllerBase {
    *   Array containing list of terms in that vocabulary.
    */
   private function prepareNodes($type) {
-    $item = [];
-    $values = [
-      'type' => $type,
-    ];
-    $nodes = $this->nodeStorage->loadByProperties($values);
 
+    $item = [];
+    $group_nodes = $this->activeGroup->getContent('group_node:' . $type);
+
+    foreach ($group_nodes as $group_node) {
+      $node = $group_node->getEntity();
+      $uid = $node->getOwnerId();
+      $user = $this->userStorage->load($uid);
+      $item[] = [
+        'title' => $node->get('title')->value,
+        'link' => $node->toUrl()->setAbsolute()->toString(),
+        'description' => htmlspecialchars($node->get('body')->value),
+        'pubdate' => $this->dateFormatter->format($node->get('created')->value, 'long'),
+        'dc:creator' => $user->get('name')->getValue()[0]['value'],
+        'guid' => $node->id() . " " . $this->t("at") . " " . $this->baseUrl,
+      ];
+    }
+
+    return $item;
+  }
+
+  /**
+   * Return an array of node items linked to term for RSS Feed.
+   *
+   * @param string $tid
+   *   Taxonomy term id.
+   *
+   * @return array
+   *   Array containing list of nodes linked to the term.
+   */
+  private function prepareTerms($tid) {
+    $item = [];
+
+    $nodes = $this->nodeStorage->loadByProperties([
+      'field_taxonomy_terms' => $tid,
+    ]);
     foreach ($nodes as $node) {
       $uid = $node->getOwnerId();
       $user = $this->userStorage->load($uid);
@@ -241,51 +283,18 @@ class RssXmlController extends ControllerBase {
   }
 
   /**
-   * Return an array of term items required by RSS Feed.
-   *
-   * @param string $machine_name
-   *   The vocabulary machine name.
-   *
-   * @return array
-   *   Array containing list of terms in that vocabulary.
-   */
-  private function prepareTerms($machine_name) {
-    $item = [];
-    $terms = $this->termStorage->loadTree($machine_name);
-    foreach ($terms as $term) {
-      $term_obj = $this->termStorage->load($term->tid);
-
-      $item[] = [
-        'title' => $term->name,
-        'link' => $term_obj->toUrl()->setAbsolute()->toString(),
-        'description' => htmlspecialchars($term_obj->get('description')->value),
-        'pubdate' => $this->dateFormatter->format($term->changed, 'long'),
-        'guid' => $term->tid . " " . $this->t("at") . " " . $this->baseUrl,
-      ];
-    }
-
-    return $item;
-  }
-
-  /**
    * Return an array of publication items required by RSS Feed.
    *
-   * @param string $pub_type
-   *   The publication type name.
-   *
    * @return array
    *   Array containing list of terms in that vocabulary.
    */
-  private function preparePublications($pub_type) {
+  private function preparePublications() {
     $item = [];
-    $values = [
-      'type' => $pub_type,
-    ];
-    $publications = $this->publicationStorage->loadByProperties($values);
 
-    foreach ($publications as $publication) {
+    $group_publications = $this->activeGroup->getContent('group_entity:bibcite_reference');
+    foreach ($group_publications as $group_publication) {
+      $publication = $group_publication->getEntity();
       $uid = $publication->get('uid')->getValue()[0]['target_id'];
-
       $user = $this->userStorage->load($uid);
       $item[] = [
         'title' => $publication->get('html_title')->value,
