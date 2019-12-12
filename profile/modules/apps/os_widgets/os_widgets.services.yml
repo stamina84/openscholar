@@ -20,4 +20,4 @@ services:
       - { name: access_check, applies_to: _add_slideshow_access_check }
   os_widgets.list_widgets_helper:
     class: Drupal\os_widgets\Helper\ListWidgetsHelper
-    arguments: ['@database', '@entity_type.manager']
+    arguments: ['@database', '@entity_type.manager', '@vsite.context_manager']

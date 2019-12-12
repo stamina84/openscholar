@@ -24,6 +24,7 @@ services:
       DB_NAME: $DB_NAME
       DB_DRIVER: $DB_DRIVER
       PHP_XDEBUG: $PHP_XDEBUG_ENABLED
+      PHP_DATE_TIMEZONE: "America/New_York"
     volumes:
       - ./:/var/www/html
 

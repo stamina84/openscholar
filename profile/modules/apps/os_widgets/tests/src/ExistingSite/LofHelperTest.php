@@ -157,4 +157,22 @@ class LofHelperTest extends OsWidgetsExistingSiteTestBase {
     $this->assertArrayHasKey('#pager_id', $build['render_content']['#pager']);
   }
 
+  /**
+   * Test Prepend purl helper method.
+   */
+  public function testPrependPurl(): void {
+    $vsite_alias = $this->group->get('path')->getValue()[0]['alias'];
+    // Test with no vsite in url.
+    $url = 'internal:/blog';
+    $url_raw = 'blog';
+    $result = $this->lofHelper->prependPurl($url, $url_raw);
+    $this->assertEquals("internal:$vsite_alias/blog", $result);
+
+    // Test with vsite in url.
+    $url = "internal:$vsite_alias/blog";
+    $url_raw = "$vsite_alias/blog";
+    $result = $this->lofHelper->prependPurl($url, $url_raw);
+    $this->assertEquals("internal:$vsite_alias/blog", $result);
+  }
+
 }
