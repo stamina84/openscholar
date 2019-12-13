@@ -132,3 +132,4 @@ permissions:
   - 'view bibcite_reference website revisions'
   - 'view control_panel in toolbar'
   - 'view media'
+  - 'view search api pages'

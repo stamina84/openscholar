@@ -17,3 +17,4 @@ permissions:
   - 'use text format title_filter'
   - 'view bibcite_reference'
   - 'view media'
+  - 'view search api pages'
