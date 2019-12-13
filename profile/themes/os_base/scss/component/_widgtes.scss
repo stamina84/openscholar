@@ -107,6 +107,7 @@
             width: 21px;
             position: absolute;
             left: 7px;
+            background-position: -23px -1028px;
           }
         }
         &.addthis {
@@ -225,6 +226,13 @@
           a {
             &:before {
               background-position: -20px -494px;
+            }
+          }
+        }
+        &.dataverse-dataset, &.dataverse-list, &.dataverse-search-box {
+          a {
+            &:before {
+              background-position: -23px -970px;
             }
           }
         }
