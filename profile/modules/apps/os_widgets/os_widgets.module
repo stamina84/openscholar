@@ -5,6 +5,7 @@
  * OS widgets.
  */
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\views\Plugin\views\filter\Bundle;
 use Drupal\block_content\BlockContentForm;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -26,6 +27,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\os_widgets\Helper\FollowMeWidgetHelper;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Serialization\Json;
+use Drupal\block_content\Entity\BlockContent;
 
 /**
  * Implements hook_library_info_alter().
@@ -514,6 +516,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
       }
       $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
       $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
+      array_unshift($form['actions']['submit']['#submit'], 'os_widgets_submit_more_url');
       break;
 
     case 'block_content_dataverse_list_form':
@@ -1268,12 +1271,6 @@ function os_widgets_form_block_content_list_of_files_edit_form_alter(&$form, For
  *   The form state.
  */
 function os_widgets_alter_list_of_files_block_form(array &$form, FormStateInterface $form_state) {
-  $form['#attached']['library'][] = 'os_widgets/lofwidgetForm';
-
-  // Hide revision information from widget form.
-  // TODO Remove when it is implemented for all widgets collectively.
-  $form['revision_information']['#access'] = FALSE;
-
   $form['#attached']['library'][] = 'os_widgets/lofWidgetForm';
 
   // Remove None option from select lists.
@@ -1370,4 +1367,73 @@ function os_widgets_alter_list_of_files_block_form(array &$form, FormStateInterf
   }
   $form['field_url_for_the_more_link']['widget']['0']['title']['#default_value'] = t('More');
   $form['field_url_for_the_more_link']['widget']['0']['title']['#title'] = t('Label of the more link (default: More)');
+  array_unshift($form['actions']['submit']['#submit'], 'os_widgets_submit_more_url');
+}
+
+/**
+ * Common submit handler for all widgets which need to handle show more link.
+ *
+ * @param array $form
+ *   Form itself.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Form state.
+ */
+function os_widgets_submit_more_url(array $form, FormStateInterface $form_state) {
+  $url_field = $form_state->getValue('field_url_for_the_more_link');
+  $url_field = array_shift($url_field);
+  $uri = $url_field['uri'];
+
+  // Don't do anything if external url.
+  if (UrlHelper::isExternal($uri)) {
+    return;
+  }
+
+  // If purl attached then do not do anything if not prepend current vsite purl.
+  // We are not doing any additional validations as it will be handled by url
+  // field's element_validate and we can only prepend current vsite purl to any
+  // url entered if it does not carry active/curent vsite's purl.
+  $uri_raw = str_replace('internal:/', '', $uri);
+  $uri_raw = str_replace('entity:', '', $uri_raw);
+  $uri = \Drupal::service('os_widgets.list_widgets_helper')->prependPurl($uri, $uri_raw);
+
+  $form_state->setValue('field_url_for_the_more_link', [[
+    'uri' => $uri,
+    'title' => $url_field['title'],
+    'attributes' => $url_field['attributes'],
+  ],
+  ]
+  );
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ *
+ * Deleting the block_ids stored in field_widget_collection field
+ * is implemented considering that block is deleted from a vSite.
+ */
+function os_widgets_block_delete(EntityInterface $entity) {
+  if (strpos($entity->id(), 'block_content|') !== FALSE) {
+    $block_uuid = str_replace('block_content|', '', $entity->id());
+    // Fetching bid as its replaced with UUID in OsWidgetsBlockRepository.php.
+    $block = \Drupal::service('entity.repository')->loadEntityByUuid('block_content', $block_uuid);
+    $bid = $block->id();
+    // EntityQuery to fetch all blocks that are referencing above block.
+    $query = Drupal::service('entity.query')
+      ->get('block_content')
+      ->condition('field_widget_collection', $bid);
+    $entity_ids = $query->execute();
+    if (!empty($entity_ids)) {
+      foreach ($entity_ids as $entity_id) {
+        $block = BlockContent::load($entity_id);
+        $tabs = $block->get('field_widget_collection')->getValue();
+        foreach ($tabs as $key => $targets) {
+          if ($targets['target_id'] == $bid) {
+            unset($tabs[$key]);
+          }
+        }
+        $block->set('field_widget_collection', $tabs);
+        $block->save();
+      }
+    }
+  }
 }

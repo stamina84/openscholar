@@ -11,6 +11,7 @@ use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
+use Drupal\vsite\Plugin\VsiteContextManager;
 
 /**
  * Helper class for merging views with different entity types.
@@ -34,16 +35,26 @@ class ListWidgetsHelper implements ListWidgetsHelperInterface {
   protected $entityTypeManager;
 
   /**
+   * Vsite Manager service.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManager
+   */
+  protected $vsiteManager;
+
+  /**
    * ListOfPostsWidgetHelper constructor.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   Connection instance.
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_manager
    *   Entity type manager instance.
+   * @param \Drupal\vsite\Plugin\VsiteContextManager $vsite_manager
+   *   Vsite Manager instance.
    */
-  public function __construct(Connection $database, EntityTypeManager $entity_manager) {
+  public function __construct(Connection $database, EntityTypeManager $entity_manager, VsiteContextManager $vsite_manager) {
     $this->connection = $database;
     $this->entityTypeManager = $entity_manager;
+    $this->vsiteManager = $vsite_manager;
   }
 
   /**
@@ -223,6 +234,22 @@ class ListWidgetsHelper implements ListWidgetsHelperInterface {
       '#heading_id' => $header_id,
       '#pager_id' => $pager_id,
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prependPurl(string $value, string $uri_raw) : string {
+    $purl = $this->vsiteManager->getActivePurl();
+    // If vsite prefix is entered, don't change it.
+    $parts = explode('/', $value);
+    if ($parts && in_array($purl, $parts)) {
+      return $value;
+    }
+    else {
+      $url = "internal:/$purl/$uri_raw";
+    }
+    return $url;
   }
 
   /**

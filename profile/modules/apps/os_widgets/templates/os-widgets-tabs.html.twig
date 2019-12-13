@@ -10,12 +10,12 @@
  */
 #}
 <ul class="nav nav-tabs" role="tablist">
-  {% for key,content in contents %}
+  {% for key, content in contents %}
     {% set activeClass = ''  %}
     {% if loop.first %}
       {% set activeClass = 'active'  %}
     {% endif %}
-      <li class="{{ activeClass }}" role="presentation"><a data-toggle="tab" href="#tab-{{ key }}" aria-controls="tab-{{ key }}">{{ content.section_title }}</a></li>
+      <li class="{{ activeClass }}" role="tab"><a data-toggle="tab" data-target="#tab-{{ key }}" aria-controls="tab-{{ key }}">{{ content.section_title }}</a></li>
   {% endfor %}
 </ul>
 <div class="tab-content">

@@ -17,16 +17,18 @@
       {% for url in apps %}
         <li>{{url}}</li>
       {% endfor %}
-      {% for url in publications %}
-        <li>{{url}}</li>
-      {% endfor %}
     </ul>
   </div>
   <h2 class="feed-title">{{ "Categories"|t }}</h2>
   <div class="item-list">
     <ul class="feed-items">
-      {% for url in categories %}
-        <li>{{url}}</li>
+      {% for vocabulary,terms in categories %}
+      <h2 class="feed-title">{{ vocabulary }}</h2>
+        <ul>
+          {% for url in terms %}
+            <li>{{url}}</li>
+          {% endfor %}
+        </ul>
       {% endfor %}
     </ul>
   </div>

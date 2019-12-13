@@ -61,6 +61,21 @@ function os_classes_form_node_form_alter(
 }
 
 /**
+ * Implements hook_views_data_alter().
+ */
+function os_classes_views_data_alter(array &$data) {
+  $data['node__field_semester']['semester_order'] = [
+    'title' => t("Semester order"),
+    'group' => t('Content'),
+    'help' => t('Sort semester by custom value mapping.'),
+    'sort' => [
+      'field' => 'field_semester_value',
+      'id' => 'os_classes_class_semester_order',
+    ],
+  ];
+}
+
+/**
  * Validate form.
  *
  * @param array $form

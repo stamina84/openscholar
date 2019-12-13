@@ -13,7 +13,6 @@ function os_rss_theme($existing, $type, $theme, $path) {
     'os_rss_page' => [
       'variables' => [
         'apps' => '',
-        'publications' => '',
         'categories' => '',
       ],
     ],

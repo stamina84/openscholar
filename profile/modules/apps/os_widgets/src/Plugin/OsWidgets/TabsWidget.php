@@ -22,6 +22,7 @@ class TabsWidget extends OsWidgetsBase implements OsWidgetsInterface {
   public function buildBlock(&$build, $block_content) {
     $contents = [];
     $add_widgets = $block_content->get('field_widget_collection')->getValue();
+    $count = 0;
     foreach ($add_widgets as $widget) {
       $bid = $widget['target_id'];
       $block = BlockContent::load($bid);
@@ -32,11 +33,12 @@ class TabsWidget extends OsWidgetsBase implements OsWidgetsInterface {
       ];
       $section_title = $widget['section_title'];
 
-      $contents[$bid] = [
+      $contents[$count . '-' . $bid] = [
         'widget' => $render,
         'contextual_link' => $contextual_link_placeholder,
         'section_title' => $section_title,
       ];
+      $count++;
     }
 
     $build['tabs'] = [

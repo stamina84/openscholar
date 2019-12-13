@@ -24,8 +24,8 @@ content:
     weight: 1
     label: visually_hidden
     settings:
-      max_width: 100%
-      max_height: '701'
+      max_width: '560'
+      max_height: '315'
     third_party_settings: {  }
     type: 'media:embed'
     region: content

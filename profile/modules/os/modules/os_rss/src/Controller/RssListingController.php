@@ -54,37 +54,37 @@ class RssListingController extends ControllerBase {
 
     // Get all apps accessible to user.
     $apps = $this->appLoader->getAppsForUser($this->currentUser());
-
-    $content_types = [];
     foreach ($apps as $app) {
+      if ($app['entityType'] === 'media') {
+        continue;
+      }
       $title = (string) $app['title'];
-      $url = Url::fromRoute('os_rss.rss_xml');
-      $url->setOptions(['query' => ['type' => $app['id']]]);
-      $content_types[] = Link::fromTextAndUrl($title, $url)->toString();
+      $bundle = $app['entityType'] === 'bibcite_reference' ? 'publications' : $app['bundle'][0];
+      $options[$bundle] = $title;
     }
 
-    // Load all bibcite_reference on the site.
-    $bundles = $this->bundleInfo->getBundleInfo('bibcite_reference');
-
-    $bibcite_reference = [];
-    foreach ($bundles as $bundle => $label) {
+    $content_types = [];
+    foreach ($options as $bundle => $title) {
       $url = Url::fromRoute('os_rss.rss_xml');
       $url->setOptions(['query' => ['type' => $bundle]]);
-      $bibcite_reference[] = Link::fromTextAndUrl($label['label'], $url)->toString();
+      $content_types[] = Link::fromTextAndUrl($title, $url)->toString();
     }
 
     // Load all vocalbulary from the site.
     $vocabularies = Vocabulary::loadMultiple();
-    foreach ($vocabularies as $vocablary) {
-      $url = Url::fromRoute('os_rss.rss_xml');
-      $url->setOptions(['query' => ['term' => $vocablary->id()]]);
-      $categories[] = Link::fromTextAndUrl($vocablary->get('name'), $url)->toString();
+    foreach ($vocabularies as $vocabulary) {
+      $vname = $vocabulary->get('name');
+      $terms = $this->entityTypeManager()->getStorage('taxonomy_term')->loadTree($vocabulary->id());
+      foreach ($terms as $term) {
+        $url = Url::fromRoute('os_rss.rss_xml');
+        $url->setOptions(['query' => ['term' => $term->tid]]);
+        $categories[$vname][] = Link::fromTextAndUrl($term->name, $url)->toString();
+      }
     }
 
     $build = [
       '#theme' => 'os_rss_page',
       '#apps' => $content_types,
-      '#publications' => $bibcite_reference,
       '#categories' => $categories,
     ];
     return $build;

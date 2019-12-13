@@ -22,7 +22,7 @@
       {% endif %}
       <div class="panel-heading" role="tab">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ key }}" aria-controls="#collapse-{{ key }}">{{ content.section_title }} <i class="more-less glyphicon {{icon}}"></i> </a>
+          <a data-toggle="collapse" data-parent="#accordion-{{ bid }}" data-target="#collapse-{{ key }}" aria-controls="#collapse-{{ key }}">{{ content.section_title }} <i class="more-less glyphicon {{icon}}"></i> </a>
         </h4>
       </div>
       <div id="collapse-{{ key }}" class="panel-collapse collapse {{ collapseAll }}" role="tabpanel">
