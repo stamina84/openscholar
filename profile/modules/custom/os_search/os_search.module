@@ -15,13 +15,32 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
   $group_context = \Drupal::service('vsite.context_manager');
   $group = $group_context->getActiveVsite();
 
+  // Load grouped content if search belongs to vsite.
   if ($group) {
     $group_id = $group->id();
     $query->addCondition('custom_search_group', $group_id, '=');
   }
 
+  // Add unreal condition to remove default search results from global search.
   if (!$group && !$query->getKeys()) {
     $query->addCondition('custom_search_group', 0, '=');
+  }
+
+  // Allow enabled Apps only.
+  $app_loader = \Drupal::service('os_app_access.app_loader');
+  $current_user = \Drupal::currentUser();
+  $enabled_apps = $app_loader->getAppsForUser($current_user);
+  $enabled_apps_list = [];
+
+  foreach ($enabled_apps as $enabled_app) {
+    if (isset($enabled_app['bundle'])) {
+      $enabled_apps_list[] = $enabled_app['bundle'][0];
+    }
+  }
+
+  // TODO: (Add App to index, 'skipped' for entities without attached apps).
+  if ($enabled_apps_list) {
+    $query->addCondition('content_type', $enabled_apps_list, 'IN');
   }
 
 }
