@@ -26,6 +26,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.body
+  content_type:
+    label: 'Content type'
+    datasource_id: 'entity:node'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - node
   created:
     label: 'Authored on'
     datasource_id: 'entity:node'
@@ -34,14 +42,6 @@ field_settings:
     dependencies:
       module:
         - node
-  created_1:
-    label: 'Authored on'
-    datasource_id: 'entity:bibcite_reference'
-    property_path: created
-    type: date
-    dependencies:
-      module:
-        - os_publications
   custom_search_group:
     label: 'Group (text)'
     property_path: custom_search_group
@@ -54,6 +54,38 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_year_offered
+  reference_created:
+    label: 'Authored on'
+    datasource_id: 'entity:bibcite_reference'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - os_publications
+  reference_title:
+    label: Title
+    datasource_id: 'entity:bibcite_reference'
+    property_path: title
+    type: solr_text_spellcheck
+    dependencies:
+      module:
+        - bibcite_entity
+  reference_type:
+    label: 'Reference type'
+    datasource_id: 'entity:bibcite_reference'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - bibcite_entity
+  status:
+    label: status
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    dependencies:
+      module:
+        - node
   title:
     label: Title
     datasource_id: 'entity:node'
@@ -62,30 +94,14 @@ field_settings:
     dependencies:
       module:
         - node
-  title_1:
-    label: Title
-    datasource_id: 'entity:bibcite_reference'
-    property_path: title
-    type: solr_text_spellcheck
-    dependencies:
-      module:
-        - bibcite_entity
-  type:
-    label: 'Content type'
+  uid:
+    label: uid
     datasource_id: 'entity:node'
-    property_path: type
-    type: string
+    property_path: uid
+    type: integer
     dependencies:
       module:
         - node
-  type_1:
-    label: 'Reference type'
-    datasource_id: 'entity:bibcite_reference'
-    property_path: type
-    type: string
-    dependencies:
-      module:
-        - bibcite_entity
 datasource_settings:
   'entity:bibcite_reference':
     bundles:
@@ -117,11 +133,11 @@ processor_settings:
     all_fields: true
     fields:
       - body
+      - content_type
       - field_year_offered
+      - reference_title
+      - reference_type
       - title
-      - title_1
-      - type
-      - type_1
     title: true
     alt: true
     tags:
@@ -137,22 +153,24 @@ processor_settings:
     all_fields: true
     fields:
       - body
+      - content_type
       - field_year_offered
+      - reference_title
+      - reference_type
       - title
-      - title_1
-      - type
-      - type_1
     weights:
       preprocess_index: -20
       preprocess_query: -20
   language_with_fallback: {  }
   rendered_item: {  }
-  solr_date_range: {  }
+  solr_date_range:
+    weights:
+      preprocess_index: 0
   stemmer:
     all_fields: true
     fields:
       - body
-      - title_1
+      - reference_title
     exceptions:
       mexican: mexic
       texan: texa
@@ -163,7 +181,7 @@ processor_settings:
     all_fields: true
     fields:
       - body
-      - title_1
+      - reference_title
     spaces: ''
     overlap_cjk: 1
     minimum_word_size: '3'
