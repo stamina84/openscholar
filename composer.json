@@ -218,6 +218,7 @@
         "drupal/robotstxt": "^1.2",
         "drupal/search_api": "^1.15",
         "drupal/search_api_page": "^1.0@beta",
+        "drupal/search_api_spellcheck": "^3.0@alpha",
         "drupal/shorten": "2.x-dev",
         "drupal/slick": "^2.0",
         "drupal/slick_media": "^2.0",

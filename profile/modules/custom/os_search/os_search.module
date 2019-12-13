@@ -12,6 +12,16 @@ use Drupal\search_api\Query\QueryInterface;
  */
 function os_search_search_api_query_alter(QueryInterface &$query) {
   // TODO: Get Group ID dynamically.
-  $group_id = (int) rand(1, 2);
-  $query->addCondition('custom_search_group', $group_id, '=');
+  $group_context = \Drupal::service('vsite.context_manager');
+  $group = $group_context->getActiveVsite();
+
+  if ($group) {
+    $group_id = $group->id();
+    $query->addCondition('custom_search_group', $group_id, '=');
+  }
+
+  if (!$group && !$query->getKeys()) {
+    $query->addCondition('custom_search_group', 0, '=');
+  }
+
 }
