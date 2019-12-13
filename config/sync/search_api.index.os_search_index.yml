@@ -3,10 +3,12 @@ langcode: en
 status: true
 dependencies:
   module:
+    - os_publications
+    - bibcite_entity
+    - search_api_solr
     - node
     - search_api
     - os_search
-    - bibcite_entity
   config:
     - field.storage.node.body
     - field.storage.node.field_year_offered
@@ -32,6 +34,14 @@ field_settings:
     dependencies:
       module:
         - node
+  created_1:
+    label: 'Authored on'
+    datasource_id: 'entity:bibcite_reference'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - os_publications
   custom_search_group:
     label: 'Group (text)'
     property_path: custom_search_group
@@ -52,6 +62,14 @@ field_settings:
     dependencies:
       module:
         - node
+  title_1:
+    label: Title
+    datasource_id: 'entity:bibcite_reference'
+    property_path: title
+    type: solr_text_spellcheck
+    dependencies:
+      module:
+        - bibcite_entity
   type:
     label: 'Content type'
     datasource_id: 'entity:node'
@@ -60,6 +78,14 @@ field_settings:
     dependencies:
       module:
         - node
+  type_1:
+    label: 'Reference type'
+    datasource_id: 'entity:bibcite_reference'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - bibcite_entity
 datasource_settings:
   'entity:bibcite_reference':
     bundles:
@@ -93,7 +119,9 @@ processor_settings:
       - body
       - field_year_offered
       - title
+      - title_1
       - type
+      - type_1
     title: true
     alt: true
     tags:
@@ -111,16 +139,20 @@ processor_settings:
       - body
       - field_year_offered
       - title
+      - title_1
       - type
+      - type_1
     weights:
       preprocess_index: -20
       preprocess_query: -20
   language_with_fallback: {  }
   rendered_item: {  }
+  solr_date_range: {  }
   stemmer:
     all_fields: true
     fields:
       - body
+      - title_1
     exceptions:
       mexican: mexic
       texan: texa
@@ -131,6 +163,7 @@ processor_settings:
     all_fields: true
     fields:
       - body
+      - title_1
     spaces: ''
     overlap_cjk: 1
     minimum_word_size: '3'
