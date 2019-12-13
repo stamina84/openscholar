@@ -49,15 +49,6 @@ services:
         soft: -1
         hard: -1
 
-  kibana:
-    image: wodby/kibana:latest
-    depends_on:
-      - elasticsearch
-    labels:
-      - 'traefik.backend=${PROJECT_NAME}_kibana'
-      - 'traefik.port=5601'
-      - 'traefik.frontend.rule=Host:kibana.php.docker.localhost'
-
   apache:
     image: wodby/apache:2.4
     container_name: "${PROJECT_NAME}_apache"
