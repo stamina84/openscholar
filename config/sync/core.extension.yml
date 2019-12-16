@@ -59,7 +59,6 @@ module:
   entity: 0
   entity_reference: 0
   entity_reference_revisions: 0
-  facets: 0
   fakeobjects: 0
   field: 0
   field_layout: 0
@@ -154,8 +153,6 @@ module:
   robotstxt: 0
   search_api: 0
   search_api_page: 0
-  search_api_solr: 0
-  search_api_spellcheck: 0
   serialization: 0
   shorten: 0
   slick: 0
