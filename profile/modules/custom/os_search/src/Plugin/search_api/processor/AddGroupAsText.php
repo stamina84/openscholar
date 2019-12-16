@@ -34,7 +34,7 @@ class AddGroupAsText extends ProcessorPluginBase {
       $definition = [
         'label' => $this->t('Group (text)'),
         'description' => $this->t('Group for entity.'),
-        'type' => 'string',
+        'type' => 'integer',
         'is_list' => FALSE,
         'processor_id' => $this->getPluginId(),
       ];
