@@ -4,6 +4,8 @@ namespace Drupal\Tests\openscholar\Traits;
 
 use DateInterval;
 use DateTime;
+use DateTimeZone;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -77,7 +79,7 @@ trait WidgetsTestTrait {
   public function createVsiteEvents(GroupInterface $vsite) : array {
     // For case when 30 minutes have not passed.
     $timezone = drupal_get_user_timezone();
-    $new_datetime = new DateTime('now', new \DateTimeZone($timezone));
+    $new_datetime = new DrupalDateTime('now', new DateTimeZone('GMT'));
     $date_interval = new DateInterval('PT25M');
     $date_interval->invert = 1;
     $new_datetime->add($date_interval);
@@ -94,7 +96,7 @@ trait WidgetsTestTrait {
     ]);
 
     // For case when 30 minutes have passed.
-    $new_datetime = new DateTime('now', new \DateTimeZone($timezone));
+    $new_datetime = new DrupalDateTime('now', new DateTimeZone('GMT'));
     $date_interval = new DateInterval('PT31M');
     $date_interval->invert = 1;
     $new_datetime->add($date_interval);
@@ -111,12 +113,12 @@ trait WidgetsTestTrait {
     ]);
 
     // For when End of Day has passed.
-    $new_datetime = new DateTime('now', new \DateTimeZone($timezone));
+    $new_datetime = new DrupalDateTime('now', new DateTimeZone('GMT'));
     $date_interval = new DateInterval('P1D');
     $date_interval->invert = 1;
     $new_datetime->add($date_interval);
     $date = $new_datetime->format("Y-m-d\TH:i:s");
-    $end_datetime = new DateTime('now', new \DateTimeZone($timezone));
+    $end_datetime = new DrupalDateTime('now', new \DateTimeZone('GMT'));
     $end_date = $end_datetime->add(new DateInterval('P1D'))->format("Y-m-d\TH:i:s");
     $eventNode3 = $this->createNode([
       'type' => 'events',
