@@ -16,4 +16,5 @@ permissions:
   - 'use text format filtered_html'
   - 'use text format title_filter'
   - 'view bibcite_reference'
+  - 'view disqus comments'
   - 'view media'

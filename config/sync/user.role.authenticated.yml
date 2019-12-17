@@ -131,4 +131,5 @@ permissions:
   - 'view bibcite_reference web_service revisions'
   - 'view bibcite_reference website revisions'
   - 'view control_panel in toolbar'
+  - 'view disqus comments'
   - 'view media'

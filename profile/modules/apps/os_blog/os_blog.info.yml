@@ -19,3 +19,4 @@ dependencies:
   - drupal:user
   - drupal:views
   - drupal:vsite
+  - drupal:disqus
