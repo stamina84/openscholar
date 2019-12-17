@@ -58,7 +58,6 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
  *
  * @param Drupal\search_api\Query\QueryInterface $query
  *   Search api query to be altered.
- *
  * @param string $sort
  *   Url sort argument.
  */
