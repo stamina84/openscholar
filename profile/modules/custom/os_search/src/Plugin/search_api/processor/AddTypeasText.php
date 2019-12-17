@@ -8,12 +8,12 @@ use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
 
 /**
- * Adds the common title to the indexed data.
+ * Adds the common type to the indexed data.
  *
  * @SearchApiProcessor(
- *   id = "add_title_as_text",
- *   label = @Translation("Custom Title (text) field"),
- *   description = @Translation("Adds common title for all entites to the indexed data."),
+ *   id = "add_type_as_text",
+ *   label = @Translation("Custom Entity Type (text) field"),
+ *   description = @Translation("Adds common type for all entites to the indexed data."),
  *   stages = {
  *     "add_properties" = 0,
  *   },
@@ -21,7 +21,7 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *   hidden = true,
  * )
  */
-class AddTitleasText extends ProcessorPluginBase {
+class AddTypeasText extends ProcessorPluginBase {
 
   /**
    * {@inheritdoc}
@@ -31,13 +31,13 @@ class AddTitleasText extends ProcessorPluginBase {
 
     if (!$datasource) {
       $definition = [
-        'label' => $this->t('Custom Title (text)'),
-        'description' => $this->t('Common Title for all entities.'),
+        'label' => $this->t('Custom Type (text)'),
+        'description' => $this->t('Common Type for all entities.'),
         'type' => 'string',
         'is_list' => FALSE,
         'processor_id' => $this->getPluginId(),
       ];
-      $properties['custom_title'] = new ProcessorProperty($definition);
+      $properties['custom_type'] = new ProcessorProperty($definition);
     }
 
     return $properties;
@@ -51,19 +51,20 @@ class AddTitleasText extends ProcessorPluginBase {
     $object = $item->getOriginalObject()->getValue();
     $custom_bundle = $object->getEntityTypeId();
 
-    $custom_title = '';
+    $custom_type = '';
+    // Get bundle or type based on Entity Type.
     if ($custom_bundle == 'node') {
-      $custom_title = $object->getTitle();
+      $custom_type = $object->bundle();
     }
     if ($custom_bundle == 'bibcite_reference') {
-      $custom_title = $object->get('title')->getValue()[0]['value'];
+      $custom_type = $object->get('type')->getValue()[0]['target_id'];
     }
 
     if ($custom_bundle) {
-      $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_title');
+      $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_type');
 
       foreach ($fields as $field) {
-        $field->addValue($custom_title);
+        $field->addValue($custom_type);
       }
     }
   }
