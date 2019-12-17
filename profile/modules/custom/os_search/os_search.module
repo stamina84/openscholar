@@ -45,4 +45,35 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
     $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
   }
 
+  // Get the sort url parameter.
+  $sort = \Drupal::request()->query->get('sort');
+  if ($sort) {
+    handle_sort($query, $sort);
+  }
+
+}
+
+/**
+ * Handles search sort parameters.
+ *
+ * @param Drupal\search_api\Query\QueryInterface $query
+ *   Search api query to be altered.
+ *
+ * @param string $sort
+ *   Url sort argument.
+ */
+function handle_sort(QueryInterface &$query, $sort) {
+
+  switch ($sort) {
+    case 'title-asc':
+      $query->sort('custom_title');
+      break;
+
+    case 'title-desc':
+      $query->sort('custom_title', 'DESC');
+      break;
+
+    default:
+      break;
+  }
 }
