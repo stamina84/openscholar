@@ -14,6 +14,38 @@ use Drupal\views\Entity\View;
 class BlogTest extends OsExistingSiteJavascriptTestBase {
 
   /**
+   * Group administrator.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $groupAdmin;
+
+  /**
+   * Group member.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $groupMember;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->vsiteContextManager = $this->container->get('vsite.context_manager');
+    $this->configFactory = $this->container->get('config.factory');
+    $this->vsiteContextManager->activateVsite($this->group);
+    $this->configFactory->getEditable('os_blog.settings')
+      ->set('comment_type', 'disqus_comments')
+      ->set('disqus_shortname', 'testing-disqus')
+      ->save();
+    $this->groupAdmin = $this->createUser();
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
+    $this->groupMember = $this->createUser();
+    $this->addGroupEnhancedMember($this->groupMember, $this->group);
+  }
+
+  /**
    * Tests the node add blog form.
    */
   public function testBlogAddForm(): void {
@@ -137,6 +169,41 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->pageTextNotContains($blog_2010->getTitle());
     $web_assert->pageTextNotContains($blog_2011_03->getTitle());
     $web_assert->pageTextNotContains($blog->getTitle());
+  }
+
+  /**
+   * Test if vsite Disqus domain show on blog page.
+   */
+  public function testDisqusOnBlogPage() {
+    $this->drupalLogin($this->groupMember);
+    // Creating blog type node.
+    $title = 'Disqus comments testing';
+    $this->visitViaVsite('node/add/blog', $this->group);
+    $this->getSession()->getPage()->fillField('title[0][value]', $title);
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
+    // Asserting disqus comments iframe added to blog.
+    $this->assertSession()->waitForElementVisible('css', '.field--name-field-disqus-comments');
+    $this->assertSession()->waitForElementVisible('css', 'iframe');
+    $this->assertSession()->elementAttributeContains('css', 'iframe', 'src', 'testing-disqus');
+  }
+
+  /**
+   * Test if vsite Disqus domain show on blog page.
+   */
+  public function testNoDisqusOnBlogPage() {
+    $this->configFactory->getEditable('os_blog.settings')
+      ->set('comment_type', 'no_comments')
+      ->save();
+    $this->drupalLogin($this->groupMember);
+    // Creating blog type node.
+    $title = 'Without Disqus comments';
+    $this->visitViaVsite('node/add/blog', $this->group);
+    $this->getSession()->getPage()->fillField('title[0][value]', $title);
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
+    // Asserting no disqus comments are added tp blog page.
+    $this->assertSession()->assertNoElementAfterWait('css', '.field--name-field-disqus-comments');
   }
 
 }

@@ -5,11 +5,13 @@ dependencies:
   config:
     - field.field.node.blog.body
     - field.field.node.blog.field_attached_media
+    - field.field.node.blog.field_disqus_comments
     - field.field.node.blog.field_taxonomy_terms
     - image.style.gallery
     - node.type.blog
   module:
     - cp_taxonomy
+    - disqus
     - os_media
     - text
     - user
@@ -112,6 +114,13 @@ content:
       id: ''
       overlay: ''
     third_party_settings: {  }
+    region: content
+  field_disqus_comments:
+    weight: 4
+    label: visually_hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: disqus_comment
     region: content
   field_taxonomy_terms:
     weight: 2

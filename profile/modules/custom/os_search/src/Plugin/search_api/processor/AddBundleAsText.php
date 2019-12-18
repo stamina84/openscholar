@@ -8,7 +8,7 @@ use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
 
 /**
- * Adds the item's Group to the indexed data.
+ * Adds the item's Bundle to the indexed data.
  *
  * @SearchApiProcessor(
  *   id = "add_bundle_as_text",

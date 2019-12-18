@@ -18,3 +18,8 @@ services:
     arguments: ['@vsite.context_manager']
     tags:
       - { name: group_permission_calculator, priority: -200 }
+
+  cp_users.custom_compact_perm:
+    class: Drupal\cp_users\Routing\CpUserRouteSubscriber
+    tags:
+      - { name: event_subscriber }
