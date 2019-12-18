@@ -1,0 +1,23 @@
+uuid: 9a65b7d8-f759-48df-a052-33f5f73e9357
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.search_sort
+    - field.field.block_content.search_sort.field_widget_title
+id: block_content.search_sort.default
+targetEntityType: block_content
+bundle: search_sort
+mode: default
+content:
+  field_widget_title:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true
