@@ -246,3 +246,37 @@ function cp_users_preprocess_menu(&$variables) {
     ]);
   }
 }
+
+/**
+ * Implements hook_cron().
+ *
+ * Removes expired support user members.
+ */
+function cp_users_cron() {
+
+  // Get support user duration config.
+  $duration = \Drupal::config('cp_users.settings')->get('support_user_duration');
+
+  $request_time = \Drupal::time()->getRequestTime();
+  $expiration_time = strtotime('-' . $duration, $request_time);
+
+  $group_types = \Drupal::entityTypeManager()->getStorage('group_type')->loadMultiple();
+  $group_storage = \Drupal::entityTypeManager()->getStorage('group_content');
+  foreach ($group_types as $group_type) {
+
+    // Fetch Expired Support user member.
+    $query = \Drupal::entityQuery('group_content');
+    $query->condition('type', $group_type->id() . '-group_membership');
+    $query->condition('group_roles', $group_type->id() . '-support_user');
+    $query->condition('created', $expiration_time, '<');
+    $ids = $query->execute();
+
+    $group_contents = $group_storage->loadMultiple($ids);
+    foreach ($group_contents as $group_content) {
+      $group = $group_content->getGroup();
+      $user = $group_content->getEntity();
+      $group->removeMember($user);
+    }
+  }
+
+}

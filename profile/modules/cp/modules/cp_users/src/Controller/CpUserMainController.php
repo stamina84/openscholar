@@ -22,6 +22,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Component\Datetime\Time;
 
 /**
  * Controller for the cp_users page.
@@ -66,6 +69,20 @@ class CpUserMainController extends ControllerBase {
   protected $groupMembershipLoader;
 
   /**
+   * Config factory service.
+   *
+   * @var Drupal\Core\Config\ConfigFactory
+   */
+  protected $config;
+
+  /**
+   * Time service.
+   *
+   * @var Drupal\Component\Datetime\Time
+   */
+  protected $time;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -74,7 +91,9 @@ class CpUserMainController extends ControllerBase {
       $container->get('entity_type.manager'),
       $container->get('cp_users.change_ownership_access_check'),
       $container->get('cp_users.cp_users_helper'),
-      $container->get('group.membership_loader')
+      $container->get('group.membership_loader'),
+      $container->get('config.factory'),
+      $container->get('datetime.time')
     );
   }
 
@@ -91,13 +110,19 @@ class CpUserMainController extends ControllerBase {
    *   CpUsers helper service.
    * @param \Drupal\group\GroupMembershipLoaderInterface $group_membership_loader
    *   Group membership loader.
+   * @param \Drupal\Core\Config\ConfigFactory $config
+   *   Config factory.
+   * @param Drupal\Component\Datetime\Time $time
+   *   Time Service.
    */
-  public function __construct(VsiteContextManagerInterface $vsiteContextManager, EntityTypeManagerInterface $entityTypeManager, ChangeOwnershipAccessCheck $change_ownership_access_check, CpUsersHelperInterface $cp_users_helper, GroupMembershipLoaderInterface $group_membership_loader) {
+  public function __construct(VsiteContextManagerInterface $vsiteContextManager, EntityTypeManagerInterface $entityTypeManager, ChangeOwnershipAccessCheck $change_ownership_access_check, CpUsersHelperInterface $cp_users_helper, GroupMembershipLoaderInterface $group_membership_loader, ConfigFactory $config, Time $time) {
     $this->vsiteContextManager = $vsiteContextManager;
     $this->entityTypeManager = $entityTypeManager;
     $this->changeOwnershipAccessChecker = $change_ownership_access_check;
     $this->cpUsersHelper = $cp_users_helper;
     $this->groupMembershipLoader = $group_membership_loader;
+    $this->config = $config;
+    $this->time = $time;
   }
 
   /**
@@ -125,6 +150,17 @@ class CpUserMainController extends ControllerBase {
 
       if ($can_change_ownership && $is_vsite_owner) {
         $role_link = Link::createFromRoute('Change Owner', 'cp.users.owner', ['user' => $u->id()], ['attributes' => ['class' => ['use-ajax']]])->toString();
+      }
+      elseif (array_key_exists($group->getGroupType()->id() . '-support_user', $roles)) {
+        $duration = $this->config->getEditable('cp_users.settings')->get('support_user_duration');
+
+        $request_time = $this->time->getRequestTime();
+        $member_created = $group->getMember($u)->getGroupContent()->get('created')->value;
+        $expire_timestamp = strtotime('+' . $duration, $member_created);
+        $expiration_day = DateTimePlus::createFromTimestamp($expire_timestamp);
+        $current_day = DateTimePlus::createFromTimestamp($request_time);
+        $diff = $current_day->diff($expiration_day);
+        $role_link = $this->t('No longer member in @diff days', ['@diff' => ($diff->d + 1)]);
       }
       elseif (!$is_vsite_owner && $group->hasPermission('manage cp roles', $this->currentUser())) {
         $role_link = Link::createFromRoute($this->t('Change Role'), 'cp_users.role.change', ['user' => $u->id()], [
