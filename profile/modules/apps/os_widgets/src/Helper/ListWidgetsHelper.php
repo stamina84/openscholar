@@ -2,6 +2,7 @@
 
 namespace Drupal\os_widgets\Helper;
 
+use DateInterval;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -369,6 +370,11 @@ class ListWidgetsHelper implements ListWidgetsHelperInterface {
       foreach ($eventResults as $eventNode) {
         $startDateTime = new DrupalDateTime($eventNode->field_recurring_date_value);
         $endDateTime = new DrupalDateTime($eventNode->field_recurring_date_end_value);
+        $offset = $startDateTime->getOffset();
+        $offsetInt = DateInterval::createFromDateString((string) $offset . 'seconds');
+        // Add offset to adjust for Timezone.
+        $startDateTime->add($offsetInt);
+        $endDateTime->add($offsetInt);
         switch ($fieldData['showEvents']) {
           case 'upcoming_events':
             if ($fieldData['sortedBy'] === 'sort_event_asc') {

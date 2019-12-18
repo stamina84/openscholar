@@ -1,0 +1,24 @@
+uuid: 8e6e8309-4e23-444c-ba85-e341a79cf805
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_disqus_comments
+    - node.type.blog
+  module:
+    - disqus
+id: node.blog.field_disqus_comments
+field_name: field_disqus_comments
+entity_type: node
+bundle: blog
+label: 'Disqus comments'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    status: 1
+    identifier: ''
+default_value_callback: ''
+settings: {  }
+field_type: disqus_comment
