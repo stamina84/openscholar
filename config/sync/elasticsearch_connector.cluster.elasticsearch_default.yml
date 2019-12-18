@@ -1,0 +1,14 @@
+uuid: cffef947-3130-4d98-982f-362b79034996
+langcode: en
+status: '1'
+dependencies: {  }
+cluster_id: elasticsearch_default
+name: elasticsearch-default
+url: 'http://elasticsearch:9200'
+options:
+  multiple_nodes_connection: true
+  use_authentication: 0
+  authentication_type: Basic
+  username: ''
+  password: ''
+  timeout: '3'

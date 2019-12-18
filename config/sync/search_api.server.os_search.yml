@@ -1,0 +1,25 @@
+uuid: 85253f4f-08c8-4a38-ba9a-740104c9ddb9
+langcode: en
+status: true
+dependencies:
+  module:
+    - elasticsearch_connector
+id: os_search
+name: 'OS Search'
+description: 'OS Search'
+backend: elasticsearch
+backend_config:
+  server_description: ''
+  cluster_settings:
+    cluster: elasticsearch_default
+  fuzziness: auto
+  scheme: http
+  host: localhost
+  port: '9200'
+  path: ''
+  excerpt: false
+  retrieve_data: false
+  highlight_data: false
+  http_method: AUTO
+  autocorrect_spell: true
+  autocorrect_suggest_words: true
