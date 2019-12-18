@@ -2,3 +2,7 @@ manage default group roles:
   title: 'Manage default group roles'
   description: 'Manage default group roles'
   restrict access: true
+
+use compact mode:
+  title: 'Use Compact Mode'
+  description: 'Allow user to enable/disable Compact mode.'
