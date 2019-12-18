@@ -8,7 +8,7 @@ use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
 
 /**
- * Adds the common type to the indexed data.
+ * Adds the common created date to the indexed data.
  *
  * @SearchApiProcessor(
  *   id = "add_created_as_text",
@@ -51,7 +51,7 @@ class AddCreatedasText extends ProcessorPluginBase {
     $custom_bundle = $object->getEntityTypeId();
 
     $custom_date = '';
-    // Get bundle or type based on Entity Type.
+    // Get created date based on Entity Type.
     if ($custom_bundle == 'node') {
       $custom_date = $object->getCreatedTime();
     }
@@ -59,13 +59,12 @@ class AddCreatedasText extends ProcessorPluginBase {
       $custom_date = $object->get('created')->getValue()[0]['value'];
     }
 
-    if ($custom_bundle) {
-      $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_date');
+    $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_date');
 
-      foreach ($fields as $field) {
-        $field->addValue($custom_date);
-      }
+    foreach ($fields as $field) {
+      $field->addValue($custom_date);
     }
+
   }
 
 }
