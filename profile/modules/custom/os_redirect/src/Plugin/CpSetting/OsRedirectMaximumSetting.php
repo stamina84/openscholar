@@ -47,7 +47,7 @@ class OsRedirectMaximumSetting extends CpSettingBase {
       '#type' => 'textfield',
       '#size' => 10,
       '#title' => t('Maximum number of redirects'),
-      '#default_value' => $config->get('maximum_number'),
+      '#default_value' => $config->get('maximum_number') ?? 15,
     ];
   }
 
