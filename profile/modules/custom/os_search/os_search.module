@@ -47,48 +47,12 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
 
   // Get the sort url parameter.
   $sort = \Drupal::request()->query->get('sort');
+  $sort_direction = \Drupal::request()->query->get('dir') ?? 'ASC';
   if ($sort) {
-    os_search_handle_sort($query, $sort);
+    $sort_type = ['title', 'type', 'date'];
+    if (in_array($sort, $sort_type)) {
+      $query->sort('custom_' . $sort, $sort_direction);
+    }
   }
 
-}
-
-/**
- * Handles search sort parameters.
- *
- * @param Drupal\search_api\Query\QueryInterface $query
- *   Search api query to be altered.
- * @param string $sort
- *   Url sort argument.
- */
-function os_search_handle_sort(QueryInterface &$query, $sort) {
-
-  switch ($sort) {
-    case 'title-asc':
-      $query->sort('custom_title');
-      break;
-
-    case 'title-desc':
-      $query->sort('custom_title', 'DESC');
-      break;
-
-    case 'type-asc':
-      $query->sort('custom_type');
-      break;
-
-    case 'type-desc':
-      $query->sort('custom_type', 'DESC');
-      break;
-
-    case 'date-asc':
-      $query->sort('custom_date');
-      break;
-
-    case 'date-desc':
-      $query->sort('custom_date', 'DESC');
-      break;
-
-    default:
-      break;
-  }
 }

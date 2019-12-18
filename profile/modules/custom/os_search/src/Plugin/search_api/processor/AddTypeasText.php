@@ -60,12 +60,10 @@ class AddTypeasText extends ProcessorPluginBase {
       $custom_type = $object->get('type')->getValue()[0]['target_id'];
     }
 
-    if ($custom_bundle) {
-      $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_type');
+    $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_type');
 
-      foreach ($fields as $field) {
-        $field->addValue($custom_type);
-      }
+    foreach ($fields as $field) {
+      $field->addValue($custom_type);
     }
   }
 

@@ -59,13 +59,12 @@ class AddTitleasText extends ProcessorPluginBase {
       $custom_title = $object->get('title')->getValue()[0]['value'];
     }
 
-    if ($custom_bundle) {
-      $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_title');
+    $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_title');
 
-      foreach ($fields as $field) {
-        $field->addValue($custom_title);
-      }
+    foreach ($fields as $field) {
+      $field->addValue($custom_title);
     }
+
   }
 
 }
