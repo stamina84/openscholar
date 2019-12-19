@@ -53,7 +53,6 @@ class SearchSortWidgetTest extends OsExistingSiteJavascriptTestBase {
 
     $this->visitViaVsite("block/add/search_sort", $this->group);
     $web_assert->statusCodeEquals(200);
-    $page = $this->getCurrentPage();
 
     $this->widgetName = $this->randomString();
     $edit = [
