@@ -4,7 +4,7 @@
  * Default theme implementation for the Embedded Office Documents Viewer field formatter.
  *
  * Available variables:
- * - url: The publicly accessible url at which the embedded document may be reached.
+ * - iframe_url: Embed iframe url.
  * - filename: The original file name of the embedded document.
  * - width: Width settings.
  * - height: Height settings.
@@ -18,4 +18,4 @@
  * @ingroup themeable
  */
 #}
-<iframe class="os-office-embed" width="{{ width }}" height="{{ height }}" src="https://view.officeapps.live.com/op/embed.aspx?src={{ url }}"></iframe>
+<iframe class="os-office-embed" width="{{ width }}" height="{{ height }}" src="{{ iframe_url }}"></iframe>
