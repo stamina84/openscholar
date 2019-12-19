@@ -46,8 +46,9 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
   }
 
   // Get the sort url parameter.
-  $sort = \Drupal::request()->query->get('sort');
-  $sort_direction = \Drupal::request()->query->get('dir') ?? 'ASC';
+  $request = \Drupal::request();
+  $sort = $request->query->get('sort');
+  $sort_direction = $request->query->get('dir') ?? 'ASC';
   if ($sort) {
     $sort_type = ['title', 'type', 'date'];
     if (in_array($sort, $sort_type)) {
