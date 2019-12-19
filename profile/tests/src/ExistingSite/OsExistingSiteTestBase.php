@@ -5,6 +5,7 @@ namespace Drupal\Tests\openscholar\ExistingSite;
 use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
+use Drupal\vsite\Plugin\VsiteContextManager;
 
 /**
  * OS kernel and functional test base.
@@ -37,6 +38,20 @@ abstract class OsExistingSiteTestBase extends ExistingSiteBase {
   protected $groupAlias;
 
   /**
+   * The object to test.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManager
+   */
+  protected $vsiteContextManager;
+
+  /**
+   * Config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -44,6 +59,8 @@ abstract class OsExistingSiteTestBase extends ExistingSiteBase {
     $this->group = $this->createGroup();
     $this->groupAlias = $this->group->get('path')->first()->getValue()['alias'];
     $this->pluginManager = $this->container->get('plugin.manager.group_content_enabler');
+    $this->vsiteContextManager = $this->container->get('vsite.context_manager');
+    $this->configFactory = $this->container->get('config.factory');
     $this->runCount = 0;
   }
 
