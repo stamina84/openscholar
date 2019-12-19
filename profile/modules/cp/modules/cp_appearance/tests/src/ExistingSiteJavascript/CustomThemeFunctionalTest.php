@@ -17,6 +17,7 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
    *
    * @covers \Drupal\cp_appearance\Entity\Form\CustomThemeForm::save
    * @covers \Drupal\cp_appearance\Entity\Form\CustomThemeForm::redirectOnSave
+   * @covers \Drupal\cp_appearance\Entity\Form\InstallForm::submitForm
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -103,6 +104,7 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
    *
    * @covers \Drupal\cp_appearance\Entity\Form\CustomThemeForm::save
    * @covers \Drupal\cp_appearance\Entity\Form\CustomThemeForm::redirectOnSave
+   * @covers \Drupal\cp_appearance\Entity\Form\InstallForm::submitForm
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    * @throws \Behat\Mink\Exception\ExpectationException

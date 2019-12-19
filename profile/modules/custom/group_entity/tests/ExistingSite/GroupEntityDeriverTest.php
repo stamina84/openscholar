@@ -77,7 +77,7 @@ class GroupEntityDeriverTest extends ExistingSiteBase {
 
     $vocab = Vocabulary::create([
       'vid' => 'test_vocab',
-      'label' => 'test vocab',
+      'name' => 'Test Vocab',
     ]);
     $vocab->save();
 
