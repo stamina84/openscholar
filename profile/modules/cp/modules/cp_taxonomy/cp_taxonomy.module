@@ -278,18 +278,20 @@ function cp_taxonomy_form_node_form_alter(&$form, FormStateInterface $form_state
  * Custom validation for node field_taxonomy_terms field.
  */
 function cp_taxonomy_node_terms_validate(&$form, FormStateInterface $form_state) {
-  $terms_values = $form_state->getValue('field_taxonomy_terms');
-  foreach ($form['field_taxonomy_terms']['#terms'] as $key => $vid) {
-    if ($form['field_taxonomy_terms']['widget'][$vid]['#required'] && empty($terms_values[$vid])) {
-      if (isset($form['field_taxonomy_terms']['widget'][$vid]["#type"]) && $form['field_taxonomy_terms']['widget'][$vid]["#type"] == 'entity_autocomplete') {
-        $form_state->setError($form, t('@vid - Term is required.', ['@vid' => $vid]));
+  if (isset($form['field_taxonomy_terms']['#terms'])) {
+    $terms_values = $form_state->getValue('field_taxonomy_terms');
+    foreach ($form['field_taxonomy_terms']['#terms'] as $key => $vid) {
+      if ($form['field_taxonomy_terms']['widget'][$vid]['#required'] && empty($terms_values[$vid])) {
+        if (isset($form['field_taxonomy_terms']['widget'][$vid]["#type"]) && $form['field_taxonomy_terms']['widget'][$vid]["#type"] == 'entity_autocomplete') {
+          $form_state->setError($form, t('@vid - Term is required.', ['@vid' => $vid]));
+        }
+        else {
+          $form_state->setError($form, t('@vid - No term is available, please contact site admin.', ['@vid' => $vid]));
+        }
       }
-      else {
-        $form_state->setError($form, t('@vid - No term is available, please contact site admin.', ['@vid' => $vid]));
+      if (isset($form['field_taxonomy_terms']['#no_terms'][$key])) {
+        $form_state->setError($form, t('@vid - Vocabulary has no terms, please contact site admin.', ['@vid' => $vid]));
       }
-    }
-    if (isset($form['field_taxonomy_terms']['#no_terms'][$key])) {
-      $form_state->setError($form, t('@vid - Vocabulary has no terms, please contact site admin.', ['@vid' => $vid]));
     }
   }
 }
