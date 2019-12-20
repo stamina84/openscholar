@@ -10,10 +10,6 @@ dependencies:
   module:
     - file
     - image
-    - layout_builder
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: media.audio.default
 targetEntityType: media
 bundle: audio

@@ -1,0 +1,10 @@
+uuid: 1b7a8c65-dde4-40f3-98e0-1ea6fbed947a
+langcode: en
+status: true
+dependencies:
+  module:
+    - bibcite_entity
+id: bibcite_reference.slide_teaser
+label: 'Slide Teaser'
+targetEntityType: bibcite_reference
+cache: true

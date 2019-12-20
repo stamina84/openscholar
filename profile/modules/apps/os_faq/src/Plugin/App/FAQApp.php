@@ -14,6 +14,11 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *   bundle = {
  *    "faq"
  *   },
+ *   viewsTabs = {
+ *     "os_faq" = {
+ *       "page_1",
+ *     },
+ *   },
  *   id = "faq"
  * )
  */

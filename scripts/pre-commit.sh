@@ -21,6 +21,14 @@ if [[ $? -eq 0 ]]; then
 fi
 
 if [[ ${IS_DOCKER_CONTAINER_AVAILABLE} = true ]] ; then
+  echo "Docker container is available. Checking circular module dependencies..."
+  docker-compose exec -T php vendor/bin/drush validate:module-dependencies
+else
+  echo "Docker is not available. Checking circular module dependencies..."
+  drush validate:module-dependencies
+fi
+
+if [[ ${IS_DOCKER_CONTAINER_AVAILABLE} = true ]] ; then
   echo "Docker container is available. Checking code standards now..."
   git diff --diff-filter=ACMRTUXB --cached --name-only | xargs docker-compose exec -T php composer code-standard $1
 else
@@ -39,5 +47,6 @@ if [[ ${IS_DOCKER_CONTAINER_AVAILABLE} = true ]] ; then
 else
   git diff --diff-filter=ACMRTUXB --cached --name-only | xargs composer code-standard-fix $1
 fi
+
 
 exit 1

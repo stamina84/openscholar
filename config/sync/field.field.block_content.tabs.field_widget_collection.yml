@@ -1,0 +1,64 @@
+uuid: e40c9d5e-be7c-40b7-8aa8-569d71f425ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.accordion
+    - block_content.type.addthis
+    - block_content.type.basic
+    - block_content.type.custom_text_html
+    - block_content.type.embed_media
+    - block_content.type.featured_posts
+    - block_content.type.follow_me
+    - block_content.type.list_of_posts
+    - block_content.type.mailchimp_subscription
+    - block_content.type.media_gallery
+    - block_content.type.publication_authors
+    - block_content.type.publication_types
+    - block_content.type.publication_years
+    - block_content.type.rss_feed
+    - block_content.type.slideshow
+    - block_content.type.tabs
+    - block_content.type.taxonomy
+    - block_content.type.twitter_feed
+    - field.storage.block_content.field_widget_collection
+  module:
+    - os_widgets
+id: block_content.tabs.field_widget_collection
+field_name: field_widget_collection
+entity_type: block_content
+bundle: tabs
+label: 'Add Widget to Collection'
+description: 'Note that any widgets added must have content or they WILL NOT display in this widget. If you add a widget to a page normally and it doesn''t appear, it won''t appear in this widget either.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:block_content'
+  handler_settings:
+    target_bundles:
+      accordion: accordion
+      addthis: addthis
+      basic: basic
+      custom_text_html: custom_text_html
+      embed_media: embed_media
+      featured_posts: featured_posts
+      follow_me: follow_me
+      list_of_posts: list_of_posts
+      mailchimp_subscription: mailchimp_subscription
+      media_gallery: media_gallery
+      publication_authors: publication_authors
+      publication_types: publication_types
+      publication_years: publication_years
+      rss_feed: rss_feed
+      slideshow: slideshow
+      tabs: tabs
+      taxonomy: taxonomy
+      twitter_feed: twitter_feed
+    sort:
+      field: id
+      direction: ASC
+    auto_create: 0
+    auto_create_bundle: addthis
+field_type: entity_reference_with_value

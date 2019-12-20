@@ -1,0 +1,19 @@
+uuid: 7ad6a73c-d87f-4c50-8205-4b7d34d81ab5
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_dataset
+    - field.storage.block_content.field_widget_title
+id: block_content.dataverse_dataset.field_widget_title
+field_name: field_widget_title
+entity_type: block_content
+bundle: dataverse_dataset
+label: 'Widget Title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,23 @@
+uuid: ee9c7a88-2ddc-4962-bcca-13ad6fafe7aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.storage.block_content.field_url_for_the_more_link
+  module:
+    - link
+id: block_content.list_of_posts.field_url_for_the_more_link
+field_name: field_url_for_the_more_link
+entity_type: block_content
+bundle: list_of_posts
+label: 'URL for the more link'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link

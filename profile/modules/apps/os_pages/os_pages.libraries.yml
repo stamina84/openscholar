@@ -1,0 +1,5 @@
+contextualChanges:
+  js:
+    js/os_pages.contextualChanges.js: {}
+  dependencies:
+    - core/drupal

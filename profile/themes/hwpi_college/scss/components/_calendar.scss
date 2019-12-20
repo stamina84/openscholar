@@ -1,8 +1,9 @@
 /**** code for upcoming/past events sheilds ****/
-.fc-listUpcoming-view, .fc-listPast-view  {
-  .fc-list-heading {
-    .fc-list-heading-main {
-      background: url(../images/event-shield.png) no-repeat 0 0 transparent;
+.calendar.node--calendar {
+  .event-start {
+    background: url(../images/event-shield.png) no-repeat 0 0 transparent;
+    span.event-start-month {
+      color: $color-black;
     }
   }
 }

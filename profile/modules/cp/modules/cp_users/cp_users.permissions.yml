@@ -2,3 +2,9 @@ manage default group roles:
   title: 'Manage default group roles'
   description: 'Manage default group roles'
   restrict access: true
+support vsite:
+  title: 'Manage vsite as support user'
+  description: 'Manage vsite as support user'
+use compact mode:
+  title: 'Use Compact Mode'
+  description: 'Allow user to enable/disable Compact mode.'

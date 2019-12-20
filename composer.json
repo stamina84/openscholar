@@ -24,10 +24,6 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/openscholar/drupal-test-traits"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/openscholar/groupmenu"
         },
         {
@@ -75,7 +71,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/panelbutton/releases/panelbutton_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/panelbutton_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -87,7 +83,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/colorbutton/releases/colorbutton_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colorbutton_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -99,7 +95,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/fakeobjects/releases/fakeobjects_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/fakeobjects_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -111,7 +107,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/pagebreak/releases/pagebreak_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/pagebreak_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -123,7 +119,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/link/releases/link_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/link_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -135,7 +131,7 @@
                 "version": "4.11.3",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/mathjax/releases/mathjax_4.11.3.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/mathjax_4.11.3.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -147,7 +143,7 @@
                 "version": "4.12.1",
                 "type": "drupal-library",
                 "dist": {
-                    "url": "https://download.ckeditor.com/colordialog/releases/colordialog_4.12.1.zip",
+                    "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colordialog_4.12.1.zip?raw=true",
                     "type": "zip"
                 }
             }
@@ -160,13 +156,13 @@
     ],
     "require": {
         "ext-json": "*",
-        "ckeditor/colorbutton": "4.11.3",
+        "ckeditor/colorbutton": "^4.11",
         "ckeditor/colordialog": "^4.12",
-        "ckeditor/fakeobjects": "4.11.3",
-        "ckeditor/link": "4.11.3",
-        "ckeditor/mathjax": "4.11.3",
-        "ckeditor/pagebreak": "4.11.3",
-        "ckeditor/panelbutton": "4.11.3",
+        "ckeditor/fakeobjects": "^4.11",
+        "ckeditor/link": "^4.11",
+        "ckeditor/mathjax": "^4.11",
+        "ckeditor/pagebreak": "^4.11",
+        "ckeditor/panelbutton": "^4.11",
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6",
         "doctrine/lexer": "dev-master",
@@ -175,6 +171,7 @@
         "drupal/advancedqueue": "^1.0@beta",
         "drupal/anchor_link": "^2.0",
         "drupal/bibcite": "1.x-dev",
+        "drupal/blazy": "^2.0",
         "drupal/block_visibility_groups": "^1.3",
         "drupal/bootstrap": "^3.17",
         "drupal/cancel_button": "^1.1",
@@ -187,14 +184,17 @@
         "drupal/config_sync": "^2.0@alpha",
         "drupal/console": "^1.0.2",
         "drupal/context": "^4.0@beta",
-        "drupal/core": "8.6.16",
+        "drupal/core": "^8.7.11",
         "drupal/date_recur": "^2.0",
         "drupal/date_recur_modular": "^1.0@alpha",
+        "drupal/disqus": "^1.0",
         "drupal/easy_breadcrumb": "^1.8",
         "drupal/entity_reference_revisions": "^1.6",
         "drupal/field_tools": "^1.0@alpha",
         "drupal/fullcalendar": "1.x-dev",
         "drupal/google_analytics": "^2.4",
+        "drupal/google_tag": "^1.2",
+        "drupal/group": "^1.0-rc4",
         "drupal/group_purl": "1.0-alpha1",
         "drupal/groupmenu": "^1.0-beta4",
         "drupal/image_widget_crop": "^2.2",
@@ -217,18 +217,19 @@
         "drupal/robotstxt": "^1.2",
         "drupal/search_api": "^1.9",
         "drupal/shorten": "2.x-dev",
-        "drupal/slick": "^1.0",
+        "drupal/slick": "^2.0",
         "drupal/slick_media": "^2.0",
+        "drupal/slick_paragraphs": "^2.0",
         "drupal/styleguide": "^1.0@alpha",
         "drupal/term_reference_tree": "1.x-dev",
         "drupal/toolbar_menu": "^2.1",
         "drupal/twig_extensions": "^2.0",
         "drupal/video_embed_field": "^2.0",
         "drupal/views_accordion": "^1.1",
-        "drupal/views_ical": "^2.1",
+        "drupal/views_ical": "^2.2",
         "drupal/views_infinite_scroll": "^1.5",
         "drush/drush": "^9.0.0",
-        "egulias/email-validator": "1.2.6",
+        "egulias/email-validator": "^2.0",
         "ezyang/htmlpurifier": "^4.11",
         "fullcalendar/fullcalendar": "^3.3",
         "j7mbo/twitter-api-php": "^1.0",
@@ -238,20 +239,24 @@
         "npm-asset/slick-carousel": "^1.8",
         "oomphinc/composer-installers-extender": "^1.1",
         "php-ds/php-ds": "^1.2",
+        "rrssb/rrssb-plus": "^0.5.0",
+        "sweetchuck/robo-cdd": "^0.0.1",
         "swordapp/swordappv2-php-library": "master",
         "twbs/bootstrap-sass": "^3.3.7",
         "twig/extensions": "^1.5",
         "vlucas/phpdotenv": "^2.4",
+        "webflo/drupal-core-require-dev": "^8.7.11",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
-        "drupal/features": "^3.7",
-        "webflo/drupal-core-require-dev": "8.6.16",
+        "dmore/chrome-mink-driver": "^2.6",
+        "drupal/coder": "8.3.3",
         "drupal/devel": "^1.2",
-        "weitzman/drupal-test-traits": "dev-pass-chrome-driver-options",
-        "dmore/chrome-mink-driver": "^2.6"
+        "drupal/features": "^3.7",
+        "drupal/restui": "^1.17",
+        "weitzman/drupal-test-traits": "^1.3"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -288,7 +293,6 @@
             "command -v npm install || echo \"NPM not installed. Please install it and run composer install again.\"",
             "DrupalProject\\composer\\ScriptHandler::installBootstrapLibrary",
             "DrupalProject\\composer\\ScriptHandler::installOsToolbarLibrary",
-            "DrupalProject\\composer\\ScriptHandler::placeCustomThemes",
             "./scripts/register-cs.sh",
             "./scripts/install-hooks.sh"
         ],
@@ -299,8 +303,7 @@
             "DrupalProject\\composer\\ScriptHandler::installFullcalendarLibrary",
             "command -v npm update || echo \"NPM not installed. Please install it and run composer install.\"",
             "DrupalProject\\composer\\ScriptHandler::installBootstrapLibrary",
-            "DrupalProject\\composer\\ScriptHandler::installOsToolbarLibrary",
-            "DrupalProject\\composer\\ScriptHandler::placeCustomThemes"
+            "DrupalProject\\composer\\ScriptHandler::installOsToolbarLibrary"
         ],
         "code-standard": [
             "./vendor/bin/phpcs --standard=Drupal --ignore=*.yml,*.md",
@@ -350,7 +353,10 @@
                 "Getlabel() on null layout builder.": "https://www.drupal.org/files/issues/2018-07-16/2985882-entityfield-2.patch",
                 "'view_path' is set to /views/ajax after second ajax request": "https://www.drupal.org/files/issues/2018-03-14/drupal-views_path_ajax-2866386-10.patch",
                 "Image styles fails with absolute path": "https://www.drupal.org/files/issues/image_styles-2754273-7.patch",
-                "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch"
+                "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2950883-2.patch",
+                "User context missing when using toUrl in some circumstances": "https://www.drupal.org/files/issues/2019-05-22/3056234-test-fix-4.patch",
+                "null route object in big_pipe requests after 8.7.8 upgrade": "https://www.drupal.org/files/issues/2019-10-24/3089913-2.patch",
+                "Contextual links double trigger": "https://www.drupal.org/files/issues/2019-11-15/drupal-contextual_links_double_trigger-2834346-19.patch"
             },
             "drupal/group_purl": {
                 "Prevent base path from interfering with purl detection": "https://www.drupal.org/files/issues/2019-04-12/group_purl.3026646-3.basepath.patch",
@@ -390,7 +396,7 @@
                 "Integrity constraint violation: Duplicate entry for key PRIMARY in node_access": "https://www.drupal.org/files/issues/2018-08-17/group-duplicate-node-access-entries-2892512-15.patch",
                 "New group content created when node edited": "https://www.drupal.org/files/issues/2019-06-04/3059300-3.patch",
                 "Prevent resaving of deleted entities": "https://raw.githubusercontent.com/openscholar/openscholar/ae879229e866cbc96d91d2b2a8273292fa26fd34/patches/group.fix_saving_deleted_entity.patch",
-                "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-05-28/group-support_string_entity_ids-2797793-162.patch",
+                "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-10-17/group-support_string_entity_ids-2797793-171.patch",
                 "Group creator must complete their membership Wizard duplicates membership": "https://www.drupal.org/files/issues/2019-07-09/group_membership_duplication-3016197-10.patch"
             },
             "drupal/shorten": {

@@ -173,7 +173,7 @@ class TaxonomyTermsWidget extends WidgetBase implements WidgetInterface, Contain
       if (isset($values[$vid]['add_more'])) {
         unset($values[$vid]['add_more']);
       }
-      $widget_values = $fieldWidget->massageFormValues($values[$vid], $form, $form_state);
+      $widget_values = !empty($values[$vid]) ? $fieldWidget->massageFormValues($values[$vid], $form, $form_state) : [];
       if (empty($widget_values)) {
         continue;
       }
@@ -223,7 +223,7 @@ class TaxonomyTermsWidget extends WidgetBase implements WidgetInterface, Contain
         continue;
       }
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($field_value['target_id']);
-      if ($term->bundle() != $vid) {
+      if (!empty($term) && ($term->bundle() != $vid)) {
         unset($filtered_items[$delta]);
       }
     }

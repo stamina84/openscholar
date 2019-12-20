@@ -28,7 +28,6 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    sections: {  }
     allow_custom: false
     enabled: false
 id: node.person.slide_teaser
@@ -37,7 +36,7 @@ bundle: person
 mode: slide_teaser
 content:
   body:
-    label: hidden
+    label: visually_hidden
     type: text_default
     weight: 1
     settings: {  }
@@ -45,14 +44,14 @@ content:
     region: content
   field_address:
     weight: 3
-    label: hidden
+    label: visually_hidden
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_email:
     weight: 4
-    label: hidden
+    label: visually_hidden
     settings: {  }
     third_party_settings: {  }
     type: email_mailto
@@ -67,7 +66,7 @@ content:
     region: content
   field_phone:
     weight: 5
-    label: hidden
+    label: visually_hidden
     settings:
       title: ''
     third_party_settings: {  }
@@ -77,13 +76,13 @@ content:
     type: string
     weight: 0
     region: content
-    label: hidden
+    label: visually_hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
   field_taxonomy_terms:
     weight: 7
-    label: hidden
+    label: visually_hidden
     settings:
       label: 'See also'
       number_of_characters: 94

@@ -895,7 +895,7 @@ display:
     cache_metadata:
       max-age: 0
       contexts:
-        - group_membership.roles.permissions
+        - user.group_permissions
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
@@ -923,7 +923,7 @@ display:
     cache_metadata:
       max-age: 0
       contexts:
-        - group_membership.roles.permissions
+        - user.group_permissions
         - 'languages:language_content'
         - 'languages:language_interface'
         - url

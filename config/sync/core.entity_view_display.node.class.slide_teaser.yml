@@ -1,0 +1,179 @@
+uuid: af6c0968-6eb2-43a8-8ce2-51885ac667a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.slide_teaser
+    - field.field.node.class.body
+    - field.field.node.class.field_attached_media
+    - field.field.node.class.field_class_link
+    - field.field.node.class.field_class_materials
+    - field.field.node.class.field_semester
+    - field.field.node.class.field_taxonomy_terms
+    - field.field.node.class.field_year_offered
+    - image.style.gallery
+    - node.type.class
+  module:
+    - cp_taxonomy
+    - entity_reference_revisions
+    - layout_builder
+    - link
+    - options
+    - os_media
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: node.class.slide_teaser
+targetEntityType: node
+bundle: class
+mode: slide_teaser
+content:
+  body:
+    label: visually_hidden
+    type: text_trimmed
+    weight: 3
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  field_attached_media:
+    type: os_slick_media
+    weight: 6
+    label: visually_hidden
+    settings:
+      optionset: slick_media_gallery
+      optionset_thumbnail: ''
+      skin: default
+      skin_thumbnail: ''
+      image_style: gallery
+      thumbnail_style: ''
+      responsive_image_style: ''
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      media_switch: ''
+      view_mode: default
+      ratio: ''
+      image: ''
+      title: ''
+      link: ''
+      layout: ''
+      thumbnail_caption: ''
+      class: ''
+      cache: '0'
+      sizes: ''
+      breakpoints:
+        xs:
+          image_style: ''
+          width: ''
+          breakpoint: ''
+        sm:
+          image_style: ''
+          width: ''
+          breakpoint: ''
+        md:
+          image_style: ''
+          width: ''
+          breakpoint: ''
+        lg:
+          image_style: ''
+          width: ''
+          breakpoint: ''
+        xl:
+          image_style: ''
+          width: ''
+          breakpoint: ''
+      current_view_mode: default
+      vanilla: 0
+      background: 0
+      caption:
+        field_media_file: 0
+        field_taxonomy_terms: 0
+        field_media_oembed_content: 0
+        field_media_html: 0
+        field_media_html_description: 0
+        field_image_caption: 0
+        field_media_image: 0
+      override: 0
+      overridables:
+        arrows: 0
+        autoplay: 0
+        dots: 0
+        draggable: 0
+        infinite: 0
+        mouseWheel: 0
+        randomize: 0
+        variableWidth: 0
+      thumbnail: ''
+      preserve_keys: false
+      visible_items: 0
+      skin_arrows: ''
+      skin_dots: ''
+      style: ''
+      icon: ''
+      box_caption: ''
+      box_caption_custom: ''
+      box_style: ''
+      box_media_style: ''
+      grid: 0
+      grid_header: ''
+      grid_medium: 0
+      grid_small: 0
+      id: ''
+      overlay: ''
+    third_party_settings: {  }
+    region: content
+  field_class_link:
+    weight: 2
+    label: inline
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_class_materials:
+    type: entity_reference_revisions_entity_view
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_semester:
+    weight: 0
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_taxonomy_terms:
+    weight: 7
+    label: visually_hidden
+    settings:
+      label: 'See also'
+      number_of_characters: 94
+    third_party_settings: {  }
+    type: cp_taxonomy_comma_separator
+    region: content
+  field_year_offered:
+    weight: 1
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  links:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true

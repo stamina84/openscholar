@@ -5,11 +5,21 @@ namespace Drupal\vsite\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\os_widgets_context\OsWidgetsContextInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Manager for the App plugin system.
  */
-class AppManager extends DefaultPluginManager implements AppManangerInterface {
+class AppManager extends DefaultPluginManager implements AppManagerInterface {
+
+
+  /**
+   * Os Widget context interface.
+   *
+   * @var \Drupal\os_widgets_context\OsWidgetsContextInterface
+   */
+  protected $osWidgetsContext;
 
   /**
    * Constructs an AppManager object.
@@ -20,8 +30,10 @@ class AppManager extends DefaultPluginManager implements AppManangerInterface {
    *   Cache backend.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   Module handler.
+   * @param \Drupal\os_widgets_context\OsWidgetsContextInterface $os_widgets_context
+   *   OS Widgets Context.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, OsWidgetsContextInterface $os_widgets_context) {
     parent::__construct(
       'Plugin/App',
       $namespaces,
@@ -32,16 +44,20 @@ class AppManager extends DefaultPluginManager implements AppManangerInterface {
 
     $this->alterInfo('app_info');
     $this->setCacheBackend($cache_backend, 'app_info_plugins');
+    $this->osWidgetsContext = $os_widgets_context;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getAppForBundle(string $bundle): string {
+  public function getAppForBundle(string $entity_type_id, string $bundle): string {
     $defs = $this->getDefinitions();
     $app = '';
     foreach ($defs as $d) {
-      if (isset($d['bundle']) && \in_array($bundle, $d['bundle'], TRUE)) {
+      if ($d['entityType'] != $entity_type_id) {
+        continue;
+      }
+      if (isset($d['bundle']) && \in_array($bundle, $d['bundle'], TRUE) || $bundle == '*') {
         $app = $d['id'];
       }
     }
@@ -51,6 +67,31 @@ class AppManager extends DefaultPluginManager implements AppManangerInterface {
     }
 
     return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAppsForView(ViewExecutable $view): array {
+    $defs = $this->getDefinitions();
+    $apps = [];
+    foreach ($defs as $d) {
+      if (!empty($d['viewsTabs'])) {
+        foreach ($d['viewsTabs'] as $view_id => $displays) {
+          if ($view_id != $view->id()) {
+            continue;
+          }
+          foreach ($displays as $display) {
+            if ($display != $view->current_display) {
+              continue;
+            }
+            $apps[] = $d['id'];
+          }
+        }
+      }
+    }
+
+    return $apps;
   }
 
   /**
@@ -91,6 +132,28 @@ class AppManager extends DefaultPluginManager implements AppManangerInterface {
     }
 
     return $group_permissions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundlesFromApps() : array {
+    $bundles = [];
+    $active_apps = $this->osWidgetsContext->getActiveApps();
+    if (empty($active_apps)) {
+      return $bundles;
+    }
+    foreach ($active_apps as $app) {
+      $plugin_definition = $this->getDefinition($app);
+      if (empty($plugin_definition['bundle'])) {
+        $bundles[] = $plugin_definition['entityType'] . ':*';
+        continue;
+      }
+      foreach ($plugin_definition['bundle'] as $bundle) {
+        $bundles[] = $plugin_definition['entityType'] . ':' . $bundle;
+      }
+    }
+    return $bundles;
   }
 
 }

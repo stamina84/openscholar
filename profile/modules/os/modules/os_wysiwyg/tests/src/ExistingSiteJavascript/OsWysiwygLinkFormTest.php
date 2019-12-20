@@ -2,8 +2,6 @@
 
 namespace Drupal\os_wysiwyg\ExistingSiteJavascript;
 
-use Drupal\file\Entity\File;
-use Drupal\media\Entity\Media;
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
 
 /**
@@ -33,25 +31,7 @@ class OsWysiwygLinkFormTest extends OsExistingSiteJavascriptTestBase {
       ],
     ]);
 
-    /** @var \Drupal\Core\File\FileSystemInterface $filesystem */
-    $filesystem = \Drupal::service('file_system');
-    $file = File::create([
-      'uri' => drupal_get_path('module', 'os_wysiwyg') . '/tests/files/test.txt',
-    ]);
-    $file->setPermanent();
-    $file->save();
-    $this->markEntityForCleanUp($file);
-
-    $media = Media::create([
-      'bundle' => 'document',
-      'field_media_file' => [
-        'target_id' => $file->id(),
-      ],
-    ]);
-    $media->setPublished(TRUE);
-    $media->save();
-    $this->markEntityForCleanUp($media);
-
+    $media = $this->createMedia();
     $this->group->addContent($media, 'group_entity:media');
   }
 

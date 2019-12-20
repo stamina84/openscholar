@@ -17,7 +17,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\cp_taxonomy\CpTaxonomyHelperInterface;
 use Drupal\os_widgets\OsWidgetsBase;
+use Drupal\os_widgets_context\OsWidgetsContextInterface;
 use Drupal\os_widgets\OsWidgetsInterface;
+use Drupal\vsite\Plugin\AppManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -60,6 +62,20 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
   protected $time;
 
   /**
+   * Os Widget context interface.
+   *
+   * @var \Drupal\os_widgets_context\OsWidgetsContextInterface
+   */
+  protected $osWidgetsContext;
+
+  /**
+   * Vsite app manager.
+   *
+   * @var \Drupal\vsite\Plugin\AppManagerInterface
+   */
+  protected $vsiteAppManager;
+
+  /**
    * Cp Taxonomy Helper.
    *
    * @var \Drupal\cp_taxonomy\CpTaxonomyHelperInterface
@@ -69,11 +85,13 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, RequestStack $request_stack, CpTaxonomyHelperInterface $taxonomy_helper, TimeInterface $time) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, RequestStack $request_stack, CpTaxonomyHelperInterface $taxonomy_helper, TimeInterface $time, OsWidgetsContextInterface $os_widgets_context, AppManagerInterface $vsite_app_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $connection);
     $this->requestStack = $request_stack;
     $this->taxonomyHelper = $taxonomy_helper;
     $this->time = $time;
+    $this->osWidgetsContext = $os_widgets_context;
+    $this->vsiteAppManager = $vsite_app_manager;
   }
 
   /**
@@ -88,7 +106,9 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $container->get('database'),
       $container->get('request_stack'),
       $container->get('cp.taxonomy.helper'),
-      $container->get('datetime.time')
+      $container->get('datetime.time'),
+      $container->get('os_widgets_context.context'),
+      $container->get('vsite.app.manager')
     );
   }
 
@@ -101,6 +121,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $field_taxonomy_show_children_values = $block_content->get('field_taxonomy_show_children')->getValue();
     $field_taxonomy_display_type_values = $block_content->get('field_taxonomy_display_type')->getValue();
     $field_taxonomy_show_empty_terms_values = $block_content->get('field_taxonomy_show_empty_terms')->getValue();
+    $field_taxonomy_behavior_values = $block_content->get('field_taxonomy_behavior')->getValue();
     $vid = $field_taxonomy_vocabulary_values[0]['target_id'];
     $depth = empty($field_taxonomy_tree_depth_values[0]['value']) ? NULL : $field_taxonomy_tree_depth_values[0]['value'];
     // When unchecked, only show top level terms.
@@ -111,6 +132,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $this->settings['depth'] = $depth;
     $this->settings['bundles'] = $this->getFilteredBundles($block_content, $vid);
     $this->settings['show_empty_terms'] = !empty($field_taxonomy_show_empty_terms_values[0]['value']);
+    $this->settings['taxonomy_behavior'] = $field_taxonomy_behavior_values[0]['value'];
     $terms = $this->getTerms();
     switch ($field_taxonomy_display_type_values[0]['value']) {
       case 'menu':
@@ -149,24 +171,26 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $terms_count = $this->getTermsCount($terms);
 
     $keep_term_tids = [];
-    // Only show_empty_terms is FALSE case, we need to check parent visibility.
-    if (!$this->settings['show_empty_terms']) {
-      // Mark tids to handle what term can be deleted.
-      foreach ($terms_count as $tid => $count) {
-        // Get all parents include current one.
-        $parents = $this->entityTypeManager->getStorage("taxonomy_term")->loadAllParents($tid);
-        if (!empty($parents)) {
-          foreach ($parents as $parent) {
-            // Store current tid and all parent tids.
-            $keep_term_tids[$parent->id()] = $parent->id();
-          }
-        }
+    $taxonomy_term_storage = $this->entityTypeManager->getStorage("taxonomy_term");
+    // We need to check parent visibility.
+    // Mark tids to handle what term can be deleted.
+    foreach ($terms_count as $tid => $count) {
+      // Get all parents include current one.
+      $parents = $taxonomy_term_storage->loadAllParents($tid);
+      foreach ($parents as $parent) {
+        // Store current tid and all parent tids.
+        $keep_term_tids[$parent->id()] = $parent->id();
       }
     }
 
+    $active_apps = $this->osWidgetsContext->getActiveApps();
     foreach ($terms as $i => $term) {
       // If show_empty_terms is TRUE, we don't unset any items.
       if (!$this->settings['show_empty_terms'] && !in_array($term->tid, $keep_term_tids)) {
+        unset($terms[$i]);
+        continue;
+      }
+      if (!empty($active_apps) && $this->settings['taxonomy_behavior'] == 'contextual' && !in_array($term->tid, $keep_term_tids)) {
         unset($terms[$i]);
         continue;
       }
@@ -197,8 +221,11 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
         break;
 
       case 'contextual':
-        if ($node = $this->requestStack->getCurrentRequest()->attributes->get('node')) {
-          $bundles[] = 'node:' . $node->bundle();
+        $bundles = $this->vsiteAppManager->getBundlesFromApps();
+        // If no context exists, use allowed bundles.
+        if (empty($bundles)) {
+          $settings = $this->taxonomyHelper->getVocabularySettings($vid);
+          $bundles = $settings['allowed_vocabulary_reference_types'];
         }
         break;
 
@@ -322,7 +349,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
       // Fix bundles array if remove everything.
       if (count($bundles) == 0) {
-        $bundles[] = 'events';
+        $bundles[0] = 'events';
       }
     }
     // If both special type is present, then nothing to do.
@@ -348,7 +375,9 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
       $query->condition($db_or);
     }
-    $query->condition($alias . '.bundle', $bundles, 'IN');
+    if (count($bundles) == 1 && $bundles[0] != '*') {
+      $query->condition($alias . '.bundle', $bundles, 'IN');
+    }
     $field_data_id = '';
     switch ($entity_name) {
       case 'node':

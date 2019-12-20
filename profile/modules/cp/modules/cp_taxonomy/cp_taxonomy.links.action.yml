@@ -3,3 +3,9 @@ entity.taxonomy_vocabulary.cp.add_form:
   title: 'Add vocabulary'
   appears_on:
     - cp.taxonomy
+
+entity.taxonomy_term.cp.add_form:
+  route_name: cp.taxonomy.term.add
+  title: 'Add term'
+  appears_on:
+    - cp.taxonomy.list

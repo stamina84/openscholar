@@ -1,0 +1,45 @@
+uuid: dbe875a3-8c5e-4ac8-8470-4c09540129ee
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.teaser
+    - field.field.media.oembed.field_media_oembed_content
+    - field.field.media.oembed.field_taxonomy_terms
+    - image.style.media_thumbnail
+    - media.type.oembed
+  module:
+    - image
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.oembed.teaser
+targetEntityType: media
+bundle: oembed
+mode: teaser
+content:
+  name:
+    type: string
+    weight: 1
+    region: content
+    label: visually_hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+  thumbnail:
+    type: image
+    weight: 0
+    region: content
+    label: visually_hidden
+    settings:
+      image_style: media_thumbnail
+      image_link: content
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_oembed_content: true
+  field_taxonomy_terms: true
+  langcode: true
+  uid: true

@@ -1,0 +1,33 @@
+uuid: 2813b972-444d-42b9-8a39-c2e8959ba1c1
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - options
+id: block_content.field_columns
+field_name: field_columns
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: '2'
+      label: '2'
+    -
+      value: '3'
+      label: '3'
+    -
+      value: '4'
+      label: '4'
+    -
+      value: '5'
+      label: '5'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

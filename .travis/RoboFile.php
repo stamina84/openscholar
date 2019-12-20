@@ -43,6 +43,20 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->runUnitTests($groups));
+        return $collection->run();
+    }
+
+    /**
+     * Runs unit tests and generates code coverage report.
+     *
+     * @return \Robo\Result
+     *   The result of the collection of tasks.
+     */
+    public function jobRunUnitTestsCodeCoverage($groups = '')
+    {
+        $collection = $this->collectionBuilder();
+        $collection->addTaskList($this->buildEnvironment());
         $collection->addTaskList($this->enableXDebug());
         $collection->addTaskList($this->runUnitTests($groups));
         return $collection->run();
@@ -62,13 +76,29 @@ class RoboFile extends \Robo\Tasks
         return $collection->run();
     }
 
-  /**
-   * Command to run kernel tests.
-   *
-   * @return \Robo\Result
-   *   The result of the collection of tasks.
-   */
+    /**
+     * Command to run kernel tests.
+     *
+     * @return \Robo\Result
+     *   The result of the collection of tasks.
+     */
     public function jobRunKernelTests($groups = '')
+    {
+        $collection = $this->collectionBuilder();
+        $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->installTestConfigs());
+        $collection->addTaskList($this->runKernelTests($groups));
+        return $collection->run();
+    }
+
+    /**
+     * Runs kernel tests with code coverage report.
+     *
+     * @return \Robo\Result
+     *   The result of the collection of tasks.
+     */
+    public function jobRunKernelTestsCodeCoverage($groups = '')
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildEnvironment());

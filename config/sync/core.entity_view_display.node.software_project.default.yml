@@ -10,12 +10,8 @@ dependencies:
     - node.type.software_project
   module:
     - cp_taxonomy
-    - layout_builder
     - text
     - user
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: node.software_project.default
 targetEntityType: node
 bundle: software_project

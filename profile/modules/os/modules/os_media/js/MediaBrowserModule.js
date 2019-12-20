@@ -106,6 +106,7 @@
       {label: 'Audio', value: 'audio'},
       {label: 'Icon', value: 'icon'},
       {label: 'Embeds', value: 'oembed'},
+      {label: 'Presentation', value: 'presentation'},
     ];
 
     let defaultFilteredTypes = params.types;
@@ -119,6 +120,14 @@
         }
       }
     }
+
+
+    $scope.isHtml = false;
+    angular.forEach($scope.availFilter, function (value, key) {
+      if (value === 'html') {
+        $scope.isHtml = true;
+      }
+    });
 
     $scope.extensions = [];
     if (params.file_extensions) {
@@ -665,6 +674,16 @@
 
     $scope.embed = '';
     $scope.embedSubmit = function () {
+      var pattern = new RegExp('^(https?:\\/\\/)?'+
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+
+        '(\\#[-a-z\\d_]*)?$','i');
+      if (!$scope.isHtml && !pattern.test(this.embed)) {
+        $scope.embedNotAllowed = true;
+        return;
+      }
       // construct the entity
       var data = {
         name: 'embed',
@@ -733,9 +752,7 @@
       else {
         results.push($scope.selected_file);
       }
-
       $('.modal-backdrop').slice(1).remove();
-      
       close(results);
     }
 
@@ -846,7 +863,8 @@
             audio: 'audio',
             executable: 'executable',
             document: 'document',
-            html: 'html'
+            html: 'html',
+            presentation: 'presentation'
           },
           replace: false
         };

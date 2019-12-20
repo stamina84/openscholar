@@ -1,0 +1,23 @@
+uuid: 888c223d-cbea-420e-a6fb-d6f5a1a43736
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.storage.block_content.field_events_should_expire
+  module:
+    - options
+id: block_content.list_of_posts.field_events_should_expire
+field_name: field_events_should_expire
+entity_type: block_content
+bundle: list_of_posts
+label: 'Events should expire'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: after_event_start
+default_value_callback: ''
+settings: {  }
+field_type: list_string

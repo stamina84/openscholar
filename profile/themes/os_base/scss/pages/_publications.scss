@@ -60,7 +60,9 @@
       }
     }
   }
-  /**** css for abstract ****/
+}
+/**** css for abstract ****/
+article {
   .field--abstract {
     margin: 0 4px;
     &.field--label {
@@ -85,7 +87,7 @@
   }
 }
 /** citation **/
-.path-bibcite {
+.path-bibcite, .block--type-list-of-posts {
   .bibcite-citation {
     display: block;
     border: 1px solid $color-gray2;

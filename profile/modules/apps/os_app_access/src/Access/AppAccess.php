@@ -9,7 +9,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\os_app_access\AppAccessLevels;
-use Drupal\vsite\Plugin\AppManangerInterface;
+use Drupal\vsite\Plugin\AppManagerInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -35,7 +35,7 @@ class AppAccess implements AccessInterface, ContainerInjectionInterface {
   /**
    * App manager.
    *
-   * @var \Drupal\vsite\Plugin\AppManangerInterface
+   * @var \Drupal\vsite\Plugin\AppManagerInterface
    */
   protected $appManager;
 
@@ -46,10 +46,10 @@ class AppAccess implements AccessInterface, ContainerInjectionInterface {
    *   Config factory service.
    * @param \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager
    *   Vsite context manager.
-   * @param \Drupal\vsite\Plugin\AppManangerInterface $app_mananger
+   * @param \Drupal\vsite\Plugin\AppManagerInterface $app_mananger
    *   App manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, VsiteContextManagerInterface $vsite_context_manager, AppManangerInterface $app_mananger) {
+  public function __construct(ConfigFactoryInterface $config_factory, VsiteContextManagerInterface $vsite_context_manager, AppManagerInterface $app_mananger) {
     $this->configFactory = $config_factory;
     $this->vsiteContextManager = $vsite_context_manager;
     $this->appManager = $app_mananger;

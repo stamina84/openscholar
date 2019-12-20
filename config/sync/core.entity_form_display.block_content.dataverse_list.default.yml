@@ -1,0 +1,60 @@
+uuid: a23faa26-57a4-41b8-8b3f-d2b4e31960f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_list
+    - field.field.block_content.dataverse_list.field_dataverse_identifier
+    - field.field.block_content.dataverse_list.field_embed_height
+    - field.field.block_content.dataverse_list.field_widget_title
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.dataverse_list.default
+targetEntityType: block_content
+bundle: dataverse_list
+mode: default
+content:
+  field_dataverse_identifier:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_embed_height:
+    weight: 3
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_widget_title:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 4
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

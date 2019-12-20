@@ -1,0 +1,46 @@
+uuid: 99a1a34b-5871-430f-8a35-aad6f1eb0cd4
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.media.presentation
+    - field.field.media.document.field_media_file
+    - field.field.media.document.field_taxonomy_terms
+    - media.type.document
+  module:
+    - cp_taxonomy
+    - layout_builder
+    - os_office_embed
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.document.presentation
+targetEntityType: media
+bundle: document
+mode: presentation
+content:
+  field_media_file:
+    type: os_office_embed
+    weight: 0
+    region: content
+    label: visually_hidden
+    settings:
+      width: 500
+      height: 400
+    third_party_settings: {  }
+  field_taxonomy_terms:
+    weight: 1
+    label: hidden
+    settings:
+      label: 'See also'
+      number_of_characters: 94
+    third_party_settings: {  }
+    type: cp_taxonomy_comma_separator
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  thumbnail: true
+  uid: true

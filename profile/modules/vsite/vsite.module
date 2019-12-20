@@ -6,6 +6,7 @@
  */
 
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\node\NodeInterface;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
@@ -190,7 +191,7 @@ function vsite_form_alter(&$form, FormStateInterface $formState, $form_id) {
  */
 function vsite_path_widget_check_empty_validate(&$form, FormStateInterface $form_state) {
   $path_value = $form_state->getValue('path');
-  if (!empty($path_value[0]) && $path_value[0]['pathauto'] == 0) {
+  if (isset($path_value[0]['pathauto']) && $path_value[0]['pathauto'] === 0) {
     $alias = trim($path_value[0]['alias'], '/');
     if (empty($alias)) {
       $form_state->setErrorByName('path][0][alias', 'URL alias can not be empty.');
@@ -421,4 +422,59 @@ function vsite_node_preview_submit(array $form, FormStateInterface $form_state) 
   // New method introduced in the patch.
   // See https://www.drupal.org/project/drupal/issues/2950883
   $form_state->ignoreDestination();
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for attaching cache metadata to pages.
+ *
+ * This will attach cache metadata for vsites.
+ */
+function vsite_preprocess_page(&$variables, $hook) {
+  /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+  $vsite_context_manager = \Drupal::service('vsite.context_manager');
+  /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
+  $active_vsite = $vsite_context_manager->getActiveVsite();
+
+  if ($active_vsite) {
+    $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], ['config:vsite.settings']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function vsite_preprocess_node(&$variables) {
+  if ($variables['page']) {
+    $app_manager = Drupal::service('vsite.app.manager');
+    $app = $app_manager->getAppForBundle('node', $variables['node']->bundle());
+    Drupal::service('os_widgets_context.context')->addApp($app);
+  }
+}
+
+/**
+ * Implements hook_preprocess_bibcite_reference().
+ */
+function vsite_preprocess_bibcite_reference(&$variables) {
+  $entity = Drupal::requestStack()->getCurrentRequest()->attributes->get('bibcite_reference');
+  // Checking the current request and rendered reference id match.
+  if (!empty($entity) && $entity->id() == $variables['bibcite_reference']->id()) {
+    $app_manager = Drupal::service('vsite.app.manager');
+    $app = $app_manager->getAppForBundle('bibcite_reference', '*');
+    Drupal::service('os_widgets_context.context')->addApp($app);
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function vsite_views_pre_render(ViewExecutable $view) {
+  /** @var \Drupal\os_widgets_context\OsWidgetsContext $os_widget_context */
+  $os_widget_context = Drupal::service('os_widgets_context.context');
+
+  /** @var \Drupal\vsite\Plugin\AppManager $app_manager */
+  $app_manager = Drupal::service('vsite.app.manager');
+  $apps = $app_manager->getAppsForView($view);
+  foreach ($apps as $app) {
+    $os_widget_context->addApp($app);
+  }
 }

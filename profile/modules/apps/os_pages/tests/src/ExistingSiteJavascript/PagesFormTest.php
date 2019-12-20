@@ -35,12 +35,11 @@ class PagesFormTest extends TestBase {
     $page_add_option->click();
 
     $this->getSession()->getPage()->fillField('title[0][value]', $title);
-    $this->getSession()->getPage()->selectFieldOption('book[bid]', 'new');
+    $this->getSession()->getPage()->find('css', 'input[type=checkbox][name="book[checkbox]"]')->check();
     $this->waitForAjaxToFinish();
     $this->getSession()->getPage()->pressButton('Save');
 
     $book = $this->getNodeByTitle($title);
-
     // Test sub-page level 1 creation.
     $title = $this->randomMachineName();
     $this->visitViaVsite("node/add/page?parent={$book->id()}", $this->group);

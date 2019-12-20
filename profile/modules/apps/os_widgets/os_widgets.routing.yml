@@ -35,3 +35,20 @@ os_widgets.delete_widget:
     _title: 'Delete block'
   requirements:
     _group_permission: 'manage layout'
+os_widgets.add_slideshow:
+  path: '/os/add/slideshow/{block_content}'
+  defaults:
+    _form: 'Drupal\os_widgets\Form\AddSlideshowForm'
+    _title: 'Add new slideshow'
+  options:
+    parameters:
+      block_content:
+        type: entity:block_content
+  requirements:
+    _add_slideshow_access_check: 'TRUE'
+os_widgets.widgets_pagination_ajax:
+  path: '/refresh-widget-content/{id}'
+  defaults:
+    _controller: '\Drupal\os_widgets\Controller\WidgetsPaginationController::changePage'
+  requirements:
+    _permission: 'access content'

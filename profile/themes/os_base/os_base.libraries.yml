@@ -19,3 +19,7 @@ slick:
       /libraries/slick/slick/slick.css: {}
     theme:
       /libraries/slick/slick/slick-theme.css: {}
+
+accordion:
+  js:
+    js/accordion.js: {}

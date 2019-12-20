@@ -108,9 +108,11 @@ function vsite_tokens($type, $tokens, array $data, array $options, BubbleableMet
           break;
 
         case 'site_favicon':
-          /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsiteContext */
+          /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
           $config_factory = \Drupal::service('config.factory');
+          /** @var \Drupal\Core\Config\ImmutableConfig $config */
           $config = $config_factory->get('vsite.settings');
+          /** @var int $favicon_fid */
           $favicon_fid = $config->get('favicon_fid');
           if (!empty($favicon_fid) && $file = File::load($favicon_fid)) {
             $favicon_url = file_create_url($file->getFileUri());

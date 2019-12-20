@@ -1,0 +1,14 @@
+uuid: 17017dfb-d487-426f-a6a4-1624a0c6a284
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.support_team
+  module:
+    - user
+id: user_remove_role_action.support_team
+label: 'Remove the Support Team role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: support_team

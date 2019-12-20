@@ -13,77 +13,37 @@
         return;
       }
 
+      function makeTodaybtnActive() {
+        let $fcTodayButton = $('.fullcalendar button.fc-today-button');
+        $fcTodayButton.removeAttr('disabled');
+        $fcTodayButton.removeClass('ui-state-disabled');
+      }
+
       return $.extend({
         eventRender: function (event, element) {
-          if (element.hasClass('fc-event-future') && !element.hasClass('fc-day-grid-event')) {
-            let userOffsetInSeconds = drupalSettings['os_events']['offsetInM']/3600;
-            let userOffsetInHM = drupalSettings['os_events']['offsetInHm'];
-            let dateString = event['start']['_i'] + userOffsetInHM;
-            let date = new Date(dateString).getTime()/1000;
-            let eventDate = (date - (userOffsetInSeconds*3600));
-            let nid = event.eid;
-            element.html(drupalSettings['os_events']['node'][nid]);
-            element.find('#events_signup_modal_form').attr('href', '/events/signup/' + nid + '/' + eventDate);
-          }
-          else if (element.hasClass('fc-event-past') && !element.hasClass('fc-day-grid-event')) {
-            let nid = event.eid;
-            element.html(drupalSettings[nid]);
-          }
+          makeTodaybtnActive();
         },
         eventAfterAllRender: function (view) {
-          if (view.name == 'listUpcoming' || view.name == 'listPast') {
-            let tableSubHeaders = $(".fc-list-heading");
-            tableSubHeaders.each(function () {
-              $(this).nextUntil(".fc-list-heading").wrapAll("<tr class='fc-list-item-parent'></tr>");
-            });
-            //wrapping events date, moth, year to seperate span for ui
-            $('.fc-list-heading-main').each(function () {
-              let eventdata = $(this).text().split(' ');
-              $(this).empty();
-              $(this).append($("<span class='event-year'>").text(eventdata[0]));
-              $(this).append($("<span class='event-start-month'>").text(eventdata[1]));
-              $(this).append($("<span class='event-start-day'>").text(eventdata[2]));
-            });
-            //wrapping every 2 tr(event date and event title, location) to single tr so that UI doesn't break in small screen
-            var elems = $(".fc-listUpcoming-view tbody > tr, .fc-listPast-view tbody > tr");
-            var wrapper = $('<tr class="fc-wrapper" />');
-            var pArrLen = elems.length;
-            for (var i = 0; i < pArrLen; i += 2) {
-              elems.filter(':eq(' + i + '),:eq(' + (i + 1) + ')').wrapAll(wrapper);
-            };
-          }
-          //wrapping content in td for ui
-          if (view.name == 'listWeek' || view.name == 'listDay') {
-            $('.fc-event-future').each(function(){
-              $(this).wrapInner('<td>');
-            });
+          makeTodaybtnActive();
+          if(view.name == 'today') {
+            $('.fullcalendar').fullCalendar('today');
+            makeTodaybtnActive();
+            $('.fc-prev-button').hide();
+            $('.fc-next-button').hide();
+          } else {
+            $('.fc-prev-button').show();
+            $('.fc-next-button').show();
           }
         },
         views: {
-          listUpcoming: {
+          today: {
             type: 'list',
-            visibleRange: function (currentDate) {
-              return {
-                start: currentDate.clone().add(1, 'days'),
-                end: currentDate.clone().add(2, 'weeks'),
-              }
-            },
-            buttonText: Drupal.t('Upcoming Events'),
-            listDayFormat: 'YYYY MMM DD',
-          },
-          listPast: {
-            type: 'list',
-            visibleRange: function (currentDate) {
-              return {
-                start: currentDate.clone().subtract(1, 'days'),
-                end: currentDate.clone().subtract(2, 'weeks'),
-              }
-            },
-            buttonText: Drupal.t('Past Events'),
+            buttonText: Drupal.t('Today'),
             listDayFormat: 'YYYY MMM DD',
           },
         },
         'buttonText': {
+          month: Drupal.t('Month'),
           listWeek: Drupal.t('Week'),
           listDay: Drupal.t('Day'),
         },

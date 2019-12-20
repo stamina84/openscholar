@@ -1,0 +1,23 @@
+uuid: fce139ae-c4ad-4dad-aacf-bd7b43ac7196
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_weight
+    - paragraphs.paragraphs_type.follow_me_links
+id: paragraph.follow_me_links.field_weight
+field_name: field_weight
+entity_type: paragraph
+bundle: follow_me_links
+label: weight
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

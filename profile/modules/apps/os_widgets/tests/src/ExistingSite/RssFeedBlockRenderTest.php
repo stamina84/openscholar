@@ -8,7 +8,7 @@ use Drupal\views\Views;
  * Class RssFeedBlockRenderTest.
  *
  * @group kernel
- * @group widgets
+ * @group widgets-1
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\RssFeedWidget
  */
 class RssFeedBlockRenderTest extends OsWidgetsExistingSiteTestBase {
@@ -44,7 +44,6 @@ class RssFeedBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       'type' => 'rss_feed',
       'field_content_to_display' => [
         'class',
-        'link',
         'news',
       ],
       'field_is_show_all_content' => [
@@ -55,7 +54,7 @@ class RssFeedBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       ->getViewBuilder('block_content');
     $render = $view_builder->view($block_content);
 
-    $this->assertSame('route:view.os_feeds.feed_1;arg_0=class%2Blink%2Bnews', $render['rss_feed']['#url']->toUriString());
+    $this->assertSame('route:view.os_feeds.feed_1;arg_0=class%2Bnews', $render['rss_feed']['#url']->toUriString());
   }
 
   /**
@@ -75,8 +74,6 @@ class RssFeedBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $field_allowed_values = os_widgets_field_content_to_display_allowed_values();
 
     $this->assertNotEmpty($field_allowed_values);
-    $this->assertArrayHasKey('link', $field_allowed_values);
-    $this->assertSame('Link', $field_allowed_values['link']);
     $this->assertArrayHasKey('all_publications', $field_allowed_values);
     $this->assertSame('Publications', $field_allowed_values['all_publications']->__tostring());
   }

@@ -1,0 +1,18 @@
+.lop-details .form-group.form-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+.lop-details .form-group.form-wrapper > .form-wrapper {
+  padding-right: 10px;
+}
+.lop-details .panel-body .form-group.form-wrapper .field--name-field-publication-types {
+  width: 100%;
+}
+.block-list-of-posts-form .chosen-container {
+  border: 0;
+  padding: 0;
+  box-shadow: 0;
+}
+.block-list-of-posts-form .form-type-select label {
+  display: block;
+}

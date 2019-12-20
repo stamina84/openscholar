@@ -1,0 +1,35 @@
+uuid: 01485527-1883-44f6-814c-f769bd1a6c8c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.full
+    - field.field.media.document.field_media_file
+    - field.field.media.document.field_taxonomy_terms
+    - media.type.document
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.document.full
+targetEntityType: media
+bundle: document
+mode: full
+content:
+  name:
+    type: string
+    weight: 0
+    region: content
+    label: visually_hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_file: true
+  field_taxonomy_terms: true
+  langcode: true
+  thumbnail: true
+  uid: true

@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_presentation_slides
-    - media.type.document
+    - media.type.presentation
     - node.type.presentation
 id: node.presentation.field_presentation_slides
 field_name: field_presentation_slides
@@ -20,7 +20,7 @@ settings:
   handler: 'default:media'
   handler_settings:
     target_bundles:
-      document: document
+      presentation: presentation
     sort:
       field: _none
     auto_create: false

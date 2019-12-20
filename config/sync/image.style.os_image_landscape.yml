@@ -1,0 +1,15 @@
+uuid: d2033b49-317f-4679-be3e-6d15c10fcd73
+langcode: en
+status: true
+dependencies: {  }
+name: os_image_landscape
+label: 'OS Image Landscape 320X200'
+effects:
+  69a6bd31-ebac-4c60-ae3e-843b5aa5aa6d:
+    uuid: 69a6bd31-ebac-4c60-ae3e-843b5aa5aa6d
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 320
+      height: 200
+      anchor: center-center

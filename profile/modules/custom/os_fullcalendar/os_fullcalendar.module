@@ -22,3 +22,21 @@ function os_fullcalendar_form_alter(&$form, FormStateInterface $form_state, $for
   }
 
 }
+
+/**
+ * Implements hook_preprocess_node() for events calendar view mode twig.
+ */
+function os_fullcalendar_preprocess_node(&$variables) {
+  if ($variables['node']->bundle() == 'events') {
+    $field_recurring_date = $variables['elements']['field_recurring_date'];
+    if (isset($field_recurring_date[0])) {
+      $date = strtotime($field_recurring_date[0]['#date']['start_date']['#text']);
+      $start_date = [
+        'year' => date('Y', $date),
+        'month' => strtoupper(date('M', $date)),
+        'day' => date('d', $date),
+      ];
+      $variables['start_date'] = $start_date;
+    }
+  }
+}

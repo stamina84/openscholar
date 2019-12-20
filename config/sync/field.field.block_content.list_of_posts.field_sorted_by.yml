@@ -1,0 +1,23 @@
+uuid: 976bd4b7-5363-4601-ba27-e8c22709b182
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.storage.block_content.field_sorted_by
+  module:
+    - options
+id: block_content.list_of_posts.field_sorted_by
+field_name: field_sorted_by
+entity_type: block_content
+bundle: list_of_posts
+label: 'Sorted By'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: sort_newest
+default_value_callback: ''
+settings: {  }
+field_type: list_string

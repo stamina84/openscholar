@@ -1,0 +1,8 @@
+uuid: 204cfa2f-471a-4a4c-b36c-c683e3a8873a
+langcode: en
+status: true
+dependencies: {  }
+id: accordion
+label: Accordion
+revision: 1
+description: ''

@@ -83,6 +83,8 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
     'video' => 'field_media_video_file',
     'oembed' => 'field_media_oembed_content',
     'html' => 'field_media_html',
+    'audio' => 'field_media_file',
+    'executable' => 'field_media_file',
   ];
 
   /**
@@ -94,8 +96,8 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
     'HTML' => 'html',
     'Executable' => 'executable',
     'Audio' => 'audio',
-    'Icon' => 'icon',
     'Embeds' => 'oembed',
+    'Presentation' => 'presentation',
   ];
 
   /**

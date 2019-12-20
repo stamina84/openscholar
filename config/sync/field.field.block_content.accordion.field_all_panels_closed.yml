@@ -1,0 +1,23 @@
+uuid: 650e35a8-b0a2-4fa3-abfc-72ca961be79a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.accordion
+    - field.storage.block_content.field_all_panels_closed
+id: block_content.accordion.field_all_panels_closed
+field_name: field_all_panels_closed
+entity_type: block_content
+bundle: accordion
+label: 'All Panels Closed?'
+description: 'By default, the first panel of the Accordion will be opened. Checking this will leave it closed until the user opens it.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

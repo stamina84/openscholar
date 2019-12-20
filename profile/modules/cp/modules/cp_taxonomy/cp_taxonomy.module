@@ -20,11 +20,6 @@ use Drupal\Core\Url;
  * Implements hook_entity_operation_alter().
  *
  * Remove operations from taxonomy vocabs we don't care about.
- *
- * @param array $operations
- *   List of operations.
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity these operations will act on.
  */
 function cp_taxonomy_entity_operation_alter(array &$operations, EntityInterface $entity) {
   /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsiteContextManager */
@@ -69,11 +64,6 @@ function cp_taxonomy_theme($existing, $type, $theme, $path) {
  * Implements hook_form_FORM_ID_alter().
  *
  * Remove global vocabularies from the list.
- *
- * @param array $form
- *   The form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state.
  */
 function cp_taxonomy_form_taxonomy_overview_vocabularies_alter(array &$form, FormStateInterface $form_state) {
   if (\Drupal::routeMatch()->getRouteName() == 'cp.taxonomy') {
@@ -90,11 +80,6 @@ function cp_taxonomy_form_taxonomy_overview_vocabularies_alter(array &$form, For
  * Implements hook_form_FORM_ID_alter().
  *
  * Add our submit handler to the form.
- *
- * @param array $form
- *   The form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state.
  */
 function cp_taxonomy_form_taxonomy_vocabulary_form_alter(array &$form, FormStateInterface &$form_state) {
   if (\Drupal::routeMatch()->getRouteName() == 'cp.taxonomy.add') {
@@ -161,11 +146,6 @@ function cp_taxonomy_form_taxonomy_vocabulary_form_alter(array &$form, FormState
  * Implements hook_form_FORM_ID_alter().
  *
  * Alter the terms overview page to fix links and redirects.
- *
- * @param array $form
- *   The form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state.
  */
 function cp_taxonomy_form_taxonomy_overview_terms_alter(array &$form, FormStateInterface &$form_state) {
   /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $oldMarkup */
@@ -175,7 +155,8 @@ function cp_taxonomy_form_taxonomy_overview_terms_alter(array &$form, FormStateI
   $arguments = [
     ':link' => Url::fromRoute('cp.taxonomy.term.add', ['taxonomy_vocabulary' => $vocab->id()])->toString(),
   ] + $oldMarkup->getArguments();
-  $form['terms']['#empty'] = t($oldMarkup->getUntranslatedString(), $arguments);
+
+  $form['terms']['#empty'] = t('No terms available. <a href=":link">Add term</a>.', $arguments);
   $form['actions']['reset_alphabetical']['#submit'][] = 'cp_taxonomy_reset_redirect';
 }
 
@@ -197,11 +178,6 @@ function cp_taxonomy_reset_redirect(array &$form, FormStateInterface &$form_stat
  * Implements hook_form_FORM_ID_alter().
  *
  * Change the link for the Cancel button to stay in the cp namespace.
- *
- * @param array $form
- *   The form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state.
  */
 function cp_taxonomy_form_taxonomy_vocabulary_confirm_delete_alter(array &$form, FormStateInterface &$form_state) {
   if (\Drupal::routeMatch()->getRouteName() == 'cp.taxonomy.delete') {
@@ -273,7 +249,8 @@ function cp_taxonomy_views_data_alter(&$data) {
 /**
  * Implements hook_form_FORM_ID_alter().
  *
- * Handle field_taxonomy_terms field visibility on node entity form.
+ * Issue 12552: Handle field_taxonomy_terms field on node entity form.
+ * If current node type has no related vocabularies, then show error messages.
  */
 function cp_taxonomy_form_node_form_alter(&$form, FormStateInterface $form_state) {
   if (!empty($form['field_taxonomy_terms']['widget'])) {
@@ -281,11 +258,40 @@ function cp_taxonomy_form_node_form_alter(&$form, FormStateInterface $form_state
     $node_form = $form_state->getBuildInfo()['callback_object'];
     $bundle = $node_form->getEntity()->bundle();
     $bundle_key = 'node:' . $bundle;
-
+    $messenger = \Drupal::messenger();
     $vocabularies = Drupal::service('cp.taxonomy.helper')->searchAllowedVocabulariesByType($bundle_key);
-    // If the current node type has no related vocabularies, then hide it.
-    if (empty($vocabularies)) {
-      $form['field_taxonomy_terms']['#access'] = FALSE;
+    if (!empty($vocabularies)) {
+      $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+      foreach ($vocabularies as $vid) {
+        $terms = $taxonomy_storage->loadTree($vid);
+        $form['field_taxonomy_terms']['#terms'][$vid] = $vid;
+        if (empty($terms)) {
+          $messenger->addError(t('@vid - Vocabulary has no terms, please contact site admin.', ['@vid' => $vid]));
+        }
+      }
+    }
+  }
+  $form['#validate'][] = 'cp_taxonomy_node_terms_validate';
+}
+
+/**
+ * Custom validation for node field_taxonomy_terms field.
+ */
+function cp_taxonomy_node_terms_validate(&$form, FormStateInterface $form_state) {
+  if (isset($form['field_taxonomy_terms']['#terms'])) {
+    $terms_values = $form_state->getValue('field_taxonomy_terms');
+    foreach ($form['field_taxonomy_terms']['#terms'] as $key => $vid) {
+      if ($form['field_taxonomy_terms']['widget'][$vid]['#required'] && empty($terms_values[$vid])) {
+        if (isset($form['field_taxonomy_terms']['widget'][$vid]["#type"]) && $form['field_taxonomy_terms']['widget'][$vid]["#type"] == 'entity_autocomplete') {
+          $form_state->setError($form, t('@vid - Term is required.', ['@vid' => $vid]));
+        }
+        else {
+          $form_state->setError($form, t('@vid - No term is available, please contact site admin.', ['@vid' => $vid]));
+        }
+      }
+      if (isset($form['field_taxonomy_terms']['#no_terms'][$key])) {
+        $form_state->setError($form, t('@vid - Vocabulary has no terms, please contact site admin.', ['@vid' => $vid]));
+      }
     }
   }
 }

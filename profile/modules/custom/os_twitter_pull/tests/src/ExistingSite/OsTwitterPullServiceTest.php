@@ -12,7 +12,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  *
  * @group twitter
  * @group kernel
- * @group other
+ * @group os
  *
  * @coversDefaultClass \Drupal\os_twitter_pull\TwitterPullHandler
  */

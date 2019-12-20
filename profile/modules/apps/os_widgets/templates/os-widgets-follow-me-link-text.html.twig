@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Theme implementation for a follow me widget markup text field.
+ *
+ * Available variables:
+ * - title : Containing domain
+#}
+
+<div class="rrssb no-label">
+  <ul class="rrssb-buttons">
+   {% set rrssb_class = title == 'Google+' ? 'googleplus' :  (title == '__blank__' ? '' : title) %}
+    <li class="rrssb-{{ rrssb_class |lower }}">
+      <a>
+        <span class="rrssb-icon"></span>
+        <span class="rrssb-text"></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<a href="#" class="remove" title="{{ 'Remove Link'|t }}">{{ 'Remove' |t }}</a>

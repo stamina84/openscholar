@@ -9,7 +9,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  *
  * @group twitter
  * @group functional
- * @group other
+ * @group os
  *
  * @coversDefaultClass \Drupal\os_twitter_pull\Form\OsTwitterPullAdminSettingsForm
  */

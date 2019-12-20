@@ -12,12 +12,8 @@ dependencies:
   module:
     - cp_taxonomy
     - datetime
-    - layout_builder
     - text
     - user
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: node.presentation.default
 targetEntityType: node
 bundle: presentation
@@ -52,7 +48,7 @@ content:
     weight: 2
     label: inline
     settings:
-      view_mode: default
+      view_mode: presentation
       link: false
     third_party_settings: {  }
     region: content

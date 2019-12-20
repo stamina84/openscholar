@@ -1,0 +1,19 @@
+.block--type-list-of-posts {
+  .block-content {
+    >ul {
+      >li {
+        margin-bottom: 15px;
+        border-bottom: 1px solid $color-light-gray6;
+        padding-bottom: 15px;
+        > article {
+          margin-bottom: 0;
+          border: 0;
+          padding: 0;
+        }
+      }
+    }
+  }
+  .node-readmore {
+    text-align: right;
+  }
+}

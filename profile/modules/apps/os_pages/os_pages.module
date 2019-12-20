@@ -12,6 +12,8 @@ use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_entity_insert().
@@ -224,7 +226,27 @@ function os_pages_node_prepare_form(NodeInterface $node, $operation, FormStateIn
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for making sure the vsite users are able to create and manage sub-pages.
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Handling book attributes while editing page.
+ */
+function os_pages_form_node_page_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  os_pages_node_page_alter($form, $form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Handling book attributes while creating page.
+ */
+function os_pages_form_node_page_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  os_pages_node_page_alter($form, $form_state);
+}
+
+/**
+ * Custom function to handle book feature for pages.
+ *
+ * With this, vsite users can manage pages & sub-pages for books.
  *
  * Much of the code is similar to `book_form_node_form_alter`. It has wrapped
  * everything inside an access check, that makes it impossible to create a
@@ -232,7 +254,9 @@ function os_pages_node_prepare_form(NodeInterface $node, $operation, FormStateIn
  *
  * @see \book_form_node_form_alter
  */
-function os_pages_form_node_page_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function os_pages_node_page_alter(array &$form, FormStateInterface $form_state) {
+  $disabled = FALSE;
+  $checked = FALSE;
   /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
   $vsite_context_manager = \Drupal::service('vsite.context_manager');
   /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
@@ -260,13 +284,52 @@ function os_pages_form_node_page_form_alter(&$form, FormStateInterface $form_sta
   $form['book']['bid']['#access'] = $access;
 
   $nid = !$node->isNew() ? $node->id() : 'new';
-  $options = $form['book']['bid']['#options'];
+
   if (($nid === 'new' || ($nid != $node->book['original_bid'])) &&
-    $active_vsite->hasPermission('create new books', $current_user)) {
+  $active_vsite->hasPermission('create new books', $current_user)) {
+    $form['book']['bid']['#access'] = FALSE;
+    $form['book']['pid']['#access'] = FALSE;
+    unset($form['book']['weight']);
+    $query = \Drupal::request()->query;
+
     // The node can become a new book, if it is not one already.
-    $options = [$nid => t('- Create a new book -')] + $options;
+    if ($query->get('parent')) {
+      $disabled = TRUE;
+      $checked = TRUE;
+      $parent = $query->get('parent');
+    }
+
+    $form['book']['checkbox'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Allow this page to be part of a book'),
+      '#default_value' => $checked,
+      '#ajax' => [
+        'callback' => 'os_pages_book_custom_form_update',
+      ],
+      '#attributes' => ['disabled' => $disabled],
+    ];
   }
-  $form['book']['bid']['#options'] = $options;
+
+  // Setting bid as parent. New value if its a new book.
+  if (isset($parent)) {
+    $parent_node = Node::load($parent);
+    $bid = ($parent_node->book['pid'] != 0) ? $parent_node->book['pid'] : $parent_node->book['bid'];
+    $pid = $parent;
+    $node->book['bid'] = $bid;
+    $node->book['pid'] = $pid;
+  }
+  else {
+    $bid = $nid;
+    $pid = 0;
+  }
+
+  // Get checkbox value.
+  $new = $form_state->getTriggeringElement();
+  // Add book id if checkbox is triggered and selected.
+  if ($new['#attributes']['data-drupal-selector'] == 'edit-book-checkbox' && $new['#value'] == 1) {
+    $form['book']['bid']['#value'] = $bid;
+    $form['book']['pid']['#value'] = $pid;
+  }
 
   // The "js-hide" class hides submit button when Javascript is enabled.
   $form['book']['pick-book'] = [
@@ -284,6 +347,18 @@ function os_pages_form_node_page_form_alter(&$form, FormStateInterface $form_sta
 }
 
 /**
+ * Performs ajax action on checkbox.
+ *
+ * @param array $form
+ *   The form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function os_pages_book_custom_form_update(array $form, FormStateInterface $form_state) {
+  return $form['book']['bid'];
+}
+
+/**
  * Implements hook_menu_local_tasks_alter().
  */
 function os_pages_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
@@ -294,6 +369,11 @@ function os_pages_menu_local_tasks_alter(&$data, $route_name, RefinableCacheable
         unset($data['tabs'][0][$task]);
       }
     }
+  }
+
+  // Hide Outline tab if the node is just a page and if it's not a book.
+  if ($node instanceof NodeInterface && $node->bundle() == 'page' && empty($node->book)) {
+    unset($data['tabs'][0]['entity.node.book_outline_form']);
   }
 }
 
@@ -315,7 +395,8 @@ function os_pages_module_implements_alter(&$implementations, $hook) {
  */
 function os_pages_contextual_links_view_alter(&$element, $items) {
   if (isset($element['#contextual_links']['node'])) {
-    $entity = entity_load('node', $element['#contextual_links']['node']['route_parameters']['node']);
+    $nid = $element['#contextual_links']['node']['route_parameters']['node'];
+    $entity = Node::load($nid);
 
     // Checking content type page.
     if ($entity->bundle() == 'page') {
@@ -330,13 +411,103 @@ function os_pages_contextual_links_view_alter(&$element, $items) {
         ];
       }
 
-      $element['#links']['add_subpage'] = [
-        'title' => t('Add Subpage'),
-        'url' => Url::fromRoute('node.add', [
-          'node_type' => 'page',
-          'parent' => $entity->id(),
-        ]),
-      ];
+      // Checking node has book id.
+      if ($entity->book['bid']) {
+        $element['#links']['add_subpage'] = [
+          'title' => t('Add Subpage'),
+          'url' => Url::fromRoute('node.add', [
+            'node_type' => 'page',
+            'parent' => $entity->id(),
+          ]),
+        ];
+      }
     }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ *
+ * Attaching contextualChanges library to pages (book)
+ * to handle changes in contextual links for book pages.
+ */
+function os_pages_node_view_alter(array &$build, NodeInterface $entity, EntityViewDisplayInterface $display) {
+  if ($entity->bundle() == 'page' && !empty($entity->book['bid'])) {
+    $build['#attached']['library'][] = 'os_pages/contextualChanges';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function os_pages_theme() {
+  return [
+    'page_export_html' => [
+      'variables' => [
+        'content' => NULL,
+      ],
+    ],
+    'book_export_html' => [
+      'template' => 'book-export-html',
+      'base hook' => 'book',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for page export templates.
+ *
+ * Template: page-export-html.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - title: The title of the page.
+ *   - content: Page content.
+ */
+function template_preprocess_page_export_html(array &$variables) {
+  global $base_url;
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+  $variables['base_url'] = $base_url;
+  $variables['#attached']['library'][] = 'os_pages/pageExport';
+
+  // HTML element attributes.
+  $attributes = [];
+  $attributes['lang'] = $language_interface->getId();
+  $attributes['dir'] = $language_interface->getDirection();
+  $variables['html_attributes'] = new Attribute($attributes);
+  $variables['css_path'] = drupal_get_path('module', 'os_pages') . '/css';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Adding customized css for book export page.
+ */
+function os_pages_preprocess_book_export_html(&$variables) {
+  $variables['css_path'] = drupal_get_path('module', 'os_pages') . '/css';
+}
+
+/**
+ * Implements hook_node_links_alter().
+ *
+ * Setting print-friendly page export link for Page.
+ */
+function os_pages_node_links_alter(array &$links, NodeInterface $node, array &$context) {
+  if ($node->bundle() == "page" && $context['view_mode'] == 'full' && node_is_page($node) && empty($node->book)) {
+    $book_links['book_printer'] = [
+      'title' => t('Printer-friendly version'),
+      'url' => Url::fromRoute('os_pages.export', [
+        'node' => $node->id(),
+      ]),
+      'attributes' => ['title' => t('Show a printer-friendly version of this page.')],
+    ];
+  }
+
+  if (!empty($book_links)) {
+    $links['book'] = [
+      '#theme' => 'links__node__book',
+      '#links' => $book_links,
+      '#attributes' => ['class' => ['links', 'inline']],
+    ];
   }
 }

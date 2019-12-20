@@ -989,7 +989,8 @@ function os_publications_editor_js_settings_alter(array &$settings) {
  * Implements hook_ENTITY_TYPE_view_alter().
  */
 function os_publications_bibcite_reference_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  if ($display->getMode() === 'teaser') {
+  $mode = $display->getMode();
+  if ($mode === 'teaser' || $mode === 'slide_teaser') {
     // Check note in teaser setting and unset it if setting is off.
     $publications_config = \Drupal::configFactory()->get('os_publications.settings');
     $note_in_teaser = $publications_config->get('note_in_teaser');
@@ -1003,7 +1004,7 @@ function os_publications_bibcite_reference_view_alter(array &$build, EntityInter
   }
 
   // If publication has pmid entered, show pubmed link.
-  if ($display->getMode() === 'citation') {
+  if ($mode === 'citation') {
     // Last updated on information.
     $changed = $entity->changed->value;
     $build['changed'] = [

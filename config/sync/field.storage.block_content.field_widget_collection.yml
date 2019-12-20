@@ -1,0 +1,20 @@
+uuid: ca0ce353-bd2b-45ad-a3f2-173f0209e5f3
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - os_widgets
+id: block_content.field_widget_collection
+field_name: field_widget_collection
+entity_type: block_content
+type: entity_reference_with_value
+settings:
+  target_type: block_content
+module: os_widgets
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

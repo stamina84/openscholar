@@ -26,7 +26,6 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    sections: {  }
     allow_custom: false
     enabled: false
 id: node.person.sidebar_teaser
@@ -38,14 +37,14 @@ content:
     type: image
     weight: 0
     region: content
-    label: hidden
+    label: visually_hidden
     settings:
       image_style: crop_photo_person
       image_link: content
     third_party_settings: {  }
   field_professional_titles:
     weight: 1
-    label: hidden
+    label: visually_hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }

@@ -1,0 +1,35 @@
+{#
+  /**
+   * @file
+   * Default theme implementation for Openscholar RSS Listing page.
+   *
+   * Available variables:
+   * - apps: A list of items containing links to content type rss feeds
+   * - publications: A list of items containing links to publications rss feeds
+   * - categories: A list of items containing links to taxonomy term rss feeds
+   */
+  #}
+<h1 class="page-title">{{ 'RSS Feeds'|t }}</h1>
+<div class="rss-feed-section">
+  <h2 class="feed-title">{{ "Content Types"|t }}</h2>
+  <div class="item-list">
+    <ul class="feed-items">
+      {% for url in apps %}
+        <li>{{url}}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <h2 class="feed-title">{{ "Categories"|t }}</h2>
+  <div class="item-list">
+    <ul class="feed-items">
+      {% for vocabulary,terms in categories %}
+      <h2 class="feed-title">{{ vocabulary }}</h2>
+        <ul>
+          {% for url in terms %}
+            <li>{{url}}</li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

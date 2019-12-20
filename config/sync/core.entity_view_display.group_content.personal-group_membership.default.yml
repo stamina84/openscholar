@@ -31,6 +31,7 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 0
+        third_party_settings: {  }
     enabled: true
 id: group_content.personal-group_membership.default
 targetEntityType: group_content

@@ -12,7 +12,7 @@ function os_office_embed_theme() {
   return [
     'os_office_embed' => [
       'variables' => [
-        'url' => NULL,
+        'iframe_url' => NULL,
         'filename' => NULL,
         'width' => NULL,
         'height' => NULL,

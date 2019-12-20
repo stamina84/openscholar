@@ -1,0 +1,38 @@
+{#
+/**
+ * @file
+ * Template for Accordion widget.
+ * - bid - Accordion block_id
+ * - contents: Block contents list from field_widget_collection select
+ * options.
+ * - collapsible - to close/open all accordion tabs based on selection from
+ * field_all_panels_closed.
+ *
+ */
+#}
+<div class="panel-group" id="accordion-{{ bid }}" role="tablist" aria-multiselectable="true">
+  {% for key, content in contents %}
+    <div class="panel panel-default">
+      {% if (loop.first) and (collapsible == 0) %}
+        {% set collapseAll = 'in'  %}
+        {% set icon = 'glyphicon-minus' %}
+      {% else %}
+        {% set collapseAll = ''  %}
+        {% set icon = 'glyphicon-plus' %}
+      {% endif %}
+      <div class="panel-heading" role="tab">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion-{{ bid }}" data-target="#collapse-{{ key }}" aria-controls="#collapse-{{ key }}">{{ content.section_title }} <i class="more-less glyphicon {{icon}}"></i> </a>
+        </h4>
+      </div>
+      <div id="collapse-{{ key }}" class="panel-collapse collapse {{ collapseAll }}" role="tabpanel">
+        <div class="panel-body">
+          <div class="block_content">
+            {{ content.widget }}
+            {{ content.contextual_link }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

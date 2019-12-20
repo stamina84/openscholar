@@ -4,6 +4,7 @@ namespace Drupal\cp_appearance\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 use Symfony\Component\Yaml\Yaml;
 
@@ -60,11 +61,14 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
 
   public const CUSTOM_THEME_LIBRARIES_INFO_TEMPLATE = [
     self::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE => [
-      'version' => 'VERSION',
+      'version' => -1,
       'css' => [
         'theme' => [
           self::CUSTOM_THEMES_STYLE_LOCATION => [],
         ],
+      ],
+      'js' => [
+        self::CUSTOM_THEMES_SCRIPT_LOCATION => [],
       ],
     ],
   ];
@@ -135,13 +139,17 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\cp_appearance\Entity\CustomThemeException
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
 
     $custom_theme_directory_path = self::ABSOLUTE_CUSTOM_THEMES_LOCATION . '/' . $this->id();
     $custom_theme_images_path = $custom_theme_directory_path . '/' . self::CUSTOM_THEMES_IMAGES_LOCATION;
-    $status = file_prepare_directory($custom_theme_images_path, FILE_CREATE_DIRECTORY);
+    $status = $file_system->prepareDirectory($custom_theme_images_path, FileSystemInterface::CREATE_DIRECTORY);
 
     if (!$status) {
       throw new CustomThemeException(t('Unable to create directory for storing the theme. Please contact the site administrator for support.'));
@@ -153,7 +161,7 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
     foreach ($image_ids as $id) {
       /** @var \Drupal\file\FileInterface $image */
       $image = File::load($id);
-      $status = file_unmanaged_copy($image->getFileUri(), "file://$custom_theme_images_path", FILE_EXISTS_REPLACE);
+      $status = $file_system->copy($image->getFileUri(), "file://$custom_theme_images_path", FileSystemInterface::EXISTS_REPLACE);
 
       if (!$status) {
         throw new CustomThemeException(t('Unable to place file %file_uri in the theme. Please contact the site administrator for support.', [
@@ -162,47 +170,38 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
       }
     }
 
-    // Place styles and scripts.
+    // Place styles.
     $styles = $this->getStyles();
-    if ($styles) {
-      $styles_location = "file://$custom_theme_directory_path/" . self::CUSTOM_THEMES_STYLE_LOCATION;
-      $status = touch($styles_location);
+    $styles_location = "file://$custom_theme_directory_path/" . self::CUSTOM_THEMES_STYLE_LOCATION;
+    $status = touch($styles_location);
 
-      if (!$status) {
-        throw new CustomThemeException(t('Unable to place the styles. Please contact the site administrator for support.'));
-      }
-
-      $status = file_unmanaged_save_data($styles, $styles_location, FILE_EXISTS_REPLACE);
-
-      if (!$status) {
-        throw new CustomThemeException(t('Unable to place the styles. Please contact the site administrator for support.'));
-      }
+    if (!$status) {
+      throw new CustomThemeException(t('Unable to place the styles. Please contact the site administrator for support.'));
     }
 
+    $status = $file_system->saveData($styles, $styles_location, FileSystemInterface::EXISTS_REPLACE);
+
+    if (!$status) {
+      throw new CustomThemeException(t('Unable to place the styles. Please contact the site administrator for support.'));
+    }
+
+    // Place scripts.
     $scripts = $this->getScripts();
-    if ($scripts) {
-      $scripts_location = "file://$custom_theme_directory_path/" . self::CUSTOM_THEMES_SCRIPT_LOCATION;
-      $status = touch($scripts_location);
+    $scripts_location = "file://$custom_theme_directory_path/" . self::CUSTOM_THEMES_SCRIPT_LOCATION;
+    $status = touch($scripts_location);
 
-      if (!$status) {
-        throw new CustomThemeException(t('Unable to place the scripts. Please contact the site administrator for support.'));
-      }
+    if (!$status) {
+      throw new CustomThemeException(t('Unable to place the scripts. Please contact the site administrator for support.'));
+    }
 
-      $status = file_unmanaged_save_data($scripts, $scripts_location, FILE_EXISTS_REPLACE);
+    $status = $file_system->saveData($scripts, $scripts_location, FileSystemInterface::EXISTS_REPLACE);
 
-      if (!$status) {
-        throw new CustomThemeException(t('Unable to place the scripts. Please contact the site administrator for support.'));
-      }
+    if (!$status) {
+      throw new CustomThemeException(t('Unable to place the scripts. Please contact the site administrator for support.'));
     }
 
     // Place theme.libraries.yml file.
     $libraries_info = self::CUSTOM_THEME_LIBRARIES_INFO_TEMPLATE;
-
-    if ($scripts) {
-      $libraries_info[self::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE]['js'] = [
-        self::CUSTOM_THEMES_SCRIPT_LOCATION => [],
-      ];
-    }
 
     $libraries_info_location = "file://$custom_theme_directory_path/{$this->id()}.libraries.yml";
     $status = touch($libraries_info_location);
@@ -211,7 +210,7 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
       throw new CustomThemeException(t('Unable to place theme libraries info file. Please contact the site administrator for support.'));
     }
 
-    $status = file_unmanaged_save_data(Yaml::dump($libraries_info), $libraries_info_location, FILE_EXISTS_REPLACE);
+    $status = $file_system->saveData(Yaml::dump($libraries_info), $libraries_info_location, FileSystemInterface::EXISTS_REPLACE);
 
     if (!$status) {
       throw new CustomThemeException(t('Unable to place theme libraries info file. Please contact the site administrator for support.'));
@@ -235,7 +234,7 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
     $formatted_regions = [];
     /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $region_name */
     foreach ($base_theme_regions as $region => $region_name) {
-      $formatted_regions[$region] = $region_name->__toString();
+      $formatted_regions[$region] = (string) $region_name;
     }
 
     $info = array_merge($base_info, ['regions' => $formatted_regions], self::CUSTOM_THEME_INFO_TEMPLATE);
@@ -247,11 +246,21 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
       throw new CustomThemeException(t('Unable to place theme info file. Please contact the site administrator for support.'));
     }
 
-    $status = file_unmanaged_save_data(Yaml::dump($info), $info_location, FILE_EXISTS_REPLACE);
+    $status = $file_system->saveData(Yaml::dump($info), $info_location, FileSystemInterface::EXISTS_REPLACE);
 
     if (!$status) {
       throw new CustomThemeException(t('Unable to place theme info file. Please contact the site administrator for support.'));
     }
+
+    // Make sure the browser assets are flushed. Otherwise, user will see the
+    // old styles and scripts.
+    if ($update) {
+      _drupal_flush_css_js();
+    }
+
+    /** @var \Drupal\cp_appearance\CustomThemeInstallerInterface $custom_theme_installer */
+    $custom_theme_installer = \Drupal::service('cp_appearance.custom_theme_installer');
+    $custom_theme_installer->makeInstallable();
   }
 
   /**
@@ -294,8 +303,8 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
     $config_factory = \Drupal::configFactory();
     /** @var \Drupal\Core\Config\Config $theme_setting_mut */
     $theme_setting_mut = $config_factory->getEditable('system.theme');
-    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
-    $theme_installer = \Drupal::service('theme_installer');
+    /** @var \Drupal\cp_appearance\CustomThemeInstallerInterface $custom_theme_installer */
+    $custom_theme_installer = \Drupal::service('cp_appearance.custom_theme_installer');
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
     $theme_handler = \Drupal::service('theme_handler');
     $default_theme = $theme_setting_mut->get('default');
@@ -303,7 +312,7 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
     // Only perform the cleanups on installed custom themes.
     // This will prevent system crash if an uninstalled theme is deleted.
     /** @var \Drupal\cp_appearance\Entity\CustomThemeInterface[] $installed_custom_themes */
-    $installed_custom_themes = array_filter($entities, function (CustomThemeInterface $entity) use ($theme_handler) {
+    $installed_custom_themes = array_filter($entities, static function (CustomThemeInterface $entity) use ($theme_handler) {
       return $theme_handler->themeExists($entity->id());
     });
 
@@ -314,7 +323,7 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
     }
 
     if ($installed_custom_themes) {
-      $theme_installer->uninstall(array_keys($installed_custom_themes));
+      $custom_theme_installer->uninstall(array_keys($installed_custom_themes));
     }
   }
 
@@ -323,11 +332,13 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
    */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
 
     // Cleanup custom theme files.
     foreach ($entities as $custom_theme) {
       $custom_theme_directory_path = 'file://' . self::ABSOLUTE_CUSTOM_THEMES_LOCATION . '/' . $custom_theme->id();
-      file_unmanaged_delete_recursive($custom_theme_directory_path);
+      $file_system->deleteRecursive($custom_theme_directory_path);
     }
   }
 

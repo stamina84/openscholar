@@ -25,6 +25,13 @@ use Drupal\cp_settings\CpSettingBase;
 class OsRedirectMaximumSetting extends CpSettingBase {
 
   /**
+   * Vsite Context Manager.
+   *
+   * @var \Drupal\cp_settings\CpSettingBase
+   */
+  protected $vsiteContextManager;
+
+  /**
    * {@inheritdoc}
    */
   public function getEditableConfigNames(): array {
@@ -40,7 +47,7 @@ class OsRedirectMaximumSetting extends CpSettingBase {
       '#type' => 'textfield',
       '#size' => 10,
       '#title' => t('Maximum number of redirects'),
-      '#default_value' => $config->get('maximum_number'),
+      '#default_value' => $config->get('maximum_number') ?? 15,
     ];
   }
 
@@ -64,7 +71,10 @@ class OsRedirectMaximumSetting extends CpSettingBase {
       return $access_result;
     }
 
-    if (!$account->hasPermission('administer control panel redirects')) {
+    /** @var \Drupal\group\Entity\Group|null $active_vsite */
+    $active_vsite = $this->vsiteContextManager->getActiveVsite();
+
+    if (!$active_vsite || !$active_vsite->hasPermission('url redirect group user', $account)) {
       return AccessResult::forbidden();
     }
 

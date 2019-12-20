@@ -1,0 +1,31 @@
+.block--type-accordion {
+  .panel-body {
+    position: relative;
+    border-top-color: $color-light-gray16;
+  }
+  .panel-group {
+    .panel {
+      border-radius: 0;
+      box-shadow: none;
+      border-color: $color-light-gray16;
+    }
+  }
+  .panel-heading {
+    background-color: $color-light-gray4;
+    border-color: $color-light-gray16;
+    border-radius: 0;
+    padding: 0;
+  }
+  .panel-title {
+    margin: 0;
+    padding: 0;
+    >a {
+      padding: 10px 15px;
+      display: block;
+      cursor: pointer;
+    }
+  }
+  .more-less {
+    float: right;
+  }
+}

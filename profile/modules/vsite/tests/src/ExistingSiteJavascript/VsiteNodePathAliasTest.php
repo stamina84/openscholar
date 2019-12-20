@@ -177,7 +177,6 @@ class VsiteNodePathAliasTest extends OsExistingSiteJavascriptTestBase {
       ['node/add/class'],
       ['node/add/events'],
       ['node/add/faq'],
-      ['node/add/link'],
       ['node/add/news'],
       ['node/add/page'],
       ['node/add/person'],

@@ -19,11 +19,7 @@ dependencies:
     - cp_taxonomy
     - image
     - key_value_field
-    - layout_builder
     - text
-third_party_settings:
-  layout_builder:
-    sections: {  }
 _core:
   default_config_hash: mszPeKC4zHF8VRoWV70oMw7cDO7kSgzNU04OGyQhqy0
 id: bibcite_reference.artwork.default

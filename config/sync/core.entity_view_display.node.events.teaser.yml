@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.date_format.medium
+    - core.date_format.os_event_date_format
     - core.entity_view_mode.node.teaser
     - field.field.node.events.body
     - field.field.node.events.field_attached_media
@@ -28,12 +28,8 @@ dependencies:
   module:
     - cp_taxonomy
     - date_recur
-    - layout_builder
     - text
     - user
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: node.events.teaser
 targetEntityType: node
 bundle: events
@@ -59,7 +55,7 @@ content:
     type: string
     weight: 1
     region: content
-    label: above
+    label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -67,11 +63,11 @@ content:
     type: date_recur_basic_formatter
     weight: 0
     region: content
-    label: above
+    label: inline
     settings:
-      format_type: medium
-      occurrence_format_type: medium
-      same_end_date_format_type: medium
+      format_type: os_event_date_format
+      occurrence_format_type: os_event_date_format
+      same_end_date_format_type: os_event_date_format
       separator: '-'
       timezone_override: ''
       interpreter: ''

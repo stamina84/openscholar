@@ -1,0 +1,26 @@
+uuid: b7fd72d8-0a80-480a-8bd2-07260bebe6bb
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.accordion
+    - field.field.block_content.accordion.field_all_panels_closed
+    - field.field.block_content.accordion.field_widget_collection
+    - field.field.block_content.accordion.field_widget_title
+id: block_content.accordion.default
+targetEntityType: block_content
+bundle: accordion
+mode: default
+content:
+  field_widget_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_all_panels_closed: true
+  field_widget_collection: true
+  langcode: true

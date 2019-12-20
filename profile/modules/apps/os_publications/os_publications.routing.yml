@@ -5,6 +5,12 @@ os_publications.citation_distribute_settings:
     _title: 'Common Settings'
   requirements:
     _permission: 'administer site configuration'
+os_publications.redirect_bibcite_reference_bundles_form:
+  path: '/bibcite/reference/add-select'
+  defaults:
+    _form: '\Drupal\os_publications\Form\RedirectEntityBundlesForm'
+  requirements:
+    _group_permission: 'create publications'
 os_publictions.citation_export:
   path: '/citation/export/{bibcite_format}/{bibcite_reference}'
   defaults:

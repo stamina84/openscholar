@@ -342,6 +342,8 @@ class MenuBuildForm extends FormBase {
     $fields = ['weight', 'parent', 'menu_name'];
     $form_links = $form['links'];
     $label = [];
+    $menu_name = [];
+
     foreach (Element::children($form_links) as $id) {
       if (isset($form_links[$id]['#item'])) {
         $element = $form_links[$id];

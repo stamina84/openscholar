@@ -1,0 +1,21 @@
+uuid: 892c2cbc-4766-41cd-b815-57e0d2d67b64
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.storage.block_content.field_publication_types
+  module:
+    - options
+id: block_content.list_of_posts.field_publication_types
+field_name: field_publication_types
+entity_type: block_content
+bundle: list_of_posts
+label: 'Publication Types'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: os_widgets_default_values_lop_form
+settings: {  }
+field_type: list_string

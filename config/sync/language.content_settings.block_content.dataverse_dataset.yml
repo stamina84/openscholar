@@ -1,0 +1,11 @@
+uuid: 365e8127-6890-4ec2-aae7-ee94f79604ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_dataset
+id: block_content.dataverse_dataset
+target_entity_type_id: block_content
+target_bundle: dataverse_dataset
+default_langcode: site_default
+language_alterable: false

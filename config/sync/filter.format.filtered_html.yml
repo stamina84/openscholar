@@ -16,6 +16,12 @@ filters:
     status: true
     weight: 0
     settings: {  }
+  filter_align:
+    id: filter_align
+    provider: filter
+    status: true
+    weight: 0
+    settings: {  }
   filter_autop:
     id: filter_autop
     provider: filter
@@ -56,8 +62,3 @@ filters:
     status: true
     weight: 100
     settings: {  }
-  filter_align:
-    id: filter_align
-    provider: filter
-    status: true
-    weight: 0

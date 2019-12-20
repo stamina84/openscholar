@@ -9,7 +9,6 @@ dependencies:
     - field.storage.node.field_location
     - field.storage.node.field_recurring_date
     - node.type.events
-    - system.menu.main
   module:
     - date_recur
     - datetime
@@ -75,7 +74,7 @@ display:
           times:
             default_date: false
             date: ''
-          left: 'today month listWeek listDay listUpcoming listPast'
+          left: 'today month listWeek listDay'
           center: 'prev title next'
           right: ''
           timeformat: 'h:mm A'
@@ -1015,7 +1014,7 @@ display:
       path: calendar
       display_description: ''
       menu:
-        type: normal
+        type: 'default tab'
         title: Calendar
         description: Calendar
         expanded: true
@@ -1026,6 +1025,11 @@ display:
       css_class: full-calendar-view
       defaults:
         css_class: false
+      tab_options:
+        type: none
+        title: Calendar
+        description: ''
+        weight: 0
     cache_metadata:
       max-age: -1
       contexts:

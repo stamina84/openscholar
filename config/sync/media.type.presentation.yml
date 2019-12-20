@@ -1,0 +1,14 @@
+uuid: 6fc0f442-e4dd-4cb2-b4bb-53df113f1259
+langcode: en
+status: true
+dependencies: {  }
+id: presentation
+label: Presentation
+description: 'Handle pdf, ppt, pptx, pps and ppsx extensions for Presentation node type.'
+source: file
+queue_thumbnail_downloads: false
+new_revision: false
+source_configuration:
+  source_field: field_media_file
+field_map:
+  name: name

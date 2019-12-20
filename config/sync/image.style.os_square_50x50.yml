@@ -1,0 +1,15 @@
+uuid: 4e8ecadb-f1ec-4786-a383-6da54a6561ce
+langcode: en
+status: true
+dependencies: {  }
+name: os_square_50x50
+label: 'OS Square 50X50'
+effects:
+  45169951-9fae-4357-9476-73db5953cf87:
+    uuid: 45169951-9fae-4357-9476-73db5953cf87
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 50
+      height: 50
+      anchor: center-center

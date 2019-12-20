@@ -1,0 +1,23 @@
+uuid: 95a02cce-bc06-473b-a912-48023414ec3c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.list_of_posts
+    - field.storage.block_content.field_show_pager
+id: block_content.list_of_posts.field_show_pager
+field_name: field_show_pager
+entity_type: block_content
+bundle: list_of_posts
+label: 'Show Pager'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

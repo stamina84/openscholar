@@ -130,4 +130,50 @@ class PagesTest extends TestBase {
     }
   }
 
+  /**
+   * Tests for contextual links.
+   */
+  public function testBookContextualLinks() {
+    $group_member = $this->createUser();
+    $this->addGroupEnhancedMember($group_member, $this->group);
+    $this->drupalLogin($group_member);
+    /** @var \Drupal\book\BookManagerInterface $book_manager */
+    $book_manager = $this->container->get('book.manager');
+    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
+    $path_alias_manager = $this->container->get('path.alias_manager');
+
+    /** @var \Drupal\node\NodeInterface $book1 */
+    $book1 = $this->createBookPage([
+      'title' => 'Test contextual links',
+    ]);
+    $book_manager->updateOutline($book1);
+
+    $web_assert = $this->assertSession();
+    $this->visit($path_alias_manager->getAliasByPath("/node/{$book1->id()}"));
+    $web_assert->pageTextContains('Test contextual links');
+    $web_assert->elementExists('css', '.contextual');
+  }
+
+  /**
+   * Tests for print-friendly link.
+   */
+  public function testPagePrintLinks() {
+    /** @var \Drupal\book\BookManagerInterface $book_manager */
+    $book_manager = $this->container->get('book.manager');
+    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
+    $path_alias_manager = $this->container->get('path.alias_manager');
+
+    /** @var \Drupal\node\NodeInterface $book1 */
+    $book1 = $this->createBookPage([
+      'title' => 'Test print links',
+    ]);
+    $book_manager->updateOutline($book1);
+
+    $web_assert = $this->assertSession();
+    $this->visit($path_alias_manager->getAliasByPath("/node/{$book1->id()}"));
+    $web_assert->pageTextContains('Test print links');
+    $web_assert->linkExists('Printer-friendly version');
+    $web_assert->elementExists('css', '.book-printer');
+  }
+
 }
