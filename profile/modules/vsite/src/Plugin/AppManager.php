@@ -5,6 +5,7 @@ namespace Drupal\vsite\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\Url;
 use Drupal\os_widgets_context\OsWidgetsContextInterface;
 use Drupal\views\ViewExecutable;
 
@@ -154,6 +155,24 @@ class AppManager extends DefaultPluginManager implements AppManagerInterface {
       }
     }
     return $bundles;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContextualUrl() : ?Url {
+    $url = NULL;
+    $active_apps = $this->osWidgetsContext->getActiveApps();
+    if (empty($active_apps)) {
+      return $url;
+    }
+    foreach ($active_apps as $app) {
+      $plugin_definition = $this->getDefinition($app);
+      if (!empty($plugin_definition['contextualRoute'])) {
+        return Url::fromRoute($plugin_definition['contextualRoute']);
+      }
+    }
+    return $url;
   }
 
 }

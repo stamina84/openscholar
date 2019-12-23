@@ -3,6 +3,7 @@
 namespace Drupal\vsite\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -52,5 +53,13 @@ interface AppManagerInterface extends PluginManagerInterface {
    *   Return array of bundle keys.
    */
   public function getBundlesFromApps(): array;
+
+  /**
+   * Get contextual listing url where term should link.
+   *
+   * @return \Drupal\Core\Url|null
+   *   Return the Url of term link. Null means url does not exists.
+   */
+  public function getContextualUrl() : ?Url;
 
 }

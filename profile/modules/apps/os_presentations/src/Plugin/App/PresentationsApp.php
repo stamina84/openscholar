@@ -19,7 +19,8 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *       "page_1",
  *     },
  *   },
- *   id = "presentations"
+ *   id = "presentations",
+ *   contextualRoute = "view.presentations.page_1"
  * )
  */
 class PresentationsApp extends AppPluginBase {

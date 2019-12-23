@@ -224,6 +224,7 @@
         "drupal/term_reference_tree": "1.x-dev",
         "drupal/toolbar_menu": "^2.1",
         "drupal/twig_extensions": "^2.0",
+        "drupal/twig_tweak": "^2.4",
         "drupal/video_embed_field": "^2.0",
         "drupal/views_accordion": "^1.1",
         "drupal/views_ical": "^2.2",
