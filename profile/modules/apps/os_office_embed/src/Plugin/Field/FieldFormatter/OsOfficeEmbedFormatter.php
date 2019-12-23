@@ -135,9 +135,15 @@ class OsOfficeEmbedFormatter extends FileFormatterBase implements ContainerFacto
 
       if ($uri_scheme == 'public') {
         $url = file_create_url($file->getFileUri());
+        // Handle .ppt, .pptx, .doc, .docx, .xls, .xlsx extensions.
+        $iframe_url = 'https://view.officeapps.live.com/op/embed.aspx?src=' . $url;
+        if (preg_match('/\.pdf$/i', $url)) {
+          // This case the browser will be embed PDF (tested: chrome, firefox)
+          $iframe_url = $url;
+        }
         $elements[$delta] = [
           '#theme' => 'os_office_embed',
-          '#url' => $url,
+          '#iframe_url' => $iframe_url,
           '#filename' => $filename,
           '#width' => $this->getSetting('width'),
           '#height' => $this->getSetting('height'),

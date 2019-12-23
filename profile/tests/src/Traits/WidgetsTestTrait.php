@@ -148,36 +148,36 @@ trait WidgetsTestTrait {
   public function createVsiteMedia(GroupInterface $vsite) : array {
     $new_datetime = new DateTime();
 
-    $items['image1'] = $this->createMediaImage([
-      'name' => [
-        'value' => 'MediaImage1',
-      ],
-    ]);
     $date_interval = new DateInterval('P1D');
     $date_interval->invert = 1;
     $new_datetime->add($date_interval);
     $date = $new_datetime->getTimestamp();
-    $items['image1']->set('created', $date)->save();
+    $items['image1'] = $this->createMediaImage([
+      'created' => $date,
+      'name' => [
+        'value' => 'MediaImage1',
+      ],
+    ]);
 
+    $date_interval = new DateInterval('P2D');
+    $new_datetime->add($date_interval);
+    $date = $new_datetime->getTimestamp();
     $items['image2'] = $this->createMediaImage([
       'name' => [
         'value' => 'MediaImage2',
       ],
+      'created' => $date,
     ]);
-    $date_interval = new DateInterval('P2D');
+
+    $date_interval = new DateInterval('P3D');
     $new_datetime->add($date_interval);
     $date = $new_datetime->getTimestamp();
-    $items['image2']->set('created', $date)->save();
-
     $items['document1'] = $this->createMedia([
       'name' => [
         'value' => 'Document1',
       ],
+      'created' => $date,
     ]);
-    $date_interval = new DateInterval('P3D');
-    $new_datetime->add($date_interval);
-    $date = $new_datetime->getTimestamp();
-    $items['document1']->set('created', $date)->save();
 
     $items['document2'] = $this->createMedia([
       'name' => [

@@ -8,6 +8,20 @@
   border-bottom-width: 1px;
   color: $color-white;
 }
-.block-boxes-os_boxes_tabs .links li a {
-    background-image: none !important;
- }
+ .block--type-tabs {
+  .nav-tabs {
+    border-bottom: 0;
+    >li {
+      &.active {
+        a {
+          color: $color-white;
+          border-bottom-width: 1px;
+        }
+      }
+      a {
+        font-size: 14px;
+        text-transform: capitalize;
+      }
+    }
+  }
+}

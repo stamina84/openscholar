@@ -3,4 +3,4 @@ services:
     class: Drupal\vsite_site_creation\ToolbarLinkBuilder
     decorates: user.toolbar_link_builder
     decoration_priority: 0
-    arguments: ['@current_user', '@angular.module_manager']
+    arguments: ['@current_user', '@angular.module_manager', '@cp_users.support_vsite_access_check', '@vsite.context_manager', '@entity_type.manager']

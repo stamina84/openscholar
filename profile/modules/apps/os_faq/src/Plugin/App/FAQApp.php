@@ -19,7 +19,8 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *       "page_1",
  *     },
  *   },
- *   id = "faq"
+ *   id = "faq",
+ *   contextualRoute = "view.os_faq.page_1"
  * )
  */
 class FAQApp extends AppPluginBase {

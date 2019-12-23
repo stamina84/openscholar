@@ -227,6 +227,8 @@ class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
     $markup = $renderer->renderRoot($render);
     // Checking rendered term.
     $this->assertContains($term_blog->label(), $markup->__toString());
+    // Should not link to filtered listing.
+    $this->assertNotContains('/blog/' . $term_blog->id(), $markup->__toString());
     $this->assertContains($term_other->label(), $markup->__toString());
 
     $view_blog_exec->preExecute();
@@ -239,6 +241,8 @@ class TaxonomyBlockContextualRenderTest extends TaxonomyBlockRenderTestBase {
     $markup = $renderer->renderRoot($render);
     // Checking rendered term.
     $this->assertContains($term_blog->label(), $markup->__toString());
+    // Check contextual link to filtered listing.
+    $this->assertContains('/blog/' . $term_blog->id(), $markup->__toString());
     $this->assertNotContains($term_other->label(), $markup->__toString());
   }
 

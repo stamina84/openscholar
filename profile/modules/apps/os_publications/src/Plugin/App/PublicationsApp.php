@@ -19,7 +19,8 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *       "page_4",
  *     },
  *   },
- *   id = "publications"
+ *   id = "publications",
+ *   contextualRoute = "view.publications.page_1"
  * )
  */
 class PublicationsApp extends AppPluginBase {

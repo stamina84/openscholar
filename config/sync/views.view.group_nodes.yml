@@ -922,6 +922,8 @@ display:
         5: 'user.node_grants:view'
         6: route.group
         7: user.group_permissions
+        8: route.group
+        9: user.group_permissions
       tags: {  }
   page_1:
     display_plugin: page
@@ -951,4 +953,6 @@ display:
         5: 'user.node_grants:view'
         6: route.group
         7: user.group_permissions
+        8: route.group
+        9: user.group_permissions
       tags: {  }

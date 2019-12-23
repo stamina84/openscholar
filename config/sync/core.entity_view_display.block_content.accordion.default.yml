@@ -7,20 +7,11 @@ dependencies:
     - field.field.block_content.accordion.field_all_panels_closed
     - field.field.block_content.accordion.field_widget_collection
     - field.field.block_content.accordion.field_widget_title
-  module:
-    - os_widgets
 id: block_content.accordion.default
 targetEntityType: block_content
 bundle: accordion
 mode: default
 content:
-  field_widget_collection:
-    weight: 1
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_collection_formatter
-    region: content
   field_widget_title:
     weight: 0
     label: hidden
@@ -31,4 +22,5 @@ content:
     region: content
 hidden:
   field_all_panels_closed: true
+  field_widget_collection: true
   langcode: true

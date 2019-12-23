@@ -108,19 +108,22 @@ $color-black: #000;
           }
         }
         .account a:before {
-          background-position: -10px -160px;
+          background-position: -10px -162px;
         }
         .account-edit a:before {
-          background-position: -10px -41px;
+          background-position: -10px -43px;
         }
         .logout a:before {
-          background-position: -10px -81px;
+          background-position: -10px -83px;
         }
         .twitter:before {
-          background-position: -10px -120px;
+          background-position: -10px -123px;
         }
         .site-create a:before{
-          background-position: -10px 0px;
+          background-position: -10px -4px;
+        }
+        .support-site a:before {
+          background-position: -10px -200px;
         }
       }
     }

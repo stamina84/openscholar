@@ -106,6 +106,7 @@
       {label: 'Audio', value: 'audio'},
       {label: 'Icon', value: 'icon'},
       {label: 'Embeds', value: 'oembed'},
+      {label: 'Presentation', value: 'presentation'},
     ];
 
     let defaultFilteredTypes = params.types;
@@ -862,7 +863,8 @@
             audio: 'audio',
             executable: 'executable',
             document: 'document',
-            html: 'html'
+            html: 'html',
+            presentation: 'presentation'
           },
           replace: false
         };

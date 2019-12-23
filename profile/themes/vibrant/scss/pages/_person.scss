@@ -1,20 +1,14 @@
 .path-person {
-  .main-container {
-    .node-title {
-      font-weight: bold;
-    }
+  .person--title h1 {
+    font-weight: bold;
   }
-  .block {
-    .block-title {
-      font: bold 16px/24px arial,sans-serif;
-      margin-bottom: 24px;
-      background: $color-light-gray3;
-      padding: 6px 15px;
-      -webkit-box-shadow: 0px 1px 0px 1px $color-light-gray1;
-      box-shadow: 0px 1px 0px 1px $color-light-gray1;
-      border-top: 1px solid $color-light-gray1;
-      -webkit-border-radius: 2px;
-      border-radius: 2px;
-    }
-  }
+}
+.person-data h2.block-title {
+  font: bold 16px/24px arial, sans-serif;
+  margin-bottom: 24px;
+  background: $color-light-gray3;
+  padding: 6px 15px;
+  box-shadow: 0px 1px 0px 1px $color-light-gray1;
+  border-top: 1px solid $color-light-gray1;
+  border-radius: 2px;
 }
