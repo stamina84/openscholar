@@ -172,7 +172,8 @@ class LayoutManagementController extends ControllerBase {
               $delta = $range / ($count + 1);
               // Set the weights for the children.
               foreach ($between as $pos => $b_id) {
-                $adjustee[$b_id]['weight'] = $min_weight + ($pos + 1) * $delta;
+                $new_weight = $min_weight + ($pos + 1) * $delta;
+                $adjustee[$b_id]['weight'] = !is_nan($new_weight) ? $new_weight : 0;
               }
             }
 
