@@ -4,3 +4,6 @@ create new books:
 add content to books:
   title: 'Add content and child pages to pages and manage their hierarchies.'
   section: 'Permission'
+administer book outlines:
+  title: 'Administer book outlines'
+  section: 'Permission'

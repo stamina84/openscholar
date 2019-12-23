@@ -4,7 +4,7 @@ os_pages.book_outline:
     _entity_form: 'node.book_outline'
     _title: 'Outline'
   requirements:
-    _group_permission: 'add content to books'
+    _group_permission: 'administer book outlines'
     _entity_access: 'node.view'
     node: \d+
   options:

@@ -4,3 +4,7 @@ services:
     arguments: ['@book.outline_storage']
   os_pages.visibility_storage:
     class: Drupal\os_pages\VisibilityStorage
+  os_pages.route_subscriber:
+    class: Drupal\os_pages\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
