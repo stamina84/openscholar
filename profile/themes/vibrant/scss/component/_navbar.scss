@@ -2,7 +2,7 @@
 .navbar-collapse {
   @include nav($color-light-gray2,$color-gray1,$color-gray1,$color-white,$color-light-gray8,
   $color-gray2,$color-blue1,$color-gray1,$color-blue1,$fs:20px, $fw:normal);
-  padding: 0 0 30px;
+  padding: 0 0 30px !important;
   min-height: 39px;
   .region-navigation-collapsible {
     background: $color-white;
@@ -43,6 +43,16 @@
         >a:focus {
           background: $color-gray1;
           color: $color-white;
+        }
+      }
+      a {
+        &.dropmenu-child {
+          border: 0;
+          &:hover,
+          &:active,
+          &:focus {
+            color: $color-black;
+          }
         }
       }
     }
