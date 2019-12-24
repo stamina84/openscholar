@@ -50,4 +50,22 @@ class OsBlogDisqusTest extends OsExistingSiteTestBase {
     $this->assertSession()->fieldValueEquals('edit-disqus-shortname', 'testing-disqus');
   }
 
+  /**
+   * Testing Blog comment settings after disabling Blog app.
+   */
+  public function testBlogAppAccess() {
+    $this->drupalLogin($this->groupAdmin);
+    $this->visitViaVsite('cp/settings/app-access', $this->group);
+    $this->getSession()->getPage()->find('css', 'input[type=checkbox][name="enabled[blog][disable]"]')->check();
+    $this->getSession()->getPage()->pressButton('Save configuration');
+    $this->visitViaVsite('cp/settings/apps-settings/blog_setting', $this->group);
+    $this->assertSession()->statusCodeEquals(403);
+    // Checking again after enabling blog app.
+    $this->visitViaVsite('cp/settings/app-access', $this->group);
+    $this->getSession()->getPage()->find('css', 'input[type=checkbox][name="disabled[blog][enable]"]')->check();
+    $this->getSession()->getPage()->pressButton('Save configuration');
+    $this->visitViaVsite('cp/settings/apps-settings/blog_setting', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+  }
+
 }
