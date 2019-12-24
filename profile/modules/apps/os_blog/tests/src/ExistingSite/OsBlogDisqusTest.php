@@ -39,7 +39,7 @@ class OsBlogDisqusTest extends OsExistingSiteTestBase {
    */
   public function testBlogSettingsForm() {
     $this->drupalLogin($this->groupAdmin);
-    $this->visitViaVsite('cp/settings/global-settings/blog_setting', $this->group);
+    $this->visitViaVsite('cp/settings/apps-settings/blog_setting', $this->group);
     $this->assertSession()->statusCodeEquals(200);
     // Dummy disqus domain id.
     $edit = [

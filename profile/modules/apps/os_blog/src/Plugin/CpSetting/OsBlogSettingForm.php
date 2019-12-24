@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   group = {
  *    "id" = "blog_setting",
  *    "title" = @Translation("Blog Comments"),
- *    "parent" = "cp.settings.global"
+ *    "parent" = "cp.settings.app"
  *   }
  * )
  */
