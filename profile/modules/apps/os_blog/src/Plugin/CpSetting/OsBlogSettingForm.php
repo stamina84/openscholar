@@ -2,7 +2,6 @@
 
 namespace Drupal\os_blog\Plugin\CpSetting;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -11,7 +10,6 @@ use Drupal\cp_settings\CpSettingBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
-use Drupal\os_app_access\AppAccessLevels;
 
 /**
  * CP setting.
@@ -126,21 +124,11 @@ class OsBlogSettingForm extends CpSettingBase {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account): AccessResultInterface {
-    if (!$this->activeVsite) {
-      return AccessResult::forbidden();
-    }
+    $app_access_checker = \Drupal::service('os_app_access.app_access');
+    $parent_access_result = parent::access($account);
+    $app_access_result = $app_access_checker->access($account, 'blog');
 
-    if (!$this->activeVsite->hasPermission('access control panel', $account)) {
-      return AccessResult::forbidden();
-    }
-
-    $levels = $this->configFactory->get('os_app_access.access');
-    $access_level = (int) $levels->get('blog');
-    if ($access_level === AppAccessLevels::DISABLED) {
-      return AccessResult::forbidden('This App has been disabled.');
-    }
-
-    return AccessResult::allowed();
+    return $app_access_result->orIf($parent_access_result);
   }
 
 }
