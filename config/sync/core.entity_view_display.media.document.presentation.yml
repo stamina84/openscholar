@@ -1,6 +1,6 @@
 uuid: 99a1a34b-5871-430f-8a35-aad6f1eb0cd4
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - core.entity_view_mode.media.presentation

@@ -131,3 +131,12 @@ cp_users.existing_user_autocomplete:
     _controller: '\Drupal\cp_users\Controller\CpUserMainController::existingUserAutocomplete'
   requirements:
     _group_permission: 'manage cp users'
+
+#Support role routing
+cp_users.support.group_subscribe:
+  path: '/support/vsite'
+  defaults:
+    _form: '\Drupal\cp_users\Form\CpUserSupportConfirmForm'
+    _title: Subscribe to Vsite
+  requirements:
+    _support_vsite_access_check: 'TRUE'

@@ -17,10 +17,8 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
    */
   public function setUp() {
     parent::setUp();
-
     $member = $this->createUser();
     $this->addGroupEnhancedMember($member, $this->group);
-
     $this->drupalLogin($member);
   }
 
@@ -41,8 +39,7 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
    * @see \gnode_node_access()
    */
   public function testNode(): void {
-    $this->visit("{$this->group->get('path')->getValue()[0]['alias']}/node/add/faq");
-
+    $this->visitViaVsite('node/add/faq', $this->group);
     $this->assertSession()->statusCodeEquals(200);
 
     $question = $this->randomMachineName();
@@ -50,10 +47,10 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
     $this->getSession()->getPage()->fillField('Question', $question);
     $this->getSession()->getPage()->fillField('Answer', $answer);
     $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
 
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
     $entity_type_manager = $this->container->get('entity_type.manager');
-
     $nodes = $entity_type_manager->getStorage('node')->loadByProperties([
       'title' => $question,
     ]);
@@ -62,7 +59,6 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
     $node = \reset($nodes);
 
     $this->assertEquals($question, $node->get('title')->first()->getValue()['value']);
-
     $node->delete();
   }
 
@@ -74,7 +70,7 @@ class GlobalPathAccessTest extends OsExistingSiteTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testMediaCreate(): void {
-    $this->visit("{$this->group->get('path')->getValue()[0]['alias']}/media/add/document");
+    $this->visitViaVsite('media/add/document', $this->group);
 
     $this->assertSession()->statusCodeEquals(200);
 

@@ -15,6 +15,7 @@ use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\cp_taxonomy\CpTaxonomyHelperInterface;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets_context\OsWidgetsContextInterface;
@@ -253,9 +254,18 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $field_taxonomy_range_values = $block_content->get('field_taxonomy_range')->getValue();
     $field_taxonomy_offset_values = $block_content->get('field_taxonomy_offset')->getValue();
     $field_taxonomy_show_count_values = $block_content->get('field_taxonomy_show_count')->getValue();
+    $field_taxonomy_behavior_value = $block_content->get('field_taxonomy_behavior')->getString();
+    if ($field_taxonomy_behavior_value == 'contextual') {
+      $contextual_url = $this->vsiteAppManager->getContextualUrl();
+    }
     $term_items = [];
     $tree = [];
     foreach ($terms as $term) {
+      $term_url = Url::fromRoute('entity.taxonomy_term.canonical', ['taxonomy_term' => $term->tid]);
+      if (!empty($contextual_url)) {
+        $term_url = clone $contextual_url;
+        $term_url->setRouteParameter('arg_0', $term->tid);
+      }
       $description = '';
       if (!empty($field_taxonomy_show_term_desc_values[0]['value'])) {
         $description = check_markup($term->description__value, $term->description__format);
@@ -265,12 +275,12 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
         $label .= ' (' . $term->entity_reference_count . ')';
       }
       $label = Xss::filter($label);
-      $label = Link::createFromRoute($label, 'entity.taxonomy_term.canonical', ['taxonomy_term' => $term->tid],
-      ['attributes' => ['title' => $description]]);
+      $term_url->setOption('attributes', ['title' => $description]);
+      $label_link = Link::fromTextAndUrl($label, $term_url);
       $term_items[$term->tid] = [
         '#theme' => 'os_widgets_taxonomy_term_item',
         '#term' => $term,
-        '#label' => $label,
+        '#label' => $label_link,
         '#description' => $description,
       ];
       $tree[$term->parents[0]][] = $term->tid;

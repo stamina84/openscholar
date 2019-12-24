@@ -97,6 +97,7 @@ final class MediaEntityHelper implements MediaEntityHelperInterface {
     'Executable' => 'executable',
     'Audio' => 'audio',
     'Embeds' => 'oembed',
+    'Presentation' => 'presentation',
   ];
 
   /**

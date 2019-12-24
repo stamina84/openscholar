@@ -1,0 +1,27 @@
+uuid: 1b517344-a310-4eb1-92c0-f60d63897546
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_file
+    - media.type.presentation
+  module:
+    - file
+id: media.presentation.field_media_file
+field_name: field_media_file
+entity_type: media
+bundle: presentation
+label: File
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'pdf ppt pptx pps ppsx'
+  max_filesize: ''
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

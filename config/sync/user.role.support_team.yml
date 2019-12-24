@@ -1,0 +1,10 @@
+uuid: 481789dd-e680-4368-ae9d-26c9bacc7a1c
+langcode: en
+status: true
+dependencies: {  }
+id: support_team
+label: 'Support Team'
+weight: 3
+is_admin: null
+permissions:
+  - 'support vsite'

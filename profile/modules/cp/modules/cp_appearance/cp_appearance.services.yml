@@ -7,6 +7,12 @@ services:
     arguments: ['@theme_handler']
   cp_appearance.custom_theme_installer:
     class: \Drupal\cp_appearance\CustomThemeInstaller
+    arguments: ['@theme_handler', '@config.factory', '@module_handler', '@asset.css.collection_optimizer', '@logger.channel.default', '@state']
+  cp_appearance.theme_config_subscriber:
+    class: \Drupal\cp_appearance\EventSubscriber\ThemeConfigSubscriber
+    arguments: ['@cache_tags.invalidator', '@vsite.context_manager']
+    tags:
+      - { name: event_subscriber }
   cp_appearance.init_custom_theme_subscriber:
     class: \Drupal\cp_appearance\EventSubscriber\InitCustomThemeSubscriber
     arguments: ['@config.factory', '@theme.manager', '@theme.initialization']

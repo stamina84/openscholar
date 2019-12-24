@@ -1,0 +1,14 @@
+uuid: f421399e-b4c9-4df1-9758-c51939346808
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.support_team
+  module:
+    - user
+id: user_add_role_action.support_team
+label: 'Add the Support Team role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: support_team
