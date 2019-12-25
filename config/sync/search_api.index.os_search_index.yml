@@ -44,7 +44,7 @@ field_settings:
   custom_date:
     label: 'Custom Created Date (text)'
     property_path: custom_date
-    type: string
+    type: integer
   custom_search_bundle:
     label: 'Custom Bundle (text)'
     property_path: custom_search_bundle
@@ -153,7 +153,6 @@ processor_settings:
     fields:
       - body
       - content_type
-      - custom_date
       - custom_search_bundle
       - custom_title
       - custom_type
@@ -177,7 +176,6 @@ processor_settings:
     fields:
       - body
       - content_type
-      - custom_date
       - custom_search_bundle
       - custom_title
       - custom_type
