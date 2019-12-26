@@ -15,7 +15,7 @@
     {% if loop.first %}
       {% set activeClass = 'active'  %}
     {% endif %}
-      <li class="{{ activeClass }}" role="tab"><a data-toggle="tab" data-target="#tab-{{ key }}" aria-controls="tab-{{ key }}">{{ content.section_title }}</a></li>
+      <li class="{{ activeClass }}" role="tab"><a role="button" href="#tab-{{ key }}" data-toggle="tab" data-target="#tab-{{ key }}" aria-controls="tab-{{ key }}">{{ content.section_title }}</a></li>
   {% endfor %}
 </ul>
 <div class="tab-content">

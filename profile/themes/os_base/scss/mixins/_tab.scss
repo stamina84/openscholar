@@ -1,0 +1,24 @@
+@mixin tab($bgcolor, $color:null) {
+  .nav-tabs {
+    >li {
+      &.active {
+        a {
+          background: $bgcolor;
+          color: $color;
+        }
+      }
+    }
+  }
+}
+@mixin tab_border($bcolor) {
+  .nav-tabs {
+    border-bottom: 0;
+    >li {
+      &.active {
+        a, a:hover, a:focus {
+          border-top: 3px solid $bcolor;
+        }
+      }
+    }
+  }
+}

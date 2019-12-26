@@ -1,0 +1,4 @@
+/**** tabs widget ****/
+.block--type-tabs {
+  @include tab_border($color_cloud_burst_approx);
+}

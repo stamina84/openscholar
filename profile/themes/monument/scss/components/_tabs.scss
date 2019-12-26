@@ -1,0 +1,4 @@
+/**** tabs widget ****/
+.block--type-tabs {
+  @include tab($color_mexican_red_approx, $white);
+}

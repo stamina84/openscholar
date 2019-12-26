@@ -1,0 +1,16 @@
+/**** tabs widget ****/
+.block--type-tabs {
+  .nav-tabs {
+    border-bottom: 0;
+    >li {
+      &.active {
+        a {
+          color: $color-white;
+          border-bottom: 1px solid $color-blue4;
+          border-top: 1px solid $color-blue3;
+          background: linear-gradient(to bottom, $color-blue3 0%, $color-blue4 100%) repeat scroll 0 0 transparent;
+        }
+      }
+    }
+  }
+}

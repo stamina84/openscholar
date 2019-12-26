@@ -1,5 +1,5 @@
 .navbar-collapse {
-  @include nav($color_goldenrod_approx,$color_spicy_mustard_approx,$color_pizza_approx,$white,$white,$color_pizza_approx,$white,
+  @include nav($color_goldenrod_approx,$color_spicy_mustard_approx,$color_pizza_approx,$black,$white,$color_pizza_approx,$black,
   $color_spicy_mustard_approx,$white);
   border-bottom: 3px solid $color_pizza_approx;
   @media #{$mobile} {
