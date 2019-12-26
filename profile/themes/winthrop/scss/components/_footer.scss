@@ -1,20 +1,20 @@
 footer {
   color: $white;
-  background-color: $color_steel_blue_approx;
+  background-color: $color_cloud_burst_approx;
   a {
     font-family: $font_3, $font_4;
     color: $white;
   }
-  .footer-login {
-    color: $white;
-    text-shadow: none;
-    &:after {
-      background-image: none;
-    }
-  }
   ul.nav {
     a {
       font-family: $font_3, $font_4;
+    }
+  }
+}
+.block-system-powered-by-block {
+  .block-content {
+    > a{
+      text-shadow: none;
     }
   }
 }

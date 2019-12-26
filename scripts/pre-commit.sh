@@ -4,6 +4,11 @@ echo "Running pre-commit hook"
 
 echo "Checking Docker status..."
 
+# Load env variables.
+set -o allexport
+source .env
+set +o allexport
+
 # If Docker container is available, then check code standard with Docker.
 # Otherwise, check it in standalone way.
 IS_DOCKER_CONTAINER_AVAILABLE=false
@@ -20,12 +25,14 @@ if [[ $? -eq 0 ]]; then
   IS_DOCKER_CONTAINER_AVAILABLE=true
 fi
 
-if [[ ${IS_DOCKER_CONTAINER_AVAILABLE} = true ]] ; then
-  echo "Docker container is available. Checking circular module dependencies..."
-  docker-compose exec -T php vendor/bin/drush validate:module-dependencies
-else
-  echo "Docker is not available. Checking circular module dependencies..."
-  drush validate:module-dependencies
+if [[ ! -z ${SKIP_CIRCULAR_MODULE_DEP_CHECK} && ${SKIP_CIRCULAR_MODULE_DEP_CHECK} -ne 1 ]]; then
+  if [[ ${IS_DOCKER_CONTAINER_AVAILABLE} = true ]] ; then
+    echo "Docker container is available. Checking circular module dependencies..."
+    docker-compose exec -T php vendor/bin/drush validate:module-dependencies
+  else
+    echo "Docker is not available. Checking circular module dependencies..."
+    drush validate:module-dependencies
+  fi
 fi
 
 if [[ ${IS_DOCKER_CONTAINER_AVAILABLE} = true ]] ; then

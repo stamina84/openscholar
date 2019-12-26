@@ -56,6 +56,7 @@ module:
   dynamic_page_cache: 0
   easy_breadcrumb: 0
   editor: 0
+  elasticsearch_connector: 0
   entity: 0
   entity_reference: 0
   entity_reference_revisions: 0
@@ -124,6 +125,7 @@ module:
   os_redirect_to_source: 0
   os_rest: 0
   os_rss: 0
+  os_search: 0
   os_search_solr: 0
   os_software: 0
   os_taxonomy: 0
@@ -149,7 +151,8 @@ module:
   rng_quick: 0
   rng_views: 0
   robotstxt: 0
-  search: 0
+  search_api: 0
+  search_api_page: 0
   serialization: 0
   shorten: 0
   slick: 0

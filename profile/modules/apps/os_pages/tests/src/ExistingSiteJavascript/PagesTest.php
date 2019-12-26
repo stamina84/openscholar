@@ -151,6 +151,7 @@ class PagesTest extends TestBase {
     $web_assert = $this->assertSession();
     $this->visit($path_alias_manager->getAliasByPath("/node/{$book1->id()}"));
     $web_assert->pageTextContains('Test contextual links');
+    $web_assert->waitForElement('css', '.contextual');
     $web_assert->elementExists('css', '.contextual');
   }
 

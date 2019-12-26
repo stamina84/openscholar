@@ -18,3 +18,4 @@ permissions:
   - 'view bibcite_reference'
   - 'view disqus comments'
   - 'view media'
+  - 'view search api pages'

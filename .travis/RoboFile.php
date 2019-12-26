@@ -77,6 +77,21 @@ class RoboFile extends \Robo\Tasks
     }
 
     /**
+     * Command to run circular module dependency check.
+     *
+     * @return \Robo\Result
+     *   The result of the collection of tasks.
+     */
+    public function jobCheckModuleCircularDependency()
+    {
+        $collection = $this->collectionBuilder();
+        $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->runCheckModuleCircularDependency());
+        return $collection->run();
+    }
+
+    /**
      * Command to run kernel tests.
      *
      * @return \Robo\Result
@@ -341,6 +356,19 @@ class RoboFile extends \Robo\Tasks
               ($groups ? '--group ' . $groups . ' ': ' ')  .
               '--exclude-group=kernel,functional,functional-javascript,wip '.
               '--verbose web/profiles/contrib/openscholar');
+        return $tasks;
+    }
+
+    /**
+     * Runs circular module dependency check.
+     *
+     * @return \Robo\Task\Base\Exec[]
+     *   An array of tasks.
+     */
+    protected function runCheckModuleCircularDependency()
+    {
+        $tasks[] = $this->taskExecStack()
+          ->exec('docker-compose exec -T php ./vendor/bin/drush validate:module-dependencies');
         return $tasks;
     }
 

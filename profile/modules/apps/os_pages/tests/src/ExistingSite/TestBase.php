@@ -32,6 +32,7 @@ abstract class TestBase extends OsExistingSiteTestBase {
   public function createBookPage(array $values = [], $book_id = NULL, $parent_id = NULL) : NodeInterface {
     /** @var \Drupal\node\NodeInterface $book */
     $book = $this->createNode($values + [
+      'title' => $this->randomString(),
       'type' => 'page',
       'book' => [
         'bid' => $book_id ?? 'new',

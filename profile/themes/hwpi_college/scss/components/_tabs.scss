@@ -1,0 +1,12 @@
+/**** tabs widget ****/
+ .block--type-tabs {
+  .nav-tabs {
+    border-bottom: 0;
+    >li {
+      border-bottom: 1px solid $color-light-gray4;
+      a {
+        padding: 10px 15px;
+      }
+    }
+  }
+}

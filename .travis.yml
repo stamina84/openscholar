@@ -33,6 +33,7 @@ jobs:
   include:
     - script: robo job:check-coding-standards
     - script: robo job:run-unit-tests
+    - script: robo job:check-module-circular-dependency
     - script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3"
     - script: robo job:run-kernel-tests "publications-1,wysiwyg,vsite,os,os-theme-preview"
     - script: robo job:run-kernel-tests "cp,other,cp-menu,profiles,redirect,cp-appearance"

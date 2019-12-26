@@ -412,7 +412,7 @@ function os_pages_contextual_links_view_alter(&$element, $items) {
       }
 
       // Checking node has book id.
-      if ($entity->book['bid']) {
+      if (!empty($entity->book['bid'])) {
         $element['#links']['add_subpage'] = [
           'title' => t('Add Subpage'),
           'url' => Url::fromRoute('node.add', [
@@ -509,5 +509,28 @@ function os_pages_node_links_alter(array &$links, NodeInterface $node, array &$c
       '#links' => $book_links,
       '#attributes' => ['class' => ['links', 'inline']],
     ];
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function os_pages_form_node_page_book_outline_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+  $vsite_context_manager = \Drupal::service('vsite.context_manager');
+  /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
+  $active_vsite = $vsite_context_manager->getActiveVsite();
+  if ($active_vsite) {
+    foreach ($active_vsite->getContent('group_node:page') as $group_content) {
+      $vsite_nids[] = $group_content->entity_id->target_id;
+    }
+    $book_options = $form['book']['bid']['#options'];
+    // Removing form options if page is not from this vsite.
+    foreach ($book_options as $key => $value) {
+      if (!in_array($key, $vsite_nids)) {
+        unset($book_options[$key]);
+      }
+    }
+    $form['book']['bid']['#options'] = $book_options;
   }
 }

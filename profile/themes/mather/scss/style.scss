@@ -1,5 +1,6 @@
 @import '../../os_base/scss/base/breakpoints';
 @import '../../os_base/scss/mixins/navbar';
+@import '../../os_base/scss/mixins/tab';
 
 @import './base/variables';
 @import './base/base';
@@ -11,4 +12,5 @@
 @import './components/poweredby';
 @import './components/search';
 @import './components/sidebar';
+@import './components/tabs';
 @import './global/global';

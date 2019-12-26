@@ -53,4 +53,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_disqus_comments: true
   langcode: true

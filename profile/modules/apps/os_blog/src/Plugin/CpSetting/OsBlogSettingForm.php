@@ -2,7 +2,9 @@
 
 namespace Drupal\os_blog\Plugin\CpSetting;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\cp_settings\CpSettingBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -16,7 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   group = {
  *    "id" = "blog_setting",
  *    "title" = @Translation("Blog Comments"),
- *    "parent" = "cp.settings.global"
+ *    "parent" = "cp.settings.app"
  *   }
  * )
  */
@@ -75,6 +77,17 @@ class OsBlogSettingForm extends CpSettingBase {
       ->set('comment_type', $formState->getValue('comment_type'))
       ->set('disqus_shortname', $formState->getValue('disqus_shortname'))
       ->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account): AccessResultInterface {
+    $app_access_checker = \Drupal::service('os_app_access.app_access');
+    $parent_access_result = parent::access($account);
+    $app_access_result = $app_access_checker->access($account, 'blog');
+
+    return $app_access_result->orIf($parent_access_result);
   }
 
 }

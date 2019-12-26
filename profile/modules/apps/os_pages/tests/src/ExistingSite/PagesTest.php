@@ -12,6 +12,15 @@ namespace Drupal\Tests\os_pages\ExistingSite;
 class PagesTest extends TestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->groupAdmin = $this->createUser();
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
+  }
+
+  /**
    * Tests alias.
    */
   public function testAlias() {
@@ -32,24 +41,20 @@ class PagesTest extends TestBase {
   public function testOutline() {
     /** @var \Drupal\book\BookOutlineStorageInterface $book_outline_storage */
     $book_outline_storage = $this->container->get('book.outline_storage');
-    /** @var \Drupal\book\BookManagerInterface $book_manager */
-    $book_manager = $this->container->get('book.manager');
 
     /** @var \Drupal\node\NodeInterface $book */
-    $book = $this->createBookPage();
-    $book_manager->updateOutline($book);
+    $book = $this->createBookPage([
+      'title' => 'First book manager',
+    ]);
 
     /** @var \Drupal\node\NodeInterface $page1 */
     $page1 = $this->createBookPage([], $book->id());
-    $book_manager->updateOutline($page1);
 
     /** @var \Drupal\node\NodeInterface $page11 */
     $page11 = $this->createBookPage([], $book->id(), $page1->id());
-    $book_manager->updateOutline($page11);
 
     /** @var \Drupal\node\NodeInterface $page2 */
     $page2 = $this->createBookPage([], $book->id());
-    $book_manager->updateOutline($page2);
 
     // Assert book has no parent and has correct number of children.
     $this->assertEquals(0, $book->book['pid']);
