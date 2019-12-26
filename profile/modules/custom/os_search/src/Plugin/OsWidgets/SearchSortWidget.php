@@ -23,6 +23,11 @@ use Drupal\Core\Url;
 class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
   /**
+   * Search sort type.
+   */
+  const SORT_TYPE = ['title', 'type', 'date'];
+
+  /**
    * Route Match service.
    *
    * @var \Drupal\Core\Routing\CurrentRouteMatch
@@ -70,7 +75,7 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $request = $this->requestStack->getCurrentRequest();
       $query_params = $request->query->all();
 
-      $link_types = ['title', 'type', 'date'];
+      $link_types = self::SORT_TYPE;
       $items = [];
       $sort_dir = [];
       // Check if there is an exists sort param in query and flip the direction.
@@ -85,7 +90,12 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
       foreach ($link_types as $link_type) {
         $query_params['sort'] = $link_type;
-        $query_params['dir'] = 'ASC';
+        if ($query_params['sort'] == 'date') {
+          $query_params['dir'] = 'DESC';
+        }
+        else {
+          $query_params['dir'] = 'ASC';
+        }
         if ($sort_dir[$link_type]) {
           $query_params['dir'] = $sort_dir[$link_type];
         }
