@@ -1,0 +1,200 @@
+uuid: 9e028085-ebb5-4e0d-82e5-4f4b545418ce
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - field.storage.node.field_year_offered
+    - search_api.server.os_search
+  module:
+    - node
+    - os_publications
+    - bibcite_entity
+    - search_api
+    - os_search
+id: os_search_index
+name: 'OS Search Index'
+description: 'Main OS Search Index'
+read_only: false
+field_settings:
+  body:
+    label: Body
+    datasource_id: 'entity:node'
+    property_path: body
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.body
+  content_type:
+    label: 'Content type'
+    datasource_id: 'entity:node'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - node
+  created:
+    label: 'Authored on'
+    datasource_id: 'entity:node'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - node
+  custom_search_bundle:
+    label: 'Custom Bundle (text)'
+    property_path: custom_search_bundle
+    type: string
+  custom_search_group:
+    label: 'Group (text)'
+    property_path: custom_search_group
+    type: integer
+  field_year_offered:
+    label: 'Year offered'
+    datasource_id: 'entity:node'
+    property_path: field_year_offered
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_year_offered
+  reference_created:
+    label: 'Authored on'
+    datasource_id: 'entity:bibcite_reference'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - os_publications
+  reference_title:
+    label: Title
+    datasource_id: 'entity:bibcite_reference'
+    property_path: title
+    type: text
+    dependencies:
+      module:
+        - bibcite_entity
+  reference_type:
+    label: 'Reference type'
+    datasource_id: 'entity:bibcite_reference'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - bibcite_entity
+  status:
+    label: status
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    dependencies:
+      module:
+        - node
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - node
+  uid:
+    label: uid
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'entity:bibcite_reference':
+    bundles:
+      default: true
+      selected: {  }
+  'entity:node':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_bundle_as_text: {  }
+  add_group_as_text: {  }
+  add_url: {  }
+  aggregated_field: {  }
+  entity_status: {  }
+  highlight:
+    highlight: always
+    highlight_partial: true
+    excerpt: true
+    excerpt_length: 256
+    exclude_fields: {  }
+    prefix: '<strong>'
+    suffix: '</strong>'
+    weights:
+      postprocess_query: 0
+  html_filter:
+    all_fields: true
+    fields:
+      - body
+      - content_type
+      - custom_search_bundle
+      - field_year_offered
+      - reference_title
+      - reference_type
+      - title
+    title: true
+    alt: true
+    tags:
+      b: 2
+      h1: 5
+      h2: 3
+      h3: 2
+      strong: 2
+    weights:
+      preprocess_index: -15
+      preprocess_query: -46
+  ignorecase:
+    all_fields: true
+    fields:
+      - body
+      - content_type
+      - custom_search_bundle
+      - field_year_offered
+      - reference_title
+      - reference_type
+      - title
+    weights:
+      preprocess_index: -20
+      preprocess_query: -49
+  language_with_fallback: {  }
+  rendered_item: {  }
+  stemmer:
+    all_fields: true
+    fields:
+      - body
+      - reference_title
+    exceptions:
+      mexican: mexic
+      texan: texa
+    weights:
+      preprocess_index: 0
+      preprocess_query: -42
+  tokenizer:
+    all_fields: true
+    fields:
+      - body
+      - reference_title
+    spaces: ''
+    overlap_cjk: 1
+    minimum_word_size: '3'
+    weights:
+      preprocess_index: -6
+      preprocess_query: -44
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: false
+  cron_limit: 50
+server: os_search

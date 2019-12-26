@@ -34,6 +34,22 @@ services:
     volumes:
       - ./:/var/www/html:cached
 
+  elasticsearch:
+    image: wodby/elasticsearch:7-5.3.0
+    container_name: "${PROJECT_NAME}_elasticsearch"
+    environment:
+      ES_JAVA_OPTS: "-Xms500m -Xmx500m"
+    ports:
+      - "9200:9200"
+    labels:
+      - 'traefik.backend=${PROJECT_NAME}_elasticsearch'
+      - 'traefik.port=9200'
+      - 'traefik.frontend.rule=Host:elastic.php.docker.localhost'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
   apache:
     image: wodby/apache:2.4
     container_name: "${PROJECT_NAME}_apache"
