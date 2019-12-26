@@ -13,6 +13,7 @@ dependencies:
     - media.type.html
     - media.type.image
     - media.type.oembed
+    - media.type.presentation
   module:
     - bibcite_entity
     - file
@@ -311,12 +312,13 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - user.group_permissions
         - 'languages:language_content'
         - 'languages:language_interface'
         - request_format
+        - route.group
         - url
         - url.query_args
+        - user.group_permissions
       tags:
         - 'config:field.storage.media.field_media_file'
   page_1:
@@ -2075,6 +2077,7 @@ display:
             executable: executable
             html: html
             image: image
+            presentation: presentation
           group: 1
           exposed: false
           expose:
@@ -2205,11 +2208,12 @@ display:
     cache_metadata:
       max-age: 0
       contexts:
-        - user.group_permissions
         - 'languages:language_content'
         - 'languages:language_interface'
+        - route.group
         - url
         - url.query_args
+        - user.group_permissions
       tags:
         - 'config:field.storage.media.field_media_file'
         - 'config:field.storage.media.field_media_html'
@@ -2395,10 +2399,11 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - user.group_permissions
         - 'languages:language_content'
         - 'languages:language_interface'
         - request_format
+        - route.group
         - url
+        - user.group_permissions
       tags:
         - 'config:field.storage.media.field_media_file'
