@@ -6,6 +6,7 @@
  */
 
 use Drupal\search_api\Query\QueryInterface;
+use Drupal\os_search\Plugin\OsWidgets\SearchSortWidget;
 
 /**
  * Implements hook_search_api_query_alter().
@@ -43,6 +44,17 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
 
   if ($enabled_apps_list) {
     $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
+  }
+
+  // Get the sort url parameter.
+  $request = \Drupal::request();
+  $sort = $request->query->get('sort');
+  $sort_direction = $request->query->get('dir') ?? 'ASC';
+  if ($sort) {
+    $sort_type = SearchSortWidget::SORT_TYPE;
+    if (in_array($sort, $sort_type)) {
+      $query->sort('custom_' . $sort, $sort_direction);
+    }
   }
 
 }

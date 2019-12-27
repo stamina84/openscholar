@@ -2,16 +2,16 @@ uuid: 9e028085-ebb5-4e0d-82e5-4f4b545418ce
 langcode: en
 status: true
 dependencies:
+  module:
+    - os_publications
+    - bibcite_entity
+    - node
+    - search_api
+    - os_search
   config:
     - field.storage.node.body
     - field.storage.node.field_year_offered
     - search_api.server.os_search
-  module:
-    - node
-    - os_publications
-    - bibcite_entity
-    - search_api
-    - os_search
 id: os_search_index
 name: 'OS Search Index'
 description: 'Main OS Search Index'
@@ -41,6 +41,10 @@ field_settings:
     dependencies:
       module:
         - node
+  custom_date:
+    label: 'Custom Created Date (text)'
+    property_path: custom_date
+    type: integer
   custom_search_bundle:
     label: 'Custom Bundle (text)'
     property_path: custom_search_bundle
@@ -49,6 +53,14 @@ field_settings:
     label: 'Group (text)'
     property_path: custom_search_group
     type: integer
+  custom_title:
+    label: 'Custom Title (text)'
+    property_path: custom_title
+    type: string
+  custom_type:
+    label: 'Custom Type (text)'
+    property_path: custom_type
+    type: string
   field_year_offered:
     label: 'Year offered'
     datasource_id: 'entity:node'
@@ -119,7 +131,10 @@ datasource_settings:
       selected: {  }
 processor_settings:
   add_bundle_as_text: {  }
+  add_created_as_text: {  }
   add_group_as_text: {  }
+  add_title_as_text: {  }
+  add_type_as_text: {  }
   add_url: {  }
   aggregated_field: {  }
   entity_status: {  }
@@ -139,6 +154,8 @@ processor_settings:
       - body
       - content_type
       - custom_search_bundle
+      - custom_title
+      - custom_type
       - field_year_offered
       - reference_title
       - reference_type
@@ -160,6 +177,8 @@ processor_settings:
       - body
       - content_type
       - custom_search_bundle
+      - custom_title
+      - custom_type
       - field_year_offered
       - reference_title
       - reference_type
