@@ -185,3 +185,25 @@ function os_media_views_pre_render(ViewExecutable $view) {
     $view->element['#attached']['library'][] = 'os/osMediaBrowse';
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK() for overriding vsite media admin UI.
+ *
+ * This overrides the "Used In" field output.
+ */
+function os_media_preprocess_views_view_field(&$variables) {
+  /** @var \Drupal\views\ViewExecutable $view */
+  $view = $variables['view'];
+  /** @var \Drupal\views\Plugin\views\field\FieldPluginBase $field */
+  $field = $variables['field'];
+
+  if ($view->current_display === 'page_1' &&
+    $field->field === 'nothing' &&
+    $field->options['id'] === 'nothing_4' &&
+    $view->id() === 'os_media') {
+    /** @var int $media_id */
+    $media_id = $view->result[$view->row_index]->mid;
+    // TODO: Implement.
+    $variables['output'] = $media_id;
+  }
+}
