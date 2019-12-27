@@ -8,8 +8,10 @@
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\file\Entity\File;
+use Drupal\node\NodeInterface;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -203,7 +205,36 @@ function os_media_preprocess_views_view_field(&$variables) {
     $view->id() === 'os_media') {
     /** @var int $media_id */
     $media_id = $view->result[$view->row_index]->mid;
-    // TODO: Implement.
-    $variables['output'] = $media_id;
+
+    // TODO: Move inside a service.
+    /** @var \Drupal\node\NodeStorageInterface $node_storage */
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $field_attached_media_query */
+    $field_attached_media_query = $node_storage->getQuery();
+
+    $field_attached_media_query->condition('status', NodeInterface::PUBLISHED)
+      ->condition('type', [
+        'software_project',
+        'news',
+        'faq',
+        'class',
+        'blog',
+        'page',
+        'events',
+      ], 'IN')
+      ->condition('field_attached_media.entity:media.mid', $media_id);
+
+    $field_attached_media_usages = $node_storage->loadMultiple($field_attached_media_query->execute());
+    $node_labels = array_map(static function (NodeInterface $node) {
+      return Link::createFromRoute($node->label(), 'entity.node.canonical', [
+        'node' => $node->id(),
+      ])->toString();
+    }, $field_attached_media_usages);
+
+    // TODO: Do the same for other node+media fields.
+    // TODO: Do the same for reference+media field.
+    $variables['output'] = [
+      '#markup' => implode(', ', $node_labels),
+    ];
   }
 }
