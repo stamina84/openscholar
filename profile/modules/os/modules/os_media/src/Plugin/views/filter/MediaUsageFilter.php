@@ -4,6 +4,7 @@ namespace Drupal\os_media\Plugin\views\filter;
 
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\NodeInterface;
 use Drupal\os_media\MediaAdminUIHelper;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -78,7 +79,6 @@ class MediaUsageFilter extends FilterPluginBase {
     $value = reset($value);
 
     if (!empty($value)) {
-      $media_ids = [];
       /** @var \Drupal\node\NodeInterface[] $nodes_using_media_by_title */
       $nodes_using_media_by_title = $this->mediaAdminUiHelper->filterNodesUsingMediaByTitle($value);
       /** @var \Drupal\bibcite_entity\Entity\ReferenceInterface[] $publications_using_media_by_title */
@@ -86,23 +86,27 @@ class MediaUsageFilter extends FilterPluginBase {
 
       // Create a collection of media ids being used. Later the collection will
       // be used in filtering the result.
-      foreach ($nodes_using_media_by_title as $node) {
+      $media_ids_in_nodes = array_map(static function (NodeInterface $node) {
         if ($node->hasField('field_attached_media')) {
-          $media_ids[] = $node->get('field_attached_media')->first()->getValue()['target_id'];
+          return array_column($node->get('field_attached_media')->getValue(), 'target_id');
         }
-        elseif ($node->hasField('field_presentation_slides')) {
-          $media_ids[] = $node->get('field_presentation_slides')->first()->getValue()['target_id'];
+
+        if ($node->hasField('field_presentation_slides')) {
+          return array_column($node->get('field_presentation_slides')->getValue(), 'target_id');
         }
-        elseif ($node->hasField('field_software_package')) {
-          $media_ids[] = $node->get('field_software_package')->first()->getValue()['target_id'];
+
+        if ($node->hasField('field_software_package')) {
+          return array_column($node->get('field_software_package')->getValue(), 'target_id');
         }
-      }
+
+        return [];
+      }, $nodes_using_media_by_title);
 
       $media_ids_in_publications = array_map(static function (ReferenceInterface $reference) {
         return array_column($reference->get('field_attach_files')->getValue(), 'target_id');
       }, $publications_using_media_by_title);
 
-      $media_ids = array_merge($media_ids, ...$media_ids_in_publications);
+      $media_ids = array_merge([], ...$media_ids_in_nodes, ...$media_ids_in_publications);
 
       if ($media_ids) {
         $this->query->addWhere('AND', 'media_field_data.mid', $media_ids, 'IN');
