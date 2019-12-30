@@ -34,7 +34,7 @@ class SlideshowWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#type' => 'link',
       '#prefix' => '<p>',
       '#suffix' => '</p>',
-      '#title' => $this->t('Add slideshow'),
+      '#title' => $this->t('Add slide'),
       '#url' => Url::fromRoute('os_widgets.add_slideshow', [
         'block_content' => $block_content->id(),
       ]),
@@ -43,6 +43,8 @@ class SlideshowWidget extends OsWidgetsBase implements OsWidgetsInterface {
           'use-ajax',
           'button',
           'button--small',
+          'btn',
+          'btn-success',
         ],
         'data-dialog-type' => 'modal',
       ],
