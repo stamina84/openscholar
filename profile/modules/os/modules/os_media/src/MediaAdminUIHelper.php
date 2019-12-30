@@ -18,6 +18,13 @@ final class MediaAdminUIHelper {
   protected $nodeStorage;
 
   /**
+   * Publication storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $publicationStorage;
+
+  /**
    * Creates a new MediaAdminUIHelper object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -28,6 +35,7 @@ final class MediaAdminUIHelper {
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
     $this->nodeStorage = $entity_type_manager->getStorage('node');
+    $this->publicationStorage = $entity_type_manager->getStorage('bibcite_reference');
   }
 
   /**
@@ -55,6 +63,25 @@ final class MediaAdminUIHelper {
   }
 
   /**
+   * Returns the publications using a media entity.
+   *
+   * @param int $media_id
+   *   ID of the media entity.
+   *
+   * @return \Drupal\bibcite_entity\Entity\ReferenceInterface[]
+   *   The publications.
+   */
+  public function getMediaUsageInPublications($media_id): array {
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
+    $query = $this->publicationStorage->getQuery();
+
+    $query->condition('status', 1)
+      ->condition('field_attach_files.entity:media.mid', $media_id);
+
+    return $this->publicationStorage->loadMultiple($query->execute());
+  }
+
+  /**
    * Filters nodes which are using a media by title.
    *
    * This always performs the filtering with `LIKE` operator.
@@ -79,6 +106,28 @@ final class MediaAdminUIHelper {
       ->condition('title', "%{$title}%", 'LIKE');
 
     return $this->nodeStorage->loadMultiple($query->execute());
+  }
+
+  /**
+   * Filters publications which are using a media by title.
+   *
+   * This always performs the filtering with `LIKE` operator.
+   *
+   * @param string $title
+   *   The title to filter with.
+   *
+   * @return \Drupal\bibcite_entity\Entity\ReferenceInterface[]
+   *   The filtered publications.
+   */
+  public function filterPublicationsUsingMediaByTitle(string $title): array {
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
+    $query = $this->publicationStorage->getQuery();
+
+    $query->condition('status', 1)
+      ->exists('field_attach_files')
+      ->condition('title', "%{$title}%", 'LIKE');
+
+    return $this->publicationStorage->loadMultiple($query->execute());
   }
 
 }

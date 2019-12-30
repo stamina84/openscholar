@@ -2,6 +2,7 @@
 
 namespace Drupal\os_media\Plugin\views\filter;
 
+use Drupal\bibcite_entity\Entity\ReferenceInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\os_media\MediaAdminUIHelper;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
@@ -77,25 +78,34 @@ class MediaUsageFilter extends FilterPluginBase {
     $value = reset($value);
 
     if (!empty($value)) {
+      $media_ids = [];
       /** @var \Drupal\node\NodeInterface[] $nodes_using_media_by_title */
       $nodes_using_media_by_title = $this->mediaAdminUiHelper->filterNodesUsingMediaByTitle($value);
-      $media_entity_ids = [];
+      /** @var \Drupal\bibcite_entity\Entity\ReferenceInterface[] $publications_using_media_by_title */
+      $publications_using_media_by_title = $this->mediaAdminUiHelper->filterPublicationsUsingMediaByTitle($value);
 
+      // Create a collection of media ids being used. Later the collection will
+      // be used in filtering the result.
       foreach ($nodes_using_media_by_title as $node) {
         if ($node->hasField('field_attached_media')) {
-          $media_entity_ids[] = $node->get('field_attached_media')->first()->getValue()['target_id'];
+          $media_ids[] = $node->get('field_attached_media')->first()->getValue()['target_id'];
         }
         elseif ($node->hasField('field_presentation_slides')) {
-          $media_entity_ids[] = $node->get('field_presentation_slides')->first()->getValue()['target_id'];
+          $media_ids[] = $node->get('field_presentation_slides')->first()->getValue()['target_id'];
         }
         elseif ($node->hasField('field_software_package')) {
-          $media_entity_ids[] = $node->get('field_software_package')->first()->getValue()['target_id'];
+          $media_ids[] = $node->get('field_software_package')->first()->getValue()['target_id'];
         }
       }
 
-      // TODO: Do the same for reference+media field.
-      if ($media_entity_ids) {
-        $this->query->addWhere('AND', 'media_field_data.mid', $media_entity_ids, 'IN');
+      $media_ids_in_publications = array_map(static function (ReferenceInterface $reference) {
+        return array_column($reference->get('field_attach_files')->getValue(), 'target_id');
+      }, $publications_using_media_by_title);
+
+      $media_ids = array_merge($media_ids, ...$media_ids_in_publications);
+
+      if ($media_ids) {
+        $this->query->addWhere('AND', 'media_field_data.mid', $media_ids, 'IN');
       }
     }
   }

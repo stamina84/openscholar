@@ -5,6 +5,7 @@
  * Hook implementations to support the media browser.
  */
 
+use Drupal\bibcite_entity\Entity\ReferenceInterface;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -209,6 +210,8 @@ function os_media_preprocess_views_view_field(&$variables) {
     $media_id = $view->result[$view->row_index]->mid;
     /** @var \Drupal\node\NodeInterface[] $media_usages_in_nodes */
     $media_usages_in_nodes = $media_admin_ui_helper->getMediaUsageInNodes($media_id);
+    /** @var \Drupal\bibcite_entity\Entity\ReferenceInterface[] $media_usages_in_publications */
+    $media_usages_in_publications = $media_admin_ui_helper->getMediaUsageInPublications($media_id);
 
     $node_labels = array_map(static function (NodeInterface $node) {
       return Link::createFromRoute($node->label(), 'entity.node.canonical', [
@@ -216,9 +219,16 @@ function os_media_preprocess_views_view_field(&$variables) {
       ])->toString();
     }, $media_usages_in_nodes);
 
-    // TODO: Do the same for reference+media field.
+    $publication_labels = array_map(static function (ReferenceInterface $reference) {
+      return Link::createFromRoute($reference->label(), 'entity.bibcite_reference.canonical', [
+        'bibcite_reference' => $reference->id(),
+      ])->toString();
+    }, $media_usages_in_publications);
+
+    $labels = array_merge($node_labels, $publication_labels);
+
     $variables['output'] = [
-      '#markup' => implode(', ', $node_labels),
+      '#markup' => implode(', ', $labels),
     ];
   }
 }
