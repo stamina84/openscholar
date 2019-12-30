@@ -123,64 +123,40 @@
           {{ page.content }}
           {% if page.content_first %}
             <div class="content-first">
-              <div class="container">
-                <div class="row">
-                  <div class="col-sm-12">
-                    {{ page.content_first }}
-                  </div>
-                </div>
-              </div>
+              {{ page.content_first }}
             </div>
           {% endif %}
           {% if page.content_second %}
             <div class="content-second clearfix">
-              <div class="col-sm-12">
-                {{ page.content_second }}
-              </div>
+              {{ page.content_second }}
             </div>
           {% endif %}
           {% if page.content_bottom %}
             <div class="content-bottom">
-              <div class="container">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      {{ page.content_bottom }}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {{ page.content_bottom }}
             </div>
           {% endif %}
           {% if page.content_bottom_first %}
             <div class="content-bottom-first clearfix">
-              <div class="col-sm-12">
-                {{ page.content_bottom_first }}
-              </div>
+              {{ page.content_bottom_first }}
             </div>
           {% endif %}
           {% if page.content_bottom_second %}
             <div class="content-bottom-second clearfix">
-              <div class="col-sm-12">
-                {{ page.content_bottom_second }}
-              </div>
+              {{ page.content_bottom_second }}
             </div>
           {% endif %}
           {% if page.sidebar_first %}
             {% block sidebar_first %}
               <aside class="sidebar-first clearfix" role="complementary">
-                <div class="col-sm-12">
                   {{ page.sidebar_first }}
-                </div>
               </aside>
             {% endblock %}
           {% endif %}
           {% if page.sidebar_second %}
             {% block sidebar_second %}
               <aside class="sidebar-second clearfix" role="complementary">
-              <div class="col-sm-12">
                 {{ page.sidebar_second }}
-              </div>
               </aside>
             {% endblock %}
           {% endif %}
