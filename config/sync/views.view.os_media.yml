@@ -19,6 +19,7 @@ dependencies:
     - group
     - image
     - media
+    - os_media
     - rest
     - serialization
     - vsite
@@ -1895,6 +1896,46 @@ display:
           entity_type: media
           entity_field: bundle
           plugin_id: bundle
+        os_media_media_usage_filter:
+          id: os_media_media_usage_filter
+          table: media
+          field: os_media_media_usage_filter
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 'Used In'
+            description: ''
+            use_operator: false
+            operator: os_media_media_usage_filter_op
+            identifier: os_media_media_usage_filter
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              support_team: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: media
+          plugin_id: os_media_media_usage_filter
       filter_groups:
         operator: AND
         groups:
