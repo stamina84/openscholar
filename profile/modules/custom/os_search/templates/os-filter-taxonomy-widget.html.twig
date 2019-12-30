@@ -1,0 +1,25 @@
+{#
+  /**
+   * @file
+   * Default theme implementation for Fiter by Taxonomy widget.
+   *
+   * Available variables:
+   * - header: A list of items containing links to content type rss feeds
+   * - items: A list of items containing links to publications rss feeds
+   */
+  #}
+<div class="os-filter-taxonomy">
+  <h2 class="feed-title">{{ header }}</h2>
+  <div class="item-list">
+    <ul class="feed-items">
+      {% for vocabulary,terms in items %}
+      <h2 class="feed-title">{{ vocabulary }}</h2>
+        <ul>
+          {% for url in terms %}
+            <li>{{url}}</li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

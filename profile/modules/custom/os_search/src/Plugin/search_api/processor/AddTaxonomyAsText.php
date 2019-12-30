@@ -49,17 +49,14 @@ class AddTaxonomyAsText extends ProcessorPluginBase {
   public function addFieldValues(ItemInterface $item) {
 
     $object = $item->getOriginalObject()->getValue();
-    $custom_bundle = $object->getEntityTypeId();
 
-    if ($custom_bundle == 'node') {
-      if ($object->hasField('field_taxonomy_terms')) {
-        $tids = $object->get('field_taxonomy_terms')->getValue();
+    if ($object->hasField('field_taxonomy_terms')) {
+      $tids = $object->get('field_taxonomy_terms')->getValue();
 
-        $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_taxonomy');
-        foreach ($fields as $field) {
-          foreach ($tids as $tid) {
-            $field->addValue($tid['target_id']);
-          }
+      $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), NULL, 'custom_taxonomy');
+      foreach ($fields as $field) {
+        foreach ($tids as $tid) {
+          $field->addValue($tid['target_id']);
         }
       }
     }
