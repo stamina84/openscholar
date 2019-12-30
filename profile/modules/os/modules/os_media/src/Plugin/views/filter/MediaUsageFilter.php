@@ -3,7 +3,6 @@
 namespace Drupal\os_media\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node\NodeInterface;
 use Drupal\os_media\MediaAdminUIHelper;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -78,15 +77,26 @@ class MediaUsageFilter extends FilterPluginBase {
     $value = reset($value);
 
     if (!empty($value)) {
-      /** @var \Drupal\node\NodeInterface[] $field_attached_media_usages */
-      $field_attached_media_usages = $this->mediaAdminUiHelper->filterNodesUsingMediaByTitle($value);
+      /** @var \Drupal\node\NodeInterface[] $nodes_using_media_by_title */
+      $nodes_using_media_by_title = $this->mediaAdminUiHelper->filterNodesUsingMediaByTitle($value);
+      $media_entity_ids = [];
 
-      $media_entity_ids = array_map(static function (NodeInterface $node) {
-        return $node->get('field_attached_media')->first()->getValue()['target_id'];
-      }, $field_attached_media_usages);
+      foreach ($nodes_using_media_by_title as $node) {
+        if ($node->hasField('field_attached_media')) {
+          $media_entity_ids[] = $node->get('field_attached_media')->first()->getValue()['target_id'];
+        }
+        elseif ($node->hasField('field_presentation_slides')) {
+          $media_entity_ids[] = $node->get('field_presentation_slides')->first()->getValue()['target_id'];
+        }
+        elseif ($node->hasField('field_software_package')) {
+          $media_entity_ids[] = $node->get('field_software_package')->first()->getValue()['target_id'];
+        }
+      }
 
       // TODO: Do the same for reference+media field.
-      $this->query->addWhere('AND', 'media_field_data.mid', $media_entity_ids, 'IN');
+      if ($media_entity_ids) {
+        $this->query->addWhere('AND', 'media_field_data.mid', $media_entity_ids, 'IN');
+      }
     }
   }
 

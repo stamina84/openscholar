@@ -40,25 +40,18 @@ final class MediaAdminUIHelper {
    *   The nodes.
    */
   public function getMediaUsageInNodes($media_id): array {
-    /** @var \Drupal\Core\Entity\Query\QueryInterface $field_attached_media_query */
-    $field_attached_media_query = $this->nodeStorage->getQuery();
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
+    $query = $this->nodeStorage->getQuery();
 
-    $field_attached_media_query->condition('status', NodeInterface::PUBLISHED)
-      ->condition('type', [
-        'software_project',
-        'news',
-        'faq',
-        'class',
-        'blog',
-        'page',
-        'events',
-      ], 'IN')
-      ->condition('field_attached_media.entity:media.mid', $media_id);
+    $condition_group = $query->orConditionGroup()
+      ->condition('field_attached_media.entity:media.mid', $media_id)
+      ->condition('field_presentation_slides.entity:media.mid', $media_id)
+      ->condition('field_software_package.entity:media.mid', $media_id);
 
-    // TODO: Do the same for other node+media fields.
-    $usages = $this->nodeStorage->loadMultiple($field_attached_media_query->execute());
+    $query->condition('status', NodeInterface::PUBLISHED)
+      ->condition($condition_group);
 
-    return $usages;
+    return $this->nodeStorage->loadMultiple($query->execute());
   }
 
   /**
@@ -73,26 +66,19 @@ final class MediaAdminUIHelper {
    *   The filtered nodes.
    */
   public function filterNodesUsingMediaByTitle(string $title): array {
-    /** @var \Drupal\Core\Entity\Query\QueryInterface $field_attached_media_query */
-    $field_attached_media_query = $this->nodeStorage->getQuery();
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
+    $query = $this->nodeStorage->getQuery();
 
-    $field_attached_media_query->condition('status', NodeInterface::PUBLISHED)
-      ->condition('type', [
-        'software_project',
-        'news',
-        'faq',
-        'class',
-        'blog',
-        'page',
-        'events',
-      ], 'IN')
+    $condition_group = $query->orConditionGroup()
       ->exists('field_attached_media')
+      ->exists('field_presentation_slides')
+      ->exists('field_software_package');
+
+    $query->condition('status', NodeInterface::PUBLISHED)
+      ->condition($condition_group)
       ->condition('title', "%{$title}%", 'LIKE');
 
-    // TODO: Do the same for other node+media fields.
-    $usages = $this->nodeStorage->loadMultiple($field_attached_media_query->execute());
-
-    return $usages;
+    return $this->nodeStorage->loadMultiple($query->execute());
   }
 
 }
