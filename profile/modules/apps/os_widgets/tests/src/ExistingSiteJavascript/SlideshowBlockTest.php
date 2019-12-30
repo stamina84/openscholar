@@ -63,7 +63,7 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
 
     $this->visitViaVsite("", $this->group);
     $page = $this->getCurrentPage();
-    $page->findLink('Add slideshow')->press();
+    $page->findLink('Add slide')->press();
     $web_assert->waitForElement('css', '.modal-dialog');
     $web_assert->pageTextContains('Add new slideshow');
     $page->fillField('field_slide_image[0][target_id]', $image->label());
