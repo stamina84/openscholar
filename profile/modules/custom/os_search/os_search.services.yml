@@ -1,0 +1,4 @@
+services:
+  os_search.list_app_helper:
+    class: Drupal\os_search\ListAppsHelper
+    arguments: ['@os_app_access.app_loader', '@current_user']

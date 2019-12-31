@@ -6,3 +6,4 @@ dependencies:
   - "cp:cp_settings"
   - "Search:search_api"
   - "drupal:vsite"
+  - "drupal:os_app_access"
