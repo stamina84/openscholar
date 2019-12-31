@@ -95,9 +95,11 @@ class MediaUsageFilter extends FilterPluginBase {
   protected function valueForm(&$form, FormStateInterface $form_state) {
     parent::valueForm($form, $form_state);
 
-    // TODO: An empty textfield appears in "used in" filter setting.
     $form['value'] = [
       '#type' => 'textfield',
+      '#title' => $this->t('Value'),
+      '#size' => 30,
+      '#default_value' => $this->value,
     ];
   }
 
