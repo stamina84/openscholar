@@ -51,7 +51,7 @@ function os_media_library_info_alter(&$libraries, $extension) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for altering the behavior of media admin UI.
  */
 function os_media_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $hidden_bundles = [
@@ -59,6 +59,8 @@ function os_media_form_views_exposed_form_alter(&$form, FormStateInterface $form
     'video',
   ];
   if ($form['#id'] == 'views-exposed-form-os-media-page-1') {
+    $form['#submit'][] = 'os_media_media_admin_ui_filter_submit_handler';
+
     foreach ($hidden_bundles as $bundle) {
       unset($form['bundle']['#options'][$bundle]);
     }
@@ -204,14 +206,21 @@ function os_media_preprocess_views_view_field(&$variables) {
     $field->field === 'nothing' &&
     $field->options['id'] === 'nothing_4' &&
     $view->id() === 'os_media') {
+
+    /** @var \Drupal\Core\TempStore\PrivateTempStoreFactory $private_temp_store_factory */
+    $private_temp_store_factory = \Drupal::service('tempstore.private');
+    /** @var \Drupal\Core\TempStore\PrivateTempStore $private_temp_store */
+    $private_temp_store = $private_temp_store_factory->get('os_media');
     /** @var \Drupal\os_media\MediaAdminUIHelper $media_admin_ui_helper */
     $media_admin_ui_helper = \Drupal::service('os_media.media_admin_ui_helper');
+
+    $media_usage_filter = $private_temp_store->get('os_media_usage_filter') ?? '';
     /** @var int $media_id */
     $media_id = $view->result[$view->row_index]->mid;
     /** @var \Drupal\node\NodeInterface[] $media_usages_in_nodes */
-    $media_usages_in_nodes = $media_admin_ui_helper->getMediaUsageInNodes($media_id);
+    $media_usages_in_nodes = $media_admin_ui_helper->getMediaUsageInNodes($media_id, $media_usage_filter);
     /** @var \Drupal\bibcite_entity\Entity\ReferenceInterface[] $media_usages_in_publications */
-    $media_usages_in_publications = $media_admin_ui_helper->getMediaUsageInPublications($media_id);
+    $media_usages_in_publications = $media_admin_ui_helper->getMediaUsageInPublications($media_id, $media_usage_filter);
 
     $node_labels = array_map(static function (NodeInterface $node) {
       return Link::createFromRoute($node->label(), 'entity.node.canonical', [
@@ -246,4 +255,20 @@ function os_media_views_data_alter(array &$data) {
       'id' => 'os_media_media_usage_filter',
     ],
   ];
+}
+
+/**
+ * Submit handler for os_media admin UI exposed filter form.
+ *
+ * @ingroup forms
+ *
+ * @throws \Drupal\Core\TempStore\TempStoreException
+ */
+function os_media_media_admin_ui_filter_submit_handler(array &$form, FormStateInterface $form_state): void {
+  /** @var \Drupal\Core\TempStore\PrivateTempStoreFactory $private_temp_store_factory */
+  $private_temp_store_factory = \Drupal::service('tempstore.private');
+  /** @var \Drupal\Core\TempStore\PrivateTempStore $private_temp_store */
+  $private_temp_store = $private_temp_store_factory->get('os_media');
+
+  $private_temp_store->set('os_media_usage_filter', $form_state->getValue('os_media_media_usage_filter'));
 }

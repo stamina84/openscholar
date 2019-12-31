@@ -43,11 +43,14 @@ final class MediaAdminUIHelper {
    *
    * @param int $media_id
    *   ID of the media entity.
+   * @param string $title
+   *   (Optional) Node title to further filter the usages.
+   *   It always uses `LIKE` operator during filtering.
    *
    * @return \Drupal\node\NodeInterface[]
    *   The nodes.
    */
-  public function getMediaUsageInNodes($media_id): array {
+  public function getMediaUsageInNodes($media_id, string $title = ''): array {
     /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
     $query = $this->nodeStorage->getQuery();
 
@@ -57,7 +60,8 @@ final class MediaAdminUIHelper {
       ->condition('field_software_package.entity:media.mid', $media_id);
 
     $query->condition('status', NodeInterface::PUBLISHED)
-      ->condition($condition_group);
+      ->condition($condition_group)
+      ->condition('title', "%$title%", 'LIKE');
 
     return $this->nodeStorage->loadMultiple($query->execute());
   }
@@ -67,16 +71,20 @@ final class MediaAdminUIHelper {
    *
    * @param int $media_id
    *   ID of the media entity.
+   * @param string $title
+   *   (Optional) Publication title to further filter the usages.
+   *   It always uses `LIKE` operator during filtering.
    *
    * @return \Drupal\bibcite_entity\Entity\ReferenceInterface[]
    *   The publications.
    */
-  public function getMediaUsageInPublications($media_id): array {
+  public function getMediaUsageInPublications($media_id, string $title = ''): array {
     /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
     $query = $this->publicationStorage->getQuery();
 
     $query->condition('status', 1)
-      ->condition('field_attach_files.entity:media.mid', $media_id);
+      ->condition('field_attach_files.entity:media.mid', $media_id)
+      ->condition('title', "%$title%", 'LIKE');
 
     return $this->publicationStorage->loadMultiple($query->execute());
   }
