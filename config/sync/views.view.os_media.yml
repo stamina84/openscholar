@@ -1525,7 +1525,7 @@ display:
           alter:
             alter_text: false
             text: ''
-            make_link: false
+            make_link: true
             path: ''
             absolute: false
             external: false
@@ -1534,7 +1534,7 @@ display:
             trim_whitespace: false
             alt: ''
             rel: ''
-            link_class: ''
+            link_class: 'far fa-trash-alt'
             prefix: ''
             suffix: ''
             target: ''
@@ -1692,7 +1692,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<a file-editor-modal=\"\" fid=\"{{mid}}\" href=\"#\" views-close=\"reload(result)\" class=\"ng-isolate-scope\">Edit</a>\r\n{{ delete_media }}"
+            text: "<a file-editor-modal=\"\" fid=\"{{mid}}\" href=\"#\" views-close=\"reload(result)\" class=\"ng-isolate-scope far fa-edit\">Edit</a>\r\n{{ delete_media }}"
             make_link: false
             path: '#'
             absolute: false
@@ -1718,7 +1718,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: ''
+          element_class: manage-media
           element_label_type: ''
           element_label_class: ''
           element_label_colon: true
