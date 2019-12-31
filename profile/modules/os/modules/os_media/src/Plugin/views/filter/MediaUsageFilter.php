@@ -57,6 +57,41 @@ class MediaUsageFilter extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    $options['operator']['default'] = 'LIKE';
+
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function operatorValidate($form, FormStateInterface $form_state) {
+    /** @var array $submitted_data */
+    $submitted_data = $form_state->getValues();
+    $is_operator_exposed = (bool) $submitted_data['options']['expose']['use_operator'];
+
+    if ($is_operator_exposed) {
+      $form_state->setError($form['expose']['use_operator'], $this->t('Exposing the operator is not allowed. It is restricted to `LIKE`.'));
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function operatorOptions() {
+    return [
+      'LIKE' => $this->t('LIKE'),
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     parent::valueForm($form, $form_state);
 
@@ -69,8 +104,18 @@ class MediaUsageFilter extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function adminSummary() {
+    if (!empty($this->options['exposed'])) {
+      return $this->t('exposed');
+    }
+
+    return $this->operator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
-    // TODO: Restrict the operator to `LIKE`.
     if (empty($this->value)) {
       return;
     }

@@ -45,7 +45,6 @@ final class MediaAdminUIHelper {
    *   ID of the media entity.
    * @param string $title
    *   (Optional) Node title to further filter the usages.
-   *   It always uses `LIKE` operator during filtering.
    *
    * @return \Drupal\node\NodeInterface[]
    *   The nodes.
@@ -73,7 +72,6 @@ final class MediaAdminUIHelper {
    *   ID of the media entity.
    * @param string $title
    *   (Optional) Publication title to further filter the usages.
-   *   It always uses `LIKE` operator during filtering.
    *
    * @return \Drupal\bibcite_entity\Entity\ReferenceInterface[]
    *   The publications.
@@ -91,8 +89,6 @@ final class MediaAdminUIHelper {
 
   /**
    * Filters nodes which are using a media by title.
-   *
-   * This always performs the filtering with `LIKE` operator.
    *
    * @param string $title
    *   The title to filter with.
@@ -118,8 +114,6 @@ final class MediaAdminUIHelper {
 
   /**
    * Filters publications which are using a media by title.
-   *
-   * This always performs the filtering with `LIKE` operator.
    *
    * @param string $title
    *   The title to filter with.

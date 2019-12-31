@@ -250,7 +250,7 @@ function os_media_views_data_alter(array &$data) {
     'title' => t('Filter by entity title using the media'),
     'filter' => [
       'title' => t('Used In'),
-      'help' => t('Filter by entity title using the media.'),
+      'help' => t('Filter by entity title using the media. Filtering is always done using `LIKE` operator.'),
       'field' => 'mid',
       'id' => 'os_media_media_usage_filter',
     ],
