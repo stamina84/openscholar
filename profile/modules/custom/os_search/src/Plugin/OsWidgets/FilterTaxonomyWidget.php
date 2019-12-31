@@ -14,7 +14,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
- * Class SearchSortWidget.
+ * Class FilterTaxonomyWidget.
  *
  * @OsWidget(
  *   id = "filter_taxonomy_widget",

@@ -1,0 +1,11 @@
+uuid: 2240ec01-23c4-4f63-aa6c-a04fc4b28bcd
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.filter_taxonomy
+id: block_content.filter_taxonomy
+target_entity_type_id: block_content
+target_bundle: filter_taxonomy
+default_langcode: site_default
+language_alterable: false

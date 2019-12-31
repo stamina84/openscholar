@@ -53,6 +53,10 @@ field_settings:
     label: 'Group (text)'
     property_path: custom_search_group
     type: integer
+  custom_taxonomy:
+    label: 'Custom Taxonomy (text)'
+    property_path: custom_taxonomy
+    type: integer
   custom_title:
     label: 'Custom Title (text)'
     property_path: custom_title
@@ -133,6 +137,7 @@ processor_settings:
   add_bundle_as_text: {  }
   add_created_as_text: {  }
   add_group_as_text: {  }
+  add_taxonomy_as_text: {  }
   add_title_as_text: {  }
   add_type_as_text: {  }
   add_url: {  }

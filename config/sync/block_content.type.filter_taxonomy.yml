@@ -1,0 +1,8 @@
+uuid: eb415987-fc21-403d-8724-1964b57964be
+langcode: en
+status: true
+dependencies: {  }
+id: filter_taxonomy
+label: 'Filter Taxonomy'
+revision: 1
+description: ''
