@@ -62,7 +62,7 @@ final class MediaAdminUiHelper {
       ->condition($condition_group)
       ->condition('title', "%$title%", 'LIKE');
 
-    return $this->nodeStorage->loadMultiple($query->execute());
+    return array_values($this->nodeStorage->loadMultiple($query->execute()));
   }
 
   /**
@@ -84,7 +84,7 @@ final class MediaAdminUiHelper {
       ->condition('field_attach_files.entity:media.mid', $media_id)
       ->condition('title', "%$title%", 'LIKE');
 
-    return $this->publicationStorage->loadMultiple($query->execute());
+    return array_values($this->publicationStorage->loadMultiple($query->execute()));
   }
 
   /**
@@ -109,7 +109,7 @@ final class MediaAdminUiHelper {
       ->condition($condition_group)
       ->condition('title', "%{$title}%", 'LIKE');
 
-    return $this->nodeStorage->loadMultiple($query->execute());
+    return array_values($this->nodeStorage->loadMultiple($query->execute()));
   }
 
   /**
@@ -129,7 +129,7 @@ final class MediaAdminUiHelper {
       ->exists('field_attach_files')
       ->condition('title', "%{$title}%", 'LIKE');
 
-    return $this->publicationStorage->loadMultiple($query->execute());
+    return array_values($this->publicationStorage->loadMultiple($query->execute()));
   }
 
 }
