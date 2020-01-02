@@ -10,6 +10,7 @@ use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -17,6 +18,7 @@ use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\UserInterface;
 use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
 
@@ -26,6 +28,9 @@ use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
 trait ExistingSiteTestTrait {
 
   use UserCreationTrait;
+  use TestFileCreationTrait {
+    getTestFiles as coreGetTestFiles;
+  }
 
   /**
    * Configurations to clean up.
@@ -166,7 +171,7 @@ trait ExistingSiteTestTrait {
    * @param string $type
    *   (optional) The file type to attach to the entity.
    *   File type, possible values: 'binary', 'html', 'image', 'javascript',
-   *   'php', 'sql', 'text'.
+   *   'php', 'sql', 'text', 'pdf', 'tar'.
    *
    * @return \Drupal\media\MediaInterface
    *   The new media entity.
@@ -238,7 +243,7 @@ trait ExistingSiteTestTrait {
    * @param string $type
    *   (optional) The file type.
    *   File type, possible values: 'binary', 'html', 'image', 'javascript',
-   *   'php', 'sql', 'text'.
+   *   'php', 'sql', 'text', 'pdf', 'tar'.
    * @param int $index
    *   The index of the test files which is going to be used to create the file.
    *
@@ -248,8 +253,20 @@ trait ExistingSiteTestTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createFileCore($type = 'text', $index = 0): FileInterface {
-    /** @var array $test_files */
-    $test_files = $this->getTestFiles($type);
+    /** @var array $core_test_files */
+    $core_test_files = $this->coreGetTestFiles($type);
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = $this->container->get('file_system');
+
+    $original = drupal_get_path('module', 'os_test') . '/files';
+    $files = file_scan_directory($original, '/(pdf|tar)-.*/');
+    foreach ($files as $file) {
+      $file_system->copy($file->uri, PublicStream::basePath());
+    }
+
+    $test_files = array_merge($files, $core_test_files);
+    usort($test_files, [$this, 'compareFiles']);
+
     $file = File::create((array) $test_files[$index]);
     $file->save();
 

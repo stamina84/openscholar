@@ -3,7 +3,6 @@
 namespace Drupal\Tests\openscholar\ExistingSite;
 
 use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
-use Drupal\Tests\TestFileCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 use Drupal\vsite\Plugin\VsiteContextManager;
 
@@ -13,7 +12,6 @@ use Drupal\vsite\Plugin\VsiteContextManager;
 abstract class OsExistingSiteTestBase extends ExistingSiteBase {
 
   use ExistingSiteTestTrait;
-  use TestFileCreationTrait;
 
   /**
    * Test group.
