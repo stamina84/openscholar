@@ -57,17 +57,18 @@ class MediaAdminUiHelperTest extends OsExistingSiteTestBase {
     $usages = $this->mediaAdminUiHelper->getMediaUsageInNodes($pdf_media->id());
     $this->assertEmpty($usages);
 
+    $faq->setPublished(TRUE)->save();
+
     // Assert non-existing media.
     $usages = $this->mediaAdminUiHelper->getMediaUsageInNodes($non_existing_media_id);
     $this->assertEmpty($usages);
 
-    // Assert non-existing title.
+    // Assert non-matching title.
     $usages = $this->mediaAdminUiHelper->getMediaUsageInNodes($pdf_media->id(), $non_matching_title);
     $this->assertEmpty($usages);
 
     // Positive tests.
     // Assert for field_attached_media.
-    $faq->setPublished(TRUE)->save();
     $usages = $this->mediaAdminUiHelper->getMediaUsageInNodes($pdf_media->id());
     $this->assertCount(1, $usages);
     $this->assertEqual($usages[0]->id(), $faq->id());
@@ -109,6 +110,51 @@ class MediaAdminUiHelperTest extends OsExistingSiteTestBase {
     }, $usages);
     $this->assertContains($faq->id(), $usage_nids);
     $this->assertContains($presentation->id(), $usage_nids);
+  }
+
+  /**
+   * @covers ::getMediaUsageInPublications
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testGetMediaUsageInPublications(): void {
+    $pdf_media = $this->createMedia([], 'pdf');
+    $non_existing_media_id = INF;
+    $non_matching_title = 'Boah';
+
+    // Negative tests.
+    // Assert unpublished publication.
+    $reference = $this->createReference([
+      'html_title' => 'Cumberland Falls',
+      'field_attach_files' => [
+        'target_id' => $pdf_media->id(),
+      ],
+      'status' => 0,
+    ]);
+
+    $usages = $this->mediaAdminUiHelper->getMediaUsageInPublications($pdf_media->id());
+    $this->assertEmpty($usages);
+
+    $reference->set('status', 1)->save();
+
+    // Assert non-existing media id.
+    $usages = $this->mediaAdminUiHelper->getMediaUsageInPublications($non_existing_media_id);
+    $this->assertEmpty($usages);
+
+    // Assert non-matching title.
+    $usages = $this->mediaAdminUiHelper->getMediaUsageInPublications($pdf_media->id(), $non_matching_title);
+    $this->assertEmpty($usages);
+
+    // Positive tests.
+    // Assert for field_attach_files.
+    $usages = $this->mediaAdminUiHelper->getMediaUsageInPublications($pdf_media->id());
+    $this->assertCount(1, $usages);
+    $this->assertEqual($usages[0]->id(), $reference->id());
+
+    // Assert with title.
+    $usages = $this->mediaAdminUiHelper->getMediaUsageInPublications($pdf_media->id(), 'all');
+    $this->assertCount(1, $usages);
+    $this->assertEqual($usages[0]->id(), $reference->id());
   }
 
 }
