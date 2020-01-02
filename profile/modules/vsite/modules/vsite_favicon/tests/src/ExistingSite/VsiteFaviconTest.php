@@ -24,7 +24,7 @@ class VsiteFaviconTest extends OsExistingSiteTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->fileFavicon = $this->createFile('image');
+    $this->fileFavicon = $this->createFileCore('image');
   }
 
   /**

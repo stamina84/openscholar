@@ -32,7 +32,7 @@ class CustomThemeTest extends TestBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testSave(): void {
-    $image = $this->createFile('image');
+    $image = $this->createFileCore('image');
     $custom_theme_label = strtolower($this->randomMachineName());
 
     $custom_theme = CustomTheme::create([

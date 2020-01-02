@@ -165,6 +165,8 @@ trait ExistingSiteTestTrait {
    *   (optional) The values used to create the entity.
    * @param string $type
    *   (optional) The file type to attach to the entity.
+   *   File type, possible values: 'binary', 'html', 'image', 'javascript',
+   *   'php', 'sql', 'text'.
    *
    * @return \Drupal\media\MediaInterface
    *   The new media entity.
@@ -172,7 +174,7 @@ trait ExistingSiteTestTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createMedia(array $values = [], $type = 'text'): MediaInterface {
-    $file = $this->createFile($type);
+    $file = $this->createFileCore($type);
     /** @var \Drupal\media\MediaStorage $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('media');
     $media = $storage->create($values + [
@@ -207,7 +209,7 @@ trait ExistingSiteTestTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createMediaImage(array $values = []): MediaInterface {
-    $file = $this->createFile('image');
+    $file = $this->createFileCore('image');
     /** @var \Drupal\media\MediaStorage $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('media');
     $media = $storage->create($values + [
@@ -235,6 +237,8 @@ trait ExistingSiteTestTrait {
    *
    * @param string $type
    *   (optional) The file type.
+   *   File type, possible values: 'binary', 'html', 'image', 'javascript',
+   *   'php', 'sql', 'text'.
    * @param int $index
    *   The index of the test files which is going to be used to create the file.
    *
@@ -243,7 +247,7 @@ trait ExistingSiteTestTrait {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createFile($type = 'text', $index = 0): FileInterface {
+  protected function createFileCore($type = 'text', $index = 0): FileInterface {
     /** @var array $test_files */
     $test_files = $this->getTestFiles($type);
     $file = File::create((array) $test_files[$index]);

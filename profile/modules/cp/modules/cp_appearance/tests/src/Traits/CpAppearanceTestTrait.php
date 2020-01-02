@@ -37,7 +37,7 @@ trait CpAppearanceTestTrait {
    */
   public function createCustomTheme(array $values = [], $styles = '', $scripts = ''): CustomThemeInterface {
     /** @var \Drupal\file\FileInterface[] $image */
-    $image = $this->createFile('image');
+    $image = $this->createFileCore('image');
 
     $theme_data = $values + [
       'id' => $this->randomMachineName(),

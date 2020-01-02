@@ -41,7 +41,7 @@ class VsiteMetatagTest extends OsExistingSiteTestBase {
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
     $vsite_context_manager = $this->container->get('vsite.context_manager');
 
-    $this->fileLogo = $this->createFile('image');
+    $this->fileLogo = $this->createFileCore('image');
     $this->group = $this->createGroup([
       'path' => [
         'alias' => '/test-alias',

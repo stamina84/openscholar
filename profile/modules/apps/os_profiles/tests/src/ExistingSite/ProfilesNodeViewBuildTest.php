@@ -65,7 +65,7 @@ class ProfilesNodeViewBuildTest extends OsExistingSiteTestBase {
    * Test node view listing custom default image.
    */
   public function testNodeViewTeaserCustomDefaultImage() {
-    $file = $this->createFile('image');
+    $file = $this->createFileCore('image');
     $profiles_config = $this->config->getEditable('os_profiles.settings');
     $profiles_config->set('default_image_fid', $file->id());
     $profiles_config->save();
@@ -82,7 +82,7 @@ class ProfilesNodeViewBuildTest extends OsExistingSiteTestBase {
    * Test node view full custom default image.
    */
   public function testNodeViewFullCustomDefaultImage() {
-    $file = $this->createFile('image');
+    $file = $this->createFileCore('image');
     $profiles_config = $this->config->getEditable('os_profiles.settings');
     $profiles_config->set('default_image_fid', $file->id());
     $profiles_config->save();
@@ -96,7 +96,7 @@ class ProfilesNodeViewBuildTest extends OsExistingSiteTestBase {
    * Test node view listing person image.
    */
   public function testNodeViewTeaserPersonImage() {
-    $file = $this->createFile('image');
+    $file = $this->createFileCore('image');
     $personNodeWithImage = $this->createNode([
       'type' => 'person',
       'field_first_name' => $this->randomMachineName(),
@@ -123,7 +123,7 @@ class ProfilesNodeViewBuildTest extends OsExistingSiteTestBase {
    * Test node view full person image.
    */
   public function testNodeViewFullPersonImage() {
-    $file = $this->createFile('image');
+    $file = $this->createFileCore('image');
     $personNodeWithImage = $this->createNode([
       'type' => 'person',
       'field_first_name' => $this->randomMachineName(),
