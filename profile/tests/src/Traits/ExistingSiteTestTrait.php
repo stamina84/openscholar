@@ -179,7 +179,7 @@ trait ExistingSiteTestTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createMedia(array $values = [], $type = 'text'): MediaInterface {
-    $file = $this->createFileCore($type);
+    $file = $this->createFile($type);
     /** @var \Drupal\media\MediaStorage $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('media');
     $media = $storage->create($values + [
@@ -214,7 +214,7 @@ trait ExistingSiteTestTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createMediaImage(array $values = []): MediaInterface {
-    $file = $this->createFileCore('image');
+    $file = $this->createFile('image');
     /** @var \Drupal\media\MediaStorage $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('media');
     $media = $storage->create($values + [
@@ -252,7 +252,7 @@ trait ExistingSiteTestTrait {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createFileCore($type = 'text', $index = 0): FileInterface {
+  protected function createFile($type = 'text', $index = 0): FileInterface {
     /** @var array $core_test_files */
     $core_test_files = $this->coreGetTestFiles($type);
     /** @var array $os_test_files */

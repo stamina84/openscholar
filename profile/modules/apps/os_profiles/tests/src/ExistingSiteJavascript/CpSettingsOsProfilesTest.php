@@ -80,7 +80,7 @@ class CpSettingsOsProfilesTest extends OsExistingSiteJavascriptTestBase {
     $this->container->get('vsite.context_manager')->activateVsite($this->group);
     $web_assert = $this->assertSession();
     $this->drupalLogin($this->groupAdmin);
-    $file = $this->createFileCore('image');
+    $file = $this->createFile('image');
     $file->setPermanent();
     $file->save();
     $profiles_config = $this->configFactory->getEditable('os_profiles.settings');
@@ -115,7 +115,7 @@ class CpSettingsOsProfilesTest extends OsExistingSiteJavascriptTestBase {
   public function testCpSettingsReRenderImageCrop() {
     $web_assert = $this->assertSession();
     $this->drupalLogin($this->groupAdmin);
-    $file = $this->createFileCore('image');
+    $file = $this->createFile('image');
     $file->setPermanent();
     $file->save();
     $this->container->get('vsite.context_manager')->activateVsite($this->group);
