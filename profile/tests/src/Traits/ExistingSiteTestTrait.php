@@ -255,17 +255,10 @@ trait ExistingSiteTestTrait {
   protected function createFileCore($type = 'text', $index = 0): FileInterface {
     /** @var array $core_test_files */
     $core_test_files = $this->coreGetTestFiles($type);
-    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-    $file_system = $this->container->get('file_system');
+    /** @var array $os_test_files */
+    $os_test_files = $this->getTestFiles($type);
 
-    $original = drupal_get_path('module', 'os_test') . '/files';
-    $files = file_scan_directory($original, '/(pdf|tar)-.*/');
-    foreach ($files as $file) {
-      $file_system->copy($file->uri, PublicStream::basePath());
-    }
-
-    $test_files = array_merge($files, $core_test_files);
-    usort($test_files, [$this, 'compareFiles']);
+    $test_files = array_merge($os_test_files, $core_test_files);
 
     $file = File::create((array) $test_files[$index]);
     $file->save();
@@ -273,6 +266,60 @@ trait ExistingSiteTestTrait {
     $this->markEntityForCleanup($file);
 
     return $file;
+  }
+
+  /**
+   * Gets a list of files that can be used in tests.
+   *
+   * It will copy all files in modules/os_test/files to public://.
+   * These contain pdf and tar files.
+   *
+   * All filenames are prefixed with their type and have appropriate extensions:
+   * - pdf-*.pdf
+   * - tar-*.tar
+   *
+   * Any subsequent calls will not generate any new files, or copy the files
+   * over again. However, if a test class adds a new file to public:// that
+   * is prefixed with one of the above types, it will get returned as well, even
+   * on subsequent calls.
+   *
+   * @param string $type
+   *   File type, possible values: 'pdf', 'tar'.
+   * @param int $size
+   *   (optional) File size in bytes to match. Defaults to NULL, which will not
+   *   filter the returned list by size.
+   *
+   * @return array[]
+   *   List of files in public:// that match the filter(s).
+   */
+  protected function getTestFiles($type, $size = NULL): array {
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = $this->container->get('file_system');
+    $original = drupal_get_path('module', 'os_test') . '/files';
+
+    $scanned_files = file_scan_directory($original, '/(pdf|tar)-.*/');
+    foreach ($scanned_files as $file) {
+      $file_system->copy($file->uri, PublicStream::basePath());
+    }
+
+    $files = [];
+    // Make sure type is valid.
+    if (\in_array($type, ['pdf', 'tar'])) {
+      $files = file_scan_directory('public://', '/' . $type . '\-.*/');
+
+      // If size is set then remove any files that are not of that size.
+      if ($size !== NULL) {
+        foreach ($files as $file) {
+          $stats = stat($file->uri);
+          if ($stats['size'] != $size) {
+            unset($files[$file->uri]);
+          }
+        }
+      }
+    }
+    usort($files, [$this, 'compareFiles']);
+
+    return $files;
   }
 
   /**
