@@ -5,7 +5,7 @@ namespace Drupal\os_media\Plugin\views\filter;
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
-use Drupal\os_media\MediaAdminUIHelper;
+use Drupal\os_media\MediaAdminUiHelper;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,7 +21,7 @@ class MediaUsageFilter extends FilterPluginBase {
   /**
    * Media admin UI helper.
    *
-   * @var \Drupal\os_media\MediaAdminUIHelper
+   * @var \Drupal\os_media\MediaAdminUiHelper
    */
   protected $mediaAdminUiHelper;
 
@@ -34,10 +34,10 @@ class MediaUsageFilter extends FilterPluginBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\os_media\MediaAdminUIHelper $media_admin_ui_helper
+   * @param \Drupal\os_media\MediaAdminUiHelper $media_admin_ui_helper
    *   Media admin UI helper.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MediaAdminUIHelper $media_admin_ui_helper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MediaAdminUiHelper $media_admin_ui_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->mediaAdminUiHelper = $media_admin_ui_helper;
   }

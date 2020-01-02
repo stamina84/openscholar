@@ -6,5 +6,5 @@ services:
     class: \Drupal\os_media\MediaEntityHelper
     arguments: ['@http_client', '@media.oembed.iframe_url_helper', '@config.factory', '@messenger', '@logger.factory']
   os_media.media_admin_ui_helper:
-    class: \Drupal\os_media\MediaAdminUIHelper
+    class: \Drupal\os_media\MediaAdminUiHelper
     arguments: ['@entity_type.manager']

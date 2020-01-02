@@ -8,7 +8,7 @@ use Drupal\node\NodeInterface;
 /**
  * Provides helper methods for improving the experience of media admin UI.
  */
-final class MediaAdminUIHelper {
+final class MediaAdminUiHelper {
 
   /**
    * Node storage.

@@ -211,7 +211,7 @@ function os_media_preprocess_views_view_field(&$variables) {
     $private_temp_store_factory = \Drupal::service('tempstore.private');
     /** @var \Drupal\Core\TempStore\PrivateTempStore $private_temp_store */
     $private_temp_store = $private_temp_store_factory->get('os_media');
-    /** @var \Drupal\os_media\MediaAdminUIHelper $media_admin_ui_helper */
+    /** @var \Drupal\os_media\MediaAdminUiHelper $media_admin_ui_helper */
     $media_admin_ui_helper = \Drupal::service('os_media.media_admin_ui_helper');
 
     $media_usage_filter = $private_temp_store->get('os_media_usage_filter') ?? '';
