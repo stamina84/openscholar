@@ -58,6 +58,7 @@
 #factory-wrapper {
   background-color: $color-light-gray9;
   z-index: 999;
+  overflow-y: scroll;
   .close {
     float: none;
     font-size: 21px;

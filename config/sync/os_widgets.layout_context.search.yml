@@ -1,0 +1,10 @@
+uuid: 2d5fc81d-ddf2-48ff-9286-bbafc2e2c448
+langcode: en
+status: true
+dependencies: {  }
+id: search
+label: Search
+description: ''
+activationRules: "search\r\nsearch/*"
+weight: 0
+data: {  }
