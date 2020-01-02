@@ -51,7 +51,8 @@ class OsBlogSettingForm extends CpSettingBase {
       '#default_value' => $blog_config->get('comment_type'),
     ];
 
-    $description = $this->t('Enter the website you used to register your Disqus account.');
+    $description = $this->t('Enter the website shortname you used to register your Disqus account.
+                     If you registered <br /> http://example.disqus.com, you would enter "example" here. <a href="@disqus" target="_blank">Signup for a Disqus account &#187;</a>', ['@disqus' => 'https://disqus.com/']);
     $form['disqus_shortname'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Disqus shortname'),

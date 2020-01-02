@@ -28,16 +28,16 @@ options:
     pauseOnDotsHover: false
     pauseOnFocus: true
     arrows: true
-    prevArrow: '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0" role="button">Previous</button>'
-    nextArrow: '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0" role="button">Next</button>'
+    prevArrow: '<button type="button" data-role="none" class="slick-prev" aria-label="Previous Slide" tabindex="0" role="button"><span class="glyphicon glyphicon-arrow-left"></span></button>'
+    nextArrow: '<button type="button" data-role="none" class="slick-next" aria-label="Next Slide" tabindex="0" role="button"><span class="glyphicon glyphicon-arrow-right"></span></button>'
     downArrow: false
     downArrowTarget: ''
     downArrowOffset: 0
     centerMode: false
     centerPadding: 50px
-    dots: false
+    dots: true
     dotsClass: slick-dots
-    appendDots: $(element)
+    appendDots: .slick__arrow
     draggable: true
     fade: false
     focusOnSelect: false
@@ -84,7 +84,7 @@ options:
           arrows: true
           centerMode: false
           centerPadding: 50px
-          dots: false
+          dots: true
           draggable: true
           fade: false
           focusOnSelect: false
@@ -121,7 +121,7 @@ options:
           arrows: true
           centerMode: false
           centerPadding: 50px
-          dots: false
+          dots: true
           draggable: true
           fade: false
           focusOnSelect: false

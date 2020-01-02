@@ -4,3 +4,5 @@ global-styling:
     theme:
       '//fonts.googleapis.com/css?family=Montserrat': { external: true }
       css/style.css: {}
+  js:
+    js/onepage.js: {}

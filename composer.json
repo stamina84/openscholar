@@ -191,6 +191,7 @@
         "drupal/easy_breadcrumb": "^1.8",
         "drupal/elasticsearch_connector": "^7.0@alpha",
         "drupal/entity_reference_revisions": "^1.6",
+        "drupal/facets": "^1.4",
         "drupal/field_tools": "^1.0@alpha",
         "drupal/fullcalendar": "1.x-dev",
         "drupal/google_analytics": "^2.4",
