@@ -40,6 +40,13 @@ trait ExistingSiteTestTrait {
   protected $cleanUpConfigs = [];
 
   /**
+   * Whether the files were copied to the test files directory.
+   *
+   * @var bool
+   */
+  protected $generatedOsTestFiles = FALSE;
+
+  /**
    * Creates a group.
    *
    * @param array $values
@@ -293,13 +300,17 @@ trait ExistingSiteTestTrait {
    *   List of files in public:// that match the filter(s).
    */
   protected function getTestFiles($type, $size = NULL): array {
-    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-    $file_system = $this->container->get('file_system');
-    $original = drupal_get_path('module', 'os_test') . '/files';
+    if (!$this->generatedOsTestFiles) {
+      /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+      $file_system = $this->container->get('file_system');
+      $original = drupal_get_path('module', 'os_test') . '/files';
 
-    $scanned_files = file_scan_directory($original, '/(pdf|tar)-.*/');
-    foreach ($scanned_files as $file) {
-      $file_system->copy($file->uri, PublicStream::basePath());
+      $scanned_files = file_scan_directory($original, '/(pdf|tar)-.*/');
+      foreach ($scanned_files as $file) {
+        $file_system->copy($file->uri, PublicStream::basePath());
+      }
+
+      $this->generatedOsTestFiles = TRUE;
     }
 
     $files = [];
