@@ -157,4 +157,75 @@ class MediaAdminUiHelperTest extends OsExistingSiteTestBase {
     $this->assertEqual($usages[0]->id(), $reference->id());
   }
 
+  /**
+   * @covers ::filterNodesUsingMediaByTitle
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testFilterNodesUsingMediaByTitle(): void {
+    $pdf_media = $this->createMedia([], 'pdf');
+    $tar_media = $this->createMedia([
+      'bundle' => [
+        'target_id' => 'executable',
+      ],
+    ], 'tar');
+    $non_matching_title = 'Charles';
+
+    // Negative tests.
+    // Assert unpublished content.
+    $faq = $this->createNode([
+      'type' => 'faq',
+      'title' => "Witch's Cauldron",
+      'field_attached_media' => [
+        'target_id' => $pdf_media->id(),
+      ],
+      'status' => NodeInterface::NOT_PUBLISHED,
+    ]);
+
+    $usages = $this->mediaAdminUiHelper->filterNodesUsingMediaByTitle('itch');
+    $this->assertEmpty($usages);
+
+    $faq->setPublished(TRUE)->save();
+
+    // Assert non-matching title.
+    $usages = $this->mediaAdminUiHelper->filterNodesUsingMediaByTitle($non_matching_title);
+    $this->assertEmpty($usages);
+
+    // Positive tests.
+    // Assert field_attached_media OR field_presentation_slides.
+    $presentation = $this->createNode([
+      'type' => 'presentation',
+      'title' => "Witch's Cauldron",
+      'field_presentation_slides' => [
+        'target_id' => $pdf_media->id(),
+      ],
+    ]);
+
+    $usages = $this->mediaAdminUiHelper->filterNodesUsingMediaByTitle('itch');
+    $this->assertCount(2, $usages);
+    $usage_nids = array_map(static function (NodeInterface $node) {
+      return $node->id();
+    }, $usages);
+    $this->assertContains($faq->id(), $usage_nids);
+    $this->assertContains($presentation->id(), $usage_nids);
+
+    // Assert field_software_package.
+    $software_project = $this->createReference([
+      'type' => 'software_project',
+    ]);
+    $software_release = $this->createNode([
+      'type' => 'software_release',
+      'field_software_package' => [
+        'target_id' => $tar_media->id(),
+      ],
+      'field_software_project' => [
+        'target_id' => $software_project->id(),
+      ],
+      'field_software_version' => "O'Creagh's Run",
+    ]);
+
+    $usages = $this->mediaAdminUiHelper->filterNodesUsingMediaByTitle('un');
+    $this->assertCount(1, $usages);
+    $this->assertEqual($usages[0]->id(), $software_release->id());
+  }
+
 }
