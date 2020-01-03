@@ -205,6 +205,7 @@
         "drupal/mailchimp": "^1.8",
         "drupal/mathjax": "^2.7",
         "drupal/metatag": "^1.7",
+        "drupal/node_revision_delete": "^1.0@beta",
         "drupal/pagebreak": "^1.0",
         "drupal/paragraphs": "^1.4",
         "drupal/pathauto": "^1.2",
@@ -413,6 +414,9 @@
             "drupal/config_ignore": {
                 "Override drush cim/cex for filtering": "https://www.drupal.org/files/issues/2019-01-08/2973431-supplementary-drush-commands-17.patch",
                 "Allow adding continer filtering": "https://www.drupal.org/files/issues/2019-01-09/2973431-ignore-collections-18.patch"
+            },
+            "drupal/node_revision_delete": {
+                "Fix last execute and period logic": "https://www.drupal.org/files/issues/2019-12-20/fix-last-execute-logic-3102382-2.patch"
             }
         },
         "patches-ignore": {

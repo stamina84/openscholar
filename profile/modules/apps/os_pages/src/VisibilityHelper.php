@@ -4,7 +4,8 @@ namespace Drupal\os_pages;
 
 use Drupal\book\BookOutlineStorageInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\node\Entity\Node;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class PagesVisibilityHelper.
@@ -19,13 +20,33 @@ final class VisibilityHelper implements VisibilityHelperInterface {
   protected $bookOutlineStorage;
 
   /**
+   * The node storage.
+   *
+   * @var \Drupal\node\NodeStorage
+   */
+  protected $nodeStorage;
+
+  /**
    * VisibilityHelper constructor.
    *
    * @param \Drupal\book\BookOutlineStorageInterface $book_outline_storage
    *   The book outline storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(BookOutlineStorageInterface $book_outline_storage) {
+  public function __construct(BookOutlineStorageInterface $book_outline_storage, EntityTypeManagerInterface $entity_type_manager) {
     $this->bookOutlineStorage = $book_outline_storage;
+    $this->nodeStorage = $entity_type_manager->getStorage('node');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('book.outline_storage'),
+      $container->get('entity_type.manager')
+    );
   }
 
   /**
@@ -39,7 +60,7 @@ final class VisibilityHelper implements VisibilityHelperInterface {
     }
 
     /** @var \Drupal\node\NodeInterface $book */
-    $book = Node::load($entity->book['bid']);
+    $book = $this->nodeStorage->load($entity->book['bid']);
 
     /** @var array $book_pages */
     $book_pages = $this->bookOutlineStorage->loadBookChildren($book->id());

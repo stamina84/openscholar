@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Contains bibcite_revision_delete.module.
+ */
+
+/**
+ * Implements hook_cron().
+ */
+function bibcite_revision_delete_cron() {
+  $state = \Drupal::state();
+  // Getting the config.
+  $config = \Drupal::config('bibcite_revision_delete.settings');
+  // Getting the frequency to run cron.
+  $period = $config->get('bibcite_revision_delete_time');
+  // Getting the last time cron runs.
+  $last_execute = $state->get('bibcite_revision_delete.last_execute');
+  if (is_null($last_execute)) {
+    $last_execute = 0;
+  }
+  // Getting the current time.
+  $current_time = \Drupal::time()->getRequestTime();
+
+  if (($period != -1) && ($current_time - $last_execute > $period)) {
+    // Getting the the maximum number of revisions to process.
+    $revisions_to_process = $config->get('bibcite_revision_delete_cron');
+    // Getting the revisions to delete.
+    $revisions = \Drupal::service('bibcite_revision_delete')->getCandidatesRevisionsByNumber($revisions_to_process);
+    // Checking if we have revisions to delete.
+    if (count($revisions)) {
+      // Getting the bibcite storage.
+      $bibcite_storage = \Drupal::entityTypeManager()->getStorage('bibcite_reference');
+
+      // Delete the revisions.
+      foreach ($revisions as $revision) {
+        $bibcite_storage->deleteRevision($revision);
+      }
+      // The bibcite_revision_delete.last_execute state variable stores the last
+      // time a revision was deleted once cron run.
+      $state->set('bibcite_revision_delete.last_execute', $current_time);
+    }
+  }
+
+}

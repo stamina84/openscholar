@@ -1,0 +1,6 @@
+name: Bibcite Revision Delete
+description: Prune bibcite_reference revisions.
+type: module
+core: 8.x
+dependencies:
+  - drupal:bibcite_entity
