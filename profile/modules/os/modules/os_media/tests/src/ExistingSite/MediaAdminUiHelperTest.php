@@ -91,11 +91,18 @@ class MediaAdminUiHelperTest extends OsExistingSiteTestBase {
     $this->assertContains($presentation->id(), $usage_nids);
 
     // Assert for field_software_package.
+    $software_project = $this->createReference([
+      'type' => 'software_project',
+    ]);
     $software_release = $this->createNode([
       'type' => 'software_release',
       'field_software_package' => [
         'target_id' => $tar_media->id(),
       ],
+      'field_software_project' => [
+        'target_id' => $software_project->id(),
+      ],
+      'field_software_version' => 'v2',
     ]);
 
     $usages = $this->mediaAdminUiHelper->getMediaUsageInNodes($tar_media->id());
