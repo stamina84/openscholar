@@ -235,4 +235,37 @@ class MediaAdminUiHelperTest extends OsExistingSiteTestBase {
     $this->assertEqual($usages[0]->id(), $software_release->id());
   }
 
+  /**
+   * @covers ::filterPublicationsUsingMediaByTitle
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testFilterPublicationsUsingMediaByTitle(): void {
+    $pdf_media = $this->createMedia([], 'pdf');
+    $non_matching_title = 'Wolf';
+
+    // Negative tests.
+    // Assert unpublished publication.
+    $reference = $this->createReference([
+      'html_title' => 'Kaer Morhen',
+      'field_attach_files' => [
+        'target_id' => $pdf_media->id(),
+      ],
+      'status' => 0,
+    ]);
+
+    $usages = $this->mediaAdminUiHelper->filterPublicationsUsingMediaByTitle('hen');
+    $this->assertEmpty($usages);
+
+    // Assert non-matching title.
+    $reference->set('status', 1)->save();
+
+    $usages = $this->mediaAdminUiHelper->filterPublicationsUsingMediaByTitle($non_matching_title);
+    $this->assertEmpty($usages);
+
+    // Positive tests.
+    $usages = $this->mediaAdminUiHelper->filterPublicationsUsingMediaByTitle('hen');
+    $this->assertCount(1, $usages);
+    $this->assertEqual($usages[0]->id(), $reference->id());
+  }
+
 }
