@@ -1,0 +1,4 @@
+services:
+  bibcite_revision_delete:
+    class: Drupal\bibcite_revision_delete\BibciteRevisionDelete
+    arguments: ["@config.factory", '@database']
