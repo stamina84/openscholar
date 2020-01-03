@@ -91,7 +91,7 @@ class MediaAdminUiHelperTest extends OsExistingSiteTestBase {
     $this->assertContains($presentation->id(), $usage_nids);
 
     // Assert for field_software_package.
-    $software_project = $this->createReference([
+    $software_project = $this->createNode([
       'type' => 'software_project',
     ]);
     $software_release = $this->createNode([
@@ -216,7 +216,7 @@ class MediaAdminUiHelperTest extends OsExistingSiteTestBase {
     $this->assertContains($presentation->id(), $usage_nids);
 
     // Assert field_software_package.
-    $software_project = $this->createReference([
+    $software_project = $this->createNode([
       'type' => 'software_project',
     ]);
     $software_release = $this->createNode([
