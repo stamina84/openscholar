@@ -83,3 +83,19 @@ cp.content.browse.collection:
     _title: 'Browse Site Content'
   requirements:
     _group_permission: 'manage vsite content'
+
+cp.content.import.collection:
+  path: '/cp/content/import'
+  defaults:
+    _controller: '\Drupal\cp\Controller\CpController::overview'
+    _title: 'Import'
+  requirements:
+    _group_permission: 'access control panel'
+
+cp.content.import:
+  path: '/cp/content/import/{app_name}'
+  defaults:
+    _form: '\Drupal\cp_import\Form\CpImportForm'
+    _title_callback: '\Drupal\cp_import\Form\CpImportForm::getTitle'
+  requirements:
+    _custom_access: '\Drupal\cp_import\Access\CpImportAccessCheck::access'

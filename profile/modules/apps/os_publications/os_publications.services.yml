@@ -22,3 +22,6 @@ services:
   os_publications.citation_helper:
     class: Drupal\os_publications\CitationHelper
     arguments: ['@config.factory', '@plugin.manager.bibcite_format']
+  os_publications.contributor_helper:
+    class: Drupal\os_publications\ContributorHelper
+    arguments: ['@entity_type.manager']
