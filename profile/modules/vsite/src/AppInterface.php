@@ -33,4 +33,17 @@ interface AppInterface extends PluginInspectionInterface {
    */
   public function getCreateLinks();
 
+  /**
+   * Return the import form.
+   *
+   * @param array $form
+   *   The form to be returned.
+   * @param string $type
+   *   App type.
+   *
+   * @return array
+   *   The Import form.
+   */
+  public function getImportForm(array $form, $type) : array;
+
 }

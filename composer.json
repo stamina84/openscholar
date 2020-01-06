@@ -205,6 +205,8 @@
         "drupal/mailchimp": "^1.8",
         "drupal/mathjax": "^2.7",
         "drupal/metatag": "^1.7",
+        "drupal/migrate_source_csv": "^3.1",
+        "drupal/migrate_tools": "^4.5",
         "drupal/node_revision_delete": "^1.0@beta",
         "drupal/pagebreak": "^1.0",
         "drupal/paragraphs": "^1.4",
@@ -414,6 +416,12 @@
             "drupal/config_ignore": {
                 "Override drush cim/cex for filtering": "https://www.drupal.org/files/issues/2019-01-08/2973431-supplementary-drush-commands-17.patch",
                 "Allow adding continer filtering": "https://www.drupal.org/files/issues/2019-01-09/2973431-ignore-collections-18.patch"
+            },
+            "drupal/disqus": {
+                "Disqus migrate support is broken": "https://www.drupal.org/files/issues/disqus-migrate-support-2879592-14.patch"
+            },
+            "drupal/migrate_tools": {
+                "Warning: session_id(): Cannot change session id when headers already sent": "https://www.drupal.org/files/issues/2019-03-09/3038712-2.patch"
             },
             "drupal/node_revision_delete": {
                 "Fix last execute and period logic": "https://www.drupal.org/files/issues/2019-12-20/fix-last-execute-logic-3102382-2.patch"

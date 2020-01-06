@@ -42,6 +42,7 @@ module:
   courier: 0
   cp: 0
   cp_appearance: 0
+  cp_import: 0
   cp_settings: 0
   cp_taxonomy: 0
   cp_users: 0
@@ -99,6 +100,10 @@ module:
   metatag_open_graph: 0
   metatag_twitter_cards: 0
   metatag_views: 0
+  migrate: 0
+  migrate_plus: 0
+  migrate_source_csv: 0
+  migrate_tools: 0
   node: 0
   node_revision_delete: 0
   options: 0

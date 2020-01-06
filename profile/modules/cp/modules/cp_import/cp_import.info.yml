@@ -1,0 +1,10 @@
+name: Cp Import
+type: module
+core: 8.x
+version: '1.0'
+dependencies:
+  - drupal:cp
+  - drupal:migrate_source_csv
+  - drupal:vsite
+  - drupal:migrate_tools
+  - drupal:os_media

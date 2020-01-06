@@ -83,3 +83,7 @@ cp.help.support:
   title: 'Support'
   url: 'internal:##'
   parent: cp.help
+cp.content.import.collection:
+  title: 'Import'
+  route_name: cp.content.import.collection
+  parent: cp.content
