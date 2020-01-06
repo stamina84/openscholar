@@ -47,9 +47,12 @@ final class ThemeSelectorBuilder implements ThemeSelectorBuilderInterface, Conta
 
     foreach ($candidates as $candidate) {
       /** @var string $screenshot_uri */
-      $screenshot_uri = $installed_themes[$candidate]->info['screenshot'];
-      if (file_exists($screenshot_uri)) {
-        return $screenshot_uri;
+
+      if (isset($installed_themes[$candidate]->info['screenshot'])) {
+        $screenshot_uri = $installed_themes[$candidate]->info['screenshot'];
+        if (file_exists($screenshot_uri)) {
+          return $screenshot_uri;
+        }
       }
     }
 

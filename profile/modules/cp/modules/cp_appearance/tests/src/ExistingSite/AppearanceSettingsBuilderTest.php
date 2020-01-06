@@ -41,11 +41,10 @@ class AppearanceSettingsBuilderTest extends TestBase {
 
   /**
    * @covers ::getFeaturedThemes
-   * @covers ::osInstalledThemes
+   * @covers ::installedThemes
    * @covers ::prepareThemes
    * @covers ::addScreenshotInfo
    * @covers ::addOperations
-   * @covers ::addMoreOperations
    * @covers ::addNotes
    */
   public function testFeaturedThemes(): void {
@@ -57,11 +56,11 @@ class AppearanceSettingsBuilderTest extends TestBase {
     $themes = $this->appearanceSettingsBuilder->getFeaturedThemes();
 
     $this->assertFalse(isset($themes['stark']));
-    $this->assertFalse(isset($themes['seven']));
-    $this->assertFalse(isset($themes['os_base']));
+    $this->assertTrue(isset($themes['seven']));
+    $this->assertTrue(isset($themes['os_base']));
     $this->assertFalse(isset($themes['bootstrap']));
-
     $this->assertTrue(isset($themes['hwpi_classic']));
+    $this->assertTrue(isset($themes['blue_sky']));
 
     // Test presence of custom properties.
     $active_theme = $themes['hwpi_classic'];
@@ -92,34 +91,53 @@ class AppearanceSettingsBuilderTest extends TestBase {
 
     $this->assertCount(0, $active_theme->operations);
 
-    // Test more operations.
-    $theme = $themes['vibrant'];
-    $this->assertGreaterThan(0, \count($theme->more_operations));
-    $more_operations = $theme->more_operations[0];
-    $this->assertEquals($more_operations['#type'], 'form');
-    // Custom theme should not appear as flavor.
-    $this->assertCount(0, $themes['documental']->more_operations);
-
     // Test notes.
     $this->assertCount(0, $inactive_theme->notes);
 
     $this->assertCount(1, $active_theme->notes);
     $notes = $active_theme->notes[0];
     $this->assertEquals('current theme', $notes);
+
   }
 
   /**
-   * Flavors should not appear in the list.
+   * @covers ::getOnePageThemes
+   * @covers ::installedThemes
+   * @covers ::prepareThemes
+   * @covers ::addScreenshotInfo
+   * @covers ::addNotes
    */
-  public function testNoFlavors(): void {
-    /** @var \Drupal\Core\Extension\Extension[] $themes */
-    $themes = $this->appearanceSettingsBuilder->getFeaturedThemes();
-    /** @var array $sub_themes */
-    $sub_themes = $themes['vibrant']->sub_themes;
+  public function testOnePageThemes(): void {
+    /** @var \Drupal\Core\Config\Config $theme_config_mut */
+    $theme_config_mut = $this->configFactory->getEditable('system.theme');
+    $theme_config_mut->set('default', 'kirkland')->save();
 
-    foreach ($sub_themes as $key => $value) {
-      $this->assertFalse(isset($themes[$key]));
-    }
+    /** @var \Drupal\Core\Extension\Extension[] $themes */
+    $themes = $this->appearanceSettingsBuilder->getOnePageThemes();
+
+    $this->assertFalse(isset($themes['adams']));
+    $this->assertFalse(isset($themes['bootstrap']));
+    $this->assertTrue(isset($themes['kirkland']));
+    $this->assertTrue(isset($themes['onepage']));
+
+    // Test presence of custom properties.
+    $active_theme = $themes['kirkland'];
+
+    $this->assertTrue(property_exists($active_theme, 'is_default'));
+    $this->assertTrue(property_exists($active_theme, 'is_admin'));
+    $this->assertTrue(property_exists($active_theme, 'screenshot'));
+    $this->assertTrue(property_exists($active_theme, 'operations'));
+    $this->assertTrue(property_exists($active_theme, 'notes'));
+
+    // Test screenshot info.
+    $screenshot_info = $active_theme->screenshot;
+
+    $this->assertNotNull($screenshot_info);
+    $this->assertSame('profiles/contrib/openscholar/themes/kirkland/screenshot.png', $screenshot_info['uri']);
+    $this->assertSame('Screenshot for Kirkland theme', $screenshot_info['alt']->__toString());
+    $this->assertSame('Screenshot for Kirkland theme', $screenshot_info['title']->__toString());
+    $this->assertTrue(isset($screenshot_info['attributes']));
+
   }
 
   /**
@@ -169,7 +187,6 @@ class AppearanceSettingsBuilderTest extends TestBase {
    * @covers ::prepareThemes
    * @covers ::addScreenshotInfo
    * @covers ::addOperations
-   * @covers ::addMoreOperations
    * @covers ::addNotes
    */
   public function testCustomThemes(): void {
