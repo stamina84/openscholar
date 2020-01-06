@@ -31,11 +31,6 @@ class ThemeForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, array $theme_options = NULL) {
     // Administration theme settings.
-    $form['cp_theme'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Set theme'),
-      '#open' => TRUE,
-    ];
     $form['cp_theme']['theme'] = [
       '#type' => 'select',
       '#options' => $theme_options,
@@ -48,6 +43,12 @@ class ThemeForm extends ConfigFormBase {
       '#type' => 'submit',
       '#value' => $this->t('Save Theme'),
       '#button_type' => 'primary',
+    ];
+    $form['cp_theme']['actions']['cancel'] = [
+      '#type' => 'button',
+      '#value' => $this->t('Cancel'),
+      '#button_type' => 'primary',
+      '#cancel' => 'cancel',
     ];
     return $form;
   }
