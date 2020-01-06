@@ -48,7 +48,9 @@ use Drupal\vsite\Config\VsiteStorageDefinition;
  *     "label",
  *     "description",
  *     "applicableTo",
- *     "creationTasks"
+ *     "creationTasks",
+ *     "enabledApps",
+ *     "privateApps"
  *   }
  * )
  */
@@ -63,6 +65,10 @@ class GroupPreset extends ConfigEntityBase implements GroupPresetInterface {
   protected $applicableTo;
 
   protected $creationTasks;
+
+  protected $enabledApps;
+
+  protected $privateApps;
 
   /**
    * {@inheritdoc}

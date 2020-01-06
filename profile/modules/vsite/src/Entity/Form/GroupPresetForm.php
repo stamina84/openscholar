@@ -5,6 +5,8 @@ namespace Drupal\vsite\Entity\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\os_app_access\AppLoader;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class GroupPresetForm.
@@ -19,6 +21,32 @@ class GroupPresetForm extends EntityForm {
    * @var \Drupal\vsite\Entity\GroupPresetInterface
    */
   protected $entity;
+
+  /**
+   * App Loader.
+   *
+   * @var \Drupal\os_app_access\AppLoader
+   */
+  protected $appLoader;
+
+  /**
+   * Constructor for the form.
+   *
+   * @param \Drupal\os_app_access\AppLoader $appLoader
+   *   AppLoader instance.
+   */
+  public function __construct(AppLoader $appLoader) {
+    $this->appLoader = $appLoader;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('os_app_access.app_loader')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -55,6 +83,12 @@ class GroupPresetForm extends EntityForm {
     foreach ($group_types as $gt) {
       $applicableToOptions[$gt->id()] = $gt->label();
     }
+
+    $app_list = [];
+    $app_definition = $this->appLoader->getAppsForUser($this->currentUser());
+    foreach ($app_definition as $app) {
+      $app_list[$app['id']] = $app['title'];
+    }
     $form['applicableTo'] = [
       '#type' => 'select',
       '#title' => $this->t('Applies To'),
@@ -63,6 +97,25 @@ class GroupPresetForm extends EntityForm {
       '#default_value' => $this->entity->get('applicableTo'),
       '#description' => $this->t('Select what group types can use this preset.'),
       '#required' => TRUE,
+    ];
+
+    $form['enabledApps'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Enabled Apps'),
+      '#multiple' => TRUE,
+      '#options' => $app_list,
+      '#default_value' => $this->entity->get('enabledApps'),
+      '#description' => $this->t('Select apps to be enabled by default for this preset.'),
+      '#required' => TRUE,
+    ];
+
+    $form['privateApps'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Private Apps'),
+      '#multiple' => TRUE,
+      '#options' => $app_list,
+      '#default_value' => $this->entity->get('privateApps'),
+      '#description' => $this->t('Select apps to be set as private by default for this preset.'),
     ];
 
     $form['creationTasks'] = [

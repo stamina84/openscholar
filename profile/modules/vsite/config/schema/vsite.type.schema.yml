@@ -20,3 +20,15 @@ vsite.type.*:
     creationTasks:
       type: string
       label: Creation Tasks
+    enabledApps:
+      type: sequence
+      label: Enabled Apps
+      sequence:
+        type: string
+        label: Apps
+    privateApps:
+      type: sequence
+      label: Private Apps
+      sequence:
+        type: string
+        label: Apps
