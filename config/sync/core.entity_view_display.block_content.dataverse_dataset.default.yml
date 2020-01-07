@@ -26,3 +26,4 @@ hidden:
   field_dataset_persistent_type: true
   field_embed_height: true
   langcode: true
+  search_api_excerpt: true

@@ -234,4 +234,5 @@ hidden:
   html_title: true
   keywords: true
   langcode: true
+  search_api_excerpt: true
   uid: true

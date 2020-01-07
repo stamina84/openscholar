@@ -122,3 +122,4 @@ hidden:
   field_middle_name: true
   field_redirect_to_source: true
   langcode: true
+  search_api_excerpt: true

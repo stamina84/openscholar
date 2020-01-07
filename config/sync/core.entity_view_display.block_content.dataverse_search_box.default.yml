@@ -29,3 +29,4 @@ hidden:
   field_dataverse_identifier: true
   field_search_placeholder_text: true
   langcode: true
+  search_api_excerpt: true

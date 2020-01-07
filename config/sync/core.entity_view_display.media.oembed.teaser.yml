@@ -42,4 +42,5 @@ hidden:
   field_media_oembed_content: true
   field_taxonomy_terms: true
   langcode: true
+  search_api_excerpt: true
   uid: true

@@ -51,3 +51,4 @@ hidden:
   field_rbuild_short_name: true
   field_repository_url: true
   langcode: true
+  search_api_excerpt: true

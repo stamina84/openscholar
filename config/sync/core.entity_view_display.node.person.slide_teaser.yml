@@ -114,3 +114,4 @@ hidden:
   field_photo_person: true
   field_redirect_to_source: true
   langcode: true
+  search_api_excerpt: true
