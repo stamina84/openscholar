@@ -47,3 +47,4 @@ hidden:
   field_taxonomy_tree_depth: true
   field_taxonomy_vocabulary: true
   langcode: true
+  search_api_excerpt: true

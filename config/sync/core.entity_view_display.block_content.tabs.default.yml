@@ -27,3 +27,4 @@ content:
 hidden:
   field_widget_collection: true
   langcode: true
+  search_api_excerpt: true

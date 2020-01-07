@@ -51,3 +51,4 @@ hidden:
   field_slide_alt_text: true
   field_slide_link: true
   field_slide_title_text: true
+  search_api_excerpt: true
