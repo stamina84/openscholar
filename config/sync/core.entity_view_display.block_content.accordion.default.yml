@@ -24,3 +24,4 @@ hidden:
   field_all_panels_closed: true
   field_widget_collection: true
   langcode: true
+  search_api_excerpt: true

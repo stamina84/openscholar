@@ -42,3 +42,4 @@ hidden:
   field_is_random: true
   field_is_styled: true
   langcode: true
+  search_api_excerpt: true

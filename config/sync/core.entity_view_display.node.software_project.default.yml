@@ -50,3 +50,4 @@ content:
 hidden:
   field_packaging: true
   langcode: true
+  search_api_excerpt: true

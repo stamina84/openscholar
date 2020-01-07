@@ -20,6 +20,7 @@ dependencies:
     - image
     - media
     - os_media
+    - node
     - rest
     - serialization
     - vsite
