@@ -157,8 +157,18 @@ class CpImportHelper implements CpImportHelperInterface {
         $header = $row;
       }
       else {
+        // If header and row column numbers don't match , csv file structure is
+        // incorrect and needs to be updated.
+        if (count($header) !== count($row)) {
+          return [];
+        }
         $data[] = array_combine($header, $row);
       }
+    }
+
+    // If no data rows then we do not need to proceed but throw error.
+    if (!$data) {
+      return [];
     }
 
     // Put values encoded to utf-8 in the csv source file so that it can be
