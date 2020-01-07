@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: cp_taxonomy_add_terms_node_action
+label: 'Apply Taxonomy term'
+type: node
+plugin: cp_taxonomy_add_terms_node_action
+configuration: {  }

@@ -62,3 +62,13 @@ cp.taxonomy.reset.vocab:
     requirements:
       _group_permission: 'manage taxonomy'
       _group_member: 'TRUE'
+cp.taxonomy.add_terms_node_multiple_form:
+  path: '/cp/content/add-terms-to-node'
+  defaults:
+    _form: '\Drupal\cp_taxonomy\Form\AddTermsToNodeForm'
+    entity_type_id: 'node'
+  requirements:
+    _group_permission: 'manage taxonomy'
+    _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
