@@ -8,6 +8,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Class ListAppHelperTest.
  *
  * @group kernel
+ * @group widgets-4
  * @covers \Drupal\os_search\ListAppsHelper
  */
 class ListAppHelperTest extends OsExistingSiteTestBase {

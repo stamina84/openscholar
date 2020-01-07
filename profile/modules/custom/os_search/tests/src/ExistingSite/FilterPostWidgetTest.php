@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\os_search\ExistingSiteJavascript;
+namespace Drupal\Tests\os_search\ExistingSite;
 
 use Drupal\Tests\os_widgets\ExistingSite\OsWidgetsExistingSiteTestBase;
 
@@ -8,7 +8,7 @@ use Drupal\Tests\os_widgets\ExistingSite\OsWidgetsExistingSiteTestBase;
  * Tests filter by post build function.
  *
  * @group kernel
- * @group widgets
+ * @group widgets-4
  * @covers \Drupal\os_search\Plugin\OsWidgets\FilterPostWidget
  */
 class FilterPostWidgetTest extends OsWidgetsExistingSiteTestBase {
