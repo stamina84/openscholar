@@ -402,6 +402,7 @@ function _vsite_process_preset_task(GroupInterface $group, GroupPresetInterface 
       'title' => $row['Title'],
     ]);
   }
+  // TODO Enable apps and pther tasks to be handled.
 }
 
 /**
