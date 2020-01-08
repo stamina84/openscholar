@@ -112,6 +112,13 @@ h2.block-title {
       width: 100%;
     }
   }
+  .slideshow-layout-16-9-side {
+    .widget--slideshow {
+      img {
+        width: 55%;
+      }
+    }
+  }
 }
 /**** a11y ****/
 .sr-only {
