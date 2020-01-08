@@ -7,7 +7,6 @@ label: Personal
 description: 'Personal preset with some default content.'
 applicableTo:
   personal: personal
-creationTasks: ''
 enabledApps:
   class: class
   page: page

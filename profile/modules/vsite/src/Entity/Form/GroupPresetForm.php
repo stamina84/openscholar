@@ -118,16 +118,6 @@ class GroupPresetForm extends EntityForm {
       '#description' => $this->t('Select apps to be set as private by default for this preset.'),
     ];
 
-    $form['creationTasks'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Creation Tasks'),
-      '#rows' => 10,
-      '#default_value' => $this->entity->get('creationTasks'),
-      '#description' => $this->t('Enter a fully-qualified class and method name, one per line. Ex. @example', [
-        '@example' => '\Drupal\example\Task::taskMethod',
-      ]),
-    ];
-
     $this->getRedirectDestination()->set(Url::fromRoute('entity.group_preset.collection')->toString());
     return $form;
   }

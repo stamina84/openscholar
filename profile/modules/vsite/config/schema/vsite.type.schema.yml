@@ -17,9 +17,6 @@ vsite.type.*:
       sequence:
         type: string
         label: Applicable Vsites
-    creationTasks:
-      type: string
-      label: Creation Tasks
     enabledApps:
       type: sequence
       label: Enabled Apps

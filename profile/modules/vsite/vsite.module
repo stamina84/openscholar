@@ -21,6 +21,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\vsite\Cache\VsiteCacheContext;
+use League\Csv\Reader;
 
 /**
  * Implements hook_modules_installed().
@@ -324,10 +325,22 @@ function _vsite_get_group_and_subsite_ids(GroupInterface $group) {
  * Implements hook_group_create().
  */
 function vsite_group_create(GroupInterface $group) {
+  // TODO , check if hook_insert is needed.
   if ($group->hasField('field_preset') && !$group->get('field_preset')->isEmpty()) {
     $preset_id = $group->get('field_preset')->get(0)->getValue()['target_id'];
     if ($preset = GroupPreset::load($preset_id)) {
-      $tasks = $preset->getCreationTasks();
+      $fileArr = $preset->getCreationFiles();
+      if (isset($fileArr[$group->getGroupType()->id()])) {
+        $uriArr = array_keys($fileArr[$group->getGroupType()->id()]);
+      }
+      // TODO Review and see what could be changed for better.
+      foreach ($uriArr as $uri) {
+        $batch['operations'][] = [
+          '_vsite_process_preset_task',
+          [$group, $preset, $uri],
+        ];
+      }
+
       $batch = [
         'title' => t('Setting up your new OpenScholar site'),
         'operations' => [],
@@ -335,14 +348,8 @@ function vsite_group_create(GroupInterface $group) {
         'init_message' => t('Preparing for setup'),
         'progress_message' => t('Set up tasks @current of @total completed. Estimated time for completion is @estimate'),
       ];
-      foreach ($tasks as $t) {
-        $batch['operations'][] = [
-          '_vsite_process_preset_task',
-          [$group, $preset, $t],
-        ];
-      }
-      batch_set($batch);
     }
+    batch_set($batch);
   }
 }
 
@@ -353,15 +360,47 @@ function vsite_group_create(GroupInterface $group) {
  *   The group being operated on.
  * @param \Drupal\vsite\Entity\GroupPresetInterface $preset
  *   The preset the group is using.
- * @param string $task
- *   The task to perform.
+ * @param string $uri
+ *   The file uri.
+ * @param mixed $context
+ *   The batch context.
  *
  * @return array|null
  *   The result of the batch or null if the task was not callable
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
-function _vsite_process_preset_task(GroupInterface $group, GroupPresetInterface $preset, string $task, &$context) {
-  if (is_callable($task)) {
-    return call_user_func_array($task, [$group, $preset, &$context]);
+function _vsite_process_preset_task(GroupInterface $group, GroupPresetInterface $preset, $uri, &$context) {
+  $parsedUri = explode('/', $uri);
+  $count = count($parsedUri);
+  $entityType = $uri[$count - 3];
+  $bundle = $uri[$count - 2];
+
+  $header = NULL;
+  $data = [];
+
+  $csv = Reader::createFromPath($uri, 'r');
+  foreach ($csv as $row) {
+    if (!$header) {
+      $header = $row;
+    }
+    else {
+      // If header and row column numbers don't match , csv file structure is
+      // incorrect and needs to be updated.
+      if (count($header) !== count($row)) {
+        return [];
+      }
+      $data[] = array_combine($header, $row);
+    }
+  }
+
+  // Todo Revamp all functionality in this method and use helper methods.
+  foreach ($data as $row) {
+    \Drupal::entityTypeManager()->getStorage($entityType)->create([
+      'type' => $bundle,
+      'title' => $row['Title'],
+    ]);
   }
 }
 
