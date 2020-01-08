@@ -215,6 +215,11 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'contents' => [],
       ],
     ],
+    'os_widgets_dataverse_dataset_citation' => [
+      'variables' => [
+        'js_url' => '',
+      ],
+    ],
     'os_widgets_list_of_files' => [
       'variables' => [
         'files' => '',
@@ -521,7 +526,8 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
 
     case 'block_content_dataverse_list_form':
     case 'block_content_dataverse_list_edit_form':
-      $form['field_dataverse_identifier']['widget'][0]['value']['#field_prefix'] = 'https://dataverse.harvard.edu/dataverse/';
+      $config = Drupal::service('config.factory')->get('os_widgets.dataverse');
+      $form['field_dataverse_identifier']['widget'][0]['value']['#field_prefix'] = $config->get('listing_base_url');
       break;
 
   }
