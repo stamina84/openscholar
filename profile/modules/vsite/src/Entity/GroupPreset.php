@@ -110,7 +110,7 @@ class GroupPreset extends ConfigEntityBase implements GroupPresetInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCreationFiles() {
+  public function getCreationFiles(): array {
     foreach ($this->applicableTo as $gid => $label) {
       $fileUri[$gid] = file_scan_directory(drupal_get_path('module', 'vsite') . "/presets/$gid/$this->id", '/.csv/');
     }
@@ -120,14 +120,14 @@ class GroupPreset extends ConfigEntityBase implements GroupPresetInterface {
   /**
    * {@inheritdoc}
    */
-  public function getEnabledApps() {
+  public function getEnabledApps(): array {
     return $this->enabledApps;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPrivateApps() {
+  public function getPrivateApps() : array {
     return $this->privateApps;
   }
 
