@@ -22,6 +22,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\vsite\Cache\VsiteCacheContext;
 use League\Csv\Reader;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_modules_installed().
@@ -324,7 +325,7 @@ function _vsite_get_group_and_subsite_ids(GroupInterface $group) {
 /**
  * Implements hook_group_create().
  */
-function vsite_group_create(GroupInterface $group) {
+function vsite_group_insert(GroupInterface $group) {
   // TODO , check if hook_insert is needed.
   if ($group->hasField('field_preset') && !$group->get('field_preset')->isEmpty()) {
     $preset_id = $group->get('field_preset')->get(0)->getValue()['target_id'];
@@ -334,13 +335,6 @@ function vsite_group_create(GroupInterface $group) {
         $uriArr = array_keys($fileArr[$group->getGroupType()->id()]);
       }
       // TODO Review and see what could be changed for better.
-      foreach ($uriArr as $uri) {
-        $batch['operations'][] = [
-          '_vsite_process_preset_task',
-          [$group, $preset, $uri],
-        ];
-      }
-
       $batch = [
         'title' => t('Setting up your new OpenScholar site'),
         'operations' => [],
@@ -348,6 +342,13 @@ function vsite_group_create(GroupInterface $group) {
         'init_message' => t('Preparing for setup'),
         'progress_message' => t('Set up tasks @current of @total completed. Estimated time for completion is @estimate'),
       ];
+
+      foreach ($uriArr as $uri) {
+        $batch['operations'][] = [
+          '_vsite_process_preset_task',
+          [$group, $preset, $uri],
+        ];
+      }
     }
     batch_set($batch);
   }
@@ -365,17 +366,17 @@ function vsite_group_create(GroupInterface $group) {
  * @param mixed $context
  *   The batch context.
  *
- * @return array|null
- *   The result of the batch or null if the task was not callable
- *
  * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function _vsite_process_preset_task(GroupInterface $group, GroupPresetInterface $preset, $uri, &$context) {
+  $alias = $group->get('path')->getValue()[0]['alias'];
+  $context['results']['alias'] = $alias;
   $parsedUri = explode('/', $uri);
   $count = count($parsedUri);
-  $entityType = $uri[$count - 3];
-  $bundle = $uri[$count - 2];
+  $entityType = $parsedUri[$count - 3];
+  $bundle = $parsedUri[$count - 2];
 
   $header = NULL;
   $data = [];
@@ -386,23 +387,50 @@ function _vsite_process_preset_task(GroupInterface $group, GroupPresetInterface 
       $header = $row;
     }
     else {
-      // If header and row column numbers don't match , csv file structure is
-      // incorrect and needs to be updated.
-      if (count($header) !== count($row)) {
-        return [];
-      }
       $data[] = array_combine($header, $row);
     }
   }
 
   // Todo Revamp all functionality in this method and use helper methods.
-  foreach ($data as $row) {
-    \Drupal::entityTypeManager()->getStorage($entityType)->create([
-      'type' => $bundle,
-      'title' => $row['Title'],
-    ]);
+  switch ($entityType) {
+    case 'node':
+      foreach ($data as $row) {
+        $node = \Drupal::entityTypeManager()->getStorage($entityType)->create([
+          'type' => $bundle,
+          'title' => $row['Title'],
+        ]);
+        $node->save();
+        $group->addContent($node, "group_node:$bundle");
+        /** @var \Drupal\Core\Path\AliasStorageInterface $path_alias_storage */
+        $path_alias_storage = \Drupal::service('path.alias_storage');
+        $exist_alias = $path_alias_storage->load(['source' => '/node/' . $node->id()]);
+        // Fix group alias of the node.
+        $path_alias_storage->save('/node/' . $node->id(), '/[vsite:' . $group->id() . ']' . $exist_alias['alias'], 'en', $exist_alias['pid']);
+      }
+      break;
+
+    case 'block_content':
+      foreach ($data as $row) {
+        $block = \Drupal::entityTypeManager()->getStorage($entityType)->create([
+          'type' => $bundle,
+          'info' => $row['Info'],
+          'field_widget_title' => $row['Title'],
+          'body' => $row['Body'],
+        ]);
+        $block->save();
+        // TODO add block to vsite and checkout about placement.
+      }
   }
-  // TODO Enable apps and pther tasks to be handled.
+
+  // TODO Enable apps and other tasks to be handled.
+}
+
+/**
+ * Vsite creation finished callback.
+ */
+function _vsite_batch_finished($success, $results, $operations) {
+  // TODO if any messages need to be displayed as per results.
+  return new RedirectResponse($results['alias']);
 }
 
 /**

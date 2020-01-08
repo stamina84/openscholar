@@ -96,9 +96,11 @@ class OsGroupResource extends OsEntityResource {
       $config->save();
     }
 
-    // Send the batch ID as a header so the client can handle it properly.
-    if ($batch = batch_get()) {
-      $response->headers->set('X-Drupal-Batch-Id', $batch['id']);
+    // Send the batch url as a header so the client can handle it properly.
+    if (batch_get()) {
+      $redirectObject = batch_process();
+      $target_url = $redirectObject->getTargetUrl();
+      $response->headers->set('X-Drupal-Batch-Url', $target_url);
     }
 
     return $response;
