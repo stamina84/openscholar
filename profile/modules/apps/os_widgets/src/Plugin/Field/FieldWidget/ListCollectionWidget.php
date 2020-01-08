@@ -185,7 +185,6 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
         $max = $cardinality - 1;
         break;
     }
-
     $title = $this->fieldDefinition->getLabel();
     $description = FieldFilteredMarkup::create($this->token
       ->replace($this->fieldDefinition->getDescription()));
@@ -195,7 +194,7 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
         'select_input' => [
           '#title' => $title,
           '#type' => 'select',
-          '#options' => $this->getOptions($items->getEntity(), $target_bundles),
+          '#options' => (!empty($target_bundles)) ? $this->getOptions($items->getEntity(), $target_bundles) : [],
           '#default_value' => NULL,
         ],
         'add' => [
@@ -479,7 +478,8 @@ class ListCollectionWidget extends WidgetBase implements ContainerFactoryPluginI
    */
   protected function getOptions(FieldableEntityInterface $entity, array $target_bundles) {
     $options = [];
-    if ($vsite = $this->vsiteContextManager->getActiveVsite()) {
+    $vsite = $this->vsiteContextManager->getActiveVsite();
+    if ($vsite && !empty($target_bundles)) {
       $vSiteBlocks = $vsite->getContent('group_entity:block_content');
       foreach ($vSiteBlocks as $vSiteBlock) {
         /** @var \Drupal\block_content\BlockContentInterface $block_content */

@@ -1,0 +1,35 @@
+uuid: ca833997-c578-46b9-9a54-2a93fa281254
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slider
+    - field.field.block_content.slider.field_display_arrows
+    - field.field.block_content.slider.field_display_scrollbar
+    - field.field.block_content.slider.field_duration
+    - field.field.block_content.slider.field_slider_height
+    - field.field.block_content.slider.field_transition_speed
+    - field.field.block_content.slider.field_widget_collection
+    - field.field.block_content.slider.field_widget_title
+id: block_content.slider.default
+targetEntityType: block_content
+bundle: slider
+mode: default
+content:
+  field_widget_title:
+    weight: 0
+    label: visually_hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_display_arrows: true
+  field_display_scrollbar: true
+  field_duration: true
+  field_slider_height: true
+  field_transition_speed: true
+  field_widget_collection: true
+  langcode: true
+  search_api_excerpt: true
