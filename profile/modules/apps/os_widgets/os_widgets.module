@@ -997,6 +997,10 @@ function os_widgets_alter_follow_me_block_form(array &$form, FormStateInterface 
         '#type' => 'hidden',
         '#default_value' => $v['title'],
       ],
+      'id' => [
+        '#type' => 'hidden',
+        '#default_value' => $v['id'] ?? '',
+      ],
       'weight' => [
         '#type' => 'textfield',
         '#default_value' => $v['weight'],
@@ -1027,29 +1031,41 @@ function os_widgets_alter_follow_me_block_form(array &$form, FormStateInterface 
 function os_widgets_follow_me_submit_form($form, FormStateInterface &$form_state) {
   $profile_links = $form_state->getUserInput();
   unset($profile_links['links']['blank']);
+  $profile_link_ids = array_column($profile_links['links'], 'id');
 
   /** @var \Drupal\Core\Entity\EntityInterface $entity */
   $entity = $form_state->getFormObject()->getEntity();
   foreach ($entity->get('field_links')->getValue() as $value) {
-    if ($value['target_id']) {
+    // Deleting paragraphs only if it's removed from widget.
+    if ($value['target_id'] && (array_search($value['target_id'], $profile_link_ids) === FALSE)) {
       $paragraph = Paragraph::load($value['target_id']);
-      $paragraph->delete();
+      if (!empty($paragraph)) {
+        $paragraph->delete();
+      }
     }
   }
+
   if (!empty($profile_links['links'])) {
     // Create the Paragraph with fields.
     $paragraph_items = [];
     foreach ($profile_links['links'] as $values) {
-      $paragraph = Paragraph::create(['type' => 'follow_me_links']);
-      $paragraph->set('field_domain', Html::escape($values['domain']));
-      $paragraph->set('field_link_title', Html::escape($values['title']));
-      $paragraph->set('field_weight', Html::escape($values['weight']));
-      $paragraph->save();
-
-      $paragraph_items[] = [
-        'target_id' => $paragraph->id(),
-        'target_revision_id' => $paragraph->getRevisionId(),
-      ];
+      if (!empty($values['domain'])) {
+        // Creating paragraphs only if domain is not empty and if its new.
+        if (empty($values['id'])) {
+          $paragraph = Paragraph::create(['type' => 'follow_me_links']);
+          $paragraph->set('field_domain', Html::escape($values['domain']));
+          $paragraph->set('field_link_title', Html::escape($values['title']));
+          $paragraph->set('field_weight', Html::escape($values['weight']));
+          $paragraph->save();
+        }
+        else {
+          $paragraph = Paragraph::load($values['id']);
+        }
+        $paragraph_items[] = [
+          'target_id' => $paragraph->id(),
+          'target_revision_id' => $paragraph->getRevisionId(),
+        ];
+      }
     }
 
     $entity->set('field_links', $paragraph_items);
@@ -1071,6 +1087,7 @@ function os_widgets_follow_me_table($element) {
         $render->render($element[$c]['text']),
         $render->render($element[$c]['domain']),
         $render->render($element[$c]['title']),
+        $render->render($element[$c]['id']),
         $render->render($element[$c]['weight']),
       ],
       'class' => [$c !== 'blank' ? 'draggable' : ''],
@@ -1121,6 +1138,7 @@ function os_widgets_get_profile_url_links(EntityInterface $entity) {
           'domain' => $paragraph->get('field_domain')->getString(),
           'title' => $paragraph->get('field_link_title')->getString(),
           'weight' => $paragraph->get('field_weight')->getString(),
+          'id' => $value['target_id'],
         ];
         $links['links'][] = $profile_links;
       }
