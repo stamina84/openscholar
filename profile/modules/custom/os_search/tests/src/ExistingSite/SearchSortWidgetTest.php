@@ -9,7 +9,7 @@ use Drupal\Tests\os_widgets\ExistingSite\OsWidgetsExistingSiteTestBase;
  *
  * @group kernel
  * @group widgets
- * @covers \Drupal\os_search\Plugin\OsWidgets\SearchSortWidgetTest
+ * @covers \Drupal\os_search\Plugin\OsWidgets\SearchSortWidget
  */
 class SearchSortWidgetTest extends OsWidgetsExistingSiteTestBase {
 
