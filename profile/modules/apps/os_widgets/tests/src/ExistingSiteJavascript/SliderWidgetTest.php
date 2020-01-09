@@ -77,7 +77,7 @@ class SliderWidgetTest extends OsExistingSiteJavascriptTestBase {
   /**
    * Testing slider assertions.
    */
-  public function testSliderAssertArrows() {
+  public function assertSliderWidget() {
     $web_assert = $this->assertSession();
 
     $slider_block = $this->createBlockContent([
@@ -91,23 +91,8 @@ class SliderWidgetTest extends OsExistingSiteJavascriptTestBase {
     ]);
     $this->group->addContent($slider_block, 'group_entity:block_content');
     $this->placeBlockContentToRegion($slider_block, 'content');
-    $this->visitViaVsite("", $this->group);
-    $web_assert->statusCodeEquals(200);
 
-    // Asserting markup contain arrows as field_display_arrows is selected.
-    $web_assert->buttonExists('Previous');
-    $web_assert->buttonExists('Next');
-    // Asserting dots.
-    $web_assert->buttonExists('slick-slide-control00');
-    $web_assert->pageTextContains('Lorem Ipsum content 2');
-  }
-
-  /**
-   * Testing slider assertions without arrows.
-   */
-  public function testSliderAssertNoArrows() {
-    $web_assert = $this->assertSession();
-    $slider_block = $this->createBlockContent([
+    $slider_block2 = $this->createBlockContent([
       'type' => 'slider',
       'info' => [
         'value' => 'Slider test 2',
@@ -115,14 +100,24 @@ class SliderWidgetTest extends OsExistingSiteJavascriptTestBase {
       'field_widget_title' => 'Slider test 2',
       'field_widget_collection' => $this->blockIds,
     ]);
-    $this->group->addContent($slider_block, 'group_entity:block_content');
-    $this->placeBlockContentToRegion($slider_block, 'content');
+    $this->group->addContent($slider_block2, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($slider_block2, 'content');
+
     $this->visitViaVsite("", $this->group);
     $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('Lorem Ipsum content 1');
+    $web_assert->pageTextContains('Lorem Ipsum content 2');
+    // Asserting markup contain arrows as field_display_arrows is selected.
+    $web_assert->pageTextContains('testing slider');
+    $web_assert->elementExists('css', '#dots-' . $slider_block->id() . ' .slick-prev');
+    $web_assert->elementExists('css', '#dots-' . $slider_block->id() . ' .slick-next');
+    // Asserting dots.
+    $web_assert->buttonExists('slick-slide-control00');
+
+    // Slider assertions without arrows.
     $web_assert->pageTextContains('Slider test 2');
-    // Asserting markup doesn't contain arrows.
-    $web_assert->buttonNotExists('Previous');
-    $web_assert->buttonNotExists('Next');
+    $web_assert->elementNotExists('css', '#dots-' . $slider_block2->id() . ' .slick-prev');
+    $web_assert->elementNotExists('css', '#dots-' . $slider_block2->id() . ' .slick-next');
   }
 
 }
