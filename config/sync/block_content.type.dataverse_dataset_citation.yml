@@ -1,0 +1,8 @@
+uuid: d5895563-a6e1-45dd-9916-11f6b972c4a0
+langcode: en
+status: true
+dependencies: {  }
+id: dataverse_dataset_citation
+label: 'Dataverse Dataset Citation'
+revision: 1
+description: ''

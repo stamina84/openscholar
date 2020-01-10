@@ -55,7 +55,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
     }
 
     foreach (Element::children($build) as $region) {
-      $build[$region]['#attributes']['class'] = 'block-place-region';
+      $build[$region]['#attributes']['class'][] = 'block-place-region';
       $build[$region]['#attributes']['data-region'] = $region;
       unset($build[$region]['block_place_operations']);
       $build[$region]['placeholder'] = [
@@ -165,8 +165,8 @@ class PlaceBlockPageVariant extends OriginalVariant {
     $blockRepository = \Drupal::service('os_widgets.block.repository');
     $allBlocks = $blockRepository->getVisibleBlocksPerRegion();
 
-    /** @var \Drupal\block\Entity\Block[] $blocks */
-    $blocks = $allBlocks[0];
+    /** @var \Drupal\block\Entity\Block[] $widgets_not_yet_placed */
+    $widgets_not_yet_placed = $allBlocks[0] ?? [];
 
     /** @var \Drupal\block_content\Entity\BlockContentType[] $block_types */
     $block_types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple();
@@ -230,7 +230,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
       ],
     ];
 
-    foreach ($blocks as $b) {
+    foreach ($widgets_not_yet_placed as $b) {
       $block_build = [
         '#type' => 'inline_template',
         '#template' => '<div class="block" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',

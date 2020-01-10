@@ -1,0 +1,91 @@
+uuid: dae39a29-e559-43f4-86dd-403b80f41f19
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slider
+    - field.field.block_content.slider.field_display_arrows
+    - field.field.block_content.slider.field_display_scrollbar
+    - field.field.block_content.slider.field_duration
+    - field.field.block_content.slider.field_slider_height
+    - field.field.block_content.slider.field_transition_speed
+    - field.field.block_content.slider.field_widget_collection
+    - field.field.block_content.slider.field_widget_title
+  module:
+    - field_layout
+    - layout_discovery
+    - os_widgets
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.slider.default
+targetEntityType: block_content
+bundle: slider
+mode: default
+content:
+  field_display_arrows:
+    weight: 7
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_display_scrollbar:
+    weight: 6
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_duration:
+    weight: 4
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_slider_height:
+    weight: 8
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_transition_speed:
+    weight: 5
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_widget_collection:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: list_collection_widget
+    region: content
+  field_widget_title:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 1
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

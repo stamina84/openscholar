@@ -12,3 +12,11 @@
 .add-user-dialog {
   top: 50px !important;
 }
+/**** media page ****/
+td.manage-media {
+  a{
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
+}
