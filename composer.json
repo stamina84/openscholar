@@ -275,9 +275,6 @@
         "sort-packages": true,
         "preferred-install": {
             "drupal/core": "dist"
-        },    
-        "github-oauth": {
-            "github.com": "5077fb92980ceaf9141c447192c4a9b5d66b23d0"
         }
     },
     "autoload": {

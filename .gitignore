@@ -37,4 +37,3 @@ custom_themes
 # Ignore drupal core (if not versioning drupal sources)
 .editorconfig
 .gitattributes
-.DS_Store
