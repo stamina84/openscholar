@@ -81,7 +81,49 @@ h2.block-title {
     padding: 10px 0 30px;
   }
 }
+/**** widget width****/
+.path-front {
+  .block-block-content {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .slideshow-layout-3-1-overlay,
+  .block--type-embed-media {
+    min-width: 1800px;
+    width: 100%;
+    margin: 0 auto;
+    .widget--slideshow{
+      .slide-caption {
+        margin: 2% auto 0;
+        padding: 25px;
+      }
+    }
+    .slick__arrow {
+      right: auto;
+      width: 100%;
+      .slick-dots {
+        width: auto;
+      }
+    }
+  }
+  .widget--slideshow-main {
+    img {
+      width: 100%;
+    }
+  }
+  .slideshow-layout-16-9-side {
+    .widget--slideshow {
+      img {
+        width: 55%;
+      }
+    }
+  }
+}
 /**** a11y ****/
 .sr-only {
   color: transparent;
+}
+.trigger {
+  color: $color-black;
 }

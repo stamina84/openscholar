@@ -1,0 +1,43 @@
+.path-front {
+  .block--type-list-of-posts,
+  .block--type-tabs {
+    ul[id^="list-of-posts"] {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    &.lopz-3,
+    &.lopz-6 {
+      ul[id^="list-of-posts"] {
+        > li {
+          flex: 1 1 33%;
+          article {
+            margin-right: 15px;
+          }
+          &:nth-child(3n) {
+            article {
+              margin-right: 0;
+            }
+          }
+        }
+      }
+    }
+    &.lopz-2,
+    &.lopz-4 {
+      ul[id^="list-of-posts"] {
+        display: flex;
+        flex-wrap: wrap;
+        > li {
+          flex: 1 1 50%;
+          article {
+            margin-right: 15px;
+          }
+          &:nth-child(2n) {
+            article {
+              margin-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

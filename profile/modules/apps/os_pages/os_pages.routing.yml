@@ -9,6 +9,7 @@ os_pages.book_outline:
     node: \d+
   options:
     _node_operation_route: TRUE
+
 os_pages.export:
   path: '/export/{node}'
   defaults:
@@ -16,3 +17,34 @@ os_pages.export:
   requirements:
     _entity_access: 'node.view'
     node: \d+
+
+os_pages.add_other_books:
+  path: '/node/{node}/add-other-books'
+  defaults:
+    _form: '\Drupal\os_pages\Form\AddOtherBooksForm'
+    _title: 'Add other books'
+  options:
+    _node_operation_route: TRUE
+    parameters:
+      node:
+        type: entity:node
+  requirements:
+    _permission: 'access content'
+    _group_permission: 'administer book outlines'
+    _entity_access: 'node.view'
+    node: \d+
+
+os_pages.autocomplete.books:
+  path: '/os_pages/books-autocomplete/{group}/{node}'
+  defaults:
+    _controller: '\Drupal\os_pages\Controller\BooksAutocompleteController::handleAutocomplete'
+    _format: json
+  options:
+    parameters:
+      group:
+        type: entity:group
+      node:
+        type: entity:node
+  requirements:
+    _permission: 'access content'
+    _group_permission: 'administer book outlines'

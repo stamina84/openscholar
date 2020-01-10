@@ -1,8 +1,13 @@
-.page-node-type-person {
+article.person {
   .field--name-field-photo-person, .person-default-image {
     float: left;
     margin-right: 1em;
     margin-bottom: 1em;
+  }
+  .field--name-body {
+    &:after, &:before {
+      display: initial;
+    }
   }
   .content--image--area {
     border-top: 1px solid $color-gray2;

@@ -121,10 +121,12 @@ class MediaEmbed extends OEmbed {
         if ($media->bundle() === 'oembed') {
           $media_url = $this->getSourceFieldValue($media);
           $resource = $this->mediaHelper->fetchEmbedlyResource($media_url);
-          $this->mediaHelper->downloadThumbnail($resource);
-          $thumbnail_uri = $this->mediaHelper->getLocalThumbnailUri($resource);
-          if (!empty($thumbnail_uri)) {
-            return $thumbnail_uri;
+          if ($resource) {
+            $this->mediaHelper->downloadThumbnail($resource);
+            $thumbnail_uri = $this->mediaHelper->getLocalThumbnailUri($resource);
+            if ($thumbnail_uri) {
+              return $thumbnail_uri;
+            }
           }
           else {
             $this->getGenericThumbnail();

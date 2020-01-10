@@ -11,8 +11,6 @@ use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\cp_appearance\Entity\CustomTheme;
-use Drupal\cp_appearance\Form\FlavorForm;
-use Ds\Map;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -93,10 +91,65 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
    */
   public function getFeaturedThemes(): array {
     $themes = $this->osInstalledThemes();
+    $featured_themes = [];
+    $sub_themes = [];
+    foreach ($themes as $index => $theme) {
+      $feature_theme_condition = !isset($theme->info['onepage']) && !isset($theme->info['custom theme']);
+      if ($feature_theme_condition) {
+        $featured_themes[$index] = $theme;
+        if (isset($theme->sub_themes)) {
+          $sub_themes = $this->getFlavors($themes, $theme->sub_themes);
+        }
+      }
+    }
+    $featured_themes = array_merge($featured_themes, $sub_themes);
+    $this->prepareThemes($featured_themes);
 
-    $this->prepareThemes($themes);
+    return $featured_themes;
+  }
 
-    return $themes;
+  /**
+   * {@inheritdoc}
+   */
+  public function getOnePageThemes(): array {
+    $themes = $this->osInstalledThemes();
+    $one_page_themes = [];
+    $sub_themes = [];
+    // Get one page themes.
+    foreach ($themes as $index => $theme) {
+      $one_page_condition = isset($theme->info['onepage']) && $theme->info['onepage'] == TRUE;
+      if ($one_page_condition) {
+        $one_page_themes[$index] = $theme;
+        if (isset($theme->sub_themes)) {
+          $sub_themes = $this->getFlavors($themes, $theme->sub_themes);
+        }
+      }
+    }
+    $one_page_themes = array_merge($one_page_themes, $sub_themes);
+    $this->prepareThemes($one_page_themes);
+
+    return $one_page_themes;
+  }
+
+  /**
+   * Retrieve the list of the themes based on the sub theme names.
+   *
+   * @param \Drupal\Core\Extension\Extension[] $themes
+   *   The Themes.
+   * @param array $sub_theme_names
+   *   Base theme names for any individual theme.
+   *
+   * @return array|null
+   *   The Themes.
+   */
+  protected function getFlavors(array $themes, array $sub_theme_names): array {
+    $sub_themes_list = [];
+    foreach ($themes as $index => $theme) {
+      if (in_array($theme->info['name'], $sub_theme_names)) {
+        $sub_themes_list[$index] = $theme;
+      }
+    }
+    return $sub_themes_list;
   }
 
   /**
@@ -109,10 +162,6 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
     $theme_default = $theme_config->get('default');
 
     if ($theme_default === $theme->getName()) {
-      return TRUE;
-    }
-
-    if (isset($theme->sub_themes[$theme_default])) {
       return TRUE;
     }
 
@@ -229,63 +278,12 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
   }
 
   /**
-   * Adds more allowed operations to a theme.
-   *
-   * These are the operations which cannot be rendered as links.
-   *
-   * @param \Drupal\Core\Extension\Extension $theme
-   *   The theme.
-   *
-   * @return array
-   *   Renderable form structure.
-   *
-   * @see \template_preprocess_cp_appearance_themes_page
-   */
-  protected function addMoreOperations(Extension $theme): array {
-    $operations = [];
-
-    if (\property_exists($theme, 'sub_themes')) {
-      /** @var \Drupal\Core\Extension\Extension[] $drupal_installed_themes */
-      $drupal_installed_themes = $this->themeHandler->listInfo();
-
-      $flavors_excluding_custom_themes = array_filter(array_keys($theme->sub_themes), function ($sub_theme) use ($drupal_installed_themes) {
-        // The custom theme might not be present in the current vsite config.
-        // Therefore, make sure that it exists before proceeding.
-        // This happens when custom themes are added across multiple vsites.
-        $theme_exists = $this->themeHandler->themeExists($sub_theme);
-
-        if (!$theme_exists) {
-          return FALSE;
-        }
-
-        $info = $drupal_installed_themes[$sub_theme]->info;
-
-        return !isset($info['custom theme']);
-      });
-
-      // Create a key-extension_info mapping.
-      if ($flavors_excluding_custom_themes) {
-        $sub_themes = new Map();
-
-        foreach ($flavors_excluding_custom_themes as $sub_theme) {
-          $sub_themes->put($sub_theme, $drupal_installed_themes[$sub_theme]);
-        }
-
-        $operations[] = $this->formBuilder->getForm(new FlavorForm($theme, $sub_themes, $this->themeSelectorBuilder, $this->configFactory));
-      }
-    }
-
-    return $operations;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getCustomThemes(): array {
     $custom_themes = [];
     $custom_theme_entities = CustomTheme::loadMultiple();
     $themes = $this->themeHandler->listInfo();
-
     foreach ($themes as $theme) {
       if (isset($custom_theme_entities[$theme->getName()])) {
         $custom_themes[$theme->getName()] = $theme;
@@ -293,7 +291,6 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
     }
 
     $this->prepareThemes($custom_themes);
-
     foreach ($custom_themes as &$custom_theme) {
       $operations = [];
       $operations[] = Link::createFromRoute($this->t('Edit'), 'entity.cp_custom_theme.edit_form', [
@@ -344,13 +341,12 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
       $theme->is_admin = FALSE;
       $theme->screenshot = $this->addScreenshotInfo($theme);
       $theme->operations = $this->addOperations($theme);
-      $theme->more_operations = $this->addMoreOperations($theme);
       $theme->notes = $this->addNotes($theme);
     }
   }
 
   /**
-   * List of installed themes made from os_base.
+   * List of OS installed themes(not core themes) and flavors.
    *
    * @return \Drupal\Core\Extension\Extension[]
    *   The themes.
@@ -358,10 +354,9 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
   protected function osInstalledThemes(): array {
     if (!$this->osInstalledThemes) {
       $this->osInstalledThemes = array_filter($this->themeHandler->listInfo(), function (Extension $theme) {
-        return (isset($theme->base_themes) && $theme->base_theme === 'os_base' && $theme->status);
+        return (isset($theme->base_themes) &&  $theme->status && $theme->origin != 'core') && $theme->info['base theme'] != 'bootstrap';
       });
     }
-
     return $this->osInstalledThemes;
   }
 

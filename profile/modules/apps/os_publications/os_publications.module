@@ -504,7 +504,14 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
     if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
       $form['actions'][$action]['#submit'][] = 'os_publications_bibcite_reference_form_submit';
     }
+
   }
+
+  // Submit handle to match full name of a controbutor.
+  $form_submit = $form['actions']['submit']['#submit'];
+  // Should always be the first submit (before drupal default processing).
+  array_unshift($form_submit, 'os_publications_detect_contributor_fullname');
+  $form['actions']['submit']['#submit'] = $form_submit;
 
   // Year of publication alterations.
   $form['bibcite_year_group'] = [
@@ -1026,6 +1033,31 @@ function os_publications_bibcite_reference_view_alter(array &$build, EntityInter
     // Do not remove, important for proper citation rendering.
     $build['citation']['#data']['entity'] = $entity;
   }
+}
+
+/**
+ * Submit handler to process Contributor based on full name as well.
+ */
+function os_publications_detect_contributor_fullname(&$form, FormStateInterface $formState) {
+  $contributor_helper = \Drupal::service('os_publications.contributor_helper');
+  $values = $formState->getValues();
+  $contributors = $values['author'] ?? [];
+  if (isset($contributors['add_more'])) {
+    unset($contributors['add_more']);
+  }
+
+  foreach ($contributors as $key => $contributor) {
+    $contributor_info = $contributor['target_id'];
+    if (isset($contributor_info['entity']) && $contributor_entity = $contributor_info['entity']) {
+      $existing_contributor = $contributor_helper->getByProps($contributor_entity);
+
+      if ($existing_contributor) {
+        $contributors[$key]['target_id'] = $existing_contributor->id();
+      }
+    }
+  }
+
+  $formState->setValue('author', $contributors);
 }
 
 /**

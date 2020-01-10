@@ -1,10 +1,13 @@
 services:
   os_pages.visibility_helper:
     class: Drupal\os_pages\VisibilityHelper
-    arguments: ['@book.outline_storage']
+    arguments: ['@book.outline_storage', '@entity_type.manager']
   os_pages.visibility_storage:
     class: Drupal\os_pages\VisibilityStorage
   os_pages.route_subscriber:
     class: Drupal\os_pages\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber }
+  os_pages.books_helper:
+    class: Drupal\os_pages\BooksHelper
+    arguments: ['@entity_type.manager', '@os_pages.visibility_helper']

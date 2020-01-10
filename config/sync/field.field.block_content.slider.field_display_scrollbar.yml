@@ -1,0 +1,23 @@
+uuid: 9b1a405e-8818-44cc-b60c-4a6b0decfa7a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slider
+    - field.storage.block_content.field_display_scrollbar
+id: block_content.slider.field_display_scrollbar
+field_name: field_display_scrollbar
+entity_type: block_content
+bundle: slider
+label: 'Display scrollbar'
+description: 'Render a vertical scrollbar to view longer contents.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

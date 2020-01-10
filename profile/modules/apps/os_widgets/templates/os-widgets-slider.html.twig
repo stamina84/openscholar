@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Template for Slider widget.
+ * - bid - Slider block_id
+ * - contents: Block contents list from field_widget_collection select
+ * options.
+ * - slider_height: Height for each slide.
+ * - display_scrollbar: Check for scrollbar to be shown if content exceeds slider_height.
+ *
+ */
+#}
+<div class="widget-slider scroll-{{display_scrollbar}}" id="slider-{{ bid }}" aria-multiselectable="true">
+  {% for key, content in contents %}
+    <div class="block_content" style="height:{{slider_height}}px">
+      {{ content.widget }}
+      {{ content.contextual_link }}
+    </div>
+  {% endfor %}
+</div>
+<div role="navigation" class="arrows" id="dots-{{ bid }}"></div>

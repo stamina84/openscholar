@@ -44,3 +44,4 @@ hidden:
   field_attached_media: true
   langcode: true
   links: true
+  search_api_excerpt: true

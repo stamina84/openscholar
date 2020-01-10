@@ -52,3 +52,4 @@ hidden:
   field_software_project: true
   field_software_version: true
   langcode: true
+  search_api_excerpt: true

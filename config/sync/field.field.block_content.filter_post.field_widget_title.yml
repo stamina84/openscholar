@@ -1,0 +1,19 @@
+uuid: 5d05f30e-4c9c-43f4-a599-c0999d2c5419
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.filter_post
+    - field.storage.block_content.field_widget_title
+id: block_content.filter_post.field_widget_title
+field_name: field_widget_title
+entity_type: block_content
+bundle: filter_post
+label: 'Widget Title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

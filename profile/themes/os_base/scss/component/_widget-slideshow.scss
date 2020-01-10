@@ -1,0 +1,200 @@
+/**** dots ****/
+%dots {
+  .slick-dots {
+    display: flex;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    background: $color-black;
+    min-height: 30px;
+    position: unset;
+    li {
+      margin: 0 2px;
+      button {
+        display: block;
+        width: 1rem;
+        height: 1rem;
+        padding: 0;
+        border: none;
+        border-radius: 100%;
+        background: $color-light-gray17;
+        text-indent: -9999px;
+        margin: 0 1px;
+        color: $color-black;
+        &:focus {
+          @include focus();
+        }
+      }
+      &.slick-active {
+        button {
+          background: $color-white;
+        }
+      }
+    }
+  }
+}
+/**** slideshow css ****/
+.widget--slideshow {
+  position: relative;
+  .field--name-field-slide-image {
+    .sr-only {
+      color: transparent;
+    }
+  }
+  .slide-caption {
+    background: $color-caption;
+    position: absolute;
+    color: $color-white;
+    padding: 10px 15px;
+    .field--name-field-slide-headline {
+      font-size: 24px;
+      line-height: 28px;
+    }
+    .field--name-field-slide-description {
+      font-size: 16px;
+      line-height: 24px;
+      margin-top: 10px;
+    }
+  }
+  .field {
+    margin: 0;
+  }
+  .slideshow-layout-3-1-overlay & {
+    .slide-caption {
+      width: 50%;
+      top: 0;
+      margin: 5% 0 0 5%;
+      left: 0;
+      right: 0;
+    }
+  }
+  .slideshow-layout-16-9-overlay & {
+    .slide-caption {
+      width: 100%;
+      bottom: 0;
+      min-height: 160px;
+      padding: 10px 15px 70px;
+    }
+  }
+  .slideshow-layout-16-9-below & {
+    .slide-caption {
+      position: initial;
+      background: $color-gray1;
+      min-height: 120px;
+      padding: 10px 15px 70px;
+    }
+  }
+  .slideshow-layout-16-9-side & {
+    background: $color-gray1;
+    position: relative;
+    img {
+      left: 0;
+      margin-bottom: 0;
+      float: left;
+      top: 0;
+      width: 55%;
+      z-index: 2;
+    }
+    .slide-caption {
+      background: none;
+      position: relative;
+      float: right;
+      padding-top: 4%;
+      width: 43%;
+      box-shadow: 0 0 0 0 $color-caption1;
+      margin: 0;
+    }
+  }
+}
+.block--type-slideshow {
+  .slick__arrow {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    height: auto;
+    width: auto;
+    top: auto;
+    left: auto;
+    margin-top: 0;
+    transform: initial;
+    @at-root .slideshow-layout-16-9-below#{&}, .slideshow-layout-16-9-overlay#{&} {
+      left: 20px;
+      right: auto;
+    }
+    >button,
+    li {
+      background: $color-black;
+      border: 0;
+      color: $color-white;
+      padding: 5px;
+      width: auto;
+      font-size: initial;
+      position: initial;
+      transform: inherit;
+      border-radius: 0;
+      &:before {
+        content: "";
+        font-size: initial;
+      }
+    }
+    @extend %dots;
+  }
+}
+/**** widget slider dots ****/
+.arrows {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @extend %dots;
+  .slick-dots {
+    background: none;
+    display: inline-block;
+    width: auto;
+    li {
+      margin: 0 6px;
+      width: auto;
+      button {
+        background: $color-black;
+        color: $color-white;
+      }
+      &.slick-active {
+        button {
+          background: $color-gray2;
+          color: $color-black;
+        }
+      }
+    }
+  }
+  .slick-arrow {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    background: none;
+    border-radius: 0;
+    position: inherit;
+    &:before {
+      content: '';
+    }
+  }
+  .slick-prev {
+    border-right: 10px solid $color-black;
+    margin-right: 10px;
+  }
+  .slick-next {
+    border-left: 10px solid $color-black;
+    margin-left: 10px;
+    order: 4;
+  }
+}
+.widget-slider {
+  &.scroll-1 {
+    .block_content {
+      overflow: auto;
+    }
+  }
+  .block_content {
+    position: relative;
+  }
+}

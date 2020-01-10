@@ -1,0 +1,8 @@
+uuid: 52145ced-7877-4dd6-91fc-cfa81f0e97de
+langcode: en
+status: true
+dependencies: {  }
+id: filter_post
+label: 'Filter Post'
+revision: 1
+description: 'Search filter by post widget.'

@@ -1,0 +1,19 @@
+uuid: 77184b24-3ef2-4090-afbd-feb5286da858
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_dataset_citation
+    - field.storage.block_content.field_widget_title
+id: block_content.dataverse_dataset_citation.field_widget_title
+field_name: field_widget_title
+entity_type: block_content
+bundle: dataverse_dataset_citation
+label: 'Widget Title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

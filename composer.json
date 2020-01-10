@@ -191,6 +191,7 @@
         "drupal/easy_breadcrumb": "^1.8",
         "drupal/elasticsearch_connector": "^7.0@alpha",
         "drupal/entity_reference_revisions": "^1.6",
+        "drupal/facets": "^1.4",
         "drupal/field_tools": "^1.0@alpha",
         "drupal/fullcalendar": "1.x-dev",
         "drupal/google_analytics": "^2.4",
@@ -204,6 +205,9 @@
         "drupal/mailchimp": "^1.8",
         "drupal/mathjax": "^2.7",
         "drupal/metatag": "^1.7",
+        "drupal/migrate_source_csv": "^3.1",
+        "drupal/migrate_tools": "^4.5",
+        "drupal/node_revision_delete": "^1.0@beta",
         "drupal/pagebreak": "^1.0",
         "drupal/paragraphs": "^1.4",
         "drupal/pathauto": "^1.2",
@@ -271,6 +275,9 @@
         "sort-packages": true,
         "preferred-install": {
             "drupal/core": "dist"
+        },    
+        "github-oauth": {
+            "github.com": "5077fb92980ceaf9141c447192c4a9b5d66b23d0"
         }
     },
     "autoload": {
@@ -412,6 +419,15 @@
             "drupal/config_ignore": {
                 "Override drush cim/cex for filtering": "https://www.drupal.org/files/issues/2019-01-08/2973431-supplementary-drush-commands-17.patch",
                 "Allow adding continer filtering": "https://www.drupal.org/files/issues/2019-01-09/2973431-ignore-collections-18.patch"
+            },
+            "drupal/disqus": {
+                "Disqus migrate support is broken": "https://www.drupal.org/files/issues/disqus-migrate-support-2879592-14.patch"
+            },
+            "drupal/migrate_tools": {
+                "Warning: session_id(): Cannot change session id when headers already sent": "https://www.drupal.org/files/issues/2019-03-09/3038712-2.patch"
+            },
+            "drupal/node_revision_delete": {
+                "Fix last execute and period logic": "https://www.drupal.org/files/issues/2019-12-20/fix-last-execute-logic-3102382-2.patch"
             }
         },
         "patches-ignore": {

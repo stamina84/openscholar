@@ -5,6 +5,7 @@ namespace Drupal\cp_appearance\Entity\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\cp_appearance\AppearanceSettingsBuilderInterface;
 use Drupal\cp_appearance\Entity\CustomTheme;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -175,6 +176,17 @@ class CustomThemeForm extends EntityForm {
         '::redirectOnSave',
       ],
     ];
+    /** @var \Drupal\cp_appearance\Entity\CustomThemeInterface $entity */
+    $entity = $this->getEntity();
+    if (!$entity->isNew()) {
+      $url = Url::fromRoute('entity.cp_custom_theme.delete_form', ['cp_custom_theme' => $entity->id()], ['absolute' => TRUE]);
+      $actions['delete_theme'] = [
+        '#title' => $this->t('Delete this theme'),
+        '#type' => 'link',
+        '#url' => $url,
+        '#weight' => 999,
+      ];
+    }
 
     return $actions;
   }

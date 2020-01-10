@@ -235,6 +235,14 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     $this->assertFileExists($script_file);
     $this->assertEquals('alert("Hello World"); test', $scripts);
 
+    // Tests delete link.
+    $this->visitViaVsite("cp/appearance/themes/custom-themes/{$custom_theme->id()}/edit", $this->group);
+    $this->getSession()->getPage()->clickLink('Delete this theme');
+
+    // Test correct redirection.
+    $this->assertContains('cp/appearance/themes', $this->getSession()->getCurrentUrl());
+    $this->assertSession()->pageTextContains("Delete Cyberpunk custom theme?");
+
     // Cleanup.
     $custom_theme->delete();
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */

@@ -18,6 +18,7 @@ logo:
 breadcrumb_home: 1
 breadcrumb_title: 0
 region_wells:
+  branding_header: ''
   navigation_collapsible: ''
   header: ''
   header_left: ''
@@ -26,7 +27,7 @@ region_wells:
   content_first: ''
   content_second: ''
   sidebar_first: ''
-  sidebar_second: well
+  sidebar_second: ''
   content_bottom: ''
   content_bottom_first: ''
   content_bottom_second: ''
@@ -34,5 +35,5 @@ region_wells:
   footer_left: ''
   footer_right: ''
   footer_bottom: ''
-table_responsive: '-1'
+  branding_footer: ''
 table: ''

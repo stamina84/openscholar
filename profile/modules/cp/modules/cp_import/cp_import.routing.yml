@@ -1,0 +1,7 @@
+cp_import.content.download_template:
+  path: '/cp/content/import/{app_name}/template'
+  defaults:
+    _controller: '\Drupal\cp_import\Controller\CpImportController::downloadTemplate'
+    _title: 'Download Template'
+  requirements:
+    _custom_access: '\Drupal\cp_import\Access\CpImportAccessCheck::access'

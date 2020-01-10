@@ -1,0 +1,8 @@
+uuid: 7da3739d-b54d-44c6-afa2-b6c61d5c58d7
+langcode: en
+status: true
+dependencies: {  }
+id: slider
+label: Slider
+revision: 1
+description: 'Use this widget to show widgets in a slideshow'

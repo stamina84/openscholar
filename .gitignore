@@ -24,7 +24,8 @@
 /build/
 
 # Ignore local configs
-local_config/
+local_config/*
+!local_config/.gitkeep
 
 # Ignore vsite specific configurations
 config/sync/vsite:*
@@ -36,3 +37,4 @@ custom_themes
 # Ignore drupal core (if not versioning drupal sources)
 .editorconfig
 .gitattributes
+.DS_Store

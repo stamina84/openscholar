@@ -1,0 +1,15 @@
+services:
+  post_save_migration_subscriber:
+    class: '\Drupal\cp_import\EventSubscriber\CpImportMigrationSubscriber'
+    arguments: ['@app_import_factory']
+    tags:
+      - { name: 'event_subscriber' }
+  cp_import.helper:
+    class: '\Drupal\cp_import\Helper\CpImportHelper'
+    arguments: ['@vsite.context_manager', '@os_media.media_helper', '@current_user', '@language_manager', '@entity_type.manager', '@entity_field.manager', '@file_system']
+  app_import_factory:
+    class: 'Drupal\cp_import\AppImportFactory'
+    arguments: ['@cp_import.helper']
+  cp_import_access.check:
+    class: '\Drupal\cp_import\Access\CpImportAccessCheck'
+    arguments: ['@os_app_access.app_access']
