@@ -121,7 +121,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 				</div>
 <div class="help-link">
 						<a href="https://docs.openscholar.harvard.edu/kinds-of-sites" target="_blank">Learn more about site types </a>
@@ -143,9 +143,9 @@
 						</div>
 					</div>
 				</div>
-				<div id="body-container-group-3" ng-show="canCreateUser">
-					<div class="user-creation-popup" ng-show="userCreationOptional" ng-click="showUserCreation = !showUserCreation">Register Account</div>
-					<div class = "popup" ng-show="showUserCreation">
+				<div id="body-container-group-3" ng-show="canCreateUser" class="panel">
+					<div class="user-creation-popup panel-heading" ng-show="userCreationOptional" ng-click="showUserCreation = !showUserCreation">Register Account</div>
+					<div class ="popup panel-body" ng-show="showUserCreation">
 						<div class = "popup">
 							<div><b>Desired user name</b></div>
 							<div><input type="text" ng-model="userName" class="form-text form-text-mini" ng-blur="checkUserName()" autocomplete="new-password"></div>
@@ -237,7 +237,7 @@
 			<div id="body-container-page2">
 				<div id="body-container-group-page-2">
 					<div class="visibility">
-						
+
 
 							<div ng-hide="!departmentSchool" class="starter-content three">
 								<div ng-repeat="preset in presets('department')" class="form-item form-type-radio">
@@ -270,7 +270,7 @@
 										<!--<span></span></label>-->
 								<!--</div>-->
 							</div>
-							
+
 
 							<div ng-hide="!individualScholar" class="starter-content two">
 								<div ng-repeat="preset in presets('personal')" class="form-item form-type-radio">
@@ -297,7 +297,7 @@
 								</div>-->
 
 							</div>
-						
+
 
 							<div ng-hide="!projectLabSmallGroup" class="starter-content four">
 								<div ng-repeat="preset in presets('project')" class="form-item form-type-radio">
@@ -338,7 +338,7 @@
 								</div>-->
 							</div>
 
-					
+
 						<div class="visibility right">
 							<div class="help-link">
 								<a href="https://docs.openscholar.harvard.edu/set-up-your-site" target="_blank">Learn more about starter content options</a>
