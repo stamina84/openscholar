@@ -13,6 +13,7 @@ use Drupal\Core\Link;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -271,4 +272,36 @@ function os_media_media_admin_ui_filter_submit_handler(array &$form, FormStateIn
   $private_temp_store = $private_temp_store_factory->get('os_media');
 
   $private_temp_store->set('os_media_usage_filter', $form_state->getValue('os_media_media_usage_filter'));
+}
+
+/**
+ * Implements hook_views_query_alter() for altering the Media Admin UI.
+ *
+ * This helps making alterations in the query run in the Media Admin UI.
+ */
+function os_media_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->current_display === 'page_1' && $view->id() === 'os_media') {
+    $is_sorted_by_filename = FALSE;
+    $filename_sort_direction = 'ASC';
+
+    foreach ($query->orderby as &$condition_group) {
+      // Make sure that the filename sort is done on the actual fields.
+      if ($condition_group['field'] === 'unknown') {
+        $is_sorted_by_filename = TRUE;
+        $filename_sort_direction = $condition_group['direction'];
+
+        $condition_group['field'] = 'file_managed_media__field_media_image.filename';
+      }
+    }
+
+    unset($condition_group);
+
+    // Add additional orderby clause for filename sorting.
+    if ($is_sorted_by_filename) {
+      $query->orderby[] = [
+        'field' => 'file_managed_media__field_media_file.filename',
+        'direction' => $filename_sort_direction,
+      ];
+    }
+  }
 }
