@@ -1,0 +1,20 @@
+uuid: e6381ba5-9f49-4545-a703-09284e80b482
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: block_content.field_slider_height
+field_name: field_slider_height
+entity_type: block_content
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

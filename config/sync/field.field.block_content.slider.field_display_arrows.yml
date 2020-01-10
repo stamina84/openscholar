@@ -1,0 +1,23 @@
+uuid: ab89bf4b-faec-49f7-a8f6-eaa6782f564f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slider
+    - field.storage.block_content.field_display_arrows
+id: block_content.slider.field_display_arrows
+field_name: field_display_arrows
+entity_type: block_content
+bundle: slider
+label: 'Display navigation arrows'
+description: 'Left and right arrows will display on either side of the navigation dots.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

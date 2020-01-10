@@ -1,0 +1,8 @@
+uuid: 55a290aa-a9bb-48be-8496-8ceea537a81f
+langcode: en
+status: true
+dependencies: {  }
+id: filter_date
+label: 'Filter - Date'
+revision: 1
+description: 'Filter by post date.'

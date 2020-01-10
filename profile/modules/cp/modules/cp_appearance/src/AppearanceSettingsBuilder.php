@@ -90,11 +90,12 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
    * {@inheritdoc}
    */
   public function getFeaturedThemes(): array {
-    $themes = $this->installedThemes();
+    $themes = $this->osInstalledThemes();
     $featured_themes = [];
     $sub_themes = [];
     foreach ($themes as $index => $theme) {
-      if (!isset($theme->info['onepage'])) {
+      $feature_theme_condition = !isset($theme->info['onepage']) && !isset($theme->info['custom theme']);
+      if ($feature_theme_condition) {
         $featured_themes[$index] = $theme;
         if (isset($theme->sub_themes)) {
           $sub_themes = $this->getFlavors($themes, $theme->sub_themes);
@@ -103,6 +104,7 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
     }
     $featured_themes = array_merge($featured_themes, $sub_themes);
     $this->prepareThemes($featured_themes);
+
     return $featured_themes;
   }
 
@@ -110,12 +112,13 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
    * {@inheritdoc}
    */
   public function getOnePageThemes(): array {
-    $themes = $this->installedThemes();
+    $themes = $this->osInstalledThemes();
     $one_page_themes = [];
     $sub_themes = [];
     // Get one page themes.
     foreach ($themes as $index => $theme) {
-      if (isset($theme->info['onepage']) && $theme->info['onepage'] == TRUE) {
+      $one_page_condition = isset($theme->info['onepage']) && $theme->info['onepage'] == TRUE;
+      if ($one_page_condition) {
         $one_page_themes[$index] = $theme;
         if (isset($theme->sub_themes)) {
           $sub_themes = $this->getFlavors($themes, $theme->sub_themes);
@@ -124,6 +127,7 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
     }
     $one_page_themes = array_merge($one_page_themes, $sub_themes);
     $this->prepareThemes($one_page_themes);
+
     return $one_page_themes;
   }
 
@@ -158,10 +162,6 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
     $theme_default = $theme_config->get('default');
 
     if ($theme_default === $theme->getName()) {
-      return TRUE;
-    }
-
-    if (isset($theme->sub_themes[$theme_default])) {
       return TRUE;
     }
 
@@ -346,15 +346,15 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
   }
 
   /**
-   * List of installed themes and flavors. Flavor will also be listed.
+   * List of OS installed themes(not core themes) and flavors.
    *
    * @return \Drupal\Core\Extension\Extension[]
    *   The themes.
    */
-  protected function installedThemes(): array {
+  protected function osInstalledThemes(): array {
     if (!$this->osInstalledThemes) {
       $this->osInstalledThemes = array_filter($this->themeHandler->listInfo(), function (Extension $theme) {
-        return (isset($theme->base_themes) && $theme->status);
+        return (isset($theme->base_themes) &&  $theme->status && $theme->origin != 'core') && $theme->info['base theme'] != 'bootstrap';
       });
     }
     return $this->osInstalledThemes;

@@ -1,0 +1,43 @@
+uuid: 8d803e9b-3208-4758-8de0-6cd33e2f9e90
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.filter_date
+    - field.field.block_content.filter_date.field_widget_title
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.filter_date.default
+targetEntityType: block_content
+bundle: filter_date
+mode: default
+content:
+  field_widget_title:
+    weight: 27
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

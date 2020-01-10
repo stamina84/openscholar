@@ -74,3 +74,11 @@ lofWidgetForm:
   css:
     component:
       css/os_widgets.lof.css: {}
+sliderWidget:
+  js:
+    js/os_widget_slider.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - slick/slick
+    - slick/slick.theme
