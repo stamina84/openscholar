@@ -249,7 +249,7 @@ class ListOfPostsBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     /** @var \Drupal\Core\Render\Markup $markup_array */
     $markup = $renderer->renderRoot($render);
     $this->assertContains('<article class="bibcite-reference">', $markup->__toString());
-    $this->assertContains('publications/publication1', $markup->__toString());
+    $this->assertContains('publications/publication1', strtolower($markup->__toString()));
   }
 
 }
