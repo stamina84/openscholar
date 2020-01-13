@@ -56,7 +56,7 @@ class CustomThemeAppearanceSettingsTest extends CpAppearanceExistingSiteJavascri
     $vsite_context_manager = $this->container->get('vsite.context_manager');
     $vsite_context_manager->activateVsite($this->group);
     /** @var \Drupal\cp_appearance\Entity\CustomThemeInterface $custom_theme */
-    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $custom_theme_label);
+    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->group->id() . '_' . $custom_theme_label);
     $custom_theme->delete();
   }
 

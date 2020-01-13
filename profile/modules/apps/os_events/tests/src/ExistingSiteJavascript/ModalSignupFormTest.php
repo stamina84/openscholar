@@ -115,6 +115,7 @@ class ModalSignupFormTest extends EventsJavascriptTestBase {
     $page->clickLink('Manage Registrations');
     $new_page = $this->getCurrentPage();
     $new_page->clickLink('Registrations');
+    $web_assert->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('test@example.com');
   }
 
