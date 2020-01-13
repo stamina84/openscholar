@@ -33,7 +33,7 @@ class AddCreatedasText extends ProcessorPluginBase {
       $definition = [
         'label' => $this->t('Custom Created Date (text)'),
         'description' => $this->t('Common Created Date for all entities.'),
-        'type' => 'integer',
+        'type' => 'date',
         'is_list' => FALSE,
         'processor_id' => $this->getPluginId(),
       ];
