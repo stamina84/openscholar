@@ -275,7 +275,7 @@ h3 {
 }
 
 #site-creation-container a.button {
-  background-color: #888;
+  background-color: #555;
   border: none;
   color: white;
   padding: 8px 16px;
@@ -311,7 +311,7 @@ h3 {
 }
 
 #site-creation-container .step {
-  background-color: #4caf50;
+  background-color: #50824a;
   border: none;
   color: white;
   border-radius: 50%;
@@ -323,7 +323,7 @@ h3 {
 }
 
 #site-creation-container .step.enable {
-  background-color: #4caf50;
+  background-color: #50824a;
 }
 
 #site-creation-container .step.disable {
