@@ -46,3 +46,21 @@ form {
     border-color: $color-gray6;
   }
 }
+/**** form apply button ****/
+.views-exposed-form {
+  .form--inline {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 1em;
+    .form-item {
+      margin: 0.75em 1em 0 0;
+    }
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin: 0;
+    }
+  }
+}
