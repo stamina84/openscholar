@@ -381,24 +381,24 @@ class ListWidgetsHelper implements ListWidgetsHelperInterface {
               if ($fieldData['eventExpireAppear'] === 'after_event_start') {
                 $startDateTime->add(new \DateInterval('PT30M'));
                 if ($startDateTime < $currentTime) {
-                  continue;
+                  continue 2;
                 }
               }
               elseif ($fieldData['eventExpireAppear'] === 'end_of_day') {
                 $startDateTime->modify('tomorrow -1 second');
                 if ($startDateTime < $currentTime) {
-                  continue;
+                  continue 2;
                 }
               }
               elseif ($fieldData['eventExpireAppear'] === 'end_of_event') {
                 if ($endDateTime < $currentTime) {
-                  continue;
+                  continue 2;
                 }
                 $to_keep[] = $eventNode->field_recurring_date_value;
               }
             }
             if ($currentTime > $startDateTime) {
-              continue;
+              continue 2;
             }
             $to_keep[] = $eventNode->field_recurring_date_value;
             break;
@@ -408,24 +408,24 @@ class ListWidgetsHelper implements ListWidgetsHelperInterface {
               if ($fieldData['eventExpireAppear'] === 'after_event_start') {
                 $startDateTime->add(new \DateInterval('PT30M'));
                 if ($startDateTime > $currentTime) {
-                  continue;
+                  continue 2;
                 }
               }
               elseif ($fieldData['eventExpireAppear'] === 'end_of_day') {
                 $startDateTime->modify('tomorrow -1 second');
                 if ($startDateTime > $currentTime) {
-                  continue;
+                  continue 2;
                 }
               }
               elseif ($fieldData['eventExpireAppear'] === 'end_of_event') {
                 if ($endDateTime > $currentTime) {
-                  continue;
+                  continue 2;
                 }
                 $to_keep[] = $eventNode->field_recurring_date_value;
               }
             }
             if ($currentTime < $startDateTime) {
-              continue;
+              continue 2;
             }
             $to_keep[] = $eventNode->field_recurring_date_value;
             break;
