@@ -2,6 +2,7 @@
 
 namespace Drupal\cp_import\Helper;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\FileSystem;
@@ -10,6 +11,8 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\media\Entity\Media;
 use Drupal\os_media\MediaEntityHelper;
+use Drupal\pathauto\PathautoGenerator;
+use Drupal\vsite\Path\VsiteAliasStorage;
 use Drupal\vsite\Plugin\VsiteContextManager;
 use League\Csv\Reader;
 use League\Csv\Writer;
@@ -71,6 +74,20 @@ class CpImportHelper implements CpImportHelperInterface {
   protected $fileSystem;
 
   /**
+   * Datetime Time service.
+   *
+   * @var \Drupal\Component\Datetime\Time
+   */
+  protected $time;
+
+  /**
+   * PathAutoGenerator service.
+   *
+   * @var \Drupal\pathauto\PathautoGenerator
+   */
+  protected $pathAutoGenerator;
+
+  /**
    * CpImportHelper constructor.
    *
    * @param \Drupal\vsite\Plugin\VsiteContextManager $vsiteContextManager
@@ -87,8 +104,12 @@ class CpImportHelper implements CpImportHelperInterface {
    *   EntityFieldManager instance.
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   FileSystem interface.
+   * @param \Drupal\Component\Datetime\Time $time
+   *   Time instance.
+   * @param \Drupal\pathauto\PathautoGenerator $pathautoGenerator
+   *   PathAutoGenerator instance.
    */
-  public function __construct(VsiteContextManager $vsiteContextManager, MediaEntityHelper $mediaHelper, AccountProxy $user, LanguageManager $languageManager, EntityTypeManager $entityTypeManager, EntityFieldManager $entityFieldManager, FileSystemInterface $fileSystem) {
+  public function __construct(VsiteContextManager $vsiteContextManager, MediaEntityHelper $mediaHelper, AccountProxy $user, LanguageManager $languageManager, EntityTypeManager $entityTypeManager, EntityFieldManager $entityFieldManager, FileSystemInterface $fileSystem, Time $time, PathautoGenerator $pathautoGenerator) {
     $this->vsiteManager = $vsiteContextManager;
     $this->mediaHelper = $mediaHelper;
     $this->currentUser = $user;
@@ -96,7 +117,8 @@ class CpImportHelper implements CpImportHelperInterface {
     $this->entityTypeManager = $entityTypeManager;
     $this->fieldManager = $entityFieldManager;
     $this->fileSystem = $fileSystem;
-
+    $this->time = $time;
+    $this->pathAutoGenerator = $pathautoGenerator;
   }
 
   /**
@@ -133,6 +155,24 @@ class CpImportHelper implements CpImportHelperInterface {
       $entity = $this->entityTypeManager->getStorage('node')->load($id);
       $vsite->addContent($entity, $plugin_id);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkContentPath($alias, $type): bool {
+    if ($this->vsiteAliasStorage->aliasExists("/$type/$alias", $this->languageManager->getDefaultLanguage()->getId())) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function handleContentPath(string $entityType, int $id): void {
+    $entity = $this->entityTypeManager->getStorage($entityType)->load($id);
+    $this->pathAutoGenerator->updateEntityAlias($entity, 'update', ['force' => TRUE]);
   }
 
   /**
@@ -175,8 +215,14 @@ class CpImportHelper implements CpImportHelperInterface {
     // used during migration as it does not support all encodings out of
     // the box.
     $writer = Writer::createFromPath($filename);
+    // We use pseudo current timestamp field in the csv to allow same content
+    // to be imported on some other vsite which might otherwise will not be
+    // imported due to migration unique id requirements.
+    $time = $this->time->getCurrentTime();
+    array_unshift($header, 'Timestamp');
     $writer->insertOne($header);
     foreach ($data as $row) {
+      array_unshift($row, $time);
       $writer->insertOne(array_values($row));
     }
     return $data;
