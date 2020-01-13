@@ -1,0 +1,23 @@
+uuid: a04c2189-f75d-4712-b4ac-d05a850d4cb6
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slider
+    - field.storage.block_content.field_transition_speed
+id: block_content.slider.field_transition_speed
+field_name: field_transition_speed
+entity_type: block_content
+bundle: slider
+label: 'Transition speed'
+description: 'Transitions between slides will take this long.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 0
+  max: !!float 1
+  prefix: ''
+  suffix: second|seconds
+field_type: decimal

@@ -57,6 +57,7 @@ class AppImport extends Base {
     foreach ($ids as $id) {
       $this->cpImportHelper->addContentToVsite($id, $this->groupPluginId);
     }
+    parent::migratePostRowSaveActions($event);
   }
 
   /**
@@ -70,6 +71,7 @@ class AppImport extends Base {
         $event->getRow()->setSourceProperty('Created date', $date->format('Y-m-d'));
       }
     }
+    parent::prepareRowActions($event);
   }
 
   /**

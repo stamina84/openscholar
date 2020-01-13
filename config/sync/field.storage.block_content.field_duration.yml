@@ -1,0 +1,20 @@
+uuid: 9933aede-ea01-4a7b-b005-f324d94226e0
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: block_content.field_duration
+field_name: field_duration
+entity_type: block_content
+type: decimal
+settings:
+  precision: 10
+  scale: 1
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

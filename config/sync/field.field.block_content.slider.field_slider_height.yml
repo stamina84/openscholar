@@ -1,0 +1,25 @@
+uuid: 3e095281-dd5d-43ad-899e-094be2a88f59
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slider
+    - field.storage.block_content.field_slider_height
+id: block_content.slider.field_slider_height
+field_name: field_slider_height
+entity_type: block_content
+bundle: slider
+label: 'Slider height in pixels'
+description: 'Enter a numeric value for height of the slider in pixels. If left blank, Slider height will be calculated as 400px.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 400
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: 'in pixels'
+field_type: integer

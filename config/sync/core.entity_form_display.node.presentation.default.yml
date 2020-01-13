@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.presentation.body
+    - field.field.node.presentation.field_attached_media
     - field.field.node.presentation.field_presentation_date
     - field.field.node.presentation.field_presentation_location
     - field.field.node.presentation.field_presentation_slides
@@ -28,7 +29,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 9
+    weight: 8
     settings:
       rows: 9
       summary_rows: 3
@@ -41,14 +42,20 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_attached_media:
+    weight: 12
+    settings: {  }
+    third_party_settings: {  }
+    type: media_browser_widget
+    region: content
   field_presentation_date:
-    weight: 10
+    weight: 9
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_presentation_location:
-    weight: 11
+    weight: 10
     settings:
       size: 60
       placeholder: ''
@@ -56,13 +63,13 @@ content:
     type: string_textfield
     region: content
   field_presentation_slides:
-    weight: 12
+    weight: 11
     settings: {  }
     third_party_settings: {  }
     type: media_browser_widget
     region: content
   field_taxonomy_terms:
-    weight: 14
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: reference_taxonomy_terms
@@ -79,7 +86,7 @@ content:
     settings:
       display_label: true
     region: content
-    weight: 26
+    weight: 14
     third_party_settings: {  }
   path:
     type: path
@@ -91,7 +98,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 7
     region: content
     third_party_settings: {  }
   sticky:

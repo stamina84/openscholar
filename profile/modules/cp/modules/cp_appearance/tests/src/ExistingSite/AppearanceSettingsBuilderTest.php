@@ -41,7 +41,7 @@ class AppearanceSettingsBuilderTest extends TestBase {
 
   /**
    * @covers ::getFeaturedThemes
-   * @covers ::installedThemes
+   * @covers ::osInstalledThemes
    * @covers ::prepareThemes
    * @covers ::addScreenshotInfo
    * @covers ::addOperations
@@ -56,11 +56,13 @@ class AppearanceSettingsBuilderTest extends TestBase {
     $themes = $this->appearanceSettingsBuilder->getFeaturedThemes();
 
     $this->assertFalse(isset($themes['stark']));
-    $this->assertTrue(isset($themes['seven']));
-    $this->assertTrue(isset($themes['os_base']));
+    $this->assertFalse(isset($themes['seven']));
+    $this->assertFalse(isset($themes['os_base']));
     $this->assertFalse(isset($themes['bootstrap']));
     $this->assertTrue(isset($themes['hwpi_classic']));
     $this->assertTrue(isset($themes['blue_sky']));
+    $this->assertFalse(isset($themes['kirkland']));
+    $this->assertFalse(isset($themes['onepage']));
 
     // Test presence of custom properties.
     $active_theme = $themes['hwpi_classic'];
@@ -102,7 +104,7 @@ class AppearanceSettingsBuilderTest extends TestBase {
 
   /**
    * @covers ::getOnePageThemes
-   * @covers ::installedThemes
+   * @covers ::osInstalledThemes
    * @covers ::prepareThemes
    * @covers ::addScreenshotInfo
    * @covers ::addNotes
@@ -119,6 +121,10 @@ class AppearanceSettingsBuilderTest extends TestBase {
     $this->assertFalse(isset($themes['bootstrap']));
     $this->assertTrue(isset($themes['kirkland']));
     $this->assertTrue(isset($themes['onepage']));
+    $this->assertFalse(isset($themes['stark']));
+    $this->assertFalse(isset($themes['seven']));
+    $this->assertFalse(isset($themes['os_base']));
+    $this->assertFalse(isset($themes['bootstrap']));
 
     // Test presence of custom properties.
     $active_theme = $themes['kirkland'];
@@ -151,7 +157,8 @@ class AppearanceSettingsBuilderTest extends TestBase {
 
     // When flavor is set as default.
     $theme_config_mut->set('default', 'adams')->save();
-    $this->assertTrue($this->appearanceSettingsBuilder->themeIsDefault($installed_themes['hwpi_college']));
+    $this->assertTrue($this->appearanceSettingsBuilder->themeIsDefault($installed_themes['adams']));
+    $this->assertFalse($this->appearanceSettingsBuilder->themeIsDefault($installed_themes['hwpi_college']));
 
     // When theme is set as default.
     $theme_config_mut->set('default', 'vibrant')->save();

@@ -133,6 +133,7 @@ processor_settings:
   add_bundle_as_text: {  }
   add_created_as_text: {  }
   add_group_as_text: {  }
+  add_post_date_as_text: {  }
   add_title_as_text: {  }
   add_type_as_text: {  }
   add_url: {  }

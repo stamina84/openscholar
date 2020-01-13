@@ -5,3 +5,4 @@ description: "Custom file handling for OpenScholar"
 dependencies:
   - drupal:media
   - drupal:slick_media
+  - drupal:os

@@ -39,7 +39,7 @@
           .then (function (modal) {
             modal.element.dialog(dialogParams);
             modal.close.then(function(result) {
-              document.getElementById('upmedia').focus();
+              document.getElementById('views-form-os-media-page-1').focus();
               if (angular.isFunction(close)) {
                 close({result: result});
               }

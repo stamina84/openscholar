@@ -1,0 +1,25 @@
+uuid: 873ad345-bf47-4677-9e1b-070c3b8c5bab
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.dataverse_dataset_citation
+    - field.storage.block_content.field_embed_height
+id: block_content.dataverse_dataset_citation.field_embed_height
+field_name: field_embed_height
+entity_type: block_content
+bundle: dataverse_dataset_citation
+label: 'Embed Height'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 500
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: px
+field_type: integer

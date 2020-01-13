@@ -1,3 +1,38 @@
+/**** dots ****/
+%dots {
+  .slick-dots {
+    display: flex;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    background: $color-black;
+    min-height: 30px;
+    position: unset;
+    li {
+      margin: 0 2px;
+      button {
+        display: block;
+        width: 1rem;
+        height: 1rem;
+        padding: 0;
+        border: none;
+        border-radius: 100%;
+        background: $color-light-gray17;
+        text-indent: -9999px;
+        margin: 0 1px;
+        color: $color-black;
+        &:focus {
+          @include focus();
+        }
+      }
+      &.slick-active {
+        button {
+          background: $color-white;
+        }
+      }
+    }
+  }
+}
 /**** slideshow css ****/
 .widget--slideshow {
   position: relative;
@@ -103,37 +138,63 @@
         font-size: initial;
       }
     }
-    .slick-dots {
-      display: flex;
-      margin: 0;
-      align-items: center;
-      justify-content: center;
-      background: $color-black;
-      min-height: 30px;
-      position: unset;
-      li {
-        margin: 0 2px;
+    @extend %dots;
+  }
+}
+/**** widget slider dots ****/
+.arrows {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @extend %dots;
+  .slick-dots {
+    background: none;
+    display: inline-block;
+    width: auto;
+    li {
+      margin: 0 6px;
+      width: auto;
+      button {
+        background: $color-black;
+        color: $color-white;
+      }
+      &.slick-active {
         button {
-          display: block;
-          width: 1rem;
-          height: 1rem;
-          padding: 0;
-          border: none;
-          border-radius: 100%;
-          background: $color-light-gray17;
-          text-indent: -9999px;
-          margin: 0 1px;
+          background: $color-gray2;
           color: $color-black;
-          &:focus {
-            @include focus();
-          }
-        }
-        &.slick-active {
-          button {
-            background: $color-white;
-          }
         }
       }
     }
+  }
+  .slick-arrow {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    background: none;
+    border-radius: 0;
+    position: inherit;
+    &:before {
+      content: '';
+    }
+  }
+  .slick-prev {
+    border-right: 10px solid $color-black;
+    margin-right: 10px;
+  }
+  .slick-next {
+    border-left: 10px solid $color-black;
+    margin-left: 10px;
+    order: 4;
+  }
+}
+.widget-slider {
+  &.scroll-1 {
+    .block_content {
+      overflow: auto;
+    }
+  }
+  .block_content {
+    position: relative;
   }
 }
