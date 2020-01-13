@@ -1,4 +1,4 @@
-uuid: 3ba7af20-90fb-4f40-a6e6-59c98671b767
+uuid: 3cdd6bb0-54cf-4d85-93e7-d3e3a3a9d7c9
 langcode: en
 status: true
 dependencies:
@@ -9,15 +9,15 @@ dependencies:
     - media.type.executable
     - media.type.image
     - media.type.oembed
-    - node.type.news
-id: node.news.field_attached_media
+    - node.type.presentation
+id: node.presentation.field_attached_media
 field_name: field_attached_media
 entity_type: node
-bundle: news
-label: 'Attach Supplemental Presentation Files (handouts, notes, curricula, etc.)'
+bundle: presentation
+label: 'Attached Media'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -32,5 +32,5 @@ settings:
     sort:
       field: _none
     auto_create: false
-    auto_create_bundle: document
+    auto_create_bundle: audio
 field_type: entity_reference
