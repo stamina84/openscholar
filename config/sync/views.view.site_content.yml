@@ -240,6 +240,7 @@ display:
           include_exclude: include
           selected_actions:
             - cp_node_delete_action
+            - cp_taxonomy_add_terms_node_action
             - node_publish_action
             - node_unpublish_action
           entity_type: node
@@ -895,11 +896,12 @@ display:
     cache_metadata:
       max-age: 0
       contexts:
-        - user.group_permissions
         - 'languages:language_content'
         - 'languages:language_interface'
+        - route.group
         - url
         - url.query_args
+        - user.group_permissions
         - 'user.node_grants:view'
       tags: {  }
   page_1:
@@ -923,10 +925,11 @@ display:
     cache_metadata:
       max-age: 0
       contexts:
-        - user.group_permissions
         - 'languages:language_content'
         - 'languages:language_interface'
+        - route.group
         - url
         - url.query_args
+        - user.group_permissions
         - 'user.node_grants:view'
       tags: {  }
