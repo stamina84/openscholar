@@ -30,17 +30,56 @@
         let query_string = $.param(vars);
         window.location.search = '?' + query_string;
       });
-
       // Hide widgets if the title doesn't match.
       $('#filter-widgets', context).keyup(function (e) {
         let str = e.target.value.toLowerCase();
-        $('#block-list .block', context).each(function (i) {
+        let all = $('#filter-widgets-by-type option:selected')[0].value;
+        let block = $('#block-list .block');
+        let block_attribute = $('#block-list .block section[data-attr*=' + all + ']');
+        if (str == '' && all == 'all') {
+          $(block).show();
+          $(block).addClass('block-active');
+        }
+        else if (str == '' && all != 'all') {
+          $(block_attribute).parent('.block').show();
+          $(block_attribute).parent('.block').addClass('block-active');
+        }
+        else if (str != '' && all == 'all') {
+          $(block).addClass('block-active');
+        }
+        $('#block-list .block.block-active', context).each(function (i) {
           $this = $(this);
           if ($this.find('.block-title').text().toLowerCase().indexOf(str) != -1) {
             $this.show();
+            $this.addClass('block-active');
           }
           else {
             $this.hide();
+            $this.removeClass('block-active');
+            $(block_attribute).parent('.block').addClass('block-active');
+          }
+        });
+      });
+
+      // filter by type
+      $('#filter-widgets-by-type', context).once().change(function (e) {
+        let str = e.target.value.toLowerCase();
+        let text_value = $('#filter-widgets').val();
+        let block_class = text_value ? '.block.block-active': '.block';
+        let block = $('#block-list .block');
+        $('#block-list ' + block_class, context).each(function (i) {
+          $this = $(this);
+          if ($this.find('section.block').attr('data-attr') == str) {
+            $this.show();
+            $this.addClass('block-active');
+          }
+          else {
+            $this.hide();
+            $this.removeClass('block-active');
+          }
+          if (str == 'all') {
+            $(block).show();
+            $(block).addClass('block-active');
           }
         });
       });

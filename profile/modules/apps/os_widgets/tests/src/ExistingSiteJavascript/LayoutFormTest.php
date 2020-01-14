@@ -42,7 +42,7 @@ class LayoutFormTest extends OsExistingSiteJavascriptTestBase {
 JS;
 
     $this->visitViaVsite('blog', $this->group);
-    $this->getSession()->getPage()->clickLink('Place block');
+    $this->getSession()->getPage()->clickLink('Layout');
     $this->assertSession()->waitForButton('Create New Widget');
     $this->getSession()->wait(5);
     $this->getSession()->executeScript($script);
@@ -52,7 +52,7 @@ JS;
 
     $this->drupalLogin($group_admin_2);
     $this->visitViaVsite('blog', $group2);
-    $this->getSession()->getPage()->clickLink('Place block');
+    $this->getSession()->getPage()->clickLink('Layout');
     $this->getSession()->executeScript($script);
     $this->getSession()->getPage()->pressButton('Save');
     $url = $this->getSession()->evaluateScript('window.phpunit__ajax_url');
@@ -96,9 +96,9 @@ JS;
     }
 
     $this->visitViaVsite('blog', $this->group);
-    $this->getSession()->getDriver()->click('//a[contains(.,"Place block")]');
+    $this->getSession()->getDriver()->click('//a[contains(.,"Layout")]');
 
-    $this->assertSession()->pageTextContains('Filter Widgets');
+    $this->assertSession()->pageTextContains('Filter Widgets by Title');
     $this->assertSession()->pageTextContains($block_info_1);
     $this->assertSession()->pageTextContains($block_info_2);
 

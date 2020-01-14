@@ -102,19 +102,6 @@ class PlaceBlockPageVariant extends OriginalVariant {
 
     $context = \Drupal::request()->query->get('context');
 
-    $build['footer_bottom']['widget_selector'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'id' => 'block-place-widget-selector-wrapper',
-      ],
-      'markup' => $this->buildWidgetLibrary(),
-      '#attached' => [
-        'library' => [
-          'os_media/mediaBrowserField',
-        ],
-      ],
-    ];
-
     $build['footer_bottom']['context_selector'] = [
       '#type' => 'markup',
       '#prefix' => '<div id="block-place-context-selector-wrapper">',
@@ -123,7 +110,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
         '#type' => 'select',
         '#default_value' => $context,
         '#options' => $contexts,
-        '#title' => $this->t('Select Context'),
+        '#title' => $this->t('Select Content Type'),
         '#label_attributes' => ['for' => ['block-place-context-selector']],
         '#attributes' => [
           'id' => 'block-place-context-selector',
@@ -135,6 +122,18 @@ class PlaceBlockPageVariant extends OriginalVariant {
         ],
         'drupalSettings' => [
           'layoutContexts' => $contexts,
+        ],
+      ],
+    ];
+    $build['footer_bottom']['widget_selector'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'block-place-widget-selector-wrapper',
+      ],
+      'markup' => $this->buildWidgetLibrary(),
+      '#attached' => [
+        'library' => [
+          'os_media/mediaBrowserField',
         ],
       ],
     ];
@@ -171,6 +170,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
     /** @var \Drupal\block_content\Entity\BlockContentType[] $block_types */
     $block_types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple();
     $factory_links = [];
+    $select_links = ['all' => t('-All-')];
     foreach ($block_types as $bt) {
       $factory_links[$bt->id()] = [
         'title' => $bt->label(),
@@ -186,8 +186,8 @@ class PlaceBlockPageVariant extends OriginalVariant {
           ]),
         ],
       ];
+      $select_links[$bt->id()] = $bt->label();
     }
-
     $output = [
       'factory' => [
         '#type' => 'button',
@@ -198,13 +198,24 @@ class PlaceBlockPageVariant extends OriginalVariant {
       ],
       'filter' => [
         '#type' => 'textfield',
-        '#title' => $this->t('Filter Widgets'),
+        '#title' => $this->t('Filter Widgets by Title'),
         '#maxlength' => 60,
         '#size' => 60,
         '#label_attributes' => ['for' => ['filter-widgets']],
         '#attributes' => [
           'id' => [
             'filter-widgets',
+          ],
+        ],
+      ],
+      'filter_by_type' => [
+        '#type' => 'select',
+        '#title' => t('Filter Widgets by Type'),
+        '#options' => $select_links,
+        '#label_attributes' => ['for' => ['filter-widgets-by-type']],
+        '#attributes' => [
+          'id' => [
+            'filter-widgets-by-type',
           ],
         ],
       ],
@@ -233,7 +244,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
     foreach ($widgets_not_yet_placed as $b) {
       $block_build = [
         '#type' => 'inline_template',
-        '#template' => '<div class="block" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
+        '#template' => '<div class="block block-active" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
         '#context' => [
           'id' => $b->id(),
           'title' => '',
