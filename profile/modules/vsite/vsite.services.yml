@@ -62,3 +62,7 @@ services:
   vsite.form_delete_destination:
     class: Drupal\vsite\FormDeleteDestination
     arguments: ['@vsite.context_manager']
+
+  vsite.validate_helper:
+    class: Drupal\vsite\Helper\VsiteFieldValidateHelper
+    arguments: ['@vsite.context_manager', '@entity_type.manager']
