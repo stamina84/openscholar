@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\vsite\Entity;
+namespace Drupal\vsite_preset\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\StorageInterface;
@@ -21,11 +21,11 @@ use Drupal\vsite\Config\VsiteStorageDefinition;
  *   ),
  *   handlers = {
  *     "form" = {
- *       "add" = "Drupal\vsite\Entity\Form\GroupPresetForm",
- *       "edit" = "Drupal\vsite\Entity\Form\GroupPresetForm",
- *       "delete" = "Drupal\vsite\Entity\Form\GroupPresetDeleteForm"
+ *       "add" = "Drupal\vsite_preset\Entity\Form\GroupPresetForm",
+ *       "edit" = "Drupal\vsite_preset\Entity\Form\GroupPresetForm",
+ *       "delete" = "Drupal\vsite_preset\Entity\Form\GroupPresetDeleteForm"
  *     },
- *     "list_builder" = "Drupal\vsite\Entity\Controller\GroupPresetListBuilder",
+ *     "list_builder" = "Drupal\vsite_preset\Entity\Controller\GroupPresetListBuilder",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider"
  *     }

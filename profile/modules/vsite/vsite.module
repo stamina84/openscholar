@@ -10,8 +10,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\node\NodeInterface;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
-use Drupal\vsite\Entity\GroupPresetInterface;
-use Drupal\vsite\Entity\GroupPreset;
+use Drupal\vsite_preset\Entity\GroupPresetInterface;
+use Drupal\vsite_preset\Entity\GroupPreset;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Url;
 use Drupal\group\Entity\GroupInterface;
@@ -359,7 +359,7 @@ function vsite_group_insert(GroupInterface $group) {
  *
  * @param \Drupal\group\Entity\GroupInterface $group
  *   The group being operated on.
- * @param \Drupal\vsite\Entity\GroupPresetInterface $preset
+ * @param \Drupal\vsite_preset\Entity\GroupPresetInterface $preset
  *   The preset the group is using.
  * @param string $uri
  *   The file uri.

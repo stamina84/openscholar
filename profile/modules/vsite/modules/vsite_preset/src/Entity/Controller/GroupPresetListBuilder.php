@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\vsite\Entity\Controller;
+namespace Drupal\vsite_preset\Entity\Controller;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Class GroupPresetListBuilder.
  *
- * @package Drupal\vsite\Entity\Controller
+ * @package Drupal\vsite_preset\Entity\Controller
  */
 class GroupPresetListBuilder extends ConfigEntityListBuilder {
 

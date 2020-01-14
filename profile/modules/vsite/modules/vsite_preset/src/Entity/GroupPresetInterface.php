@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\vsite\Entity;
+namespace Drupal\vsite_preset\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\StorageInterface;

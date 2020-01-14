@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\vsite\Entity\Form;
+namespace Drupal\vsite_preset\Entity\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -11,14 +11,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class GroupPresetForm.
  *
- * @package Drupal\vsite\Entity\Form
+ * @package Drupal\vsite_preset\Entity\Form
  */
 class GroupPresetForm extends EntityForm {
 
   /**
    * The entity being operated on.
    *
-   * @var \Drupal\vsite\Entity\GroupPresetInterface
+   * @var \Drupal\vsite_preset\Entity\GroupPresetInterface
    */
   protected $entity;
 
@@ -66,7 +66,7 @@ class GroupPresetForm extends EntityForm {
       '#title' => $this->t('Id'),
       '#default_value' => $this->entity->id(),
       '#machine_name' => [
-        'exists' => '\\Drupal\\vsite\\Entity\\GroupPreset::load',
+        'exists' => '\\Drupal\\vsite_preset\\Entity\\GroupPreset::load',
       ],
       // '#disabled' => true.
     ];
