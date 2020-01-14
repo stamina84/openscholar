@@ -401,7 +401,9 @@ projects[strongarm][subdir] = "contrib"
 projects[strongarm][version] = 2.0-rc1
 
 projects[term_reference_tree][subdir] = "contrib"
-projects[term_reference_tree][version] = 1.x-dev
+projects[term_reference_tree][download][type] = git
+projects[term_reference_tree][download][branch] = 7.x-1.x
+projects[term_reference_tree][download][revision] = 98f658b9d8c4e4585c8fa98cf81aad6bf990f7b4
 projects[term_reference_tree][patch][] = "https://drupal.org/files/issues/2235057-term-er-3.patch"
 
 projects[title][subdir] = "contrib"
@@ -447,8 +449,9 @@ projects[web_widgets][subdir] = "contrib"
 projects[web_widgets][version] = 1.0-alpha2
 
 projects[wysiwyg][subdir] = "contrib"
-projects[wysiwyg][version] = "2.x-dev"
-projects[wysiwyg][revision] = "9490393"
+projects[wysiwyg][download][type] = git
+projects[wysiwyg][download][branch] = 7.x-2.x
+projects[wysiwyg][download][revision] = 9490393
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-table-format.patch"
 
 projects[wysiwyg_filter][subdir] = "contrib"
