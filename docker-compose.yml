@@ -16,7 +16,7 @@ services:
 #      - /path/to/mariadb/data/on/host:/var/lib/mysql # I want to manage volumes manually.
 
   php:
-    image: wodby/drupal-php:7.2-4.6.3
+    image: wodby/drupal-php:7.3-4.14.3
     container_name: "${PROJECT_NAME}_php"
     environment:
       PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog:1025

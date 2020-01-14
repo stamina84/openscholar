@@ -126,6 +126,26 @@ class CpImportTest extends OsExistingSiteTestBase {
   }
 
   /**
+   * Tests if aliases get updated when needed.
+   */
+  public function testCpImportHandlePath() {
+    $node = $this->createNode([
+      'title' => 'Test Faq',
+      'type' => 'faq',
+      'path' => 'test-faq',
+    ]);
+    $this->group->addContent($node, 'group_node:faq');
+    // Update alias.
+    $nid = $node->id();
+    $this->cpImportHelper->handleContentPath($node->getEntityTypeId(), $nid);
+    /** @var \Drupal\Core\Path\AliasStorage $pathStorage */
+    $pathStorage = $this->container->get('path.alias_storage');
+    $new_alias = $pathStorage->lookupPathAlias("/node/$nid", $node->language()->getId());
+    // Assert alias gets updated.
+    $this->assertNotEquals('test-faq', $new_alias);
+  }
+
+  /**
    * Tests CpImport AppImport factory.
    */
   public function testCpImportAppImportFactory() {
@@ -224,6 +244,7 @@ class CpImportTest extends OsExistingSiteTestBase {
     $filename = drupal_get_path('module', 'cp_import_csv_test') . '/artifacts/faq.csv';
     // Replace existing source file.
     $path = 'public://importcsv';
+    $this->fileSystem->delete($path . '/os_faq.csv');
     $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
     file_save_data(file_get_contents($filename), $path . '/os_faq.csv', FileSystemInterface::EXISTS_REPLACE);
 
@@ -256,6 +277,19 @@ class CpImportTest extends OsExistingSiteTestBase {
     $id = key($node3);
     $content = $vsite->getContentByEntityId('group_node:faq', $id);
     $this->assertCount(1, $content);
+
+    // Import same content again to check if adding timestamp works.
+    $filename2 = drupal_get_path('module', 'cp_import_csv_test') . '/artifacts/faq_small.csv';
+    $this->cpImportHelper->csvToArray($filename2, 'utf-8');
+    $this->fileSystem->delete($path . '/os_faq.csv');
+    $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    file_save_data(file_get_contents($filename2), $path . '/os_faq.csv', FileSystemInterface::EXISTS_REPLACE);
+    $migration = $this->migrationManager->createInstance('os_faq_import');
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable->import();
+    // If count is now 2 it means same content is imported again.
+    $node2 = $storage->loadByProperties(['title' => 'Some Question 2']);
+    $this->assertCount(2, $node2);
 
     // Delete all the test data created.
     $executable->rollback();

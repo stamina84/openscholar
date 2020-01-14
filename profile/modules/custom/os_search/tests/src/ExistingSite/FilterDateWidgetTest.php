@@ -9,7 +9,7 @@ use Drupal\Tests\os_widgets\ExistingSite\OsWidgetsExistingSiteTestBase;
  *
  * @group kernel
  * @group widgets-4
- * @covers \Drupal\os_search\Plugin\OsWidgets\SearchSortWidgetTest
+ * @covers \Drupal\os_search\Plugin\OsWidgets\FilterDateWidget
  */
 class FilterDateWidgetTest extends OsWidgetsExistingSiteTestBase {
 
