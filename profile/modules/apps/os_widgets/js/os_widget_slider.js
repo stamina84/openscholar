@@ -6,6 +6,7 @@
         bid = id.replace('slider-',"");
         sliderSettings = drupalSettings.sliderWidget[bid];
         $('#'+id, context).once('osSliderWidget').slick({
+          waitForAnimate: false,
           autoplay: true,
           dots: true,
           arrows: sliderSettings.field_display_arrows,
@@ -13,6 +14,7 @@
           speed: sliderSettings.field_duration ? (sliderSettings.field_duration * 1000) : 300,
           appendArrows: '#dots-'+bid,
           appendDots: '#dots-'+bid,
+
           responsive: [
             {
               breakpoint: 768,
@@ -25,4 +27,5 @@
       });
     }
   }
+
 })(jQuery, drupalSettings);
