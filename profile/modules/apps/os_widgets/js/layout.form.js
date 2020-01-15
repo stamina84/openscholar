@@ -64,12 +64,9 @@
       // filter by type
       $('#filter-widgets-by-type', context).once().change(function (e) {
         let str = e.target.value.toLowerCase();
-        let text_value = $('#filter-widgets').val();
-        let block_class = text_value ? '.block.block-active': '.block';
-        let block = $('#block-list .block');
-        $('#block-list ' + block_class, context).each(function (i) {
+        $('#block-list .block', context).each(function (i) {
           $this = $(this);
-          if ($this.find('section.block').attr('data-attr') == str) {
+          if ($this.attr('data-block-type') == str || str == 'all') {
             $this.show();
             $this.addClass('block-active');
           }
@@ -77,11 +74,8 @@
             $this.hide();
             $this.removeClass('block-active');
           }
-          if (str == 'all') {
-            $(block).show();
-            $(block).addClass('block-active');
-          }
         });
+        $('#filter-widgets').trigger('keyup');
       });
 
       // Define regions to be sortable targets

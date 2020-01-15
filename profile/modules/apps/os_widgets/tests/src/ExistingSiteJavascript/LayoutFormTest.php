@@ -84,6 +84,7 @@ JS;
 
     $blocks[] = $this->createBlockContent([
       'info' => $block_info_2,
+      'type' => 'list_of_posts',
     ]);
 
     foreach ($blocks as $b) {
@@ -99,13 +100,28 @@ JS;
     $this->getSession()->getDriver()->click('//a[contains(.,"Layout")]');
 
     $this->assertSession()->pageTextContains('Filter Widgets by Title');
+    $this->assertSession()->pageTextContains('Filter Widgets by Type');
     $this->assertSession()->pageTextContains($block_info_1);
     $this->assertSession()->pageTextContains($block_info_2);
 
-    $this->getSession()->getPage()->fillField('filter-widgets', $block_info_1);
+    $page = $this->getSession()->getPage();
+
+    // Assert the Filter by title is working.
+    $page->fillField('filter-widgets', $block_info_1);
     $this->getSession()->executeScript('document.querySelector("#block-place-widget-selector-wrapper").scrollTo(5, 5);');
-    $this->assertTrue($this->getSession()->getPage()->find('xpath', "//h3[contains(.,\"{$block_info_1}\")]")->isVisible());
-    $this->assertNotTrue($this->getSession()->getPage()->find('xpath', "//h3[contains(.,\"{$block_info_2}\")]")->isVisible());
+    $this->assertTrue($page->find('xpath', "//h3[contains(.,\"{$block_info_1}\")]")->isVisible());
+    $this->assertNotTrue($page->find('xpath', "//h3[contains(.,\"{$block_info_2}\")]")->isVisible());
+
+    // Assert the Filter by type is working.
+    $page->fillField('filter-widgets', '');
+    $page->selectFieldOption('filter-widgets-by-type', 'list_of_posts');
+    $this->assertTrue($page->find('xpath', "//h3[contains(.,\"{$block_info_2}\")]")->isVisible());
+    $this->assertNotTrue($page->find('xpath', "//h3[contains(.,\"{$block_info_1}\")]")->isVisible());
+
+    // Assert the Filter by type is working.
+    $page->selectFieldOption('filter-widgets-by-type', 'basic');
+    $this->assertTrue($page->find('xpath', "//h3[contains(.,\"{$block_info_1}\")]")->isVisible());
+    $this->assertNotTrue($page->find('xpath', "//h3[contains(.,\"{$block_info_2}\")]")->isVisible());
   }
 
 }
