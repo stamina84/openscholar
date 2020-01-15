@@ -48,12 +48,14 @@ class WidgetsRevisionLogTest extends OsExistingSiteJavascriptTestBase {
     $page->pressButton('Create New Widget');
     // Iterate through all of widgets to check if revision information.
     foreach ($this->widgetTypes as $key => $label) {
-      $class = str_replace('_', '-', $key);
-      $page->find('xpath', '//li[contains(@class, "' . $class . '")]/a')->press();
-      $web_assert->waitForText('Add new "' . $label['label'] . '" Widget');
-      $web_assert->pageTextNotContains('Revision information');
-      $web_assert->pageTextNotContains('Revision log message');
-      $page->find('xpath', '//button[contains(@class, "ui-dialog-titlebar-close")]')->press();
+      if ($key != 'basic') {
+        $class = str_replace('_', '-', $key);
+        $page->find('xpath', '//li[contains(@class, "' . $class . '")]/a')->press();
+        $web_assert->waitForText('Add new "' . $label['label'] . '" Widget');
+        $web_assert->pageTextNotContains('Revision information');
+        $web_assert->pageTextNotContains('Revision log message');
+        $page->find('xpath', '//button[contains(@class, "ui-dialog-titlebar-close")]')->press();
+      }
     }
   }
 
