@@ -172,20 +172,22 @@ class PlaceBlockPageVariant extends OriginalVariant {
     $factory_links = [];
 
     foreach ($block_types as $bt) {
-      $factory_links[$bt->id()] = [
-        'title' => $bt->label(),
-        'url' => Url::fromRoute('os_widgets.create_widget', ['block_content_type' => $bt->id()]),
-        'attributes' => [
+      if ($bt->id() != 'basic') {
+        $factory_links[$bt->id()] = [
           'title' => $bt->label(),
-          'class' => ['use-ajax'],
-          'data-dialog-type' => 'modal',
-          'data-dialog-options' => Json::encode([
-            'width' => 1000,
-            'autoOpen' => TRUE,
-            'dialogClass' => 'widget-popup',
-          ]),
-        ],
-      ];
+          'url' => Url::fromRoute('os_widgets.create_widget', ['block_content_type' => $bt->id()]),
+          'attributes' => [
+            'title' => $bt->label(),
+            'class' => ['use-ajax'],
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => Json::encode([
+              'width' => 1000,
+              'autoOpen' => TRUE,
+              'dialogClass' => 'widget-popup',
+            ]),
+          ],
+        ];
+      }
     }
     $output = [
       'factory' => [
