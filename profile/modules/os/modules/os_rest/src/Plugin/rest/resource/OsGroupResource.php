@@ -100,6 +100,10 @@ class OsGroupResource extends OsEntityResource {
     if (batch_get()) {
       $redirectObject = batch_process();
       $target_url = $redirectObject->getTargetUrl();
+      // Prepend vsite url to batch target url so that all batch operations run
+      // in vsite context we don't have to worry about activating it explicitly.
+      $location = $response->headers->get('location');
+      $target_url = str_replace(\Drupal::request()->getSchemeAndHttpHost(), $location, $target_url);
       $response->headers->set('X-Drupal-Batch-Url', $target_url);
     }
 

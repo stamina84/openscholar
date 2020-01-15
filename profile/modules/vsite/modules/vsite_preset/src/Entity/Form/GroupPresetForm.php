@@ -86,6 +86,7 @@ class GroupPresetForm extends EntityForm {
 
     $app_list = [];
     $app_definition = $this->appLoader->getAppsForUser($this->currentUser());
+    ksm($app_definition);
     foreach ($app_definition as $app) {
       $app_list[$app['id']] = $app['title'];
     }

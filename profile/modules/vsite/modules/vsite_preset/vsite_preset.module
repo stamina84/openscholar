@@ -5,43 +5,22 @@
  * Hook implementations for the vsite_preset module.
  */
 
-use Drupal\os_widgets\Entity\LayoutContext;
-use Drupal\os_app_access\AppAccessLevels;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\vsite_preset\Entity\GroupPreset;
-use Drupal\vsite_preset\Entity\GroupPresetInterface;
-use League\Csv\Reader;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_group_create().
  */
 function vsite_preset_group_insert(GroupInterface $group) {
-  // TODO , check if hook_insert is needed.
   if ($group->hasField('field_preset') && !$group->get('field_preset')->isEmpty()) {
     $preset_id = $group->get('field_preset')->get(0)->getValue()['target_id'];
     /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
     if ($preset = GroupPreset::load($preset_id)) {
 
-      /** @var \Drupal\vsite\Plugin\VsiteContextManager $context_manager */
-      $context_manager = \Drupal::service('vsite.context_manager');
-      $context_manager->activateVsite($group);
-
-      $appsToEnable = $preset->getEnabledApps();
-      /** @var \Drupal\vsite\Plugin\AppManager $appManager */
-      $appManager = \Drupal::service('vsite.app.manager');
-      $apps = $appManager->getDefinitions();
-
-      $access = \Drupal::configFactory()->getEditable('os_app_access.access');
-      foreach ($apps as $name => $app) {
-        if (in_array($name, $appsToEnable)) {
-          $access->set($name, AppAccessLevels::PUBLIC);
-        }
-        else {
-          $access->set($name, AppAccessLevels::DISABLED);
-        }
-      }
-      $access->save();
+      /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
+      $preset_helper = \Drupal::service('vsite_preset.preset_helper');
+      $preset_helper->enableApps($group, $preset);
 
       $fileArr = $preset->getCreationFiles();
       // If for this group type no preset files exists then we need not proceed.
@@ -64,7 +43,7 @@ function vsite_preset_group_insert(GroupInterface $group) {
       foreach ($uriArr as $uri) {
         $batch['operations'][] = [
           '_vsite_preset_process_preset_task',
-          [$group, $preset, $uri],
+          [$group, $uri],
         ];
       }
     }
@@ -77,8 +56,6 @@ function vsite_preset_group_insert(GroupInterface $group) {
  *
  * @param \Drupal\group\Entity\GroupInterface $group
  *   The group being operated on.
- * @param \Drupal\vsite_preset\Entity\GroupPresetInterface $preset
- *   The preset the group is using.
  * @param string $uri
  *   The file uri.
  * @param mixed $context
@@ -88,74 +65,12 @@ function vsite_preset_group_insert(GroupInterface $group) {
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
-function _vsite_preset_process_preset_task(GroupInterface $group, GroupPresetInterface $preset, $uri, &$context) {
+function _vsite_preset_process_preset_task(GroupInterface $group, $uri, &$context) {
   $alias = $group->get('path')->getValue()[0]['alias'];
   $context['results']['alias'] = $alias;
-  $parsedUri = explode('/', $uri);
-  $count = count($parsedUri);
-  $entityType = $parsedUri[$count - 3];
-  $bundle = $parsedUri[$count - 2];
-
-  $header = NULL;
-  $data = [];
-
-  $csv = Reader::createFromPath($uri, 'r');
-  foreach ($csv as $row) {
-    if (!$header) {
-      $header = $row;
-    }
-    else {
-      $data[] = array_combine($header, $row);
-    }
-  }
-
-  // Todo Revamp all functionality in this method and use helper methods.
-  switch ($entityType) {
-    case 'node':
-      foreach ($data as $row) {
-        $node = \Drupal::entityTypeManager()->getStorage($entityType)->create([
-          'type' => $bundle,
-          'title' => $row['Title'],
-        ]);
-        $node->save();
-        $group->addContent($node, "group_node:$bundle");
-        /** @var \Drupal\Core\Path\AliasStorageInterface $path_alias_storage */
-        $path_alias_storage = \Drupal::service('path.alias_storage');
-        $exist_alias = $path_alias_storage->load(['source' => '/node/' . $node->id()]);
-        // Fix group alias of the node.
-        $path_alias_storage->save('/node/' . $node->id(), '/[vsite:' . $group->id() . ']' . $exist_alias['alias'], 'en', $exist_alias['pid']);
-      }
-      break;
-
-    case 'block_content':
-      foreach ($data as $row) {
-        $block = \Drupal::entityTypeManager()->getStorage($entityType)->create([
-          'type' => $bundle,
-          'info' => $row['Info'],
-          'field_widget_title' => $row['Title'],
-          'body' => $row['Body'],
-        ]);
-        $block->save();
-        $group->addContent($block, "group_entity:$entityType");
-
-        /** @var \Drupal\os_widgets\Entity\LayoutContext $context */
-        $context = LayoutContext::load('all_pages');
-        $data = $context->getBlockPlacements();
-        $block_uuid = $block->uuid();
-        $data[] = [
-          'id' => "$entityType|$block_uuid",
-          'region' => 'sidebar_second',
-          'weight' => 0,
-        ];
-        // Need to activate vsite here so config is saved to new vsite
-        // collection.
-        $context->setBlockPlacements($data);
-        $context->save();
-        // TODO add block to vsite and checkout about placement.
-      }
-  }
-
-  // TODO Enable apps and other tasks to be handled.
+  /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
+  $preset_helper = \Drupal::service('vsite_preset.preset_helper');
+  $preset_helper->createDefaultContent($group, $uri);
 }
 
 /**
