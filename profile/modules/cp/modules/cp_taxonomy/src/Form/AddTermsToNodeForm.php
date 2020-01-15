@@ -95,6 +95,49 @@ class AddTermsToNodeForm extends FormBase {
     if (empty($this->entityInfo)) {
       return new RedirectResponse(Url::fromRoute('cp.content.collection')->toString());
     }
+    $vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
+    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    $vocabs = $vocabulary_storage->loadMultiple();
+
+    $options = [];
+    $options_terms = [];
+    foreach ($vocabs as $vocab) {
+      $options[$vocab->id()] = $vocab->label();
+      $terms = $term_storage->loadTree($vocab->id());
+      foreach ($terms as $term) {
+        // We have to collect all terms to prevent error from allowed values.
+        $options_terms[$term->tid] = $term->name;
+      }
+    }
+    $form['vocabularies'] = [
+      '#type' => 'select',
+      '#options' => $options,
+      '#empty_option' => $this->t('- Select -'),
+      '#ajax' => [
+        'callback' => '::getTermsAjaxCallback',
+        'event' => 'change',
+        'wrapper' => 'edit-terms',
+        'progress' => [
+          'type' => 'throbber',
+          'message' => $this->t('Getting terms...'),
+        ],
+      ],
+    ];
+
+    $form['terms'] = [
+      '#type' => 'select',
+      '#options' => $options_terms,
+      '#multiple' => 1,
+      '#chosen' => 1,
+      '#title' => $this->t('Terms'),
+      '#prefix' => '<div id="edit-terms">',
+      '#suffix' => '</div>',
+      '#states' => [
+        'invisible' => [
+          ':input[name="vocabularies"]' => ['value' => ''],
+        ],
+      ],
+    ];
 
     $form['entities'] = [
       '#title' => $this->t('The selected terms above will be applied to the following content:'),
@@ -132,6 +175,27 @@ class AddTermsToNodeForm extends FormBase {
     }
 
     $form_state->setRedirect('cp.content.collection');
+  }
+
+  /**
+   * Ajax callback for handling vocabulary depends terms selection.
+   */
+  public function getTermsAjaxCallback(array &$form, FormStateInterface $form_state) {
+    if ($selected_vocabulary = $form_state->getValue('vocabularies')) {
+      $vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
+      $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+      $vocab = $vocabulary_storage->load($selected_vocabulary);
+      // Get terms from selected vocabulary.
+      $terms = $term_storage->loadTree($vocab->id());
+      $options = [];
+      foreach ($terms as $term) {
+        $options[$term->tid] = $term->name;
+      }
+      $form['terms']['#options'] = $options;
+      // Return the prepared element.
+      return $form['terms'];
+    }
+    return [];
   }
 
 }
