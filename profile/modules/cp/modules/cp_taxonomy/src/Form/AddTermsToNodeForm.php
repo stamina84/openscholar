@@ -5,9 +5,11 @@ namespace Drupal\cp_taxonomy\Form;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Renderer;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
+use Drupal\cp_taxonomy\CpTaxonomyHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -52,6 +54,20 @@ class AddTermsToNodeForm extends FormBase {
   protected $entityTypeId;
 
   /**
+   * Cp taxonomy helper.
+   *
+   * @var \Drupal\cp_taxonomy\CpTaxonomyHelper
+   */
+  protected $taxonomyHelper;
+
+  /**
+   * Renderer.
+   *
+   * @var \Drupal\Core\Render\Renderer
+   */
+  protected $renderer;
+
+  /**
    * Constructs a DeleteMultiple form object.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
@@ -60,11 +76,17 @@ class AddTermsToNodeForm extends FormBase {
    *   The entity manager.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user object.
+   * @param \Drupal\cp_taxonomy\CpTaxonomyHelper $taxonomy_helper
+   *   Taxonomy Helper.
+   * @param \Drupal\Core\Render\Renderer $renderer
+   *   Taxonomy Helper.
    */
-  public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityTypeManagerInterface $manager, AccountInterface $current_user) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityTypeManagerInterface $manager, AccountInterface $current_user, CpTaxonomyHelper $taxonomy_helper, Renderer $renderer) {
     $this->tempStore = $temp_store_factory->get('cp_taxonomy_add_terms_node');
     $this->entityTypeManager = $manager;
     $this->currentUser = $current_user;
+    $this->taxonomyHelper = $taxonomy_helper;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -74,7 +96,9 @@ class AddTermsToNodeForm extends FormBase {
     return new static(
       $container->get('tempstore.private'),
       $container->get('entity_type.manager'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('cp.taxonomy.helper'),
+      $container->get('renderer')
     );
   }
 
@@ -109,7 +133,7 @@ class AddTermsToNodeForm extends FormBase {
         $options_terms[$term->tid] = $term->name;
       }
     }
-    $form['vocabularies'] = [
+    $form['vocabulary'] = [
       '#type' => 'select',
       '#options' => $options,
       '#empty_option' => $this->t('- Select -'),
@@ -134,7 +158,7 @@ class AddTermsToNodeForm extends FormBase {
       '#suffix' => '</div>',
       '#states' => [
         'invisible' => [
-          ':input[name="vocabularies"]' => ['value' => ''],
+          ':input[name="vocabulary"]' => ['value' => ''],
         ],
       ],
     ];
@@ -165,11 +189,73 @@ class AddTermsToNodeForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $button = $form_state->getTriggeringElement();
     if ($button['#type'] == 'submit' && !empty($this->entityInfo)) {
+      $vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
+      $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
       $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
+      $selected_vocabulary = $form_state->getValue('vocabulary');
+      $terms_to_apply = $form_state->getValue('terms');
+      $terms = $term_storage->loadMultiple($terms_to_apply);
+      $term_names = [];
+      foreach ($terms as $term) {
+        $term_names[] = $term->label();
+      }
+      $allowed_types = $vocabulary_storage->load($selected_vocabulary)->get('allowed_vocabulary_reference_types');
+      $entities = $this->taxonomyHelper->explodeEntityBundles($allowed_types);
+      if (empty($entities[$this->entityTypeId])) {
+        $this->messenger()->addStatus($this->t('Selected vocabulary is not handle %entity_type_id entity type.', ['%entity_type_id' => $this->entityTypeId]));
+      }
+      $handled_bundles = $entities[$this->entityTypeId];
 
       $entities = $storage->loadMultiple(array_keys($this->entityInfo));
+      $skipped_titles = [];
+      $applied_titles = [];
+      foreach ($entities as $entity) {
+        $bundle = $entity->bundle();
+        if (!in_array($bundle, $handled_bundles)) {
+          $skipped_titles[] = $entity->label();
+          continue;
+        }
+        $current_terms = $entity->get('field_taxonomy_terms');
+        foreach ($terms as $term) {
+          $current_terms->appendItem($term);
+        }
+        $entity->set('field_taxonomy_terms', $current_terms->getValue());
+        $entity->save();
+        $applied_titles[] = $entity->label();
+      }
 
-      $this->messenger()->addStatus($this->formatPlural(count($entities), 'Updated 1 node.', 'Updated @count nodes.'));
+      $params = [
+        '%terms' => implode(", ", $term_names),
+      ];
+      // Notify the user on the skipped nodes (nodes whose bundle is not
+      // associated with the selected vocabulary).
+      if (!empty($skipped_titles)) {
+        $message = [
+          [
+            '#markup' => $this->formatPlural(count($terms_to_apply), 'Taxonomy term %terms could not be applied on the content:', '@count taxonomy terms %terms could not be applied on the content:', $params),
+          ],
+          [
+            '#theme' => 'item_list',
+            '#items' => $skipped_titles,
+          ],
+        ];
+        $this->messenger()->addWarning($this->renderer->renderPlain($message));
+      }
+
+      // Notify the user on the applied nodes.
+      if (!empty($applied_titles)) {
+        $message = [
+          [
+            '#markup' => $this->formatPlural(count($terms_to_apply), 'Taxonomy term %terms was applied on the content:', '@count taxonomy terms %terms were applied on the content:', $params),
+          ],
+          [
+            '#theme' => 'item_list',
+            '#items' => $skipped_titles,
+          ],
+        ];
+
+        $this->messenger()->addStatus($this->renderer->renderPlain($message));
+      }
 
       $this->tempStore->delete($this->currentUser->id());
     }
@@ -181,7 +267,7 @@ class AddTermsToNodeForm extends FormBase {
    * Ajax callback for handling vocabulary depends terms selection.
    */
   public function getTermsAjaxCallback(array &$form, FormStateInterface $form_state) {
-    if ($selected_vocabulary = $form_state->getValue('vocabularies')) {
+    if ($selected_vocabulary = $form_state->getValue('vocabulary')) {
       $vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
       $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
       $vocab = $vocabulary_storage->load($selected_vocabulary);

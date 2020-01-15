@@ -81,7 +81,6 @@ class AddTermsNodeAction extends ActionBase implements ContainerFactoryPluginInt
    */
   public function executeMultiple(array $entities) {
     $info = [];
-    /** @var \Drupal\bibcite_entity\Entity\ReferenceInterface $entity */
     foreach ($entities as $entity) {
       $info[$entity->id()] = $entity->label();
     }
