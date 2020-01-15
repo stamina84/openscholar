@@ -5,6 +5,8 @@
  * Hook implementations for the vsite_preset module.
  */
 
+use Drupal\os_widgets\Entity\LayoutContext;
+use Drupal\os_app_access\AppAccessLevels;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\vsite_preset\Entity\GroupPreset;
 use Drupal\vsite_preset\Entity\GroupPresetInterface;
@@ -18,7 +20,29 @@ function vsite_preset_group_insert(GroupInterface $group) {
   // TODO , check if hook_insert is needed.
   if ($group->hasField('field_preset') && !$group->get('field_preset')->isEmpty()) {
     $preset_id = $group->get('field_preset')->get(0)->getValue()['target_id'];
+    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
     if ($preset = GroupPreset::load($preset_id)) {
+
+      /** @var \Drupal\vsite\Plugin\VsiteContextManager $context_manager */
+      $context_manager = \Drupal::service('vsite.context_manager');
+      $context_manager->activateVsite($group);
+
+      $appsToEnable = $preset->getEnabledApps();
+      /** @var \Drupal\vsite\Plugin\AppManager $appManager */
+      $appManager = \Drupal::service('vsite.app.manager');
+      $apps = $appManager->getDefinitions();
+
+      $access = \Drupal::configFactory()->getEditable('os_app_access.access');
+      foreach ($apps as $name => $app) {
+        if (in_array($name, $appsToEnable)) {
+          $access->set($name, AppAccessLevels::PUBLIC);
+        }
+        else {
+          $access->set($name, AppAccessLevels::DISABLED);
+        }
+      }
+      $access->save();
+
       $fileArr = $preset->getCreationFiles();
       // If for this group type no preset files exists then we need not proceed.
       if (!$fileArr[$group->getGroupType()->id()]) {
@@ -27,6 +51,7 @@ function vsite_preset_group_insert(GroupInterface $group) {
       if (isset($fileArr[$group->getGroupType()->id()])) {
         $uriArr = array_keys($fileArr[$group->getGroupType()->id()]);
       }
+
       // TODO Review and see what could be changed for better.
       $batch = [
         'title' => t('Setting up your new OpenScholar site'),
@@ -111,6 +136,21 @@ function _vsite_preset_process_preset_task(GroupInterface $group, GroupPresetInt
           'body' => $row['Body'],
         ]);
         $block->save();
+        $group->addContent($block, "group_entity:$entityType");
+
+        /** @var \Drupal\os_widgets\Entity\LayoutContext $context */
+        $context = LayoutContext::load('all_pages');
+        $data = $context->getBlockPlacements();
+        $block_uuid = $block->uuid();
+        $data[] = [
+          'id' => "$entityType|$block_uuid",
+          'region' => 'sidebar_second',
+          'weight' => 0,
+        ];
+        // Need to activate vsite here so config is saved to new vsite
+        // collection.
+        $context->setBlockPlacements($data);
+        $context->save();
         // TODO add block to vsite and checkout about placement.
       }
   }
