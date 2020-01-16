@@ -1,4 +1,4 @@
-<div id="site-creation-container">
+<div id="site-creation-container" title="Create Site">
 	<form name="siteCreationform">
 		<!-- Screen 1 Start -->
 		<div id="page-1" ng-show="page1">
@@ -49,6 +49,7 @@
 							<div class="url-selector">
 								<span>{{baseURL}}</span>
 								<span>
+									<label class="visually-hidden" for="individual-scholar">Individual Scholar</label>
 									<input type="text" name="individualScholar" ng-model="individualScholar" formcheck-directive ng-keyup="clearRest('individualScholar');" id="individual-scholar" class="form-text">
 								</span>
 							</div>
@@ -77,6 +78,7 @@
 							<div class="url-selector">
 								<span>{{baseURL}}</span>
 								<span>
+									<label class="visually-hidden" for="project-lab-small-group">Project/Lab/Small Group</label>
 									<input type="text" name="projectLabSmallGroup" ng-model="projectLabSmallGroup" formcheck-directive ng-keyup="clearRest('projectLabSmallGroup');" id="project-lab-small-group" class="form-text">
 								</span>
 							</div>
@@ -105,6 +107,7 @@
 							<div class="url-selector">
 								<span>{{baseURL}}</span>
 								<span>
+									<label class="visually-hidden" for="department-school">Department School</label>
 									<input type="text" name="departmentSchool" ng-model="departmentSchool" formcheck-directive ng-keyup="clearRest('departmentSchool');" id="department-school" class="form-text">
 								</span>
 							</div>
@@ -121,7 +124,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 				</div>
 <div class="help-link">
 						<a href="https://docs.openscholar.harvard.edu/kinds-of-sites" target="_blank">Learn more about site types </a>
@@ -143,33 +146,29 @@
 						</div>
 					</div>
 				</div>
-				<div id="body-container-group-3" ng-show="canCreateUser">
-					<div class="user-creation-popup" ng-show="userCreationOptional" ng-click="showUserCreation = !showUserCreation">Register Account</div>
-					<div class = "popup" ng-show="showUserCreation">
+				<div id="body-container-group-3" ng-show="canCreateUser" class="panel">
+					<div class="user-creation-popup panel-heading" ng-show="userCreationOptional" ng-click="showUserCreation = !showUserCreation">Register Account</div>
+					<div class ="popup panel-body" ng-show="showUserCreation">
 						<div class = "popup">
-							<div><b>Desired user name</b></div>
-							<div><input type="text" ng-model="userName" class="form-text form-text-mini" ng-blur="checkUserName()" autocomplete="new-password"></div>
+							<div><label for="desired-user-name">Desired user name</label><input type="text" id="desired-user-name" ng-model="userName" class="form-text form-text-mini" ng-blur="checkUserName()" autocomplete="new-password"></div>
 							<div class="message error" ng-show="showUserError" ng-bind-html="userErrorMsg"></div>
 							<div>Spaces are allowed; punctuation is not allowed except for periods, hyphens, and underscores.</div>
 						</div>
 						<div class = "popup">
-							<div><b>First name</b></div>
-							<div><input type="text" ng-model="fname" class="form-text form-text-mini"></div>
+							<div><label for="firstname">First name</label><input type="text" ng-model="fname" id="firstname" class="form-text form-text-mini"></div>
 						</div>
 						<div class = "popup">
-							<div><b>Last name</b></div>
-							<div><input type="text" ng-model="lname" class="form-text form-text-mini"></div>
+							<div><label for="lastname">Last name</label><input type="text" id="lastname" ng-model="lname" class="form-text form-text-mini"></div>
 						</div>
 						<div class = "popup">
-							<div><b>Email address</b></div>
-							<span><input type="text" ng-model="email" class="form-text form-text-mini" ng-blur="checkEmail()"></span>
+							<span><label for="email-address">Email address</label><input type="text" ng-model="email" id="email-address" class="form-text form-text-mini" ng-blur="checkEmail()"></span>
 							<div class="message error" ng-show="showEmailError" ng-bind-html="emailErrorMsg"></div>
 							<div>A valid e-mail address is required. All e-mails from OpenScholar will be sent to this address.</div>
 						</div>
 						<div class = "popup">
-							<div><b>Password</b></div>
 							<div class="form-text-mini">
-								<input type="password" ng-model="password" class="form-text form-text-micro" autocomplete="new-password" ng-blur="checkPwd()">
+								<label for="password">Password</label>
+								<input type="password" id="password" ng-model="password" class="form-text form-text-micro" autocomplete="new-password" ng-blur="checkPwd()">
 								<div class="message error" ng-show="showPwdError" ng-bind-html="pwdErrorMsg"></div>
 								<div class="password-strength-text">
 									<div>Password compliance: {{strength}}</div>
@@ -178,8 +177,7 @@
 							</div>
 						</div>
 						<div class = "popup">
-							<div><b>Confirm password</b></div>
-							<div class="form-text-mini"><input type="password" ng-model="confirmPwd" class="form-text form-text-micro" autocomplete="off"><div class="password-strength-text">Password match : {{pwdMatch()}}</div>
+							<div class="form-text-mini"><label for="confirm-password">Confirm password</label><input type="password" id="confirm-password" ng-model="confirmPwd" class="form-text form-text-micro" autocomplete="off"><div class="password-strength-text">Password match : {{pwdMatch()}}</div>
 							</div>
 						</div>
 					</div>
@@ -237,7 +235,7 @@
 			<div id="body-container-page2">
 				<div id="body-container-group-page-2">
 					<div class="visibility">
-						
+
 
 							<div ng-hide="!departmentSchool" class="starter-content three">
 								<div ng-repeat="preset in presets('department')" class="form-item form-type-radio">
@@ -270,7 +268,7 @@
 										<!--<span></span></label>-->
 								<!--</div>-->
 							</div>
-							
+
 
 							<div ng-hide="!individualScholar" class="starter-content two">
 								<div ng-repeat="preset in presets('personal')" class="form-item form-type-radio">
@@ -278,6 +276,7 @@
 									<div ng-bind-html="preset.description"></div>
 									<label class="option">
 										<input type="radio" ng-model="contentOption.value" ng-value="preset.name">
+										<p class="visually-hidden" aria-hidden="true">Select</p>
 										<span></span>
 									</label>
 								</div>
@@ -297,7 +296,7 @@
 								</div>-->
 
 							</div>
-						
+
 
 							<div ng-hide="!projectLabSmallGroup" class="starter-content four">
 								<div ng-repeat="preset in presets('project')" class="form-item form-type-radio">
@@ -338,7 +337,7 @@
 								</div>-->
 							</div>
 
-					
+
 						<div class="visibility right">
 							<div class="help-link">
 								<a href="https://docs.openscholar.harvard.edu/set-up-your-site" target="_blank">Learn more about starter content options</a>
@@ -399,7 +398,7 @@
 							<h3>Mobile-friendly themes with horizontal homepage regions. <a href="http://docs.openscholar.harvard.edu/one-page-themes">How to use these themes.</a>.</h3>
 							<ul>
 							<li ng-repeat="theme in themes.single" ng-class="{even: $even, odd: $odd, selected: selected == theme.themeKey}" class="cp-themes {{theme.themeKey}}" ng-click="setTheme(theme.themeKey)">
-								<img ng-src="{{theme.screenshot}}" class="screenshot">
+								<img ng-src="{{theme.screenshot}}" class="screenshot" alt="{{theme.alt}}">
 								<div class="theme-info">
 									<span>{{theme.name}}</span>
 									<div ng-if="theme.flavorOptions.length > 0" class="cp-appearance-flavor-list">
@@ -417,7 +416,7 @@
 							<h3>Mobile-friendly themes using university color palettes.</h3>
 							<ul>
 							<li ng-repeat="theme in themes.featured" ng-class="{even: $even, odd: $odd, selected: selected == theme.themeKey}" class="cp-themes {{theme.themeKey}}" ng-click="setTheme(theme.themeKey)">
-								<img ng-src="{{theme.screenshot}}" class="screenshot">
+								<img ng-src="{{theme.screenshot}}" class="screenshot" alt="{{theme.alt}}">
 								<div class="theme-info">
 									<span>{{theme.name}}</span>
 									<div ng-if="theme.flavorOptions.length > 0" class="cp-appearance-flavor-list">
