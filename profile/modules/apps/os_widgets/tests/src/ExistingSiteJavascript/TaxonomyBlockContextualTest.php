@@ -4,6 +4,8 @@ namespace Drupal\Tests\os_widgets\ExistingSiteJavascript;
 
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
 use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
+use DateInterval;
+use DateTime;
 
 /**
  * Tests os_widgets module Taxonomy widget with contextual.
@@ -120,6 +122,66 @@ class TaxonomyBlockContextualTest extends OsExistingSiteJavascriptTestBase {
     $this->visitViaVsite('node/' . $node->id(), $this->group);
     $web_assert->pageTextContains($term_blog->label());
     $web_assert->pageTextNotContains($term_other->label());
+  }
+
+  /**
+   * Tests contextual on event pages, show only upcoming.
+   */
+  public function testTaxonomyContextualEventPageUpcoming() {
+    $web_assert = $this->assertSession();
+
+    $term1 = $this->createGroupTerm($this->group, $this->vid, []);
+    $term2 = $this->createGroupTerm($this->group, $this->vid, []);
+    // Create both upcoming and past events.
+    $new_datetime = new DateTime();
+    $date_interval = new DateInterval('P2D');
+    $new_datetime->add($date_interval);
+    $date1 = $new_datetime->format("Y-m-d\TH:i:s");
+    $new_datetime->add($date_interval);
+    $date2 = $new_datetime->format("Y-m-d\TH:i:s");
+    $eventNodeUpcoming = $this->createNode([
+      'type' => 'events',
+      'status' => 1,
+      'field_recurring_date' => [
+        'value' => $date1,
+        'end_value' => $date2,
+        'timezone' => 'America/New_York',
+        'infinite' => 0,
+      ],
+      'field_taxonomy_terms' => [
+        $term1,
+      ],
+    ]);
+    $new_datetime = new DateTime();
+    $date_interval = new DateInterval('P2D');
+    $date_interval->invert = 1;
+    $new_datetime->add($date_interval);
+    $date1 = $new_datetime->format("Y-m-d\TH:i:s");
+    $new_datetime->add($date_interval);
+    $date2 = $new_datetime->format("Y-m-d\TH:i:s");
+    $eventNodePast = $this->createNode([
+      'type' => 'events',
+      'status' => 1,
+      'field_recurring_date' => [
+        'value' => $date2,
+        'end_value' => $date1,
+        'timezone' => 'America/New_York',
+        'infinite' => 0,
+      ],
+      'field_taxonomy_terms' => [
+        $term1,
+        $term2,
+      ],
+    ]);
+    $this->group->addContent($eventNodeUpcoming, 'group_node:events');
+    $this->group->addContent($eventNodePast, 'group_node:events');
+    $this->visitViaVsite('node/' . $eventNodeUpcoming->id(), $this->group);
+
+    // Page should render only term 1 label wth count 1.
+    $web_assert->pageTextContains($term1->label() . ' (1)');
+    $web_assert->pageTextNotContains($term2->label());
+    // Widget should link term to upcoming page with argument.
+    $this->assertContains('/calendar/upcoming/' . $term1->id(), $this->getCurrentPageContent());
   }
 
   /**
