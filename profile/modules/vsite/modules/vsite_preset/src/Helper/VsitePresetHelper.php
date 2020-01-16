@@ -3,6 +3,7 @@
 namespace Drupal\vsite_preset\Helper;
 
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\cp_menu\Services\MenuHelper;
@@ -97,7 +98,7 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
       }
     }
     $access->save();
-
+    // Enable menu links for the enabled apps.
     $this->enableAppMenuLinks($group, $app_definitions, $appsToEnable);
 
   }
@@ -135,7 +136,7 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
           $node->save();
           $group->addContent($node, "group_node:$bundle");
           if ($row['Link'] == 'TRUE') {
-            $this->createContentMenuLink($row['Title'], $group->id(), $node->id());
+            $this->createContentMenuLink($row['Title'], $group->id(), $node);
           }
         }
         break;
@@ -184,7 +185,7 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
   protected function enableAppMenuLinks(GroupInterface $group, array $app_definitions, array $appsToEnable) {
     $this->menuHelper->resetVsiteMenus($group);
 
-    $menu_id = 'menu-primary-' . $group->id();
+    $menu_id = $this->menuHelper::DEFAULT_VSITE_MENU_MAPPING['main'] . $group->id();
     $storage = $this->entityTypeManager->getStorage('menu_link_content');
     sort($appsToEnable);
     foreach ($appsToEnable as $weight => $id) {
@@ -209,20 +210,21 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
    *   The menu link title.
    * @param int $gid
    *   The group/vsite id.
-   * @param int $eid
-   *   The entity id.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity for which link is to be created.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createContentMenuLink($title, $gid, $eid) {
-    // Todo Make it generic to include publications too.
-    $menu_id = 'menu-primary-' . $gid;
+  protected function createContentMenuLink($title, $gid, EntityInterface $entity) {
+    $entity_id = $entity->id();
+    $uri = $entity->getEntityTypeId() === 'bibcite_reference' ? "entity:bibcite_reference/$entity_id" : "entity:node/$entity_id";
+    $menu_id = $this->menuHelper::DEFAULT_VSITE_MENU_MAPPING['main'] . $gid;
     $storage = $this->entityTypeManager->getStorage('menu_link_content');
     $storage->create([
       'title' => $this->t('@title', ['@title' => $title]),
-      'link' => ['uri' => "entity:node/$eid"],
+      'link' => ['uri' => $uri],
       'menu_name' => $menu_id,
       'weight' => 0,
       'expanded' => TRUE,

@@ -110,7 +110,7 @@ class GroupPreset extends ConfigEntityBase implements GroupPresetInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCreationFiles(): array {
+  public function getCreationFilePaths(): array {
     foreach ($this->applicableTo as $gid => $label) {
       $fileUri[$gid] = file_scan_directory(drupal_get_path('module', 'vsite_preset') . "/presets/$gid/$this->id", '/.csv/');
     }

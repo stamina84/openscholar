@@ -26,7 +26,7 @@ interface GroupPresetInterface extends ConfigEntityInterface {
    * @return array
    *   File uris keyed by group types.
    */
-  public function getCreationFiles() : array;
+  public function getCreationFilePaths() : array;
 
   /**
    * Returns apps which are to be enabled.

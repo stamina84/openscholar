@@ -18,11 +18,12 @@ function vsite_preset_group_insert(GroupInterface $group) {
     /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
     if ($preset = GroupPreset::load($preset_id)) {
 
+      // Call helper to enable apps as per preset settings.
       /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
       $preset_helper = \Drupal::service('vsite_preset.preset_helper');
       $preset_helper->enableApps($group, $preset);
 
-      $fileArr = $preset->getCreationFiles();
+      $fileArr = $preset->getCreationFilePaths();
       // If for this group type no preset files exists then we need not proceed.
       if (!$fileArr[$group->getGroupType()->id()]) {
         return;
@@ -31,18 +32,18 @@ function vsite_preset_group_insert(GroupInterface $group) {
         $uriArr = array_keys($fileArr[$group->getGroupType()->id()]);
       }
 
-      // TODO Review and see what could be changed for better.
+      // Set batch for creating default content if source files exist.
       $batch = [
         'title' => t('Setting up your new OpenScholar site'),
         'operations' => [],
-        'finished' => '_vsite_preset_batch_finished',
+        'finished' => 'vsite_preset_batch_finished',
         'init_message' => t('Preparing for setup'),
         'progress_message' => t('Set up tasks @current of @total completed. Estimated time for completion is @estimate'),
       ];
 
       foreach ($uriArr as $uri) {
         $batch['operations'][] = [
-          '_vsite_preset_process_preset_task',
+          'vsite_preset_process_preset_task',
           [$group, $uri],
         ];
       }
@@ -65,7 +66,7 @@ function vsite_preset_group_insert(GroupInterface $group) {
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
-function _vsite_preset_process_preset_task(GroupInterface $group, $uri, &$context) {
+function vsite_preset_process_preset_task(GroupInterface $group, $uri, &$context) {
   $alias = $group->get('path')->getValue()[0]['alias'];
   $context['results']['alias'] = $alias;
   /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
@@ -76,7 +77,7 @@ function _vsite_preset_process_preset_task(GroupInterface $group, $uri, &$contex
 /**
  * Vsite creation finished callback.
  */
-function _vsite_preset_batch_finished($success, $results, $operations) {
+function vsite_preset_batch_finished($success, $results, $operations) {
   // TODO if any messages need to be displayed as per results.
   return new RedirectResponse($results['alias']);
 }
