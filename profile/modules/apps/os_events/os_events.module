@@ -25,6 +25,7 @@ use Drupal\views\ViewExecutable;
 function os_events_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
 
   $node = Drupal::routeMatch()->getParameter('node');
+  $node = is_numeric($node) ? \Drupal::entityTypeManager()->getStorage('node')->load($node) : $node;
 
   if ($node && $node->access('update') !== TRUE) {
     return;
