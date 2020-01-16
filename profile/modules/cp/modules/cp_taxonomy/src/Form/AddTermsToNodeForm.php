@@ -172,7 +172,7 @@ class AddTermsToNodeForm extends FormBase {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Next'),
+      '#value' => $this->t('Apply'),
       '#button_type' => 'primary',
     ];
     $form['actions']['cancel'] = [
@@ -215,8 +215,17 @@ class AddTermsToNodeForm extends FormBase {
           $skipped_titles[] = $entity->label();
           continue;
         }
+        /** @var \Drupal\Core\Field\FieldItemList $current_terms */
         $current_terms = $entity->get('field_taxonomy_terms');
+        $attached_terms = [];
+        foreach ($current_terms->getValue() as $value) {
+          $attached_terms[] = $value['target_id'];
+        }
         foreach ($terms as $term) {
+          // Prevent append if exists.
+          if (in_array($term->id(), $attached_terms)) {
+            continue;
+          }
           $current_terms->appendItem($term);
         }
         $entity->set('field_taxonomy_terms', $current_terms->getValue());
@@ -250,7 +259,7 @@ class AddTermsToNodeForm extends FormBase {
           ],
           [
             '#theme' => 'item_list',
-            '#items' => $skipped_titles,
+            '#items' => $applied_titles,
           ],
         ];
 
