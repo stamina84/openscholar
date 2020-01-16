@@ -73,7 +73,7 @@ class AddTermsNodeAction extends ActionBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    return $object->access('edit', $account, $return_as_object);
+    return $object->access('update', $account, $return_as_object);
   }
 
   /**
