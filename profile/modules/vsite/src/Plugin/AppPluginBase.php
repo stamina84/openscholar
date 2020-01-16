@@ -5,10 +5,12 @@ namespace Drupal\vsite\Plugin;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\cp_import\Helper\CpImportHelper;
+use Drupal\file\Entity\File;
 use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\vsite\AppInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,6 +38,13 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
   protected $cpImportHelper;
 
   /**
+   * Messenger service.
+   *
+   * @var \Drupal\Core\Messenger\Messenger
+   */
+  protected $messenger;
+
+  /**
    * AppPluginBase constructor.
    *
    * @param array $configuration
@@ -48,11 +57,14 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
    *   MigrationPlugin manager.
    * @param \Drupal\cp_import\Helper\CpImportHelper $cpImportHelper
    *   Cp Import helper instance.
+   * @param \Drupal\Core\Messenger\Messenger $messenger
+   *   Messenger instance.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migrationManager = $migrationPluginManager;
     $this->cpImportHelper = $cpImportHelper;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -64,7 +76,8 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
       $plugin_id,
       $plugin_definition,
       $container->get('plugin.manager.migration'),
-      $container->get('cp_import.helper')
+      $container->get('cp_import.helper'),
+      $container->get('messenger')
     );
   }
 
@@ -137,8 +150,8 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
 
     $form['import_file'] = [
       '#type' => 'managed_file',
-      '#title' => $this->t('Upload a file'),
-      '#description' => $this->t('Note: Import files with more than 100 rows are not permitted. Try creating multiple import files in 100 row increments.'),
+      '#title' => $this->t('Import File'),
+      '#description' => $this->t('Note: Import files with more than @rowLimit rows are not permitted. Try creating multiple import files in 100 row increments.', ['@rowLimit' => CpImportHelper::CSV_ROW_LIMIT]),
       '#upload_location' => 'public://importcsv/',
       '#upload_validators' => [
         'file_validate_extensions' => ['csv'],
@@ -201,15 +214,42 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
    * @param \Drupal\Core\Form\FormStateInterface $formState
    *   The Form State.
    *
-   * @return bool
-   *   If child apps need to execute own validations or not.
+   * @return array|bool
+   *   Data array or false if any errors are encountered.
    */
   public function validateImportSource(array $form, FormStateInterface $formState) {
     $triggerElement = $formState->getTriggeringElement();
     if ($triggerElement['#name'] === 'import_file_remove_button' || $triggerElement['#name'] === 'import_file_upload_button') {
       return FALSE;
     }
-    return TRUE;
+
+    $fileId = $formState->getValue('import_file');
+    $fileId = array_shift($fileId);
+
+    $encoding = $formState->getValue('encoding');
+
+    /** @var \Drupal\file\Entity\File|NULL $file */
+    $file = $fileId ? File::load($fileId) : NULL;
+
+    if (!$file) {
+      $formState->setError($form['import_file'], $this->t('File not found'));
+      return FALSE;
+    }
+
+    $data = $this->cpImportHelper->csvToArray($file->getFileUri(), $encoding);
+
+    if (!$data) {
+      $formState->setError($form['import_file'], $this->t('Data could not be read from the csv , The structure of your CSV file probably needs to be updated. Please download the template again.'));
+      return FALSE;
+    }
+
+    if ($data === CpImportHelper::OVER_LIMIT) {
+      $formState->setError($form['import_file']);
+      $this->messenger->addError($this->t('Exceeded @rowLimit Row limit. Please split the file so that each file has a maximum of @rowLimit rows only and run import for each file one by one.', ['@rowLimit' => CpImportHelper::CSV_ROW_LIMIT]));
+      return FALSE;
+    }
+    // If no errors return data array to child apps custom validation.
+    return $data;
   }
 
 }

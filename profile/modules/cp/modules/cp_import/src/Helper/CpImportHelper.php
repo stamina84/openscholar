@@ -12,7 +12,6 @@ use Drupal\Core\Session\AccountProxy;
 use Drupal\media\Entity\Media;
 use Drupal\os_media\MediaEntityHelper;
 use Drupal\pathauto\PathautoGenerator;
-use Drupal\vsite\Path\VsiteAliasStorage;
 use Drupal\vsite\Plugin\VsiteContextManager;
 use League\Csv\Reader;
 use League\Csv\Writer;
@@ -23,6 +22,16 @@ use League\Csv\Writer;
  * @package Drupal\cp_import\Helper
  */
 class CpImportHelper implements CpImportHelperInterface {
+
+  /**
+   * Csv row limit.
+   */
+  const CSV_ROW_LIMIT = 100;
+
+  /**
+   * Csv row limit string.
+   */
+  const OVER_LIMIT = 'rows_over_allowed_limit';
 
   /**
    * Vsite Manager service.
@@ -160,16 +169,6 @@ class CpImportHelper implements CpImportHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkContentPath($alias, $type): bool {
-    if ($this->vsiteAliasStorage->aliasExists("/$type/$alias", $this->languageManager->getDefaultLanguage()->getId())) {
-      return TRUE;
-    }
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function handleContentPath(string $entityType, int $id): void {
     $entity = $this->entityTypeManager->getStorage($entityType)->load($id);
     $this->pathAutoGenerator->updateEntityAlias($entity, 'update', ['force' => TRUE]);
@@ -209,6 +208,9 @@ class CpImportHelper implements CpImportHelperInterface {
     // If no data rows then we do not need to proceed but throw error.
     if (!$data) {
       return [];
+    }
+    if (count($data) > self::CSV_ROW_LIMIT) {
+      return self::OVER_LIMIT;
     }
 
     // Put values encoded to utf-8 in the csv source file so that it can be

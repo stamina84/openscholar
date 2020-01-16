@@ -65,11 +65,16 @@ class AppImport extends Base {
    */
   public function prepareRowActions(MigratePrepareRowEvent $event) {
     $source = $event->getRow()->getSource();
-    if ($createdDate = $source['Created date']) {
+    $createdDate = $source['Created date'];
+    if ($createdDate) {
       $date = DateTime::createFromFormat('Y-m-d', $createdDate);
       if ($date->format('Y-n-j') == $createdDate) {
         $event->getRow()->setSourceProperty('Created date', $date->format('Y-m-d'));
       }
+    }
+    else {
+      $date = new DateTime();
+      $event->getRow()->setSourceProperty('Created date', $date->format('Y-m-d'));
     }
     parent::prepareRowActions($event);
   }
@@ -118,6 +123,7 @@ class AppImport extends Base {
   public function validateRows(array $data) : array {
     $hasError = FALSE;
     $titleRows = '';
+    $bodyRows = '';
     $fileRows = '';
     $dateRows = '';
     $message = [
@@ -131,6 +137,10 @@ class AppImport extends Base {
       // Validate Title.
       if (!$row['Title']) {
         $titleRows .= $row_number . ',';
+      }
+      // Validate Body.
+      if (!$row['Body']) {
+        $bodyRows .= $row_number . ',';
       }
       // Validate File url.
       if ($url = $row['Files']) {
@@ -150,6 +160,11 @@ class AppImport extends Base {
     $titleRows = rtrim($titleRows, ',');
     if ($titleRows) {
       $message['@title'] = $this->t('Title is required for row/rows @titleRows</br>', ['@titleRows' => $titleRows]);
+      $hasError = TRUE;
+    }
+    $bodyRows = rtrim($bodyRows, ',');
+    if ($bodyRows) {
+      $message['@body'] = $this->t('Body is required for row/rows @bodyRows</br>', ['@bodyRows' => $bodyRows]);
       $hasError = TRUE;
     }
     $fileRows = rtrim($fileRows, ',');
