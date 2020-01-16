@@ -387,9 +387,11 @@ class MenuLinkAddForm extends FormBase {
   protected function stripPurl(string $value) {
     $purl = $this->vsiteManager->getActivePurl();
     // If vsite prefix is entered, strip it.
-    $parts = explode('/', $value);
-    if ($parts && in_array($purl, $parts)) {
-      return str_replace($purl, '', $value);
+    if (!UrlHelper::isValid($value, TRUE)) {
+      $parts = explode('/', $value);
+      if ($parts && in_array($purl, $parts)) {
+        return str_replace($purl, '', $value);
+      }
     }
     return $value;
   }
