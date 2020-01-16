@@ -10,7 +10,7 @@ use Drupal\vsite_preset\Entity\GroupPreset;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Implements hook_group_create().
+ * Implements hook_group_insert() for setting up site defaults as per preset settings.
  */
 function vsite_preset_group_insert(GroupInterface $group) {
   if ($group->hasField('field_preset') && !$group->get('field_preset')->isEmpty()) {

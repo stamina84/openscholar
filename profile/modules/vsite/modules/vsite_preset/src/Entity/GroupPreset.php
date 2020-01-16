@@ -77,7 +77,7 @@ class GroupPreset extends ConfigEntityBase implements GroupPresetInterface {
   protected $description;
 
   /**
-   * Group applicable to.
+   * Group type applicable to.
    *
    * @var array
    */

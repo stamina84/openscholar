@@ -1,5 +1,5 @@
 site_creation:
-  version: 1.2
+  version: -1
   js:
     js/messages.min.js: { }
     js/osSiteCreation.module.js: { }
