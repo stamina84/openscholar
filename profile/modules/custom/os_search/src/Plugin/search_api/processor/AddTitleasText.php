@@ -33,7 +33,7 @@ class AddTitleasText extends ProcessorPluginBase {
       $definition = [
         'label' => $this->t('Custom Title (text)'),
         'description' => $this->t('Common Title for all entities.'),
-        'type' => 'string',
+        'type' => 'text',
         'is_list' => FALSE,
         'processor_id' => $this->getPluginId(),
       ];
@@ -55,7 +55,7 @@ class AddTitleasText extends ProcessorPluginBase {
     if ($custom_bundle == 'node') {
       $custom_title = $object->getTitle();
     }
-    if ($custom_bundle == 'bibcite_reference') {
+    elseif ($custom_bundle == 'bibcite_reference') {
       $custom_title = $object->get('title')->getValue()[0]['value'];
     }
 
