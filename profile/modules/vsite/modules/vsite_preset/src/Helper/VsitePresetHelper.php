@@ -12,7 +12,6 @@ use Drupal\os_app_access\AppAccessLevels;
 use Drupal\os_widgets\Entity\LayoutContext;
 use Drupal\vsite\Plugin\AppManager;
 use Drupal\vsite\Plugin\VsiteContextManager;
-use Drupal\vsite_preset\Entity\GroupPreset;
 use League\Csv\Reader;
 
 /**
@@ -84,9 +83,8 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function enableApps(GroupInterface $group, GroupPreset $preset): void {
+  public function enableApps(GroupInterface $group, $appsToEnable): void {
     $this->vsiteContextManager->activateVsite($group);
-    $appsToEnable = $preset->getEnabledApps();
     $app_definitions = $this->appManager->getDefinitions();
     $access = $this->configFactory->getEditable('os_app_access.access');
     foreach ($app_definitions as $name => $app) {
@@ -100,7 +98,6 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
     $access->save();
     // Enable menu links for the enabled apps.
     $this->enableAppMenuLinks($group, $app_definitions, $appsToEnable);
-
   }
 
   /**

@@ -3,7 +3,6 @@
 namespace Drupal\vsite_preset\Helper;
 
 use Drupal\group\Entity\GroupInterface;
-use Drupal\vsite_preset\Entity\GroupPreset;
 
 /**
  * Contract for VsitePresetHelper.
@@ -15,14 +14,10 @@ interface VsitePresetHelperInterface {
    *
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The newly created vsite.
-   * @param \Drupal\vsite_preset\Entity\GroupPreset $preset
-   *   The preset in context to work upon.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @param array $appsToEnable
+   *   Apps which are to be enabled as per preset setting.
    */
-  public function enableApps(GroupInterface $group, GroupPreset $preset): void;
+  public function enableApps(GroupInterface $group, array $appsToEnable): void;
 
   /**
    * Creates default content for a preset.

@@ -19,9 +19,10 @@ function vsite_preset_group_insert(GroupInterface $group) {
     if ($preset = GroupPreset::load($preset_id)) {
 
       // Call helper to enable apps as per preset settings.
+      $appsToEnable = $preset->getEnabledApps();
       /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
       $preset_helper = \Drupal::service('vsite_preset.preset_helper');
-      $preset_helper->enableApps($group, $preset);
+      $preset_helper->enableApps($group, $appsToEnable);
 
       $fileArr = $preset->getCreationFilePaths();
       // If for this group type no preset files exists then we need not proceed.
@@ -78,6 +79,5 @@ function vsite_preset_process_preset_task(GroupInterface $group, $uri, &$context
  * Vsite creation finished callback.
  */
 function vsite_preset_batch_finished($success, $results, $operations) {
-  // TODO if any messages need to be displayed as per results.
   return new RedirectResponse($results['alias']);
 }
