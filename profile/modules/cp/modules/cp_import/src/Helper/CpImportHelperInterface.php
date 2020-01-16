@@ -33,21 +33,6 @@ interface CpImportHelperInterface {
   public function addContentToVsite(string $id, string $plugin_id): void;
 
   /**
-   * Checks content path aliases entered in the csv and marks them for update.
-   *
-   * If needed.
-   *
-   * @param string $alias
-   *   Alias to check if it exists already or not.
-   * @param string $type
-   *   Entity type to check against a pattern.
-   *
-   * @return bool
-   *   If content needs path alias update or not based on csv input.
-   */
-  public function checkContentPath(string $alias, string $type): bool;
-
-  /**
    * Handles content path to uniquify or create aliases if needed.
    *
    * @param string $entityType
@@ -65,8 +50,8 @@ interface CpImportHelperInterface {
    * @param string $encoding
    *   Encoding of the file.
    *
-   * @return array|bool
-   *   Data as an array.
+   * @return array|string
+   *   Data as an array or error string.
    */
   public function csvToArray($filename, $encoding);
 
