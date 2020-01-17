@@ -385,7 +385,7 @@ class TaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
       $query->condition($db_or);
     }
-    if (count($bundles) == 1 && $bundles[0] != '*') {
+    if (count($bundles) >= 1 && $bundles[0] != '*') {
       $query->condition($alias . '.bundle', $bundles, 'IN');
     }
     $field_data_id = '';

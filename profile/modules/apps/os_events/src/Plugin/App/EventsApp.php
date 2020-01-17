@@ -12,15 +12,24 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *   canDisable = true,
  *   entityType = "node",
  *   bundle = {
- *     "events"
+ *     "events",
+ *   },
+ *   specialBundle = {
+ *     "upcoming_events",
  *   },
  *   viewsTabs = {
  *     "calendar" = {
  *       "page_1",
  *     },
+ *     "past_events_calendar" = {
+ *       "page",
+ *     },
+ *     "upcoming_calendar" = {
+ *       "page",
+ *     },
  *   },
  *   id = "event",
- *   contextualRoute = "view.calendar.page_1"
+ *   contextualRoute = "view.upcoming_calendar.page"
  * )
  */
 class EventsApp extends AppPluginBase {
