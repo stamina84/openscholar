@@ -226,10 +226,10 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
     $storage = $this->entityTypeManager->getStorage('menu_link_content');
     sort($appsToEnable);
     foreach ($appsToEnable as $weight => $id) {
-      if (!isset($app_definitions[$id]['contextualRoute'])) {
+      if (!isset($app_definitions[$id]['listPageRoute'])) {
         continue;
       }
-      $route_name = $app_definitions[$id]['contextualRoute'];
+      $route_name = $app_definitions[$id]['listPageRoute'];
       $storage->create([
         'title' => $app_definitions[$id]['title'],
         'link' => ['uri' => "route:$route_name"],

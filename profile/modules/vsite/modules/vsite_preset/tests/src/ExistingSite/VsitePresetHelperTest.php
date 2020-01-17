@@ -65,7 +65,7 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
     $linksArr = $storage->loadByProperties(['menu_name' => "menu-primary-$gid"]);
     $this->assertEmpty($linksArr);
 
-    $this->vsitePresetHelper->enableApps($this->group, $this->toEnable);
+    $this->vsitePresetHelper->enableApps($this->group, $this->toEnable, []);
 
     // Test positive case as helper enables apps.
     /** @var \Drupal\Core\Config\ImmutableConfig $app_access_config */
