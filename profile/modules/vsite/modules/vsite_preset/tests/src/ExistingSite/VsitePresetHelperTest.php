@@ -58,10 +58,6 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
    * Tests Preset Enable apps helper.
    */
   public function testVsitePresetEnableApps() {
-    // Test Negative when no data exists.
-    /** @var \Drupal\Core\Config\ImmutableConfig $app_access_config */
-    $app_access_config = $this->configFactory->get('os_app_access.access');
-    $this->assertEmpty($app_access_config->getRawData());
 
     // Test negative no menu links exists.
     $storage = $this->entityTypeManager->getStorage('menu_link_content');
