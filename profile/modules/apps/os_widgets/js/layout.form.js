@@ -218,4 +218,18 @@
     return vars;
   }
 
+  /**
+   * Update Filter Widget by Type field.
+   */
+  $.fn.updateWidgetType = function(block_type_label) {
+    $('#block-list .block').once().each(function() {
+      let block_type = $(this).data('block-type');
+      let exists = $('#filter-widgets-by-type option[value=' + block_type + ']').length;
+
+      if (exists == 0 && typeof block_type != 'undefined') {
+        $('#filter-widgets-by-type').append('<option value=' + block_type + '>' + block_type_label + '</option>')
+      }
+    });
+  };
+
 })(jQuery);
