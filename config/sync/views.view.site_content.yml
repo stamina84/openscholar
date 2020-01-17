@@ -241,6 +241,7 @@ display:
           selected_actions:
             - cp_node_delete_action
             - cp_taxonomy_add_terms_node_action
+            - cp_taxonomy_remove_terms_node_action
             - node_publish_action
             - node_unpublish_action
           entity_type: node

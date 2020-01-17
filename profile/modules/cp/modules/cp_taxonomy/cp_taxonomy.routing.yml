@@ -72,3 +72,13 @@ cp.taxonomy.add_terms_node_multiple_form:
     _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
+cp.taxonomy.remove_terms_node_multiple_form:
+  path: '/cp/content/remove-terms-from-node'
+  defaults:
+    _form: '\Drupal\cp_taxonomy\Form\RemoveTermsFromNodeForm'
+    entity_type_id: 'node'
+  requirements:
+    _group_permission: 'manage taxonomy'
+    _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'

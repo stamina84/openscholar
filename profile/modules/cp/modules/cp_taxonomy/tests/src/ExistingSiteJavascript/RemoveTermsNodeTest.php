@@ -5,13 +5,13 @@ namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 use Drupal\node\Entity\Node;
 
 /**
- * Tests taxonomy terms apply to nodes.
+ * Tests taxonomy terms remove from nodes.
  *
  * @group functional
  * @group cp
- * @covers \Drupal\cp_taxonomy\Form\AddTermsToNodeForm
+ * @covers \Drupal\cp_taxonomy\Form\RemoveTermsFromNodeForm
  */
-class ApplyTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
+class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
 
   protected $term;
   protected $groupAdmin;
@@ -35,26 +35,30 @@ class ApplyTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
   /**
    * Test functionality of Apply term even if vocabulary not related to blog.
    */
-  public function testAppliedAndSkippedNodes() {
+  public function testRemovedAndSkippedNodes() {
     $web_assert = $this->assertSession();
+    $faq = $this->createNode([
+      'type' => 'faq',
+      'uid' => $this->groupAdmin->id(),
+      'field_taxonomy_terms' => [
+        $this->term->id(),
+      ],
+    ]);
+    $this->group->addContent($faq, 'group_node:faq');
     $blog = $this->createNode([
       'type' => 'blog',
       'uid' => $this->groupAdmin->id(),
     ]);
     $this->group->addContent($blog, 'group_node:blog');
-    $faq = $this->createNode([
-      'type' => 'faq',
-      'uid' => $this->groupAdmin->id(),
-    ]);
-    $this->group->addContent($faq, 'group_node:faq');
     $this->visitViaVsite('cp/content/browse/node', $this->group);
     $web_assert->statusCodeEquals(200);
     $page = $this->getCurrentPage();
     $page->findField('node_bulk_form[0]')->check();
     $page->findField('node_bulk_form[1]')->check();
-    $this->applyTermWithAction();
-    $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' could not be applied on the content');
-    $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was applied on the content');
+    $this->removeTermWithAction();
+    file_put_contents('testRemovedAndSkippedNodes.png', $this->getSession()->getScreenshot());
+    $web_assert->pageTextContains('No term was removed from the content');
+    $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was removed from the content');
     $warning_wrapper = $page->find('css', '.messages--warning');
     $this->assertContains($blog->label(), $warning_wrapper->getHtml());
     $this->assertNotContains($faq->label(), $warning_wrapper->getHtml());
@@ -64,20 +68,17 @@ class ApplyTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
 
     $saved_faq = Node::load($faq->id());
     $term_value = $saved_faq->get('field_taxonomy_terms')->getString();
-    $this->assertEqual($this->term->id(), $term_value);
-    $saved_blog = Node::load($blog->id());
-    $term_value = $saved_blog->get('field_taxonomy_terms')->getString();
-    $this->assertNotContains($this->term->id(), $term_value);
+    $this->assertEmpty($term_value);
   }
 
   /**
-   * Helper function, that will select a term and add to selected nodes.
+   * Helper function, that will select a term and remove from selected nodes.
    */
-  protected function applyTermWithAction() {
+  protected function removeTermWithAction() {
     $web_assert = $this->assertSession();
     $page = $this->getCurrentPage();
     $select = $page->findField('action');
-    $select->setValue('cp_taxonomy_add_terms_node_action');
+    $select->setValue('cp_taxonomy_remove_terms_node_action');
     $page->pressButton('Apply to selected items');
     $web_assert->statusCodeEquals(200);
     $page = $this->getCurrentPage();
@@ -91,7 +92,7 @@ class ApplyTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $web_assert->pageTextContains($this->term->label());
     $page->find('css', '.active-result.highlighted')->click();
     $page->find('css', '.chosen-search-input')->click();
-    $page->pressButton('Apply');
+    $page->pressButton('Remove');
     $web_assert->statusCodeEquals(200);
   }
 
