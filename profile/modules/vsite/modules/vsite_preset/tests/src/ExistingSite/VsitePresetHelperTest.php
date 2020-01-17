@@ -40,6 +40,7 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
   public function setUp() {
     parent::setUp();
     $this->vsitePresetHelper = $this->container->get('vsite_preset.preset_helper');
+    $this->group = $this->createGroup();
     $this->vsiteContextManager->activateVsite($this->group);
     $this->toEnable = [
       'class' => 'class',
@@ -113,7 +114,7 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
     ]);
     $this->assertEmpty($menuArr);
 
-    // Retrieve file creation csv source paths.
+    // Retrieve file creation csv source path.
     foreach ($this->uriArr as $uri) {
       if (strpos($uri, 'node') === FALSE) {
         continue;
@@ -154,7 +155,7 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
     ]);
     $this->assertEmpty($blockArr);
 
-    // Retrieve file creation csv source paths.
+    // Retrieve file creation csv source path.
     foreach ($this->uriArr as $uri) {
       if (strpos($uri, 'block_content') === FALSE) {
         continue;

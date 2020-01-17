@@ -5,3 +5,4 @@ core: 8.x
 dependencies:
   - "drupal:vsite"
   - "drupal:os_app_access"
+  - "drupal:cp_menu"
