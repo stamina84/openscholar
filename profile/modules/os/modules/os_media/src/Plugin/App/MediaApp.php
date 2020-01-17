@@ -11,7 +11,8 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *   title = @Translation("Media"),
  *   canDisable = true,
  *   entityType = "media",
- *   id = "media"
+ *   id = "media",
+ *   listPageRoute = "view.os_media.page_1"
  * )
  */
 class MediaApp extends AppPluginBase {
