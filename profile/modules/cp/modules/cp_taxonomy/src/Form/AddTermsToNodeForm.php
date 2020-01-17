@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Delete multiple entities form.
+ * Add terms to node entities form.
  */
 class AddTermsToNodeForm extends FormBase {
 
