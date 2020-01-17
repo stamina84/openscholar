@@ -5,12 +5,16 @@
  * Hook implementations for the vsite_preset module.
  */
 
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\vsite_preset\Entity\GroupPreset;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Implements hook_group_insert() for setting up site defaults as per preset settings.
+ * Implements hook_group_insert() for all the tasks which are needed for setting up a new vsite.
  */
 function vsite_preset_group_insert(GroupInterface $group) {
   if ($group->hasField('field_preset') && !$group->get('field_preset')->isEmpty()) {
@@ -18,11 +22,13 @@ function vsite_preset_group_insert(GroupInterface $group) {
     /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
     if ($preset = GroupPreset::load($preset_id)) {
 
-      // Call helper to enable apps as per preset settings.
+      // Gets apps list.
       $appsToEnable = $preset->getEnabledApps();
+      $appsToSetPrivate = $preset->getPrivateApps();
+      // Call helper to enable apps as per preset settings.
       /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
       $preset_helper = \Drupal::service('vsite_preset.preset_helper');
-      $preset_helper->enableApps($group, $appsToEnable);
+      $preset_helper->enableApps($group, $appsToEnable, $appsToSetPrivate, $appsToSetPrivate);
 
       $fileArr = $preset->getCreationFilePaths();
       // If for this group type no preset files exists then we need not proceed.
@@ -80,4 +86,19 @@ function vsite_preset_process_preset_task(GroupInterface $group, $uri, &$context
  */
 function vsite_preset_batch_finished($success, $results, $operations) {
   return new RedirectResponse($results['alias']);
+}
+
+/**
+ * Implements hook_entity_field_access() for the user to allow access for creating path aliases for a group.
+ */
+function vsite_preset_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getType() === 'path' &&  $field_definition->getTargetEntityTypeId() === 'group' && $operation === 'edit') {
+    // Get the group type from request to check permission for.
+    $payload = \Drupal::request()->getContent();
+    $type = json_decode($payload, TRUE)['type'];
+    if ($account->hasPermission("create $type group")) {
+      return AccessResult::allowed();
+    }
+  }
+  return AccessResult::neutral();
 }

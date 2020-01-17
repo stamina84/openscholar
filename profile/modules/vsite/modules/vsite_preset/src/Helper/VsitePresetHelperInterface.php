@@ -16,8 +16,10 @@ interface VsitePresetHelperInterface {
    *   The newly created vsite.
    * @param array $appsToEnable
    *   Apps which are to be enabled as per preset setting.
+   * @param array $appsToSetPrivate
+   *   Apps which are to be marked as private.
    */
-  public function enableApps(GroupInterface $group, array $appsToEnable): void;
+  public function enableApps(GroupInterface $group, array $appsToEnable, array $appsToSetPrivate): void;
 
   /**
    * Creates default content for a preset.

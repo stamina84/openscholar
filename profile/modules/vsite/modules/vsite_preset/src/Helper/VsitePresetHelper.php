@@ -83,13 +83,16 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function enableApps(GroupInterface $group, $appsToEnable): void {
+  public function enableApps(GroupInterface $group, $appsToEnable, $appsToSetPrivate): void {
     $this->vsiteContextManager->activateVsite($group);
     $app_definitions = $this->appManager->getDefinitions();
     $access = $this->configFactory->getEditable('os_app_access.access');
     foreach ($app_definitions as $name => $app) {
       if (in_array($name, $appsToEnable)) {
         $access->set($name, AppAccessLevels::PUBLIC);
+      }
+      elseif (in_array($name, $appsToSetPrivate)) {
+        $access->set($name, AppAccessLevels::PRIVATE);
       }
       else {
         $access->set($name, AppAccessLevels::DISABLED);
@@ -124,44 +127,81 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
 
     switch ($entityType) {
       case 'node':
-        $storage = $this->entityTypeManager->getStorage($entityType);
-        foreach ($data as $row) {
-          $node = $storage->create([
-            'type' => $bundle,
-            'title' => $row['Title'],
-          ]);
-          $node->save();
-          $group->addContent($node, "group_node:$bundle");
-          if ($row['Link'] == 'TRUE') {
-            $this->createContentMenuLink($row['Title'], $group->id(), $node);
-          }
-        }
+        $this->createNode($data, $bundle, $group);
         break;
 
       case 'block_content':
-        $storage = $this->entityTypeManager->getStorage($entityType);
-        foreach ($data as $row) {
-          $block = $storage->create([
-            'type' => $bundle,
-            'info' => $row['Info'],
-            'field_widget_title' => $row['Title'],
-            'body' => $row['Body'],
-          ]);
-          $block->save();
-          $group->addContent($block, "group_entity:$entityType");
+        $this->createWidget($data, $bundle, $group);
+        break;
+    }
+  }
 
-          /** @var \Drupal\os_widgets\Entity\LayoutContext $context */
-          $context = LayoutContext::load('all_pages');
-          $data = $context->getBlockPlacements();
-          $block_uuid = $block->uuid();
-          $data[] = [
-            'id' => "$entityType|$block_uuid",
-            'region' => 'sidebar_second',
-            'weight' => 0,
-          ];
-          $context->setBlockPlacements($data);
-          $context->save();
-        }
+  /**
+   * Creates default Node content for the group.
+   *
+   * @param array $data
+   *   Csv rows as data array.
+   * @param string $bundle
+   *   Type of node to create.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   Group for which data is created.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function createNode(array $data, $bundle, GroupInterface $group) {
+    $storage = $this->entityTypeManager->getStorage('node');
+    foreach ($data as $row) {
+      $node = $storage->create([
+        'type' => $bundle,
+        'title' => $row['Title'],
+      ]);
+      $node->save();
+      $group->addContent($node, "group_node:$bundle");
+      if ($row['Link'] == 'TRUE') {
+        $this->createContentMenuLink($row['Title'], $group->id(), $node);
+      }
+    }
+  }
+
+  /**
+   * Creates default Node content for the group.
+   *
+   * @param array $data
+   *   Csv rows as data array.
+   * @param string $bundle
+   *   Type of node to create.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   Group for which data is created.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function createWidget(array $data, $bundle, GroupInterface $group) {
+    $storage = $this->entityTypeManager->getStorage('block_content');
+    foreach ($data as $row) {
+      $block = $storage->create([
+        'type' => $bundle,
+        'info' => $row['Info'],
+        'field_widget_title' => $row['Title'],
+        'body' => $row['Body'],
+      ]);
+      $block->save();
+      $group->addContent($block, "group_entity:block_content");
+
+      /** @var \Drupal\os_widgets\Entity\LayoutContext $context */
+      $context = LayoutContext::load($row['Context']);
+      $data = $context->getBlockPlacements();
+      $block_uuid = $block->uuid();
+      $data[] = [
+        'id' => "block_content|$block_uuid",
+        'region' => $row['Region'],
+        'weight' => 0,
+      ];
+      $context->setBlockPlacements($data);
+      $context->save();
     }
   }
 
