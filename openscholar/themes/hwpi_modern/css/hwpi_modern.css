@@ -529,3 +529,7 @@ a.rslides_nav {
 .block-boxes-os_boxes_manual_list .node-teaser .field-name-body h2 {
     font-size: 1.3em !important;
 }
+
+#content-column .block {
+    border-top: 6px solid #E1E1E1;
+}
