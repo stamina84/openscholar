@@ -56,7 +56,6 @@ class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page->findField('node_bulk_form[0]')->check();
     $page->findField('node_bulk_form[1]')->check();
     $this->removeTermWithAction();
-    file_put_contents('testRemovedAndSkippedNodes.png', $this->getSession()->getScreenshot());
     $web_assert->pageTextContains('No term was removed from the content');
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was removed from the content');
     $warning_wrapper = $page->find('css', '.messages--warning');
