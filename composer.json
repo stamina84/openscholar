@@ -404,7 +404,8 @@
                 "New group content created when node edited": "https://www.drupal.org/files/issues/2019-06-04/3059300-3.patch",
                 "Prevent resaving of deleted entities": "https://raw.githubusercontent.com/openscholar/openscholar/ae879229e866cbc96d91d2b2a8273292fa26fd34/patches/group.fix_saving_deleted_entity.patch",
                 "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-10-17/group-support_string_entity_ids-2797793-171.patch",
-                "Group creator must complete their membership Wizard duplicates membership": "https://www.drupal.org/files/issues/2019-07-09/group_membership_duplication-3016197-10.patch"
+                "Group creator must complete their membership Wizard duplicates membership": "https://www.drupal.org/files/issues/2019-07-09/group_membership_duplication-3016197-10.patch",
+                "Bypass group module forced redirection for term creation": "patches/12812-term-redirection.patch"
             },
             "drupal/shorten": {
                 "Update is.gd service api url": "https://www.drupal.org/files/issues/2019-07-03/update-isgd-api-3065567-2.patch"
