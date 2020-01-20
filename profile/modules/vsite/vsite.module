@@ -147,6 +147,11 @@ function vsite_form_alter(&$form, FormStateInterface $formState, $form_id) {
           // If we are using the wizard, we need to substitute the entity save
           // handler in order to add the entity to the private temp store.
           $form['actions'][$name]['#submit'][] = 'group_content_entity_submit';
+
+          // Set current form as redirect for term creation.
+          if ($entityTypeId == 'taxonomy_term' && $entity->isNew()) {
+            $form['actions'][$name]['#submit'][] = 'term_create_redirect_submit';
+          }
         }
       }
       if (!empty($form['path']['widget'][0]['alias'])) {
@@ -184,6 +189,13 @@ function vsite_form_alter(&$form, FormStateInterface $formState, $form_id) {
       }
     }
   }
+}
+
+/**
+ * Set redirect to current page for term creation.
+ */
+function term_create_redirect_submit(&$form, FormStateInterface $form_state) {
+  $form_state->setRedirect('<current>');
 }
 
 /**
