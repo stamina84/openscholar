@@ -1169,7 +1169,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Upload Date'
+          label: 'Updated Date'
           exclude: false
           alter:
             alter_text: false
@@ -1691,7 +1691,7 @@ display:
       pager:
         type: full
         options:
-          items_per_page: 24
+          items_per_page: 15
           offset: 0
           id: 0
           total_pages: null
