@@ -4,6 +4,7 @@ namespace Drupal\cp_taxonomy\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\cp_taxonomy\Plugin\Action\AddTermsNodeAction;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -22,7 +23,7 @@ class AddTermsToNodeForm extends ManageTermsNodeFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
-    $this->tempStore = $this->tempStoreFactory->get('cp_taxonomy_add_terms_node');
+    $this->tempStore = $this->tempStoreFactory->get(AddTermsNodeAction::TEMPSTORE_KEY);
     $form['#title'] = $this->t('Apply Terms to Content');
     $this->entityTypeId = $entity_type_id;
     $this->entityInfo = $this->tempStore->get($this->currentUser->id());

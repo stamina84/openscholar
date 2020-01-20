@@ -20,6 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class RemoveTermsNodeAction extends ActionBase implements ContainerFactoryPluginInterface {
 
+  const TEMPSTORE_KEY = 'cp_taxonomy_remove_terms_node';
+
   /**
    * The tempstore object.
    *
@@ -51,7 +53,7 @@ class RemoveTermsNodeAction extends ActionBase implements ContainerFactoryPlugin
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PrivateTempStoreFactory $temp_store_factory, AccountInterface $current_user) {
     $this->currentUser = $current_user;
 
-    $this->tempStore = $temp_store_factory->get('cp_taxonomy_remove_terms_node');
+    $this->tempStore = $temp_store_factory->get(self::TEMPSTORE_KEY);
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
