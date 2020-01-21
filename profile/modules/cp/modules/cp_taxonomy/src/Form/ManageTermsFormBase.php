@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Manage terms node entities base form.
+ * Manage terms entities base form.
  */
 abstract class ManageTermsFormBase extends FormBase {
 
@@ -197,9 +197,16 @@ abstract class ManageTermsFormBase extends FormBase {
   }
 
   /**
-   * Apply terms to entity submit.
+   * Apply terms to entities submit.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function applyTermsSubmit($form_state) {
+  public function applyTermsSubmit(FormStateInterface $form_state) {
     $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
     $selected_vocabulary = $form_state->getValue('vocabulary');
@@ -240,7 +247,7 @@ abstract class ManageTermsFormBase extends FormBase {
     $params = [
       '%terms' => implode(", ", $term_names),
     ];
-    // Notify the user on the skipped nodes (nodes whose bundle is not
+    // Notify the user on the skipped entities (entities whose bundle is not
     // associated with the selected vocabulary).
     if (!empty($skipped_titles)) {
       $message = [
@@ -255,7 +262,7 @@ abstract class ManageTermsFormBase extends FormBase {
       $this->messenger()->addWarning($this->renderer->renderPlain($message));
     }
 
-    // Notify the user on the applied nodes.
+    // Notify the user on the applied entities.
     if (!empty($applied_titles)) {
       $message = [
         [
