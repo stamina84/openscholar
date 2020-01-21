@@ -377,14 +377,16 @@ trait ExistingSiteTestTrait {
    *   Region id.
    * @param string $context
    *   Layout context.
+   * @param int $weight
+   *   Weight of the block to used while placing it.
    */
-  protected function placeBlockContentToRegion(BlockContentInterface $block_content, string $region, string $context = 'all_pages') {
+  protected function placeBlockContentToRegion(BlockContentInterface $block_content, string $region, string $context = 'all_pages', int $weight = 0): void {
     $layout_config = $this->container->get('config.factory')->getEditable('os_widgets.layout_context.' . $context);
     $data = $layout_config->get('data');
     $data[] = [
       'id' => 'block_content|' . $block_content->uuid(),
       'region' => $region,
-      'weight' => '0',
+      'weight' => $weight,
     ];
     $layout_config->set('data', $data);
     $layout_config->save();
