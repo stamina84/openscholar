@@ -279,6 +279,82 @@ abstract class ManageTermsFormBase extends FormBase {
   }
 
   /**
+   * Remove terms from entities submit.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function removeTermsSubmit(FormStateInterface $form_state) {
+    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    $terms_to_remove = $form_state->getValue('terms');
+    $terms = $term_storage->loadMultiple($terms_to_remove);
+    $term_names = [];
+    foreach ($terms as $term) {
+      $term_names[] = $term->label();
+    }
+    $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
+    $entities = $storage->loadMultiple(array_keys($this->entityInfo));
+    $skipped_titles = [];
+    $applied_titles = [];
+    foreach ($entities as $entity) {
+      /** @var \Drupal\Core\Field\FieldItemList $current_terms */
+      $current_terms = $entity->get('field_taxonomy_terms');
+      $is_modified = FALSE;
+      foreach ($current_terms->getValue() as $index => $value) {
+        if (in_array($value['target_id'], $terms_to_remove)) {
+          $current_terms->removeItem($index);
+          $is_modified = TRUE;
+        }
+      }
+
+      if (!$is_modified) {
+        $skipped_titles[] = $entity->label();
+        continue;
+      }
+      $entity->set('field_taxonomy_terms', $current_terms->getValue());
+      $entity->save();
+      $applied_titles[] = $entity->label();
+    }
+
+    $params = [
+      '%terms' => implode(", ", $term_names),
+    ];
+    // Notify the user on the skipped medias (medias whose bundle is not
+    // associated with the selected vocabulary).
+    if (!empty($skipped_titles)) {
+      $message = [
+        [
+          '#markup' => $this->formatPlural(count($terms_to_remove), 'No term was removed from the content:', 'No terms were removed from the content:', $params),
+        ],
+        [
+          '#theme' => 'item_list',
+          '#items' => $skipped_titles,
+        ],
+      ];
+      $this->messenger()->addWarning($this->renderer->renderPlain($message));
+    }
+
+    // Notify the user on the applied medias.
+    if (!empty($applied_titles)) {
+      $message = [
+        [
+          '#markup' => $this->formatPlural(count($terms_to_remove), 'Taxonomy term %terms was removed from the content:', '@count taxonomy terms %terms were removed from the content:', $params),
+        ],
+        [
+          '#theme' => 'item_list',
+          '#items' => $applied_titles,
+        ],
+      ];
+
+      $this->messenger()->addStatus($this->renderer->renderPlain($message));
+    }
+  }
+
+  /**
    * Ajax callback for handling vocabulary depends terms selection.
    */
   public function getTermsAjaxCallback(array &$form, FormStateInterface $form_state) {

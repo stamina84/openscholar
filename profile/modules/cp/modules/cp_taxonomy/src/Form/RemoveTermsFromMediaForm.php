@@ -3,25 +3,25 @@
 namespace Drupal\cp_taxonomy\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\cp_taxonomy\Plugin\Action\RemoveTermsNodeAction;
+use Drupal\cp_taxonomy\Plugin\Action\RemoveTermsMediaAction;
 
 /**
- * Remove terms from node entities form.
+ * Remove terms from media entities form.
  */
-class RemoveTermsFromNodeForm extends ManageTermsFormBase {
+class RemoveTermsFromMediaForm extends ManageTermsFormBase {
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'remove_terms_to_node_form';
+    return 'remove_terms_to_media_form';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
-    $this->tempStore = $this->tempStoreFactory->get(RemoveTermsNodeAction::TEMPSTORE_KEY);
+    $this->tempStore = $this->tempStoreFactory->get(RemoveTermsMediaAction::TEMPSTORE_KEY);
     $form['#title'] = $this->t('Remove Terms from Content');
     $form = parent::buildForm($form, $form_state, $entity_type_id);
     $form['entities']['#title'] = $this->t('The selected terms above will be removed from the following content:');

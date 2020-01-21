@@ -1,0 +1,11 @@
+uuid: 758bf057-46ef-457d-b906-d71beb269c5c
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: cp_taxonomy_remove_terms_media_action
+label: 'Remove Taxonomy term'
+type: media
+plugin: cp_taxonomy_remove_terms_media_action
+configuration: {  }
