@@ -9,17 +9,17 @@
    */
   #}
 <div class="os-filter-taxonomy">
-  <h2 class="feed-title">{{ header }}</h2>
-  <div class="item-list">
-    <ul class="feed-items">
+  <h2 class="feed-title block-title">{{ header }}</h2>
+  <div class="feed-items">
       {% for vocabulary,terms in items %}
-      <h2 class="feed-title">{{ vocabulary }}</h2>
+      <div class="item-list">
+        <h3 class="feed-title">{{ vocabulary }}</h3>
         <ul>
           {% for url in terms %}
             <li>{{url}}</li>
           {% endfor %}
         </ul>
+      </div>
       {% endfor %}
-    </ul>
   </div>
 </div>
