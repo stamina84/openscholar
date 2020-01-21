@@ -1,0 +1,60 @@
+uuid: daa1b5d7-ea76-49b3-8484-b9c42049427d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.facet
+    - field.field.block_content.facet.field_facet_id
+    - field.field.block_content.facet.field_facet_limit
+    - field.field.block_content.facet.field_widget_title
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.facet.default
+targetEntityType: block_content
+bundle: facet
+mode: default
+content:
+  field_facet_id:
+    weight: 27
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_facet_limit:
+    weight: 28
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_widget_title:
+    weight: 29
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }
