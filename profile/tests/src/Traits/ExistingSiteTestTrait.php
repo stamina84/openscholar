@@ -10,6 +10,7 @@ use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -17,6 +18,7 @@ use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\UserInterface;
 use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
 
@@ -26,6 +28,9 @@ use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
 trait ExistingSiteTestTrait {
 
   use UserCreationTrait;
+  use TestFileCreationTrait {
+    getTestFiles as coreGetTestFiles;
+  }
 
   /**
    * Configurations to clean up.
@@ -33,6 +38,13 @@ trait ExistingSiteTestTrait {
    * @var \Drupal\Core\Config\Entity\ConfigEntityInterface[]
    */
   protected $cleanUpConfigs = [];
+
+  /**
+   * Whether the files were copied to the test files directory.
+   *
+   * @var bool
+   */
+  protected $generatedOsTestFiles = FALSE;
 
   /**
    * Creates a group.
@@ -165,6 +177,8 @@ trait ExistingSiteTestTrait {
    *   (optional) The values used to create the entity.
    * @param string $type
    *   (optional) The file type to attach to the entity.
+   *   File type, possible values: 'binary', 'html', 'image', 'javascript',
+   *   'php', 'sql', 'text', 'pdf', 'tar'.
    *
    * @return \Drupal\media\MediaInterface
    *   The new media entity.
@@ -235,6 +249,8 @@ trait ExistingSiteTestTrait {
    *
    * @param string $type
    *   (optional) The file type.
+   *   File type, possible values: 'binary', 'html', 'image', 'javascript',
+   *   'php', 'sql', 'text', 'pdf', 'tar'.
    * @param int $index
    *   The index of the test files which is going to be used to create the file.
    *
@@ -244,14 +260,77 @@ trait ExistingSiteTestTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function createFile($type = 'text', $index = 0): FileInterface {
-    /** @var array $test_files */
-    $test_files = $this->getTestFiles($type);
+    /** @var array $core_test_files */
+    $core_test_files = $this->coreGetTestFiles($type);
+    /** @var array $os_test_files */
+    $os_test_files = $this->getTestFiles($type);
+
+    $test_files = array_merge($os_test_files, $core_test_files);
+
     $file = File::create((array) $test_files[$index]);
     $file->save();
 
     $this->markEntityForCleanup($file);
 
     return $file;
+  }
+
+  /**
+   * Gets a list of files that can be used in tests.
+   *
+   * It will copy all files in modules/os_test/files to public://.
+   * These contain pdf and tar files.
+   *
+   * All filenames are prefixed with their type and have appropriate extensions:
+   * - pdf-*.pdf
+   * - tar-*.tar
+   *
+   * Any subsequent calls will not generate any new files, or copy the files
+   * over again. However, if a test class adds a new file to public:// that
+   * is prefixed with one of the above types, it will get returned as well, even
+   * on subsequent calls.
+   *
+   * @param string $type
+   *   File type, possible values: 'pdf', 'tar'.
+   * @param int $size
+   *   (optional) File size in bytes to match. Defaults to NULL, which will not
+   *   filter the returned list by size.
+   *
+   * @return array[]
+   *   List of files in public:// that match the filter(s).
+   */
+  protected function getTestFiles($type, $size = NULL): array {
+    if (!$this->generatedOsTestFiles) {
+      /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+      $file_system = $this->container->get('file_system');
+      $original = drupal_get_path('module', 'os_test') . '/files';
+
+      $scanned_files = file_scan_directory($original, '/(pdf|tar)-.*/');
+      foreach ($scanned_files as $file) {
+        $file_system->copy($file->uri, PublicStream::basePath());
+      }
+
+      $this->generatedOsTestFiles = TRUE;
+    }
+
+    $files = [];
+    // Make sure type is valid.
+    if (\in_array($type, ['pdf', 'tar'])) {
+      $files = file_scan_directory('public://', '/' . $type . '\-.*/');
+
+      // If size is set then remove any files that are not of that size.
+      if ($size !== NULL) {
+        foreach ($files as $file) {
+          $stats = stat($file->uri);
+          if ($stats['size'] != $size) {
+            unset($files[$file->uri]);
+          }
+        }
+      }
+    }
+    usort($files, [$this, 'compareFiles']);
+
+    return $files;
   }
 
   /**

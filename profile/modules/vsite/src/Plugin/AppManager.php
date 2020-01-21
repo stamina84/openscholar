@@ -146,11 +146,19 @@ class AppManager extends DefaultPluginManager implements AppManagerInterface {
     }
     foreach ($active_apps as $app) {
       $plugin_definition = $this->getDefinition($app);
-      if (empty($plugin_definition['bundle'])) {
+      $bundle_list = [];
+      if (!empty($plugin_definition['bundle'])) {
+        $bundle_list = $plugin_definition['bundle'];
+      }
+      if (!empty($plugin_definition['specialBundle'])) {
+        $bundle_list = array_merge($bundle_list, $plugin_definition['specialBundle']);
+      }
+
+      if (empty($bundle_list)) {
         $bundles[] = $plugin_definition['entityType'] . ':*';
         continue;
       }
-      foreach ($plugin_definition['bundle'] as $bundle) {
+      foreach ($bundle_list as $bundle) {
         $bundles[] = $plugin_definition['entityType'] . ':' . $bundle;
       }
     }

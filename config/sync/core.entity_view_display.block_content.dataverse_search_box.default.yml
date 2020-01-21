@@ -7,11 +7,6 @@ dependencies:
     - field.field.block_content.dataverse_search_box.field_dataverse_identifier
     - field.field.block_content.dataverse_search_box.field_search_placeholder_text
     - field.field.block_content.dataverse_search_box.field_widget_title
-  module:
-    - layout_builder
-third_party_settings:
-  layout_builder:
-    sections: {  }
 id: block_content.dataverse_search_box.default
 targetEntityType: block_content
 bundle: dataverse_search_box
@@ -19,7 +14,7 @@ mode: default
 content:
   field_widget_title:
     weight: 0
-    label: above
+    label: visually_hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -29,3 +24,4 @@ hidden:
   field_dataverse_identifier: true
   field_search_placeholder_text: true
   langcode: true
+  search_api_excerpt: true

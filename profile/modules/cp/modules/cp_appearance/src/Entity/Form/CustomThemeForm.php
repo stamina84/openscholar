@@ -5,9 +5,11 @@ namespace Drupal\cp_appearance\Entity\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\cp_appearance\AppearanceSettingsBuilderInterface;
 use Drupal\cp_appearance\Entity\CustomTheme;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 
 /**
  * Form handler for CustomTheme add and edit.
@@ -29,23 +31,42 @@ class CustomThemeForm extends EntityForm {
   protected $themeHandler;
 
   /**
+   * Vsite context manager.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManagerInterface
+   */
+  protected $vsiteContextManager;
+
+  /**
+   * The vsite ID.
+   *
+   * @var int
+   */
+  protected $vsiteId;
+
+  /**
    * Creates a new CustomThemeForm object.
    *
    * @param \Drupal\cp_appearance\AppearanceSettingsBuilderInterface $appearance_settings_builder
    *   Appearance settings builder service.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   Theme handler service.
+   * @param \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager
+   *   Vsite context manager service.
    */
-  public function __construct(AppearanceSettingsBuilderInterface $appearance_settings_builder, ThemeHandlerInterface $theme_handler) {
+  public function __construct(AppearanceSettingsBuilderInterface $appearance_settings_builder, ThemeHandlerInterface $theme_handler, VsiteContextManagerInterface $vsite_context_manager) {
     $this->appearanceSettingsBuilder = $appearance_settings_builder;
     $this->themeHandler = $theme_handler;
+    $this->vsiteContextManager = $vsite_context_manager;
+    $vsite = $this->vsiteContextManager->getActiveVsite();
+    $this->vsiteId = $vsite->id();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('cp_appearance.appearance_settings_builder'), $container->get('theme_handler'));
+    return new static($container->get('cp_appearance.appearance_settings_builder'), $container->get('theme_handler'), $container->get('vsite.context_manager'));
   }
 
   /**
@@ -73,14 +94,14 @@ class CustomThemeForm extends EntityForm {
 
     $form['id'] = [
       '#type' => 'machine_name',
-      '#maxlength' => DRUPAL_EXTENSION_NAME_MAX_LENGTH - \strlen(CustomTheme::CUSTOM_THEME_ID_PREFIX),
+      '#maxlength' => DRUPAL_EXTENSION_NAME_MAX_LENGTH - \strlen(CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->vsiteId . '_'),
       '#default_value' => $entity->id(),
       '#machine_name' => [
         'exists' => [$this, 'exists'],
         'source' => ['label'],
       ],
       '#disabled' => !$entity->isNew(),
-      '#field_prefix' => $entity->isNew() ? CustomTheme::CUSTOM_THEME_ID_PREFIX : '',
+      '#field_prefix' => $entity->isNew() ? CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->vsiteId . '_' : '',
     ];
 
     $form['base_theme'] = [
@@ -137,9 +158,8 @@ class CustomThemeForm extends EntityForm {
     $entity = $this->getEntity();
     /** @var array $form_state_values */
     $form_state_values = $form_state->getValues();
-
     if ($entity->isNew()) {
-      $entity->set('id', CustomTheme::CUSTOM_THEME_ID_PREFIX . $entity->id());
+      $entity->set('id', CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->vsiteId . '_' . $entity->id());
     }
 
     if ($form_state_values['images']) {
@@ -175,6 +195,17 @@ class CustomThemeForm extends EntityForm {
         '::redirectOnSave',
       ],
     ];
+    /** @var \Drupal\cp_appearance\Entity\CustomThemeInterface $entity */
+    $entity = $this->getEntity();
+    if (!$entity->isNew()) {
+      $url = Url::fromRoute('entity.cp_custom_theme.delete_form', ['cp_custom_theme' => $entity->id()], ['absolute' => TRUE]);
+      $actions['delete_theme'] = [
+        '#title' => $this->t('Delete this theme'),
+        '#type' => 'link',
+        '#url' => $url,
+        '#weight' => 999,
+      ];
+    }
 
     return $actions;
   }
@@ -208,7 +239,7 @@ class CustomThemeForm extends EntityForm {
    *   Whether the ID is taken.
    */
   public function exists($id): bool {
-    return (bool) CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $id);
+    return (bool) CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->vsiteId . '_' . $id);
   }
 
   /**

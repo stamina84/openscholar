@@ -4,14 +4,17 @@ status: true
 dependencies:
   config:
     - field.field.node.presentation.body
+    - field.field.node.presentation.field_attached_media
     - field.field.node.presentation.field_presentation_date
     - field.field.node.presentation.field_presentation_location
     - field.field.node.presentation.field_presentation_slides
     - field.field.node.presentation.field_taxonomy_terms
+    - image.style.gallery
     - node.type.presentation
   module:
     - cp_taxonomy
     - datetime
+    - os_media
     - text
     - user
 id: node.presentation.default
@@ -25,6 +28,85 @@ content:
     weight: 3
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_attached_media:
+    weight: 7
+    label: above
+    settings:
+      optionset: slick_media_gallery
+      optionset_thumbnail: ''
+      skin: default
+      skin_thumbnail: ''
+      image_style: gallery
+      responsive_image_style: ''
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      media_switch: ''
+      thumbnail_style: ''
+      ratio: ''
+      view_mode: default
+      image: ''
+      title: ''
+      link: ''
+      layout: ''
+      thumbnail_caption: ''
+      class: ''
+      cache: '0'
+      sizes: ''
+      breakpoints:
+        xs:
+          image_style: ''
+          width: ''
+        sm:
+          image_style: ''
+          width: ''
+        md:
+          image_style: ''
+          width: ''
+        lg:
+          image_style: ''
+          width: ''
+        xl:
+          image_style: ''
+          width: ''
+      current_view_mode: default
+      vanilla: 0
+      background: 0
+      caption:
+        field_media_file: 0
+        field_taxonomy_terms: 0
+        field_media_oembed_content: 0
+        field_image_caption: 0
+        field_media_image: 0
+      override: 0
+      overridables:
+        arrows: 0
+        autoplay: 0
+        dots: 0
+        draggable: 0
+        infinite: 0
+        mouseWheel: 0
+        randomize: 0
+        variableWidth: 0
+      thumbnail: ''
+      skin_arrows: ''
+      skin_dots: ''
+      style: ''
+      icon: ''
+      box_caption: ''
+      box_caption_custom: ''
+      box_style: ''
+      box_media_style: ''
+      preserve_keys: false
+      visible_items: 0
+      grid: 0
+      grid_header: ''
+      grid_medium: 0
+      grid_small: 0
+      id: ''
+      overlay: ''
+    third_party_settings: {  }
+    type: os_slick_media
     region: content
   field_presentation_date:
     weight: 0
@@ -68,3 +150,4 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  search_api_excerpt: true

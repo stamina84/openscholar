@@ -13,8 +13,50 @@ index: os_search_index
 limit: 10
 searched_fields:
   body: body
+  custom_title: custom_title
 style: view_modes
 view_mode_configuration:
+  'entity:bibcite_reference':
+    default: default
+    overrides:
+      artwork: ''
+      audiovisual: ''
+      bill: ''
+      book: ''
+      book_chapter: ''
+      broadcast: ''
+      case: ''
+      chart: ''
+      classical: ''
+      conference_paper: ''
+      conference_proceedings: ''
+      data: ''
+      database: ''
+      film: ''
+      government_report: ''
+      hearing: ''
+      journal: ''
+      journal_article: ''
+      legal_ruling: ''
+      magazine_article: ''
+      manuscript: ''
+      map: ''
+      miscellaneous: ''
+      miscellaneous_section: ''
+      newspaper_article: ''
+      patent: ''
+      personal: ''
+      presentation: ''
+      report: ''
+      software: ''
+      statute: ''
+      thesis: ''
+      unpublished: ''
+      web_article: ''
+      web_project_page: ''
+      web_service: ''
+      website: ''
+      working_paper: ''
   'entity:node':
     default: default
     overrides:

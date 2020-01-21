@@ -265,8 +265,8 @@ function cp_taxonomy_form_node_form_alter(&$form, FormStateInterface $form_state
       foreach ($vocabularies as $vid) {
         $terms = $taxonomy_storage->loadTree($vid);
         $form['field_taxonomy_terms']['#terms'][$vid] = $vid;
-        if (empty($terms)) {
-          $messenger->addError(t('@vid - Vocabulary has no terms, please contact site admin.', ['@vid' => $vid]));
+        if ($form['field_taxonomy_terms']['widget'][$vid]['#required'] && empty($terms) && !isset($form['field_taxonomy_terms']['widget'][$vid]['#tags'])) {
+          $messenger->addError(t('@vid - No term is available, please contact site admin.', ['@vid' => $form['field_taxonomy_terms']['widget'][$vid]['#title']]));
         }
       }
     }
@@ -282,15 +282,16 @@ function cp_taxonomy_node_terms_validate(&$form, FormStateInterface $form_state)
     $terms_values = $form_state->getValue('field_taxonomy_terms');
     foreach ($form['field_taxonomy_terms']['#terms'] as $key => $vid) {
       if ($form['field_taxonomy_terms']['widget'][$vid]['#required'] && empty($terms_values[$vid])) {
+        $vid_title = $form['field_taxonomy_terms']['widget'][$vid]['#title'];
         if (isset($form['field_taxonomy_terms']['widget'][$vid]["#type"]) && $form['field_taxonomy_terms']['widget'][$vid]["#type"] == 'entity_autocomplete') {
-          $form_state->setError($form, t('@vid - Term is required.', ['@vid' => $vid]));
+          $form_state->setError($form, t('@vid - Term is required.', ['@vid' => $vid_title]));
         }
         else {
-          $form_state->setError($form, t('@vid - No term is available, please contact site admin.', ['@vid' => $vid]));
+          $form_state->setError($form, t('@vid - No term is available, please contact site admin.', ['@vid' => $vid_title]));
         }
       }
       if (isset($form['field_taxonomy_terms']['#no_terms'][$key])) {
-        $form_state->setError($form, t('@vid - Vocabulary has no terms, please contact site admin.', ['@vid' => $vid]));
+        $form_state->setError($form, t('@vid - No term is available, please contact site admin.', ['@vid' => $vid_title]));
       }
     }
   }

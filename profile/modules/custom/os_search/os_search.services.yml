@@ -2,3 +2,7 @@ services:
   os_search.list_app_helper:
     class: Drupal\os_search\ListAppsHelper
     arguments: ['@os_app_access.app_loader', '@current_user']
+
+  os_search.os_search_helper:
+    class: Drupal\os_search\OsSearchHelper
+    arguments: ['@entity_type.manager']

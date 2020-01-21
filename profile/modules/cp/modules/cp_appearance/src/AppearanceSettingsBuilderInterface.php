@@ -18,6 +18,14 @@ interface AppearanceSettingsBuilderInterface {
   public function getFeaturedThemes(): array;
 
   /**
+   * Returns the one page themes.
+   *
+   * @return \Drupal\Core\Extension\Extension[]
+   *   List of themes.
+   */
+  public function getOnePageThemes(): array;
+
+  /**
    * Determines if a theme is set as default.
    *
    * It handles the case when a flavor is set as default.

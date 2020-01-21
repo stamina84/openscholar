@@ -32,7 +32,7 @@ content:
     weight: 4
     settings: {  }
     third_party_settings: {  }
-    type: options_select
+    type: options_buttons
     region: content
   field_embed_height:
     weight: 26

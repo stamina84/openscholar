@@ -105,12 +105,14 @@ class CpAppearanceMainController extends ControllerBase {
     // configuration from default config storage, and it fails to identify
     // installed custom themes.
     $this->themeHandler->refreshInfo();
-
     /** @var \Drupal\Core\Extension\Extension[] $featured_themes */
     $featured_themes = $this->appearanceSettingsBuilder->getFeaturedThemes();
     /** @var \Drupal\Core\Extension\Extension[] $custom_themes */
     $custom_themes = $this->appearanceSettingsBuilder->getCustomThemes();
-    $themes = array_merge($custom_themes, $featured_themes);
+    /** @var \Drupal\Core\Extension\Extension[] $one_page_themes */
+    $one_page_themes = $this->appearanceSettingsBuilder->getOnePageThemes();
+
+    $themes = array_merge($custom_themes, $featured_themes, $one_page_themes);
 
     // Use for simple dropdown for now.
     $basic_theme_options = [];
@@ -122,10 +124,12 @@ class CpAppearanceMainController extends ControllerBase {
     $theme_groups = [
       'custom_theme' => $custom_themes,
       'featured' => $featured_themes,
+      'one_page_theme' => $one_page_themes,
       'basic' => [],
     ];
     $theme_group_titles = [
       'custom_theme' => $this->formatPlural(count($theme_groups['custom_theme']), 'Custom theme', 'Custom themes'),
+      'one_page_theme' => $this->formatPlural(count($theme_groups['one_page_theme']), 'One Page theme', 'One Page themes'),
       'featured' => $this->formatPlural(count($theme_groups['featured']), 'Featured theme', 'Standard themes'),
       'basic' => $this->formatPlural(count($theme_groups['basic']), 'Basic theme', 'Basic themes'),
     ];

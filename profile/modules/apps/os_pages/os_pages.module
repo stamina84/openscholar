@@ -5,6 +5,7 @@
  * Pages app.
  */
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
@@ -12,6 +13,7 @@ use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Template\Attribute;
 
@@ -524,6 +526,8 @@ function os_pages_form_node_page_book_outline_form_alter(&$form, FormStateInterf
     foreach ($active_vsite->getContent('group_node:page') as $group_content) {
       $vsite_nids[] = $group_content->entity_id->target_id;
     }
+
+    $current_nid = $form['book']['nid']['#value'];
     $book_options = $form['book']['bid']['#options'];
     // Removing form options if page is not from this vsite.
     foreach ($book_options as $key => $value) {
@@ -532,5 +536,11 @@ function os_pages_form_node_page_book_outline_form_alter(&$form, FormStateInterf
       }
     }
     $form['book']['bid']['#options'] = $book_options;
+    $link = Link::fromTextAndUrl(t('Add other book pages to this outline'), Url::fromRoute('os_pages.add_other_books', ['node' => $current_nid]));
+    $link = new FormattableMarkup($link->toString(), []);
+    $form['book']['add_book_pages'] = [
+      '#markup' => $link,
+      '#weight' => -10,
+    ];
   }
 }

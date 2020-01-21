@@ -43,12 +43,12 @@ class OsBlogSettingForm extends CpSettingBase {
 
     $form['comment_type'] = [
       '#type' => 'radios',
-      '#title' => $this->t('Choose which comment type you`d like to use'),
+      '#title' => $this->t('Choose which comment type you would like to use'),
       '#options' => [
         'no_comments' => $this->t('No comments'),
         'disqus_comments' => $this->t('Disqus comments'),
       ],
-      '#default_value' => $blog_config->get('comment_type'),
+      '#default_value' => $blog_config->get('comment_type') ?? 'no_comments',
     ];
 
     $description = $this->t('Enter the website shortname you used to register your Disqus account.

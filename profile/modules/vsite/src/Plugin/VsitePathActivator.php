@@ -95,9 +95,10 @@ class VsitePathActivator implements EventSubscriberInterface {
       return $group;
     }
 
-    $route_match = $this->getCurrentRouteMatch();
+    $node = $this->getCurrentRouteMatch()->getParameter('node');
+    $node = is_numeric($node) ? $this->entityTypeManager->getStorage('node')->load($node) : $node;
 
-    if ($node = $route_match->getParameter('node')) {
+    if ($node) {
       /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage('group_content');
       // Loads all groups with a relation to the node.

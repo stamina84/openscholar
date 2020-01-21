@@ -44,7 +44,7 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     $vsite_context_manager = $this->container->get('vsite.context_manager');
     $vsite_context_manager->activateVsite($this->group);
     /** @var \Drupal\cp_appearance\Entity\CustomThemeInterface $custom_theme */
-    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . 'cyberpunk');
+    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->group->id() . '_' . 'cyberpunk');
     $this->assertNotNull($custom_theme);
     $this->assertEquals('Cyberpunk', $custom_theme->label());
     $this->assertEquals('clean', $custom_theme->getBaseTheme());
@@ -132,7 +132,7 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     $vsite_context_manager = $this->container->get('vsite.context_manager');
     $vsite_context_manager->activateVsite($this->group);
     /** @var \Drupal\cp_appearance\Entity\CustomThemeInterface $custom_theme */
-    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . 'cyberpunk_2077');
+    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->group->id() . '_' . 'cyberpunk_2077');
     $this->assertNotNull($custom_theme);
 
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
@@ -171,7 +171,9 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     $this->getSession()->getPage()->findField('scripts')->setValue('alert("Hello World")');
     $this->getSession()->getPage()->pressButton('Save');
 
-    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+    // Theme will be successfully saved as the
+    // existing theme 'Cp Appearance Test 1' has a different ID.
+    $this->assertSession()->pageTextNotContains('The machine-readable name is already in use. It must be unique.');
   }
 
   /**
@@ -203,7 +205,8 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
     $vsite_context_manager = $this->container->get('vsite.context_manager');
     $vsite_context_manager->activateVsite($this->group);
-    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $custom_theme_label);
+    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->group->id() . '_' . $custom_theme_label);
+    $this->assertEquals('os_ct_' . $this->group->id() . '_' . $custom_theme_label, $custom_theme->id());
 
     // Tests.
     $this->visitViaVsite('cp/appearance/themes', $this->group);
@@ -234,6 +237,14 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     $scripts = file_get_contents($script_file);
     $this->assertFileExists($script_file);
     $this->assertEquals('alert("Hello World"); test', $scripts);
+
+    // Tests delete link.
+    $this->visitViaVsite("cp/appearance/themes/custom-themes/{$custom_theme->id()}/edit", $this->group);
+    $this->getSession()->getPage()->clickLink('Delete this theme');
+
+    // Test correct redirection.
+    $this->assertContains('cp/appearance/themes', $this->getSession()->getCurrentUrl());
+    $this->assertSession()->pageTextContains("Delete Cyberpunk custom theme?");
 
     // Cleanup.
     $custom_theme->delete();
@@ -270,7 +281,7 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
     $vsite_context_manager = $this->container->get('vsite.context_manager');
     $vsite_context_manager->activateVsite($this->group);
-    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $custom_theme_label);
+    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->group->id() . '_' . $custom_theme_label);
 
     // Tests.
     $this->visitViaVsite("cp/appearance/themes/custom-themes/{$custom_theme->id()}/edit", $this->group);
@@ -319,7 +330,7 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
     $vsite_context_manager = $this->container->get('vsite.context_manager');
     $vsite_context_manager->activateVsite($this->group);
-    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $custom_theme_label);
+    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->group->id() . '_' . $custom_theme_label);
 
     // Tests.
     $this->visitViaVsite("cp/appearance/themes/custom-themes/{$custom_theme->id()}/delete", $this->group);
@@ -387,11 +398,11 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     $vsite_context_manager = $this->container->get('vsite.context_manager');
 
     $vsite_context_manager->activateVsite($this->group);
-    $custom_theme1 = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $custom_theme1_label);
+    $custom_theme1 = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $this->group->id() . '_' . $custom_theme1_label);
     $custom_theme1->delete();
 
     $vsite_context_manager->activateVsite($group2);
-    $custom_theme2 = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $custom_theme2_label);
+    $custom_theme2 = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $group2->id() . '_' . $custom_theme2_label);
     $custom_theme2->delete();
 
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */

@@ -68,7 +68,7 @@ interface MediaEntityHelperInterface {
    * @return mixed
    *   Data representation of embedly resource
    */
-  public function fetchEmbedlyResource($url, $width, $height);
+  public function fetchEmbedlyResource($url, $width = NULL, $height = NULL);
 
   /**
    * Returns Iframe data.

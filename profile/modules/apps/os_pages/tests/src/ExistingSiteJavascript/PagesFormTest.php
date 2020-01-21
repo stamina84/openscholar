@@ -66,6 +66,7 @@ class PagesFormTest extends TestBase {
 
     $this->getSession()->getPage()->fillField('title[0][value]', $title);
     $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
 
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->getNodeByTitle($title);
@@ -77,6 +78,58 @@ class PagesFormTest extends TestBase {
     $node->delete();
     $page->delete();
     $book->delete();
+  }
+
+  /**
+   * Testing Add other book pages form.
+   *
+   * This tests adding other book pages into current book.
+   */
+  public function testAddOtherBooksForm() {
+    $this->groupAdmin = $this->createUser();
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
+    $this->drupalLogin($this->groupAdmin);
+    $page = $this->getCurrentPage();
+    /** @var \Drupal\node\NodeInterface $book */
+    // Creating book Book-1.
+    $book = $this->createBookPage([
+      'title' => 'First outline book',
+    ]);
+    // Creating book Book-2.
+    $book2 = $this->createBookPage([
+      'title' => 'Second outline book',
+    ]);
+
+    $this->addGroupContent($book, $this->group);
+    $this->addGroupContent($book2, $this->group);
+
+    // Adding sub-page for Book-2.
+    $title = 'Sub page for book 2';
+    $this->visitViaVsite("node/add/page?parent={$book2->id()}", $this->group);
+
+    $this->getSession()->getPage()->fillField('title[0][value]', $title);
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->visitViaVsite("node/{$book->id()}/book-outline", $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $result = $this->getSession()->getPage()->findLink('Add other book pages to this outline');
+    $this->assertNotEmpty($result);
+    $result->click();
+    $this->assertSession()->statusCodeEquals(200);
+
+    $page->fillField('add_other_books', substr($title, 0, 3));
+    $this->assertSession()->waitOnAutocomplete();
+    $this->assertSession()->responseContains($title);
+    $this->getSession()->getPage()->find('css', 'ul.ui-autocomplete li:first-child')->click();
+    $page->pressButton('Save');
+    // Accessing Add other Books form of Book-1.
+    $this->visitViaVsite("node/{$book->id()}/add-other-books", $this->group);
+    $page->fillField('add_other_books', substr($title, 0, 3));
+    $this->assertSession()->waitOnAutocomplete();
+    // Since sub-page is added to Book-1, now sub-page won't be visible
+    // in Book-1 'Add other books' autocomplete field.
+    $this->assertSession()->responseNotContains($title);
   }
 
 }

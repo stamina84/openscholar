@@ -30,19 +30,52 @@
         let query_string = $.param(vars);
         window.location.search = '?' + query_string;
       });
-
       // Hide widgets if the title doesn't match.
       $('#filter-widgets', context).keyup(function (e) {
         let str = e.target.value.toLowerCase();
-        $('#block-list .block', context).each(function (i) {
+        let all = $('#filter-widgets-by-type option:selected')[0].value;
+        let block = $('#block-list .block');
+        let block_attribute = $('#block-list .block section[data-attr*=' + all + ']');
+        if (str == '' && all == 'all') {
+          $(block).show();
+          $(block).addClass('block-active');
+        }
+        else if (str == '' && all != 'all') {
+          $(block_attribute).parent('.block').show();
+          $(block_attribute).parent('.block').addClass('block-active');
+        }
+        else if (str != '' && all == 'all') {
+          $(block).addClass('block-active');
+        }
+        $('#block-list .block.block-active', context).each(function (i) {
           $this = $(this);
           if ($this.find('.block-title').text().toLowerCase().indexOf(str) != -1) {
             $this.show();
+            $this.addClass('block-active');
           }
           else {
             $this.hide();
+            $this.removeClass('block-active');
+            $(block_attribute).parent('.block').addClass('block-active');
           }
         });
+      });
+
+      // filter by type
+      $('#filter-widgets-by-type', context).once().change(function (e) {
+        let str = e.target.value.toLowerCase();
+        $('#block-list .block', context).each(function (i) {
+          $this = $(this);
+          if ($this.attr('data-block-type') == str || str == 'all') {
+            $this.show();
+            $this.addClass('block-active');
+          }
+          else {
+            $this.hide();
+            $this.removeClass('block-active');
+          }
+        });
+        $('#filter-widgets').trigger('keyup');
       });
 
       // Define regions to be sortable targets
@@ -184,5 +217,19 @@
 
     return vars;
   }
+
+  /**
+   * Update Filter Widget by Type field.
+   */
+  $.fn.updateWidgetType = function(block_type_label) {
+    $('#block-list .block').once().each(function() {
+      let block_type = $(this).data('block-type');
+      let exists = $('#filter-widgets-by-type option[value=' + block_type + ']').length;
+
+      if (exists == 0 && typeof block_type != 'undefined') {
+        $('#filter-widgets-by-type').append('<option value=' + block_type + '>' + block_type_label + '</option>')
+      }
+    });
+  };
 
 })(jQuery);

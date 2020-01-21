@@ -8,8 +8,8 @@ use Drupal\Tests\os_widgets\ExistingSite\OsWidgetsExistingSiteTestBase;
  * Tests Search sort block content.
  *
  * @group kernel
- * @group widgets
- * @covers \Drupal\os_search\Plugin\OsWidgets\SearchSortWidgetTest
+ * @group os-search
+ * @covers \Drupal\os_search\Plugin\OsWidgets\SearchSortWidget
  */
 class SearchSortWidgetTest extends OsWidgetsExistingSiteTestBase {
 

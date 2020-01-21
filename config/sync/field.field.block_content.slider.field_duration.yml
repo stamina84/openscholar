@@ -1,0 +1,23 @@
+uuid: 3ec339be-43ad-4b47-a172-04a54434a138
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.slider
+    - field.storage.block_content.field_duration
+id: block_content.slider.field_duration
+field_name: field_duration
+entity_type: block_content
+bundle: slider
+label: Duration
+description: 'Each slide will be displayed for this length of time.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 1
+  max: !!float 10
+  prefix: ''
+  suffix: second|seconds
+field_type: decimal

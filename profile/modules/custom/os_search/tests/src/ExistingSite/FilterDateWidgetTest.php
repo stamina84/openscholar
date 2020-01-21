@@ -5,24 +5,24 @@ namespace Drupal\Tests\os_search\ExistingSite;
 use Drupal\Tests\os_widgets\ExistingSite\OsWidgetsExistingSiteTestBase;
 
 /**
- * Tests Filter Taxonomy block content.
+ * Tests Filter Post Date block content.
  *
  * @group kernel
- * @group widgets
- * @covers \Drupal\os_search\Plugin\OsWidgets\FilterTaxonomyWidget
+ * @group widgets-4
+ * @covers \Drupal\os_search\Plugin\OsWidgets\FilterDateWidget
  */
-class FilterTaxonomyWidgetTest extends OsWidgetsExistingSiteTestBase {
+class FilterDateWidgetTest extends OsWidgetsExistingSiteTestBase {
 
   /**
    * Test build function to display filter post.
    */
-  public function testBuildDisplayFilterTaxonomy() {
+  public function testBuildDisplayFilterDate() {
     $block_content = $this->createBlockContent([
-      'type' => 'filter_taxonomy',
+      'type' => 'filter_date',
       'info' => [
-        'value' => 'Filter Taxonomy Title',
+        'value' => 'Filter Post by Date',
       ],
-      'field_widget_title' => ['Filter Taxonomy Title'],
+      'field_widget_title' => ['Filter by Date'],
     ]);
     $this->group->addContent($block_content, 'group_entity:block_content');
     $view_builder = $this->entityTypeManager
@@ -31,7 +31,8 @@ class FilterTaxonomyWidgetTest extends OsWidgetsExistingSiteTestBase {
     $renderer = $this->container->get('renderer');
     /** @var \Drupal\Core\Render\Markup $markup_array */
     $markup = $renderer->renderRoot($render);
-    $this->assertContains('Filter Taxonomy Title', $markup->__toString());
+    $this->assertContains('Filter by Date', $markup->__toString());
+
   }
 
 }

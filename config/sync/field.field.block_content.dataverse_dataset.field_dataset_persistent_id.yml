@@ -10,7 +10,7 @@ field_name: field_dataset_persistent_id
 entity_type: block_content
 bundle: dataverse_dataset
 label: 'Dataset Persistent Identifier'
-description: ''
+description: "Need help finding your Dataset Persistent Identifier? Learn how to here: <a href=\"https://help.theopenscholar.com/dataverse-dataset-widget\" target=\"_blank\">https://help.theopenscholar.com/dataverse-dataset-widget</a>. Note: this widget should be placed in the main content area, not in sidebar.\r\nIn braces (Format : 10.7910/DVN/GK6PR2) if DOI is selected and (Format : 1902.1/13713) if HDL is selected"
 required: true
 translatable: true
 default_value: {  }

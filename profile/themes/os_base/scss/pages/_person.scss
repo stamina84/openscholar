@@ -1,13 +1,17 @@
-.page-node-type-person {
+article.person {
   .field--name-field-photo-person, .person-default-image {
     float: left;
     margin-right: 1em;
     margin-bottom: 1em;
   }
+  .field--name-body {
+    &:after, &:before {
+      display: initial;
+    }
+  }
   .content--image--area {
     border-top: 1px solid $color-gray2;
     padding-top: 35px;
-    margin-top: 20px;
     margin-bottom: 30px;
   }
   .content--main--area {
@@ -16,6 +20,13 @@
     }
     .field--label {
       font-weight: normal;
+    }
+  }
+  .teaser--content {
+    overflow: visible;
+    .node--title {
+      padding: 0;
+      margin: 0;
     }
   }
 }
@@ -32,10 +43,14 @@
     line-height: 35px;
   }
 }
-.person-data {
-  h2.block-title {
-    border-top: 3px solid $color-blue;
-    padding-top: 12px;
+article.person {
+  .person-data {
+    .block {
+      h2.block-title {
+        border-top: 3px solid $color-blue;
+        padding-top: 12px;
+      }
+    }
   }
 }
 /**** slide teaser ****/

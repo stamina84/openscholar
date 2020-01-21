@@ -60,7 +60,7 @@ field_settings:
   custom_title:
     label: 'Custom Title (text)'
     property_path: custom_title
-    type: string
+    type: text
   custom_type:
     label: 'Custom Type (text)'
     property_path: custom_type
@@ -197,6 +197,7 @@ processor_settings:
     all_fields: true
     fields:
       - body
+      - custom_title
       - reference_title
     exceptions:
       mexican: mexic
@@ -208,6 +209,7 @@ processor_settings:
     all_fields: true
     fields:
       - body
+      - custom_title
       - reference_title
     spaces: ''
     overlap_cjk: 1

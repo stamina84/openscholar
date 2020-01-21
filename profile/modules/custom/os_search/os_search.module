@@ -60,8 +60,28 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
     $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
   }
 
-  // Get the sort url parameter.
   $request = \Drupal::request();
+
+  // Os Search Helper for filter date by post.
+  $year = $request->query->get('year');
+  $month = $request->query->get('month');
+  $day = $request->query->get('day');
+  $hour = $request->query->get('hour');
+  $minutes = $request->query->get('minutes');
+
+  // Query Params for helper parameters.
+  $query_params = [
+    'year' => $year,
+    'month' => $month,
+    'day' => $day,
+    'hour' => $hour,
+    'minutes' => $minutes,
+  ];
+
+  $search_helper = \Drupal::service('os_search.os_search_helper');
+  $search_helper->addCustomDateFilterQuery($query, $query_params);
+
+  // Get the sort url parameter.
   $sort = $request->query->get('sort');
   $sort_direction = $request->query->get('dir') ?? 'ASC';
   if ($sort) {
@@ -70,5 +90,12 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
       $query->sort('custom_' . $sort, $sort_direction);
     }
   }
+}
 
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function os_search_group_insert($entity) {
+  $search_helper = \Drupal::service('os_search.os_search_helper');
+  $search_helper->createGroupBlockWidget($entity);
 }

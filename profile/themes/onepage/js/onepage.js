@@ -4,7 +4,7 @@
       /* display posts horizontally when set to 2, 3, 4 or 6 posts. */
       let lop = $('.path-front .block--type-list-of-posts');
       let tabs = $('.path-front .block--type-tabs');
-      $([lop, tabs]).once().each(function () {
+      lop.add(tabs).once().each(function () {
         let count = $('ul[id^="list-of-posts"] > li', this).length;
         $(this).addClass('lopz-' + count);
       });

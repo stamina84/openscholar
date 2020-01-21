@@ -326,3 +326,12 @@ function os_block_content_access(BlockContentInterface $entity, $operation, Acco
 
   return $access_helper->checkAccess($entity, $operation, $account);
 }
+
+/**
+ * Implements hook_toolbar_alter() for altering toolbar items.
+ */
+function os_toolbar_alter(&$items) {
+  $items['block_place']['tab']['#title'] = t('Layout');
+  $id = $items['administration_search']['tray']['search']['#attributes']['id'];
+  $items['administration_search']['tray']['search']['#label_attributes'] = ['for' => [$id]];
+}
