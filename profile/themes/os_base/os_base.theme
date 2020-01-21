@@ -72,3 +72,14 @@ function os_base_preprocess_block(&$variables) {
 function os_base_preprocess_bootstrap_dropdown(&$var) {
   $var['toggle']['#split'] = TRUE;
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK() for theme suggestion for person type.
+ */
+function os_base_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+  $node = $variables['elements']['#node']->getType();
+  $view_mode = $variables['elements']['#view_mode'];
+  if ($node == 'person' && $view_mode == 'default') {
+    $suggestions = ['node__person__full'];
+  }
+}
