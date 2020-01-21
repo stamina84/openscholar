@@ -52,7 +52,8 @@ class ApplyTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page = $this->getCurrentPage();
     $page->findField('node_bulk_form[0]')->check();
     $page->findField('node_bulk_form[1]')->check();
-    $this->applyTermWithAction();
+    $this->applyAction('cp_taxonomy_add_terms_node_action');
+    $this->applyVocabularyFirstTerm('vocab_group_1');
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' could not be applied on the content');
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was applied on the content');
     $warning_wrapper = $page->find('css', '.messages--warning');
@@ -71,24 +72,54 @@ class ApplyTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
   }
 
   /**
-   * Helper function, that will select a term and add to selected nodes.
+   * Test add invalid vocabulary.
    */
-  protected function applyTermWithAction() {
+  public function testApplyInvalidVocabulary() {
+    $web_assert = $this->assertSession();
+    $blog = $this->createNode([
+      'type' => 'blog',
+      'uid' => $this->groupAdmin->id(),
+    ]);
+    $this->group->addContent($blog, 'group_node:blog');
+    $allowed_types = [
+      'media:*',
+    ];
+    $media_vocab = $this->randomMachineName();
+    $this->createGroupVocabulary($this->group, $media_vocab, $allowed_types);
+    $this->createGroupTerm($this->group, $media_vocab, ['name' => $this->randomMachineName()]);
+    $this->visitViaVsite('cp/content/browse/node', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $page = $this->getCurrentPage();
+    $page->findField('node_bulk_form[0]')->check();
+    $this->applyAction('cp_taxonomy_add_terms_node_action');
+    $this->applyVocabularyFirstTerm($media_vocab);
+    $web_assert->pageTextContains('Selected vocabulary is not handle node entity type.');
+  }
+
+  /**
+   * Helper function, that will apply the action.
+   */
+  protected function applyAction($action_id) {
     $web_assert = $this->assertSession();
     $page = $this->getCurrentPage();
     $select = $page->findField('action');
-    $select->setValue('cp_taxonomy_add_terms_node_action');
+    $select->setValue($action_id);
     $page->pressButton('Apply to selected items');
     $web_assert->statusCodeEquals(200);
+  }
+
+  /**
+   * Helper function, that will select a vocab and first term in chosen.
+   */
+  protected function applyVocabularyFirstTerm($vocabulary) {
+    $web_assert = $this->assertSession();
     $page = $this->getCurrentPage();
     $select = $page->findField('vocabulary');
-    $select->setValue('vocab_group_1');
+    $select->setValue($vocabulary);
     $this->waitForAjaxToFinish();
     $page->find('css', '.chosen-search-input')->click();
-
     $result = $web_assert->waitForElementVisible('css', '.active-result.highlighted');
     $this->assertNotEmpty($result, 'Chosen popup is not visible.');
-    $web_assert->pageTextContains($this->term->label());
     $page->find('css', '.active-result.highlighted')->click();
     $page->find('css', '.chosen-search-input')->click();
     $page->pressButton('Apply');

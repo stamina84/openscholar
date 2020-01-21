@@ -3,9 +3,7 @@
 namespace Drupal\cp_taxonomy\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\cp_taxonomy\Plugin\Action\RemoveTermsNodeAction;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Remove terms from node entities form.
@@ -25,72 +23,9 @@ class RemoveTermsFromNodeForm extends ManageTermsNodeFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
     $this->tempStore = $this->tempStoreFactory->get(RemoveTermsNodeAction::TEMPSTORE_KEY);
     $form['#title'] = $this->t('Remove Terms from Content');
-    $this->entityTypeId = $entity_type_id;
-    $this->entityInfo = $this->tempStore->get($this->currentUser->id());
-    if (empty($this->entityInfo)) {
-      return new RedirectResponse(Url::fromRoute('cp.content.collection')->toString());
-    }
-    $vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
-    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
-    $vocabs = $vocabulary_storage->loadMultiple();
-
-    $options = [];
-    $options_terms = [];
-    foreach ($vocabs as $vocab) {
-      $options[$vocab->id()] = $vocab->label();
-      $terms = $term_storage->loadTree($vocab->id());
-      foreach ($terms as $term) {
-        // We have to collect all terms to prevent error from allowed values.
-        $options_terms[$term->tid] = $term->name;
-      }
-    }
-    $form['vocabulary'] = [
-      '#type' => 'select',
-      '#options' => $options,
-      '#empty_option' => $this->t('- Select -'),
-      '#ajax' => [
-        'callback' => '::getTermsAjaxCallback',
-        'event' => 'change',
-        'wrapper' => 'edit-terms',
-        'progress' => [
-          'type' => 'throbber',
-          'message' => $this->t('Getting terms...'),
-        ],
-      ],
-    ];
-
-    $form['terms'] = [
-      '#type' => 'select',
-      '#options' => $options_terms,
-      '#multiple' => 1,
-      '#chosen' => 1,
-      '#title' => $this->t('Terms'),
-      '#prefix' => '<div id="edit-terms">',
-      '#suffix' => '</div>',
-      '#states' => [
-        'invisible' => [
-          ':input[name="vocabulary"]' => ['value' => ''],
-        ],
-      ],
-    ];
-
-    $form['entities'] = [
-      '#title' => $this->t('The selected terms above will be applied to the following content:'),
-      '#theme' => 'item_list',
-      '#items' => $this->entityInfo,
-    ];
-
-    $form['actions'] = ['#type' => 'actions'];
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Remove'),
-      '#button_type' => 'primary',
-    ];
-    $form['actions']['cancel'] = [
-      '#type' => 'button',
-      '#value' => $this->t('Cancel'),
-    ];
-
+    $form = parent::buildForm($form, $form_state, $entity_type_id);
+    $form['entities']['#title'] = $this->t('The selected terms above will be removed from the following content:');
+    $form['actions']['submit']['#value'] = $this->t('Remove');
     return $form;
   }
 
@@ -100,20 +35,13 @@ class RemoveTermsFromNodeForm extends ManageTermsNodeFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $button = $form_state->getTriggeringElement();
     if ($button['#type'] == 'submit' && !empty($this->entityInfo)) {
-      $vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
       $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
       $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
-      $selected_vocabulary = $form_state->getValue('vocabulary');
       $terms_to_remove = $form_state->getValue('terms');
       $terms = $term_storage->loadMultiple($terms_to_remove);
       $term_names = [];
       foreach ($terms as $term) {
         $term_names[] = $term->label();
-      }
-      $allowed_types = $vocabulary_storage->load($selected_vocabulary)->get('allowed_vocabulary_reference_types');
-      $entities = $this->taxonomyHelper->explodeEntityBundles($allowed_types);
-      if (empty($entities[$this->entityTypeId])) {
-        $this->messenger()->addStatus($this->t('Selected vocabulary is not handle %entity_type_id entity type.', ['%entity_type_id' => $this->entityTypeId]));
       }
       $entities = $storage->loadMultiple(array_keys($this->entityInfo));
       $skipped_titles = [];
