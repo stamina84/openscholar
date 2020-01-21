@@ -338,7 +338,7 @@ function os_common_library() {
             'FileEditor' => url($path.'/FileEditor', $disable),
           ),
           'version' => array(
-            'FileEditor' => '1.0.3',
+            'FileEditor' => '1.0.4',
           )
         ),
         'type' => 'setting',

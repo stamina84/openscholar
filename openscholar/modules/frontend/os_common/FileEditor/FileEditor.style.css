@@ -25,8 +25,10 @@ div[file-edit] div.description {
     margin-bottom: 1.75em;
 }
 div[file-edit] div.display_inline {
-    margin-top: .5em;
     vertical-align: top;
+}
+div[file-edit] div.decorative_checkbox {
+    padding-top: 1.2em;
 }
 div[ng-include="fileEditAddt"] {
     background: #efefef;
