@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - cp_taxonomy
     - media
 id: cp_taxonomy_add_terms_media_action
 label: 'Apply Taxonomy term'

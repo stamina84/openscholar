@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - cp_taxonomy
     - node
 id: cp_taxonomy_add_terms_node_action
 label: 'Apply Taxonomy term'

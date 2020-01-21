@@ -2,7 +2,8 @@ langcode: en
 status: true
 dependencies:
   module:
-    - bibcite_reference
+    - bibcite
+    - cp_taxonomy
 id: cp_taxonomy_add_terms_bibcite_reference_action
 label: 'Apply Taxonomy term'
 type: bibcite_reference

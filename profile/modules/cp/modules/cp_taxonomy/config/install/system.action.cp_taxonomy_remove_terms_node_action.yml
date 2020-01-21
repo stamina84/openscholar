@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - cp_taxonomy
     - node
 id: cp_taxonomy_remove_terms_node_action
 label: 'Remove Taxonomy term'
