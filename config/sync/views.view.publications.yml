@@ -791,6 +791,7 @@ display:
             - bibcite_export_multiple
             - cp_bibcite_entity_reference_delete
             - cp_taxonomy_add_terms_bibcite_reference_action
+            - cp_taxonomy_remove_terms_bibcite_reference_action
           entity_type: bibcite_reference
           plugin_id: bulk_form
         title:
