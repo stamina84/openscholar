@@ -3,7 +3,6 @@
 namespace Drupal\cp_taxonomy\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\cp_taxonomy\Plugin\Action\RemoveTermsMediaAction;
 use Drupal\cp_taxonomy\Plugin\Action\RemoveTermsPublicationAction;
 
 /**
