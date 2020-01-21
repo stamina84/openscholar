@@ -9,7 +9,7 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Remove Taxonomy term to entity.
+ * Remove Taxonomy term from entity.
  *
  * @Action(
  *   id = "cp_taxonomy_remove_terms_node_action",

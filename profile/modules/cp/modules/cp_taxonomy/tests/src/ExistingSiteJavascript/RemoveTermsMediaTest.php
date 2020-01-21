@@ -35,7 +35,7 @@ class RemoveTermsMediaTest extends CpTaxonomyExistingSiteJavascriptTestBase {
   /**
    * Test functionality of Apply term even if vocabulary not related to blog.
    */
-  public function testRemovedAndSkippedMedias() {
+  public function testRemovedAndSkippedMedia() {
     $web_assert = $this->assertSession();
     $media1 = $this->createMedia([
       'uid' => $this->groupAdmin->id(),
@@ -70,7 +70,7 @@ class RemoveTermsMediaTest extends CpTaxonomyExistingSiteJavascriptTestBase {
   }
 
   /**
-   * Helper function, that will select a term and remove from selected medias.
+   * Helper function, that will select a term and remove from selected media.
    */
   protected function removeTermWithAction() {
     $web_assert = $this->assertSession();
