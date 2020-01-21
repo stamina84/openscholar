@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Manage terms node entities base form.
  */
-abstract class ManageTermsNodeFormBase extends FormBase {
+abstract class ManageTermsFormBase extends FormBase {
 
   /**
    * The array of entities to delete.
@@ -193,6 +193,81 @@ abstract class ManageTermsNodeFormBase extends FormBase {
     $vocab_entities = $this->taxonomyHelper->explodeEntityBundles($allowed_types);
     if (empty($vocab_entities[$this->entityTypeId])) {
       $form_state->setError($form['vocabulary'], $this->t('Selected vocabulary is not handle %entity_type_id entity type.', ['%entity_type_id' => $this->entityTypeId]));
+    }
+  }
+
+  /**
+   * Apply terms to entity submit.
+   */
+  public function applyTermsSubmit($form_state) {
+    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
+    $selected_vocabulary = $form_state->getValue('vocabulary');
+    $terms_to_apply = $form_state->getValue('terms');
+    $terms = $term_storage->loadMultiple($terms_to_apply);
+    $term_names = [];
+    foreach ($terms as $term) {
+      $term_names[] = $term->label();
+    }
+
+    $entities = $storage->loadMultiple(array_keys($this->entityInfo));
+    $skipped_titles = [];
+    $applied_titles = [];
+    foreach ($entities as $entity) {
+      $bundle = $entity->bundle();
+      if (!$this->taxonomyHelper->checkIsAllowedBundle($selected_vocabulary, $this->entityTypeId, $bundle)) {
+        $skipped_titles[] = $entity->label();
+        continue;
+      }
+      /** @var \Drupal\Core\Field\FieldItemList $current_terms */
+      $current_terms = $entity->get('field_taxonomy_terms');
+      $attached_terms = [];
+      foreach ($current_terms->getValue() as $value) {
+        $attached_terms[] = $value['target_id'];
+      }
+      foreach ($terms as $term) {
+        // Prevent append if exists.
+        if (in_array($term->id(), $attached_terms)) {
+          continue;
+        }
+        $current_terms->appendItem($term);
+      }
+      $entity->set('field_taxonomy_terms', $current_terms->getValue());
+      $entity->save();
+      $applied_titles[] = $entity->label();
+    }
+
+    $params = [
+      '%terms' => implode(", ", $term_names),
+    ];
+    // Notify the user on the skipped nodes (nodes whose bundle is not
+    // associated with the selected vocabulary).
+    if (!empty($skipped_titles)) {
+      $message = [
+        [
+          '#markup' => $this->formatPlural(count($terms_to_apply), 'Taxonomy term %terms could not be applied on the content:', '@count taxonomy terms %terms could not be applied on the content:', $params),
+        ],
+        [
+          '#theme' => 'item_list',
+          '#items' => $skipped_titles,
+        ],
+      ];
+      $this->messenger()->addWarning($this->renderer->renderPlain($message));
+    }
+
+    // Notify the user on the applied nodes.
+    if (!empty($applied_titles)) {
+      $message = [
+        [
+          '#markup' => $this->formatPlural(count($terms_to_apply), 'Taxonomy term %terms was applied on the content:', '@count taxonomy terms %terms were applied on the content:', $params),
+        ],
+        [
+          '#theme' => 'item_list',
+          '#items' => $applied_titles,
+        ],
+      ];
+
+      $this->messenger()->addStatus($this->renderer->renderPlain($message));
     }
   }
 

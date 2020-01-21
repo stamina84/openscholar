@@ -3,26 +3,26 @@
 namespace Drupal\cp_taxonomy\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\cp_taxonomy\Plugin\Action\AddTermsNodeAction;
+use Drupal\cp_taxonomy\Plugin\Action\AddTermsMediaAction;
 
 /**
- * Add terms to node entities form.
+ * Add terms to media entities form.
  */
-class AddTermsToNodeForm extends ManageTermsFormBase {
+class AddTermsToMediaForm extends ManageTermsFormBase {
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'add_terms_to_node_form';
+    return 'add_terms_to_media_form';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
-    $this->tempStore = $this->tempStoreFactory->get(AddTermsNodeAction::TEMPSTORE_KEY);
-    $form['#title'] = $this->t('Apply Terms to Content');
+    $this->tempStore = $this->tempStoreFactory->get(AddTermsMediaAction::TEMPSTORE_KEY);
+    $form['#title'] = $this->t('Apply Terms to Media');
     return parent::buildForm($form, $form_state, $entity_type_id);
   }
 

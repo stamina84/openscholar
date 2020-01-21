@@ -8,7 +8,7 @@ use Drupal\cp_taxonomy\Plugin\Action\RemoveTermsNodeAction;
 /**
  * Remove terms from node entities form.
  */
-class RemoveTermsFromNodeForm extends ManageTermsNodeFormBase {
+class RemoveTermsFromNodeForm extends ManageTermsFormBase {
 
   /**
    * {@inheritdoc}

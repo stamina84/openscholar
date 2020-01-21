@@ -82,3 +82,23 @@ cp.taxonomy.remove_terms_node_multiple_form:
     _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
+cp.taxonomy.add_terms_media_multiple_form:
+  path: '/cp/content/add-terms-to-media'
+  defaults:
+    _form: '\Drupal\cp_taxonomy\Form\AddTermsToMediaForm'
+    entity_type_id: 'media'
+  requirements:
+    _group_permission: 'manage taxonomy'
+    _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
+cp.taxonomy.remove_terms_media_multiple_form:
+  path: '/cp/content/remove-terms-from-media'
+  defaults:
+    _form: '\Drupal\cp_taxonomy\Form\RemoveTermsFromMediaForm'
+    entity_type_id: 'media'
+  requirements:
+    _group_permission: 'manage taxonomy'
+    _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
