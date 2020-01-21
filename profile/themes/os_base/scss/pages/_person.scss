@@ -12,7 +12,6 @@ article.person {
   .content--image--area {
     border-top: 1px solid $color-gray2;
     padding-top: 35px;
-    margin-top: 20px;
     margin-bottom: 30px;
   }
   .content--main--area {
@@ -21,6 +20,13 @@ article.person {
     }
     .field--label {
       font-weight: normal;
+    }
+  }
+  .teaser--content {
+    overflow: visible;
+    .node--title {
+      padding: 0;
+      margin: 0;
     }
   }
 }
@@ -37,10 +43,14 @@ article.person {
     line-height: 35px;
   }
 }
-.person-data {
-  h2.block-title {
-    border-top: 3px solid $color-blue;
-    padding-top: 12px;
+article.person {
+  .person-data {
+    .block {
+      h2.block-title {
+        border-top: 3px solid $color-blue;
+        padding-top: 12px;
+      }
+    }
   }
 }
 /**** slide teaser ****/

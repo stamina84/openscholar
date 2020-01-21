@@ -1,0 +1,19 @@
+uuid: f25ceaf4-fda3-4cb7-9b64-5d618a9828f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.facet
+    - field.storage.block_content.field_facet_id
+id: block_content.facet.field_facet_id
+field_name: field_facet_id
+entity_type: block_content
+bundle: facet
+label: 'Facet Id'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

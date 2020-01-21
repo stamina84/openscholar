@@ -100,6 +100,8 @@ class CpTaxonomyTest extends VsiteExistingSiteTestBase {
       $termName = $this->getRandomGenerator()->name();
       $this->getCurrentPage()->fillField('Name', $termName);
       $this->getCurrentPage()->pressButton('Save');
+      $this->assertContains($this->groupAlias . '/cp/taxonomy/' . $vocabName . '/add', $this->getUrl());
+      $this->clickLink($termName);
       $this->assertContains('/' . $this->groupAlias . '/' . $vocabName . '/' . strtolower($termName), $this->getUrl());
 
       // Edit form is vsite-spaced.
