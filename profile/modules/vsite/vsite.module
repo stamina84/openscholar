@@ -150,7 +150,7 @@ function vsite_form_alter(&$form, FormStateInterface $formState, $form_id) {
 
           // Set current form as redirect for term creation.
           if ($entityTypeId == 'taxonomy_term' && $entity->isNew()) {
-            $form['actions'][$name]['#submit'][] = 'term_create_redirect_submit';
+            $form['actions'][$name]['#submit'][] = 'vsite_term_create_redirect_submit';
           }
         }
       }
@@ -194,7 +194,7 @@ function vsite_form_alter(&$form, FormStateInterface $formState, $form_id) {
 /**
  * Set redirect to current page for term creation.
  */
-function term_create_redirect_submit(&$form, FormStateInterface $form_state) {
+function vsite_term_create_redirect_submit(&$form, FormStateInterface $form_state) {
   $form_state->setRedirect('<current>');
 }
 
