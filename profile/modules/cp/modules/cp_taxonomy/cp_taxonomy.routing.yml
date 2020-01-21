@@ -102,3 +102,13 @@ cp.taxonomy.remove_terms_media_multiple_form:
     _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
+cp.taxonomy.add_terms_bibcite_reference_multiple_form:
+  path: '/cp/content/add-terms-to-publication'
+  defaults:
+    _form: '\Drupal\cp_taxonomy\Form\AddTermsToPublicationForm'
+    entity_type_id: 'bibcite_reference'
+  requirements:
+    _group_permission: 'manage taxonomy'
+    _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
