@@ -11,9 +11,9 @@
 
       var parse_label = {
         'prefix' : 'Prefix',
-        'first_name' : 'First name',
-        'middle_name' : 'Middle name',
-        'last_name' : 'Last name',
+        'first_name' : 'FirstName',
+        'middle_name' : 'MiddleName',
+        'last_name' : 'LastName',
         'suffix' : 'Suffix',
       };
       var vsite = settings.spaces.url;

@@ -45,7 +45,12 @@ class AutocompleteController extends ControllerBase {
    *   Human name string.
    */
   public function parseContributorName($name) {
-    $results = $this->humanParser->parse($name);
+    try {
+      $results = $this->humanParser->parse($name);
+    }
+    catch (\Exception $e) {
+      $results = [];
+    }
     return new JsonResponse(array_filter($results));
   }
 
