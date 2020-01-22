@@ -599,7 +599,6 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
   else {
     $form_validation_date_month = '';
   }
-
   // Add validation message for validating the field via JS.
   $form['bibcite_year_group']['#suffix'] = $form_validation_date_month . '<div id="bibcite-year-group-validate">' . t('Year must be in the form YYYY. Only numerical digits are allowed.') . '</div>';
 
@@ -649,6 +648,9 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
 
   // Adding class to form.
   $form['#attributes']['class'][] = 'node-form';
+
+  // Parse author name.
+  $form['#attached']['library'][] = 'os_publications/drupal.os_publications.author';
 
   os_publications_bibcite_reference_form_add_menu_option($form, $form_state);
 
