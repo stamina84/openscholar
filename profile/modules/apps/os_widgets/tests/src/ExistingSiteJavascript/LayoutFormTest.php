@@ -175,9 +175,9 @@ JS;
     $this->visitViaVsite('', $this->group);
     /** @var \Behat\Mink\Element\Element[] $widgets */
     $widgets = $this->getSession()->getPage()->findAll('css', $widget_selector);
-    $this->assertEqual($widgets[0]->find('css', $block_title_selector)->getHtml(), 'Apple Widget');
+    $this->assertEqual($widgets[0]->find('css', $block_title_selector)->getHtml(), 'Zebra Widget');
     $this->assertEqual($widgets[1]->find('css', $block_title_selector)->getHtml(), 'The Doors Widget');
-    $this->assertEqual($widgets[2]->find('css', $block_title_selector)->getHtml(), 'Zebra Widget');
+    $this->assertEqual($widgets[2]->find('css', $block_title_selector)->getHtml(), 'Apple Widget');
 
     // Change weights.
     $mut_context_config = $config_factory->getEditable('os_widgets.layout_context.' . $context);

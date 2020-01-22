@@ -208,7 +208,7 @@ class LayoutContext extends ConfigEntityBase implements LayoutContextInterface {
    *   Data to be used for sorting.
    */
   public static function sortWidgets(array $a, array $b): int {
-    return ((int) $a['weight'] - (int) $b['weight']);
+    return ((int) $a['weight'] < (int) $b['weight']) ? -1 : 1;
   }
 
 }
