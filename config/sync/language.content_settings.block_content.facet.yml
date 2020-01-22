@@ -1,0 +1,11 @@
+uuid: e6276f82-1834-4196-bbf3-cff1226eb787
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.facet
+id: block_content.facet
+target_entity_type_id: block_content
+target_bundle: facet
+default_langcode: site_default
+language_alterable: false

@@ -2,7 +2,9 @@
 
 namespace Drupal\os_widgets\Controller;
 
+use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\os_widgets\Entity\LayoutContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -51,7 +53,7 @@ class LayoutManagementController extends ControllerBase {
     /** @var \Drupal\os_widgets\Entity\LayoutContext[] $contexts */
     $contexts = $this->entityTypeManager()->getStorage('layout_context')->loadMultiple($context_ids);
 
-    uasort($contexts, ['ConfigEntityBase', 'sort']);
+    uasort($contexts, [ConfigEntityBase::class, 'sort']);
     $target = array_shift($contexts);
 
     $contexts = array_reverse($contexts);
@@ -61,7 +63,7 @@ class LayoutManagementController extends ControllerBase {
       $parent_blocks = array_merge($parent_blocks, $context_blocks);
     }
 
-    @uasort($blocks, ['Block', 'sort']);
+    uasort($blocks, [LayoutContext::class, 'sortWidgets']);
     $adjusted = $this->adjustRelativeWeights($blocks, $parent_blocks);
     $data = $this->filterBlocks($adjusted, $parent_blocks);
 
@@ -275,19 +277,10 @@ class LayoutManagementController extends ControllerBase {
     }
 
     foreach ($regions as $r => $bs) {
-      uasort($regions[$r], [$this, 'blockSort']);
+      uasort($regions[$r], [LayoutContext::class, 'sortWidgets']);
     }
 
     return $regions;
-  }
-
-  /**
-   * Sort blocks by weight.
-   */
-  private function blockSort($a, $b) {
-    $aw = is_object($a) ? $a->weight : $a['weight'];
-    $bw = is_object($b) ? $b->weight : $b['weight'];
-    return ($aw - $bw);
   }
 
 }

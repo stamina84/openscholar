@@ -71,10 +71,7 @@ class OsRedirectMaximumSetting extends CpSettingBase {
       return $access_result;
     }
 
-    /** @var \Drupal\group\Entity\Group|null $active_vsite */
-    $active_vsite = $this->vsiteContextManager->getActiveVsite();
-
-    if (!$active_vsite || !$active_vsite->hasPermission('url redirect group user', $account)) {
+    if (!$account->hasPermission('administer control panel redirects')) {
       return AccessResult::forbidden();
     }
 

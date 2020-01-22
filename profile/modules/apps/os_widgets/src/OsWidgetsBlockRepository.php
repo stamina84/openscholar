@@ -7,6 +7,8 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\os_widgets\Entity\LayoutContext;
+use Drupal\vsite\Plugin\VsiteContextManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Decorates core's Block Repositry to take Layout Contexts into account.
@@ -35,6 +37,20 @@ class OsWidgetsBlockRepository implements BlockRepositoryInterface {
   protected $themeManager;
 
   /**
+   * Vsite context manager.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManagerInterface
+   */
+  protected $vsiteContextManager;
+
+  /**
+   * Request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a new BlockRepository.
    *
    * @param \Drupal\block\BlockRepositoryInterface $blockRepository
@@ -43,11 +59,17 @@ class OsWidgetsBlockRepository implements BlockRepositoryInterface {
    *   The entity type manager service.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
+   * @param \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager
+   *   Vsite context manager.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   Request stack.
    */
-  public function __construct(BlockRepositoryInterface $blockRepository, EntityTypeManagerInterface $entity_type_manager, ThemeManagerInterface $theme_manager) {
+  public function __construct(BlockRepositoryInterface $blockRepository, EntityTypeManagerInterface $entity_type_manager, ThemeManagerInterface $theme_manager, VsiteContextManagerInterface $vsite_context_manager, RequestStack $request_stack) {
     $this->blockRepository = $blockRepository;
     $this->entityTypeManager = $entity_type_manager;
     $this->themeManager = $theme_manager;
+    $this->vsiteContextManager = $vsite_context_manager;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -57,7 +79,7 @@ class OsWidgetsBlockRepository implements BlockRepositoryInterface {
     $output = [];
     $applicable = LayoutContext::getApplicable();
 
-    $limit = \Drupal::request()->query->get('context');
+    $limit = $this->requestStack->getCurrentRequest()->query->get('context');
 
     $limit_found = !$limit;
     $flat = [];
@@ -65,11 +87,11 @@ class OsWidgetsBlockRepository implements BlockRepositoryInterface {
     $editing = TRUE;
 
     // Pull down a list of all the blocks in the site.
-    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsiteContextManager */
     if ($editing) {
       $flatWeight = 0;
-      $vsiteContextManager = \Drupal::service('vsite.context_manager');
-      if ($vsite = $vsiteContextManager->getActiveVsite()) {
+      /** @var \Drupal\group\Entity\GroupInterface|null $vsite */
+      $vsite = $this->vsiteContextManager->getActiveVsite();
+      if ($vsite) {
         $blockGCEs = $vsite->getContent('group_entity:block_content');
         foreach ($blockGCEs as $bgce) {
           /** @var \Drupal\block_content\BlockContentInterface $block_content */
@@ -116,16 +138,13 @@ class OsWidgetsBlockRepository implements BlockRepositoryInterface {
       }
     }
 
+    usort($flat, [LayoutContext::class, 'sortWidgets']);
+
     // Split out the flat list by region while loading the real block.
     foreach ($flat as $b) {
       if ($block = Block::load($b['id'])) {
         $output[$b['region']][] = $block;
       }
-    }
-
-    // Sort the blocks within region according to standard Drupal rules.
-    foreach ($output as &$blocks) {
-      @uasort($blocks, [Block::class, 'sort']);
     }
 
     return $output;

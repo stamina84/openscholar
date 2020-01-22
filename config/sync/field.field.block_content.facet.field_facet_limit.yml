@@ -1,0 +1,25 @@
+uuid: 2157ad4a-0ccf-4dc2-8844-12dee67e50bb
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.facet
+    - field.storage.block_content.field_facet_limit
+id: block_content.facet.field_facet_limit
+field_name: field_facet_limit
+entity_type: block_content
+bundle: facet
+label: 'Facet Limit'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 90
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

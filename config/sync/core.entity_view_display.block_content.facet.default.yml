@@ -1,0 +1,42 @@
+uuid: 365e10a6-3852-4fff-9f47-a26ab62b2a9a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.facet
+    - field.field.block_content.facet.field_facet_id
+    - field.field.block_content.facet.field_facet_limit
+    - field.field.block_content.facet.field_widget_title
+id: block_content.facet.default
+targetEntityType: block_content
+bundle: facet
+mode: default
+content:
+  field_facet_id:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_facet_limit:
+    weight: 2
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_widget_title:
+    weight: 3
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true
