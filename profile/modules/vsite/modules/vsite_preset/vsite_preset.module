@@ -28,7 +28,7 @@ function vsite_preset_group_insert(GroupInterface $group) {
       // Call helper to enable apps as per preset settings.
       /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
       $preset_helper = \Drupal::service('vsite_preset.preset_helper');
-      $preset_helper->enableApps($group, $appsToEnable, $appsToSetPrivate, $appsToSetPrivate);
+      $preset_helper->enableApps($group, $appsToEnable, $appsToSetPrivate);
 
       $fileArr = $preset->getCreationFilePaths();
       // If for this group type no preset files exists then we need not proceed.
