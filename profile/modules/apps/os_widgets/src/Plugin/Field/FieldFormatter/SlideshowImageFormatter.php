@@ -21,9 +21,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FieldFormatter(
  *   id = "os_widgets_slideshow_image",
  *   label = @Translation("Slideshow image"),
- *   description = @Translation("Render image with proper alt/title and link if exists."),
- *   field_types = {
- *     "entity_reference"
+ *   description = @Translation("Render image with proper alt/title and link if
+ *   exists."), field_types = {
+ *     "image"
  *   }
  * )
  */
@@ -136,20 +136,12 @@ class SlideshowImageFormatter extends FormatterBase implements ContainerFactoryP
     $title_value = $paragraph->get('field_slide_title_text')->getString();
     $slide_link_value = $paragraph->get('field_slide_link')->getString();
 
+    /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $item */
     foreach ($items as $item) {
-      $image_media = $item->entity;
-      if (!$image_media) {
-        // Referenced media might be deleted.
+      $image = $item->entity;
+      if (!$image) {
+        // Referenced file might be deleted.
         continue;
-      }
-      $image = $this->getImageFromMedia($image_media);
-      // Case of user not set alt value in slideshow paragraph.
-      if (empty($alt_value) && !empty($image_media->field_media_image->alt)) {
-        $alt_value = $image_media->field_media_image->alt;
-      }
-      // Case of user not set title value in slideshow paragraph.
-      if (empty($title_value) && !empty($image_media->field_media_image->title)) {
-        $title_value = $image_media->field_media_image->title;
       }
       $data_breakpoint_uri = $this->getImageBreakpointUri($image);
       $element['image'] = [
