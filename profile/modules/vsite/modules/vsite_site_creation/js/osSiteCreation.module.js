@@ -123,7 +123,7 @@
     if (pagefrom == 'page1' && pageto == 'page2') {
       if ($scope.individualScholar != null) {
         $scope.contentOption = {
-          value: 'os_scholar'
+          value: 'minimal'
         };
       } else if ($scope.projectLabSmallGroup != null) {
          $scope.contentOption = {
