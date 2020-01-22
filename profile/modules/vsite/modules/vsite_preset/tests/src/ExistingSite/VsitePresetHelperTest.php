@@ -110,11 +110,17 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
     ]);
     $this->assertEmpty($menuArr);
 
+    // Test negative block content does not exist already.
+    $gid = $this->group->id();
+    $blockStorage = $this->entityTypeManager->getStorage('group_content');
+    $blockArr = $blockStorage->loadByProperties([
+      'gid' => $gid,
+      'label' => 'Contact Widget',
+    ]);
+    $this->assertEmpty($blockArr);
+
     // Retrieve file creation csv source path.
     foreach ($this->uriArr as $uri) {
-      if (strpos($uri, 'node') === FALSE) {
-        continue;
-      }
       $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
     }
 
@@ -131,33 +137,6 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
       'title' => 'Bio',
     ]);
     $this->assertNotEmpty($menuArr);
-  }
-
-  /**
-   * Test preset default widget creation.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  public function testVsitePresetDefaultWidgetCreation() {
-
-    // Test negative block content does not exist already.
-    $gid = $this->group->id();
-    $blockStorage = $this->entityTypeManager->getStorage('group_content');
-    $blockArr = $blockStorage->loadByProperties([
-      'gid' => $gid,
-      'label' => 'Contact Widget',
-    ]);
-    $this->assertEmpty($blockArr);
-
-    // Retrieve file creation csv source path.
-    foreach ($this->uriArr as $uri) {
-      if (strpos($uri, 'block_content') === FALSE) {
-        continue;
-      }
-      $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
-    }
 
     // Test positive page content is created.
     $blockArr = $blockStorage->loadByProperties([
@@ -165,7 +144,6 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
       'label' => 'Contact Widget',
     ]);
     $this->assertNotEmpty($blockArr);
-
   }
 
 }

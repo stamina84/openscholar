@@ -166,7 +166,7 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
   }
 
   /**
-   * Creates default Node content for the group.
+   * Creates default Widget/block content for the group.
    *
    * @param array $data
    *   Csv rows as data array.
@@ -224,6 +224,7 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
 
     $menu_id = $this->menuHelper::DEFAULT_VSITE_MENU_MAPPING['main'] . $group->id();
     $storage = $this->entityTypeManager->getStorage('menu_link_content');
+    // Sort to make sure menu links are weighted in alphabetical order.
     sort($appsToEnable);
     foreach ($appsToEnable as $weight => $id) {
       if (!isset($app_definitions[$id]['listPageRoute'])) {
@@ -260,7 +261,7 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
     $menu_id = $this->menuHelper::DEFAULT_VSITE_MENU_MAPPING['main'] . $gid;
     $storage = $this->entityTypeManager->getStorage('menu_link_content');
     $storage->create([
-      'title' => $this->t('@title', ['@title' => $title]),
+      'title' => $title,
       'link' => ['uri' => $uri],
       'menu_name' => $menu_id,
       'weight' => 0,
