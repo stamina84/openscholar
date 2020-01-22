@@ -34,6 +34,7 @@ class OsSearchGroupSettingTest extends OsExistingSiteJavascriptTestBase {
       'custom_search_group' => 'Group (text)',
       'custom_title' => 'Custom Title (text)',
       'custom_type' => 'Custom Type (text)',
+      'custom_taxonomy' => 'Custom Taxonomy (text)',
     ];
   }
 
