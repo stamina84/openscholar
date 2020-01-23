@@ -1,4 +1,4 @@
-vsite.type.*:
+vsite_preset.type.*:
   type: config_entity
   label: Group Preset
   mapping:

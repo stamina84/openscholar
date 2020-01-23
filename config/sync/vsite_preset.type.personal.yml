@@ -1,0 +1,14 @@
+uuid: 8aa60fbf-357c-4c97-97f3-6fb1ed3686b3
+langcode: en
+status: true
+dependencies: {  }
+id: personal
+label: Personal
+description: 'Personal preset with some default content.'
+applicableTo:
+  personal: personal
+enabledApps:
+  class: class
+  page: page
+  publications: publications
+privateApps: {  }
