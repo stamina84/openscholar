@@ -9,7 +9,6 @@ use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTest
  *
  * @group functional-javascript
  * @group widgets
- * @group unique
  */
 class LayoutFormTest extends OsExistingSiteJavascriptTestBase {
 
