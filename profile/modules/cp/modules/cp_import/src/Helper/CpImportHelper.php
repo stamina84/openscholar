@@ -133,7 +133,8 @@ class CpImportHelper implements CpImportHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getMedia($media_val, $contentType) : ?Media {
+  public function getMedia($media_val, $contentType) : 
+  Media {
     $media = NULL;
     // Only load the bundles which are enabled for the content type's field.
     $bundle_fields = $this->fieldManager->getFieldDefinitions('node', $contentType);
@@ -146,7 +147,7 @@ class CpImportHelper implements CpImportHelperInterface {
     $item = get_headers($media_val, 1);
     $type = $item['Content-Type'];
     // If there is a redirection then only get the value of the last page.
-    $type = is_array($type)? end($type) : $type;
+    $type = is_array($type) ? end($type) : $type;
     if (strpos($type, 'text/html') !== FALSE) {
       $media = $this->createOembedMedia($media_val, $mediaTypes);
     }
