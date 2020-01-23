@@ -538,14 +538,14 @@ display:
       tags:
         - 'config:core.entity_view_display.bibcite_reference.artwork.default'
         - 'config:core.entity_view_display.bibcite_reference.artwork.teaser'
+        - 'config:core.entity_view_display.bibcite_reference.audiovisual.default'
+        - 'config:core.entity_view_display.bibcite_reference.audiovisual.teaser'
         - 'config:core.entity_view_display.bibcite_reference.artwork.citation'
         - 'config:core.entity_view_display.bibcite_reference.artwork.slide_teaser'
         - 'config:core.entity_view_display.bibcite_reference.artwork.table'
         - 'config:core.entity_view_display.bibcite_reference.audiovisual.citation'
-        - 'config:core.entity_view_display.bibcite_reference.audiovisual.default'
         - 'config:core.entity_view_display.bibcite_reference.audiovisual.slide_teaser'
         - 'config:core.entity_view_display.bibcite_reference.audiovisual.table'
-        - 'config:core.entity_view_display.bibcite_reference.audiovisual.teaser'
         - 'config:core.entity_view_display.bibcite_reference.bill.citation'
         - 'config:core.entity_view_display.bibcite_reference.bill.default'
         - 'config:core.entity_view_display.bibcite_reference.bill.slide_teaser'
@@ -2719,7 +2719,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          order: ASC
+          order: DESC
           exposed: false
           expose:
             label: ''

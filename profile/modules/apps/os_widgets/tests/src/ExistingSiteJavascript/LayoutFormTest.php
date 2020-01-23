@@ -148,7 +148,7 @@ JS;
       ],
     ]);
     $this->group->addContent($widget1, 'group_entity:block_content');
-    $this->placeBlockContentToRegion($widget1, $region, $context);
+    $this->placeBlockContentToRegion($widget1, $region, $context, 1);
     $new_widget1_weight = 2;
 
     $widget2 = $this->createBlockContent([
@@ -158,7 +158,7 @@ JS;
       ],
     ]);
     $this->group->addContent($widget2, 'group_entity:block_content');
-    $this->placeBlockContentToRegion($widget2, $region, $context);
+    $this->placeBlockContentToRegion($widget2, $region, $context, 2);
     $new_widget2_weight = 3;
 
     $widget3 = $this->createBlockContent([
@@ -168,10 +168,12 @@ JS;
       ],
     ]);
     $this->group->addContent($widget3, 'group_entity:block_content');
-    $this->placeBlockContentToRegion($widget3, $region, $context);
+    $this->placeBlockContentToRegion($widget3, $region, $context, 3);
     $new_widget3_weight = 1;
 
     // Assert widget placement when weight explicitly not changed.
+    // This replicates the behavior when a widget is dragged and drop in the
+    // widget placeholders - without reordering it.
     $this->visitViaVsite('', $this->group);
     /** @var \Behat\Mink\Element\Element[] $widgets */
     $widgets = $this->getSession()->getPage()->findAll('css', $widget_selector);
