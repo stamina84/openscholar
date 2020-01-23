@@ -5,12 +5,15 @@ namespace Drupal\Tests\os_fullcalendar\ExistingSiteJavascript;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\openscholar\Traits\OsCleanupClassTestTrait;
 use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
  * Test base for event tests.
  */
 abstract class EventExistingSiteJavascriptTestBase extends ExistingSiteWebDriverTestBase {
+
+  use OsCleanupClassTestTrait;
 
   /**
    * The entity type manager service.
@@ -117,6 +120,14 @@ abstract class EventExistingSiteJavascriptTestBase extends ExistingSiteWebDriver
     ]);
 
     return $event;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    $this->cleanUpProperties(self::class);
   }
 
 }

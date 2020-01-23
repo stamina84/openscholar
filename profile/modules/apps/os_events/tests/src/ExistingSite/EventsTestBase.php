@@ -36,4 +36,12 @@ abstract class EventsTestBase extends OsExistingSiteTestBase {
     $this->config = $this->container->get('config.factory');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    $this->cleanUpProperties(self::class);
+  }
+
 }
