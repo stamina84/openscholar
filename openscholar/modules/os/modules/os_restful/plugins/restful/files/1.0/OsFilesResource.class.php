@@ -242,6 +242,13 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
       'saveCallback' => array($this, 'setImageAltText'),
     );
 
+    $info['is_decorative'] = array(
+      'property' => 'field_file_is_decorative',
+      'sub_property' => 'value',
+      'callback' => array($this, 'getIsDecorative'),
+      'saveCallback' => array($this, 'setIsDecorative'),
+    );
+
     $info['image_title'] = array(
       'property' => 'field_file_image_title_text',
       'sub_property' => 'value',
@@ -309,6 +316,14 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
   public function getSchema($wrapper) {
     $uri = str_replace('///', '//', $wrapper->value()->uri);  // band aid fix
     return parse_url($uri, PHP_URL_SCHEME);
+  }
+
+  /**
+   * Callback function for the decorative bool of the image.
+   */
+  public function getIsDecorative($wrapper) {
+    $is_decorative = $this->getBundleProperty($wrapper, 'field_file_is_decorative');
+    return !empty($is_decorative);
   }
 
   /**
@@ -795,6 +810,15 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
         'format' => 'filtered_html'
       );
       $wrapper->os_file_description->set($data);
+
+      return true;
+    }
+    return false;
+  }
+
+  protected function setIsDecorative($wrapper) {
+    if (isset($this->request['is_decorative'])) {
+      $wrapper->field_file_is_decorative->set($this->request['is_decorative']);
 
       return true;
     }

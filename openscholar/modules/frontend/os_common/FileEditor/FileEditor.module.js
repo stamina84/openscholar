@@ -176,6 +176,10 @@
             var can_save = scope.invalidFileName || scope.invalidName;
 
             if (scope.file.type == 'image') {
+              // If decorative checked, no need to validate Alt field.
+              if (scope.file.is_decorative) {
+                return can_save;
+              }
               return can_save || scope.invalidAlt;
             }
 
