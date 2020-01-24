@@ -180,13 +180,13 @@ function _hwpi_branding_footer() {
       ),
     ),
     'copyright' => array(
-      '#markup' => t('<span class="harvard-copyright">!copyright_text</span> !privacy !access !copyinfring', array(
-          '!copyright_text' => str_replace("@year", date('Y'), variable_get('copyright_text', '')),
-          '!privacy' => variable_get('privacy_policy','') && variable_get('privacy_policy_text', '')?'| '.l(variable_get('privacy_policy_text'), variable_get('privacy_policy')): '',
-          '!access' => variable_get('site_access_text','')?'| '.l(variable_get('site_access_text'), variable_get('site_access')): '',
-          '!digital_access' => variable_get('site_digital_access_text','')?'| '.l(variable_get('site_digital_access_text'), variable_get('site_digital_access')): '',
-          '!copyinfring' => variable_get('copyright_infring_text','')?'| '.l(variable_get('copyright_infring_text'), variable_get('copyright_infring')): '',
-        )),
+      '#markup' => t('<span class="harvard-copyright">!copyright_text</span> !privacy !access !digital_access !copyinfring', array(
+        '!copyright_text' => str_replace("@year", date('Y'), variable_get('copyright_text', '')),
+        '!privacy' => variable_get('privacy_policy', '') && variable_get('privacy_policy_text', '') ? '| ' . l(variable_get('privacy_policy_text'), variable_get('privacy_policy')) : '',
+        '!access' => variable_get('site_access_text', '') ? '| ' . l(variable_get('site_access_text'), variable_get('site_access')) : '',
+        '!digital_access' => variable_get('site_digital_access_text', '') ? '| ' . l(variable_get('site_digital_access_text'), variable_get('site_digital_access')) : '',
+        '!copyinfring' => variable_get('copyright_infring_text', '') ? '| ' . l(variable_get('copyright_infring_text'), variable_get('copyright_infring')) : '',
+      )),
     ),
   );
 

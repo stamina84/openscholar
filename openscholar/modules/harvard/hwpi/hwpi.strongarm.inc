@@ -41,6 +41,20 @@ function hwpi_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'site_digital_access';
+  $strongarm->value = 'https://accessibility.huit.harvard.edu/digital-accessibility-policy';
+  $export['site_digital_access'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'site_digital_access_text';
+  $strongarm->value = 'Digital Accessibility';
+  $export['site_digital_access_text'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'copyright_infring';
   $strongarm->value = 'http://www.harvard.edu/reporting-copyright-infringements';
   $export['copyright_infring'] = $strongarm;

@@ -251,3 +251,15 @@ function hwpi_update_7018() {
   );
   features_revert($revert);
 }
+
+/**
+ * Saving strongarm variables to apply new menu item in footer.
+ */
+function hwpi_update_7019() {
+  $revert = array(
+    'hwpi' => array(
+      'variable',
+    )
+  );
+  features_revert($revert);
+}
