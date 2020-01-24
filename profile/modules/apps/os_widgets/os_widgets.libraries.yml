@@ -82,3 +82,8 @@ sliderWidget:
     - core/drupalSettings
     - slick/slick
     - slick/slick.theme
+contextualChanges:
+  js:
+    js/os_widgets.contextualChanges.js: {}
+  dependencies:
+    - core/drupal

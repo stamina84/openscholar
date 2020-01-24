@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\openscholar\Traits;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\bibcite_entity\Entity\Contributor;
 use Drupal\bibcite_entity\Entity\ContributorInterface;
 use Drupal\bibcite_entity\Entity\Reference;
@@ -562,6 +563,23 @@ trait ExistingSiteTestTrait {
     $this->markEntityForCleanup($paragraph);
 
     return $paragraph;
+  }
+
+  /**
+   * Retrieves the destination parameter value from a link.
+   *
+   * @param \Behat\Mink\Element\NodeElement $element
+   *   The link element.
+   *
+   * @return string
+   *   The destination.
+   */
+  protected function getDestinationParameterValue(NodeElement $element): string {
+    $href = $element->getAttribute('href');
+    list(, $query) = explode('?', $href);
+    list(, $value) = explode('=', $query);
+
+    return $value;
   }
 
 }

@@ -209,4 +209,31 @@ JS;
     $this->assertEqual($widgets[2]->find('css', $block_title_selector)->getHtml(), 'The Doors Widget');
   }
 
+  /**
+   * Tests widget's contextual delete links.
+   */
+  public function testDeleteContextualRedirect() {
+    $web_assert = $this->assertSession();
+    $block1 = $this->createBlockContent([
+      'type' => 'custom_text_html',
+      'info' => [
+        'value' => 'Test 1',
+      ],
+      'body' => [
+        'Lorem Ipsum content 1',
+      ],
+      'field_widget_title' => ['Test 1'],
+    ]);
+    $this->group->addContent($block1, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($block1, 'content');
+
+    $this->visitViaVsite("blog", $this->group);
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('Lorem Ipsum content 1');
+    $web_assert->waitForElement('css', '.contextual-links .block-contentblock-delete a');
+    $delete_link = $this->getSession()->getPage()->find('css', '.contextual-links .block-contentblock-delete a');
+    $this->assertNotNull($delete_link);
+    $this->assertEquals("{$this->groupAlias}/blog", $this->getDestinationParameterValue($delete_link));
+  }
+
 }
