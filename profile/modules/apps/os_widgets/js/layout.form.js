@@ -91,6 +91,12 @@
         }
       });
 
+      // We do not want the blocks to be placed on some parts of the page.
+      // Don't move this code fragment elsewhere in the file, might cause unexpected behaviour.
+      $('.block-place-region.region-footer-bottom', context).sortable({
+        disabled: true
+      });
+
       // Define the unused widget list to be a sortable target
       $('#block-list', context).sortable({
         items: '> div, > nav',
