@@ -11,7 +11,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Test CpUsersSupportAccessCheck.
  *
  * @group kernel
- * @group cp
+ * @group cp-2
  *
  * @coversDefaultClass \Drupal\cp_users\Access\CpUsersSupportAccessCheck
  */

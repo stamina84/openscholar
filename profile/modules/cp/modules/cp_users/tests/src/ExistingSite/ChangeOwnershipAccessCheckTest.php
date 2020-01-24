@@ -11,7 +11,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Test ChangeOwnershipAccessCheck.
  *
  * @group kernel
- * @group cp
+ * @group cp-1
  *
  * @coversDefaultClass \Drupal\cp_users\Access\ChangeOwnershipAccessCheck
  */

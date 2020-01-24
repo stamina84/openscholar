@@ -7,7 +7,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 /**
  * CpActionTest.
  *
- * @group cp
+ * @group cp-2
  * @group kernel
  */
 class CpActionTest extends OsExistingSiteTestBase {
