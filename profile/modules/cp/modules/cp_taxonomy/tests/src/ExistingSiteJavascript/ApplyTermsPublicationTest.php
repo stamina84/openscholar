@@ -3,6 +3,7 @@
 namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 
 use Drupal\bibcite_entity\Entity\Reference;
+use Drupal\Tests\cp_taxonomy\Traits\CpTaxonomyTestTrait;
 
 /**
  * Tests taxonomy terms apply to publication.
@@ -12,6 +13,8 @@ use Drupal\bibcite_entity\Entity\Reference;
  * @covers \Drupal\cp_taxonomy\Form\AddTermsToPublicationForm
  */
 class ApplyTermsPublicationTest extends CpTaxonomyExistingSiteJavascriptTestBase {
+
+  use CpTaxonomyTestTrait;
 
   protected $term;
   protected $groupAdmin;
@@ -53,36 +56,6 @@ class ApplyTermsPublicationTest extends CpTaxonomyExistingSiteJavascriptTestBase
     $saved_publication = Reference::load($publication->id());
     $term_value = $saved_publication->get('field_taxonomy_terms')->getString();
     $this->assertEqual($this->term->id(), $term_value);
-  }
-
-  /**
-   * Helper function, that will apply the action.
-   */
-  protected function applyAction($action_id) {
-    $web_assert = $this->assertSession();
-    $page = $this->getCurrentPage();
-    $select = $page->findField('action');
-    $select->setValue($action_id);
-    $page->pressButton('Apply to selected items');
-    $web_assert->statusCodeEquals(200);
-  }
-
-  /**
-   * Helper function, that will select a vocab and first term in chosen.
-   */
-  protected function applyVocabularyFirstTerm($vocabulary) {
-    $web_assert = $this->assertSession();
-    $page = $this->getCurrentPage();
-    $select = $page->findField('vocabulary');
-    $select->setValue($vocabulary);
-    $this->waitForAjaxToFinish();
-    $page->find('css', '.chosen-search-input')->click();
-    $result = $web_assert->waitForElementVisible('css', '.active-result.highlighted');
-    $this->assertNotEmpty($result, 'Chosen popup is not visible.');
-    $page->find('css', '.active-result.highlighted')->click();
-    $page->find('css', '.chosen-search-input')->click();
-    $page->pressButton('Apply');
-    $web_assert->statusCodeEquals(200);
   }
 
 }

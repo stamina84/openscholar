@@ -3,6 +3,7 @@
 namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 
 use Drupal\node\Entity\Node;
+use Drupal\Tests\cp_taxonomy\Traits\CpTaxonomyTestTrait;
 
 /**
  * Tests taxonomy terms remove from nodes.
@@ -12,6 +13,8 @@ use Drupal\node\Entity\Node;
  * @covers \Drupal\cp_taxonomy\Form\RemoveTermsFromNodeForm
  */
 class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
+
+  use CpTaxonomyTestTrait;
 
   protected $term;
   protected $groupAdmin;
@@ -54,7 +57,7 @@ class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page = $this->getCurrentPage();
     $page->findField('node_bulk_form[0]')->check();
     $page->findField('node_bulk_form[1]')->check();
-    $this->removeTermWithAction();
+    $this->removeTermWithAction('cp_taxonomy_remove_terms_node_action');
     $web_assert->pageTextContains('No term was removed from the content');
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was removed from the content');
     $warning_wrapper = $page->find('css', '.messages--warning');
@@ -67,31 +70,6 @@ class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $saved_faq = Node::load($faq->id());
     $term_value = $saved_faq->get('field_taxonomy_terms')->getString();
     $this->assertEmpty($term_value);
-  }
-
-  /**
-   * Helper function, that will select a term and remove from selected nodes.
-   */
-  protected function removeTermWithAction() {
-    $web_assert = $this->assertSession();
-    $page = $this->getCurrentPage();
-    $select = $page->findField('action');
-    $select->setValue('cp_taxonomy_remove_terms_node_action');
-    $page->pressButton('Apply to selected items');
-    $web_assert->statusCodeEquals(200);
-    $page = $this->getCurrentPage();
-    $select = $page->findField('vocabulary');
-    $select->setValue('vocab_group_1');
-    $this->waitForAjaxToFinish();
-    $page->find('css', '.chosen-search-input')->click();
-
-    $result = $web_assert->waitForElementVisible('css', '.active-result.highlighted');
-    $this->assertNotEmpty($result, 'Chosen popup is not visible.');
-    $web_assert->pageTextContains($this->term->label());
-    $page->find('css', '.active-result.highlighted')->click();
-    $page->find('css', '.chosen-search-input')->click();
-    $page->pressButton('Remove');
-    $web_assert->statusCodeEquals(200);
   }
 
 }

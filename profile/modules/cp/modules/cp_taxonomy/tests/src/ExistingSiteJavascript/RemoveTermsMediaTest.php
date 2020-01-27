@@ -3,6 +3,7 @@
 namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 
 use Drupal\media\Entity\Media;
+use Drupal\Tests\cp_taxonomy\Traits\CpTaxonomyTestTrait;
 
 /**
  * Tests taxonomy terms remove from media.
@@ -12,6 +13,8 @@ use Drupal\media\Entity\Media;
  * @covers \Drupal\cp_taxonomy\Form\RemoveTermsFromMediaForm
  */
 class RemoveTermsMediaTest extends CpTaxonomyExistingSiteJavascriptTestBase {
+
+  use CpTaxonomyTestTrait;
 
   protected $term;
   protected $groupAdmin;
@@ -53,7 +56,7 @@ class RemoveTermsMediaTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page->findField('media_bulk_form[0]')->check();
     // TODO: Hotfix for media are duplicated at admin list.
     $page->findField('media_bulk_form[2]')->check();
-    $this->removeTermWithAction();
+    $this->removeTermWithAction('cp_taxonomy_remove_terms_media_action');
     $web_assert->pageTextContains('No term was removed from the content');
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was removed from the content');
     $warning_wrapper = $page->find('css', '.messages--warning');
@@ -66,31 +69,6 @@ class RemoveTermsMediaTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $saved_media = Media::load($media1->id());
     $term_value = $saved_media->get('field_taxonomy_terms')->getString();
     $this->assertEmpty($term_value);
-  }
-
-  /**
-   * Helper function, that will select a term and remove from selected media.
-   */
-  protected function removeTermWithAction() {
-    $web_assert = $this->assertSession();
-    $page = $this->getCurrentPage();
-    $select = $page->findField('action');
-    $select->setValue('cp_taxonomy_remove_terms_media_action');
-    $page->pressButton('Apply to selected items');
-    $web_assert->statusCodeEquals(200);
-    $page = $this->getCurrentPage();
-    $select = $page->findField('vocabulary');
-    $select->setValue('vocab_group_1');
-    $this->waitForAjaxToFinish();
-    $page->find('css', '.chosen-search-input')->click();
-
-    $result = $web_assert->waitForElementVisible('css', '.active-result.highlighted');
-    $this->assertNotEmpty($result, 'Chosen popup is not visible.');
-    $web_assert->pageTextContains($this->term->label());
-    $page->find('css', '.active-result.highlighted')->click();
-    $page->find('css', '.chosen-search-input')->click();
-    $page->pressButton('Remove');
-    $web_assert->statusCodeEquals(200);
   }
 
 }
