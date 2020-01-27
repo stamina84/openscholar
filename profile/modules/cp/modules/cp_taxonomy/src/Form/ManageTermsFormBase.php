@@ -188,6 +188,7 @@ abstract class ManageTermsFormBase extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Apply'),
       '#button_type' => 'primary',
+      '#name' => 'process_terms',
     ];
     $form['actions']['cancel'] = [
       '#type' => 'submit',

@@ -31,7 +31,7 @@ class AddTermsToMediaForm extends ManageTermsFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $button = $form_state->getTriggeringElement();
-    if ($button['#value'] == $this->t('Apply') && !empty($this->entityInfo)) {
+    if ($button['#name'] == 'process_terms' && !empty($this->entityInfo)) {
       $this->applyTermsSubmit($form_state);
       $this->tempStore->delete($this->currentUser->id());
     }
