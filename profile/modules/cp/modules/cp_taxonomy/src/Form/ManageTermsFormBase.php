@@ -75,7 +75,7 @@ abstract class ManageTermsFormBase extends FormBase {
   protected $renderer;
 
   /**
-   * Constructs a DeleteMultiple form object.
+   * Constructs a ManageTermsFormBase form object.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
@@ -133,6 +133,7 @@ abstract class ManageTermsFormBase extends FormBase {
       }
     }
     $form['vocabulary'] = [
+      '#title' => $this->t('Vocabulary'),
       '#type' => 'select',
       '#options' => $options,
       '#empty_option' => $this->t('- Select -'),
