@@ -17,7 +17,7 @@ use Drupal\os_pages\Controller\BooksAutocompleteController;
 class BooksHelperTest extends TestBase {
 
   /**
-   * Test addition of new condition in section group.
+   * Tests matching pages in Autocomplete list in add-other-books form.
    */
   public function testMatchingBooks() {
     $data_nids = [];
@@ -41,31 +41,96 @@ class BooksHelperTest extends TestBase {
     ]);
     $this->addGroupContent($second_book, $this->group);
 
+    $not_book_page = $this->createNode([
+      'title' => 'Not a book page',
+      'type' => 'page',
+    ]);
+    $this->addGroupContent($not_book_page, $this->group);
+
     $data_nids = [
-      $book->id(), $first_sub_page->id(), $first_sub_sub_page->id(), $second_book->id(),
+      $book->id(), $first_sub_page->id(), $first_sub_sub_page->id(), $second_book->id(), $not_book_page->id(),
     ];
 
-    $input = 'Second';
+    $input = 'book';
     $request = Request::create('os_pages/books-autocomplete/' . $this->group->id() . '/' . $book->id());
     $request->query->set('q', $input);
 
     $entity_reference_controller = BooksAutocompleteController::create($this->container);
     $result = Json::decode($entity_reference_controller->handleAutocomplete($request, $this->group, $book)->getContent());
 
-    $value = $second_book->getTitle() . ' (' . $second_book->id() . ')';
-    $target = [
-      'value' => $value,
-      'label' => $value,
+    $value1 = [
+      'value' => $second_book->getTitle() . ' (' . $second_book->id() . ')',
+      'label' => $second_book->getTitle() . ' (' . $second_book->id() . ')',
     ];
-    $this->assertIdentical(reset($result), $target);
+
+    $value2 = [
+      'value' => $not_book_page->getTitle() . ' (' . $not_book_page->id() . ')',
+      'label' => $not_book_page->getTitle() . ' (' . $not_book_page->id() . ')',
+    ];
+
+    $target = [$value1, $value2];
+
+    $this->assertIdentical(sort($result), sort($target));
 
     // Testing BooksHelper service methods.
     $matching_nids = \Drupal::service('os_pages.books_helper')->getMatchingNodes('book');
-    $this->assertIdentical(reset($matching_nids), reset($data_nids));
+    $this->assertIdentical(sort($matching_nids), sort($data_nids));
 
     $filtered_books = \Drupal::service('os_pages.books_helper')->getGroupBookResults($this->group, $matching_nids, $book);
-    $this->assertIdentical(reset($filtered_books), $target);
+    $this->assertIdentical(sort($filtered_books), sort($target));
 
+  }
+
+  /**
+   * Tests not matching pages in Autocomplete list.
+   */
+  public function testNoMatchingPages() {
+    $book1 = $this->createBookPage([
+      'title' => 'First book 1',
+    ]);
+
+    /** @var \Drupal\node\NodeInterface $first_sub_page */
+    $book2 = $this->createBookPage([
+      'title' => 'Second book 2',
+    ]);
+
+    $this->addGroupContent($book1, $this->group);
+    $this->addGroupContent($book2, $this->group);
+
+    // Creating a page, but not added in this group.
+    $standalone_non_book_page = $this->createNode([
+      'title' => 'Not a book page in this group',
+      'type' => 'page',
+    ]);
+
+    $data_nids = [
+      $book1->id(), $book2->id(), $standalone_non_book_page->id(),
+    ];
+
+    // Even if the page is not added, it will list all pages.
+    $matching_nids = \Drupal::service('os_pages.books_helper')->getMatchingNodes('book');
+    $this->assertIdentical(sort($matching_nids), sort($data_nids));
+
+    $input = 'book';
+    $request = Request::create('os_pages/books-autocomplete/' . $this->group->id() . '/' . $book1->id());
+    $request->query->set('q', $input);
+
+    $entity_reference_controller = BooksAutocompleteController::create($this->container);
+    $result = Json::decode($entity_reference_controller->handleAutocomplete($request, $this->group, $book1)->getContent());
+
+    // Creating arrays in value-label format.
+    $value1 = [
+      'value' => $book2->getTitle() . ' (' . $book2->id() . ')',
+      'label' => $book2->getTitle() . ' (' . $book2->id() . ')',
+    ];
+    $value2 = [
+      'value' => $standalone_non_book_page->getTitle() . ' (' . $standalone_non_book_page->id() . ')',
+      'label' => $standalone_non_book_page->getTitle() . ' (' . $standalone_non_book_page->id() . ')',
+    ];
+
+    $target = [$value1, $value2];
+    $this->assertIdentical($result[0], $value1);
+    $this->assertNotIdentical($result, $target);
   }
 
 }
