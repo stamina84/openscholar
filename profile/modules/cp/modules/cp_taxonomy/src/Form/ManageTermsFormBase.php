@@ -49,14 +49,14 @@ abstract class ManageTermsFormBase extends FormBase {
   /**
    * The term storage.
    *
-   * @var \Drupal\taxonomy\TermStorage
+   * @var \Drupal\taxonomy\TermStorageInterface
    */
   protected $termStorage;
 
   /**
    * The vocabulary storage.
    *
-   * @var \Drupal\taxonomy\VocabularyStorage
+   * @var \Drupal\taxonomy\VocabularyStorageInterface
    */
   protected $vocabularyStorage;
 
@@ -77,14 +77,14 @@ abstract class ManageTermsFormBase extends FormBase {
   /**
    * Cp taxonomy helper.
    *
-   * @var \Drupal\cp_taxonomy\CpTaxonomyHelper
+   * @var \Drupal\cp_taxonomy\CpTaxonomyHelperInterface
    */
   protected $taxonomyHelper;
 
   /**
    * Renderer.
    *
-   * @var \Drupal\Core\Render\Renderer
+   * @var \Drupal\Core\Render\RendererInterface
    */
   protected $renderer;
 
@@ -190,7 +190,7 @@ abstract class ManageTermsFormBase extends FormBase {
       '#button_type' => 'primary',
     ];
     $form['actions']['cancel'] = [
-      '#type' => 'button',
+      '#type' => 'submit',
       '#value' => $this->t('Cancel'),
     ];
 
@@ -203,6 +203,9 @@ abstract class ManageTermsFormBase extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     $selected_vocabulary = $form_state->getValue('vocabulary');
+    if (empty($selected_vocabulary)) {
+      return;
+    }
     $allowed_types = $this->vocabularyStorage->load($selected_vocabulary)->get('allowed_vocabulary_reference_types');
     $vocab_entities = $this->taxonomyHelper->explodeEntityBundles($allowed_types);
     if (empty($vocab_entities[$this->entityTypeId])) {
@@ -223,6 +226,9 @@ abstract class ManageTermsFormBase extends FormBase {
   public function applyTermsSubmit(FormStateInterface $form_state) {
     $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
     $selected_vocabulary = $form_state->getValue('vocabulary');
+    if (empty($selected_vocabulary)) {
+      return;
+    }
     $terms_to_apply = $form_state->getValue('terms');
     $terms = $this->termStorage->loadMultiple($terms_to_apply);
     $term_names = [];
