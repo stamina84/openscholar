@@ -7,7 +7,7 @@ use Drupal\node\Entity\Node;
 /**
  * Tests taxonomy terms apply to nodes.
  *
- * @group functional
+ * @group functional-javascript
  * @group cp
  * @covers \Drupal\cp_taxonomy\Form\AddTermsToNodeForm
  */

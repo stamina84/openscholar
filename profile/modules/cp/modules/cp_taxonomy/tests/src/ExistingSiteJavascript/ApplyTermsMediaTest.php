@@ -7,7 +7,7 @@ use Drupal\media\Entity\Media;
 /**
  * Tests taxonomy terms apply to media.
  *
- * @group functional
+ * @group functional-javascript
  * @group cp
  * @covers \Drupal\cp_taxonomy\Form\AddTermsToMediaForm
  */

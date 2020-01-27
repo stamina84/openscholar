@@ -7,7 +7,7 @@ use Drupal\bibcite_entity\Entity\Reference;
 /**
  * Tests taxonomy terms apply to publication.
  *
- * @group functional
+ * @group functional-javascript
  * @group cp
  * @covers \Drupal\cp_taxonomy\Form\AddTermsToPublicationForm
  */

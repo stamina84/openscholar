@@ -7,7 +7,7 @@ use Drupal\node\Entity\Node;
 /**
  * Tests taxonomy terms remove from nodes.
  *
- * @group functional
+ * @group functional-javascript
  * @group cp
  * @covers \Drupal\cp_taxonomy\Form\RemoveTermsFromNodeForm
  */
