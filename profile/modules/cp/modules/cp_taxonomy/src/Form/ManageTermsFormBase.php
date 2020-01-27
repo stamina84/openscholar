@@ -47,6 +47,20 @@ abstract class ManageTermsFormBase extends FormBase {
   protected $entityTypeManager;
 
   /**
+   * The term storage.
+   *
+   * @var \Drupal\taxonomy\TermStorage
+   */
+  protected $termStorage;
+
+  /**
+   * The vocabulary storage.
+   *
+   * @var \Drupal\taxonomy\VocabularyStorage
+   */
+  protected $vocabularyStorage;
+
+  /**
    * The current user object.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -91,6 +105,8 @@ abstract class ManageTermsFormBase extends FormBase {
   public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityTypeManagerInterface $manager, AccountInterface $current_user, CpTaxonomyHelper $taxonomy_helper, Renderer $renderer) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->entityTypeManager = $manager;
+    $this->termStorage = $manager->getStorage('taxonomy_term');
+    $this->vocabularyStorage = $manager->getStorage('taxonomy_vocabulary');
     $this->currentUser = $current_user;
     $this->taxonomyHelper = $taxonomy_helper;
     $this->renderer = $renderer;
@@ -118,15 +134,13 @@ abstract class ManageTermsFormBase extends FormBase {
     if (empty($this->entityInfo)) {
       return new RedirectResponse(Url::fromRoute('cp.content.collection')->toString());
     }
-    $vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
-    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
-    $vocabs = $vocabulary_storage->loadMultiple();
+    $vocabs = $this->vocabularyStorage->loadMultiple();
 
     $options = [];
     $options_terms = [];
     foreach ($vocabs as $vocab) {
       $options[$vocab->id()] = $vocab->label();
-      $terms = $term_storage->loadTree($vocab->id());
+      $terms = $this->termStorage->loadTree($vocab->id());
       foreach ($terms as $term) {
         // We have to collect all terms to prevent error from allowed values.
         $options_terms[$term->tid] = $term->name;
@@ -188,9 +202,8 @@ abstract class ManageTermsFormBase extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
-    $vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
     $selected_vocabulary = $form_state->getValue('vocabulary');
-    $allowed_types = $vocabulary_storage->load($selected_vocabulary)->get('allowed_vocabulary_reference_types');
+    $allowed_types = $this->vocabularyStorage->load($selected_vocabulary)->get('allowed_vocabulary_reference_types');
     $vocab_entities = $this->taxonomyHelper->explodeEntityBundles($allowed_types);
     if (empty($vocab_entities[$this->entityTypeId])) {
       $form_state->setError($form['vocabulary'], $this->t('Selected vocabulary is not handle %entity_type_id entity type.', ['%entity_type_id' => $this->entityTypeId]));
@@ -208,11 +221,10 @@ abstract class ManageTermsFormBase extends FormBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function applyTermsSubmit(FormStateInterface $form_state) {
-    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
     $selected_vocabulary = $form_state->getValue('vocabulary');
     $terms_to_apply = $form_state->getValue('terms');
-    $terms = $term_storage->loadMultiple($terms_to_apply);
+    $terms = $this->termStorage->loadMultiple($terms_to_apply);
     $term_names = [];
     foreach ($terms as $term) {
       $term_names[] = $term->label();
@@ -290,9 +302,8 @@ abstract class ManageTermsFormBase extends FormBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function removeTermsSubmit(FormStateInterface $form_state) {
-    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $terms_to_remove = $form_state->getValue('terms');
-    $terms = $term_storage->loadMultiple($terms_to_remove);
+    $terms = $this->termStorage->loadMultiple($terms_to_remove);
     $term_names = [];
     foreach ($terms as $term) {
       $term_names[] = $term->label();
@@ -360,11 +371,9 @@ abstract class ManageTermsFormBase extends FormBase {
    */
   public function getTermsAjaxCallback(array &$form, FormStateInterface $form_state) {
     if ($selected_vocabulary = $form_state->getValue('vocabulary')) {
-      $vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
-      $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
-      $vocab = $vocabulary_storage->load($selected_vocabulary);
+      $vocab = $this->vocabularyStorage->load($selected_vocabulary);
       // Get terms from selected vocabulary.
-      $terms = $term_storage->loadTree($vocab->id());
+      $terms = $this->termStorage->loadTree($vocab->id());
       $options = [];
       foreach ($terms as $term) {
         $options[$term->tid] = $term->name;
