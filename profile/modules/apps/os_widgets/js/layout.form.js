@@ -91,6 +91,12 @@
         }
       });
 
+      // We do not want the blocks to be placed on some parts of the page.
+      // Don't move this code fragment elsewhere in the file, might cause unexpected behaviour.
+      $('.block-place-region.region-footer-bottom', context).sortable({
+        disabled: true
+      });
+
       // Define the unused widget list to be a sortable target
       $('#block-list', context).sortable({
         items: '> div, > nav',
@@ -217,5 +223,19 @@
 
     return vars;
   }
+
+  /**
+   * Update Filter Widget by Type field.
+   */
+  $.fn.updateWidgetType = function(block_type_label) {
+    $('#block-list .block').once().each(function() {
+      let block_type = $(this).data('block-type');
+      let exists = $('#filter-widgets-by-type option[value=' + block_type + ']').length;
+
+      if (exists == 0 && typeof block_type != 'undefined') {
+        $('#filter-widgets-by-type').append('<option value=' + block_type + '>' + block_type_label + '</option>')
+      }
+    });
+  };
 
 })(jQuery);

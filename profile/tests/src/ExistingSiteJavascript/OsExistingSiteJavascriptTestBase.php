@@ -3,6 +3,7 @@
 namespace Drupal\Tests\openscholar\ExistingSiteJavascript;
 
 use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
+use Drupal\Tests\openscholar\Traits\OsCleanupClassTestTrait;
 use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
@@ -11,6 +12,7 @@ use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 abstract class OsExistingSiteJavascriptTestBase extends ExistingSiteWebDriverTestBase {
 
   use ExistingSiteTestTrait;
+  use OsCleanupClassTestTrait;
 
   /**
    * Test group.
@@ -82,6 +84,8 @@ abstract class OsExistingSiteJavascriptTestBase extends ExistingSiteWebDriverTes
     foreach ($this->cleanUpConfigs as $config_entity) {
       $config_entity->delete();
     }
+
+    $this->cleanUpProperties(self::class);
   }
 
 }

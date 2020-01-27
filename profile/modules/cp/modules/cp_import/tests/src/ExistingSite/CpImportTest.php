@@ -17,7 +17,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Class CpImportTest.
  *
  * @group kernel
- * @group cp
+ * @group cp-1
  */
 class CpImportTest extends OsExistingSiteTestBase {
 
@@ -206,6 +206,18 @@ class CpImportTest extends OsExistingSiteTestBase {
     $this->assertEmpty($message['@date']);
     $this->assertInstanceOf(TranslatableMarkup::class, $message['@title']);
 
+    // Test body field errors.
+    $data[0] = [
+      'Title' => 'Title1',
+      'Body' => '',
+      'Files' => '',
+      'Created date' => '2015-01-01',
+      'Path' => 'test1',
+    ];
+    $message = $instance->validateRows($data);
+    $this->assertEmpty($message['@title']);
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@body']);
+
     // Test no errors in row.
     $data[0] = [
       'Title' => 'Test1',
@@ -270,6 +282,11 @@ class CpImportTest extends OsExistingSiteTestBase {
     // successfully it means conversion works.
     $node3 = $storage->loadByProperties(['title' => 'Some Question 6']);
     $this->assertCount(1, $node3);
+
+    // Test if no date was given time is not set to 0.
+    $node5 = $node3 = $storage->loadByProperties(['title' => 'Some Question 5']);
+    $node5 = array_values($node5)[0];
+    $this->assertNotEquals(0, $node5->getCreatedTime());
 
     // Tests event calls helper to add content to vsite.
     $vsite = $this->vsiteContextManager->getActiveVsite();

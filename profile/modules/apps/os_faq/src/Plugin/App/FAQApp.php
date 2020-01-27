@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\cp_import\AppImportFactory;
 use Drupal\cp_import\Helper\CpImportHelper;
-use Drupal\file\Entity\File;
 use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\vsite\Plugin\AppPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,18 +27,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   },
  *   id = "faq",
  *   contextualRoute = "view.os_faq.page_1",
+ *   listPageRoute = "view.os_faq.page_1",
  *   cpImportId = "os_faq_import",
  *   cpImportFilePath = "public://importcsv/os_faq.csv"
  * )
  */
 class FAQApp extends AppPluginBase {
-
-  /**
-   * Messenger service.
-   *
-   * @var \Drupal\Core\Messenger\Messenger
-   */
-  protected $messenger;
 
   /**
    * App Import factory service.
@@ -52,8 +45,7 @@ class FAQApp extends AppPluginBase {
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger, AppImportFactory $appImportFactory) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migrationPluginManager, $cpImportHelper);
-    $this->messenger = $messenger;
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migrationPluginManager, $cpImportHelper, $messenger);
     $this->appImportFactory = $appImportFactory;
   }
 
@@ -81,27 +73,8 @@ class FAQApp extends AppPluginBase {
    *   The Form State.
    */
   public function validateImportSource(array $form, FormStateInterface $formState) {
-    if (!parent::validateImportSource($form, $formState)) {
-      return;
-    }
-
-    $fileId = $formState->getValue('import_file');
-    $fileId = array_shift($fileId);
-
-    $encoding = $formState->getValue('encoding');
-
-    /** @var \Drupal\file\Entity\File|NULL $file */
-    $file = $fileId ? File::load($fileId) : NULL;
-
-    if (!$file) {
-      $formState->setError($form['import_file'], $this->t('File not found'));
-      return;
-    }
-
-    $data = $this->cpImportHelper->csvToArray($file->getFileUri(), $encoding);
-
+    $data = parent::validateImportSource($form, $formState);
     if (!$data) {
-      $formState->setError($form['import_file'], $this->t('Data could not be read from the csv , The structure of your CSV file probably needs to be updated. Please download the template again.'));
       return;
     }
 
@@ -119,7 +92,7 @@ class FAQApp extends AppPluginBase {
     // Validate rows.
     if ($message = $faqImport->validateRows($data)) {
       $formState->setError($form['import_file']);
-      $this->messenger->addError($this->t('@title @file @date', $message));
+      $this->messenger->addError($this->t('@title @body @file @date', $message));
     }
   }
 

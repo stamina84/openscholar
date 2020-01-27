@@ -71,4 +71,12 @@ class OsWidgetsExistingSiteTestBase extends OsExistingSiteTestBase {
     return $media;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    $this->cleanUpProperties(self::class);
+  }
+
 }

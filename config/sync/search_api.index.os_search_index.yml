@@ -53,10 +53,14 @@ field_settings:
     label: 'Group (text)'
     property_path: custom_search_group
     type: integer
+  custom_taxonomy:
+    label: 'Custom Taxonomy (text)'
+    property_path: custom_taxonomy
+    type: integer
   custom_title:
     label: 'Custom Title (text)'
     property_path: custom_title
-    type: string
+    type: text
   custom_type:
     label: 'Custom Type (text)'
     property_path: custom_type
@@ -133,7 +137,7 @@ processor_settings:
   add_bundle_as_text: {  }
   add_created_as_text: {  }
   add_group_as_text: {  }
-  add_post_date_as_text: {  }
+  add_taxonomy_as_text: {  }
   add_title_as_text: {  }
   add_type_as_text: {  }
   add_url: {  }
@@ -193,6 +197,7 @@ processor_settings:
     all_fields: true
     fields:
       - body
+      - custom_title
       - reference_title
     exceptions:
       mexican: mexic
@@ -204,6 +209,7 @@ processor_settings:
     all_fields: true
     fields:
       - body
+      - custom_title
       - reference_title
     spaces: ''
     overlap_cjk: 1

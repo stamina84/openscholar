@@ -124,4 +124,116 @@ JS;
     $this->assertNotTrue($page->find('xpath', "//h3[contains(.,\"{$block_info_2}\")]")->isVisible());
   }
 
+  /**
+   * Tests whether widget placement by weight is working.
+   *
+   * @covers \Drupal\os_widgets\Entity\LayoutContext::sortWidgets
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testWidgetPlacementByWeight(): void {
+    // Setup data required by the test.
+    $region = 'content';
+    $context = 'all_pages';
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+    $widget_selector = '.region-content section.block-block-content';
+    $block_title_selector = '.block-title';
+
+    // Content setup.
+    $widget1 = $this->createBlockContent([
+      'info' => 'Apple Widget',
+      'field_widget_title' => [
+        'value' => 'Apple Widget',
+      ],
+    ]);
+    $this->group->addContent($widget1, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($widget1, $region, $context, 1);
+    $new_widget1_weight = 2;
+
+    $widget2 = $this->createBlockContent([
+      'info' => 'The Doors Widget',
+      'field_widget_title' => [
+        'value' => 'The Doors Widget',
+      ],
+    ]);
+    $this->group->addContent($widget2, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($widget2, $region, $context, 2);
+    $new_widget2_weight = 3;
+
+    $widget3 = $this->createBlockContent([
+      'info' => 'Zebra Widget',
+      'field_widget_title' => [
+        'value' => 'Zebra Widget',
+      ],
+    ]);
+    $this->group->addContent($widget3, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($widget3, $region, $context, 3);
+    $new_widget3_weight = 1;
+
+    // Assert widget placement when weight explicitly not changed.
+    // This replicates the behavior when a widget is dragged and drop in the
+    // widget placeholders - without reordering it.
+    $this->visitViaVsite('', $this->group);
+    /** @var \Behat\Mink\Element\Element[] $widgets */
+    $widgets = $this->getSession()->getPage()->findAll('css', $widget_selector);
+    $this->assertEqual($widgets[0]->find('css', $block_title_selector)->getHtml(), 'Apple Widget');
+    $this->assertEqual($widgets[1]->find('css', $block_title_selector)->getHtml(), 'The Doors Widget');
+    $this->assertEqual($widgets[2]->find('css', $block_title_selector)->getHtml(), 'Zebra Widget');
+
+    // Change weights.
+    $mut_context_config = $config_factory->getEditable('os_widgets.layout_context.' . $context);
+    $widget_placement_config = $mut_context_config->get('data');
+    array_walk($widget_placement_config, static function (&$item) use ($widget1, $widget2, $widget3, $new_widget1_weight, $new_widget2_weight, $new_widget3_weight) {
+      if ($item['id'] === "block_content|{$widget1->uuid()}") {
+        $item['weight'] = $new_widget1_weight;
+      }
+
+      if ($item['id'] === "block_content|{$widget2->uuid()}") {
+        $item['weight'] = $new_widget2_weight;
+      }
+
+      if ($item['id'] === "block_content|{$widget3->uuid()}") {
+        $item['weight'] = $new_widget3_weight;
+      }
+    });
+    $mut_context_config->set('data', $widget_placement_config);
+    $mut_context_config->save();
+
+    // Assert widget placement after weights are altered.
+    $this->visitViaVsite('', $this->group);
+    /** @var \Behat\Mink\Element\Element[] $widgets */
+    $widgets = $this->getSession()->getPage()->findAll('css', $widget_selector);
+    $this->assertEqual($widgets[0]->find('css', $block_title_selector)->getHtml(), 'Zebra Widget');
+    $this->assertEqual($widgets[1]->find('css', $block_title_selector)->getHtml(), 'Apple Widget');
+    $this->assertEqual($widgets[2]->find('css', $block_title_selector)->getHtml(), 'The Doors Widget');
+  }
+
+  /**
+   * Tests widget's contextual delete links.
+   */
+  public function testDeleteContextualRedirect() {
+    $web_assert = $this->assertSession();
+    $block1 = $this->createBlockContent([
+      'type' => 'custom_text_html',
+      'info' => [
+        'value' => 'Test 1',
+      ],
+      'body' => [
+        'Lorem Ipsum content 1',
+      ],
+      'field_widget_title' => ['Test 1'],
+    ]);
+    $this->group->addContent($block1, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($block1, 'content');
+
+    $this->visitViaVsite("blog", $this->group);
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('Lorem Ipsum content 1');
+    $web_assert->waitForElement('css', '.contextual-links .block-contentblock-delete a');
+    $delete_link = $this->getSession()->getPage()->find('css', '.contextual-links .block-contentblock-delete a');
+    $this->assertNotNull($delete_link);
+    $this->assertEquals("{$this->groupAlias}/blog", $this->getDestinationParameterValue($delete_link));
+  }
+
 }

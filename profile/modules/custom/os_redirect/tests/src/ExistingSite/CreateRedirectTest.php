@@ -12,15 +12,14 @@ namespace Drupal\Tests\os_redirect\ExistingSite;
  */
 class CreateRedirectTest extends OsRedirectTestBase {
 
-  protected $siteUser;
-
   /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
-    $this->siteUser = $this->createUser();
-    $this->addGroupAdmin($this->siteUser, $this->group);
+    $site_user = $this->createUser();
+    $this->addGroupAdmin($site_user, $this->group);
+    $this->drupalLogin($site_user);
   }
 
   /**
@@ -35,8 +34,6 @@ class CreateRedirectTest extends OsRedirectTestBase {
     $config = $configFactory->getEditable('os_redirect.settings');
     $config->set('maximum_number', 10);
     $config->save(TRUE);
-
-    $this->drupalLogin($this->siteUser);
 
     $this->visit($this->group->get('path')->getValue()[0]['alias'] . "/cp/redirects/add");
     $web_assert->statusCodeEquals(200);
@@ -60,7 +57,6 @@ class CreateRedirectTest extends OsRedirectTestBase {
    */
   public function testAddRedirectGlobal() {
     $web_assert = $this->assertSession();
-    $this->drupalLogin($this->siteUser);
 
     // Normal site user should not access global page.
     $this->visit("/cp/redirects/add");
@@ -72,7 +68,6 @@ class CreateRedirectTest extends OsRedirectTestBase {
    */
   public function testAddRedirectInVsiteLimit() {
     $web_assert = $this->assertSession();
-    $this->drupalLogin($this->siteUser);
 
     // Set global maximum number.
     $configFactory = $this->container->get('config.factory');

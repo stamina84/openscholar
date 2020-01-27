@@ -243,21 +243,6 @@ function os_media_preprocess_views_view_field(&$variables) {
 }
 
 /**
- * Implements hook_views_data_alter() for adding more features to media+view.
- */
-function os_media_views_data_alter(array &$data) {
-  $data['media']['os_media_media_usage_filter'] = [
-    'title' => t('Filter by entity title using the media'),
-    'filter' => [
-      'title' => t('Used In'),
-      'help' => t('Filter by entity title using the media. Filtering is always done using `LIKE` operator.'),
-      'field' => 'mid',
-      'id' => 'os_media_media_usage_filter',
-    ],
-  ];
-}
-
-/**
  * Submit handler for os_media admin UI exposed filter form.
  *
  * @ingroup forms

@@ -20,21 +20,41 @@ class CpSettingsOsRedirectTest extends OsExistingSiteJavascriptTestBase {
   protected $groupAdmin;
 
   /**
+   * User with administer redirect permission access.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $siteAdmin;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
     $this->groupAdmin = $this->createUser();
     $this->addGroupAdmin($this->groupAdmin, $this->group);
+    $this->siteAdmin = $this->createUser([
+      'administer control panel redirects',
+    ]);
+    $this->addGroupAdmin($this->siteAdmin, $this->group);
+  }
+
+  /**
+   * Restrict os_redirect settings access.
+   */
+  public function testOsRedirectSettingsAccess() {
     $this->drupalLogin($this->groupAdmin);
+    $this->visitViaVsite('cp/settings/global-settings/redirect_maximum', $this->group);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
    * Tests os_redirect cp settings form behavior.
    */
   public function testCpSettingsFormSave(): void {
-    $web_assert = $this->assertSession();
+    $this->drupalLogin($this->siteAdmin);
 
+    $web_assert = $this->assertSession();
     $this->visitViaVsite("cp/settings/global-settings/redirect_maximum", $this->group);
     $web_assert->statusCodeEquals(200);
 

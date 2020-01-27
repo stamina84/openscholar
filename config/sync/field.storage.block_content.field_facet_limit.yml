@@ -1,0 +1,20 @@
+uuid: 7acef236-31b5-4d2e-8499-da01e7119d51
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: block_content.field_facet_limit
+field_name: field_facet_limit
+entity_type: block_content
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

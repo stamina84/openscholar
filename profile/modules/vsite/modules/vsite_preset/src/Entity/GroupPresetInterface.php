@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\vsite\Entity;
+namespace Drupal\vsite_preset\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\StorageInterface;
@@ -21,11 +21,21 @@ interface GroupPresetInterface extends ConfigEntityInterface {
   public function getPresetStorage() : StorageInterface;
 
   /**
-   * Returns the tasks that should be executed when a Group is created.
+   * Returns the file uri that should be imported when a Group is created.
    *
-   * @return mixed
-   *   Callbacks that should be executed when the group is created.
+   * @return array
+   *   File uris keyed by group types.
    */
-  public function getCreationTasks();
+  public function getCreationFilePaths() : array;
+
+  /**
+   * Returns apps which are to be enabled.
+   */
+  public function getEnabledApps(): array;
+
+  /**
+   * Returns apps that are to be made private.
+   */
+  public function getPrivateApps(): array;
 
 }

@@ -95,9 +95,6 @@ class CpImportForm extends FormBase {
     $fileId = array_shift($fileId);
     /** @var \Drupal\file\Entity\File $file */
     $file = $this->entityTypeManager->getStorage('file')->load($fileId);
-    // Save file permanently and call App's submit method.
-    $file->setPermanent();
-    $file->save();
 
     $definition = $this->vsiteAppManager->getDefinition($form_state->getValue('app_id'));
     // Replace existing source file.
@@ -106,7 +103,6 @@ class CpImportForm extends FormBase {
     $migration = $this->migrationManager->createInstance($definition['cpImportId']);
     $executable = new MigrateBatchExecutable($migration, new MigrateMessage());
     $executable->batchImport();
-
   }
 
   /**

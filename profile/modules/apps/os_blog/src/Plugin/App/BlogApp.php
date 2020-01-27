@@ -21,7 +21,8 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *     },
  *   },
  *   id = "blog",
- *   contextualRoute = "view.blog.page_1"
+ *   contextualRoute = "view.blog.page_1",
+ *   listPageRoute = "view.blog.page_1"
  * )
  */
 class BlogApp extends AppPluginBase {}

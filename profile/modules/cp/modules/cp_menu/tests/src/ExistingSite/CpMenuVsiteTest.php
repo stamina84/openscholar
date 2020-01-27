@@ -42,6 +42,13 @@ class CpMenuVsiteTest extends OsExistingSiteTestBase {
   protected $menuLink;
 
   /**
+   * Menu helper service.
+   *
+   * @var \Drupal\cp_menu\MenuHelperInterface
+   */
+  protected $menuHelper;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {

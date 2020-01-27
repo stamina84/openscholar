@@ -44,6 +44,8 @@ function os_breadcrumb_preprocess_page(&$variables) {
 function os_breadcrumb_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
   // App Breadcrumbs.
   $node = $route_match->getParameter('node');
+  $node = is_numeric($node) ? \Drupal::entityTypeManager()->getStorage('node')->load($node) : $node;
+
   if ($node && $node->bundle() === 'events') {
     os_breadcrumb_edit_app_breadcrumbs($breadcrumb);
   }

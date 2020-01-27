@@ -6,7 +6,7 @@ namespace Drupal\Tests\cp_users\ExistingSite;
  * Tests CpUsers storage.
  *
  * @group kernel
- * @group cp
+ * @group cp-2
  */
 class CpUsersStorageTest extends CpUsersExistingSiteTestBase {
 

@@ -7,7 +7,7 @@ use Drupal\cp_taxonomy\CpTaxonomyHelper;
 /**
  * Class CpTaxonomyHelperTest.
  *
- * @group cp
+ * @group cp-1
  * @group kernel
  *
  * @package Drupal\Tests\cp_taxonomy\ExistingSite

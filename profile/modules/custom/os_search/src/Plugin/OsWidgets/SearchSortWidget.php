@@ -74,6 +74,10 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
     if (strpos($route_name, 'search_api_page') !== FALSE) {
       $request = $this->requestStack->getCurrentRequest();
       $query_params = $request->query->all();
+      $attributes = $request->attributes->all();
+      if ($attributes['keys']) {
+        $query_params['keys'] = $attributes['keys'];
+      }
 
       $link_types = self::SORT_TYPE;
       $items = [];

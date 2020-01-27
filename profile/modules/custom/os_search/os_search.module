@@ -9,6 +9,20 @@ use Drupal\search_api\Query\QueryInterface;
 use Drupal\os_search\Plugin\OsWidgets\SearchSortWidget;
 
 /**
+ * Implements hook_theme().
+ */
+function os_search_theme($existing, $type, $theme, $path) {
+  return [
+    'os_filter_taxonomy_widget' => [
+      'variables' => [
+        'header' => '',
+        'items' => [],
+      ],
+    ],
+  ];
+}
+
+/**
  * Implements hook_search_api_query_alter().
  */
 function os_search_search_api_query_alter(QueryInterface &$query) {
@@ -76,5 +90,12 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
       $query->sort('custom_' . $sort, $sort_direction);
     }
   }
+}
 
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function os_search_group_insert($entity) {
+  $search_helper = \Drupal::service('os_search.os_search_helper');
+  $search_helper->createGroupBlockWidget($entity);
 }

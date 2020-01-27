@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\openscholar\Traits;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\bibcite_entity\Entity\Contributor;
 use Drupal\bibcite_entity\Entity\ContributorInterface;
 use Drupal\bibcite_entity\Entity\Reference;
@@ -377,14 +378,16 @@ trait ExistingSiteTestTrait {
    *   Region id.
    * @param string $context
    *   Layout context.
+   * @param int $weight
+   *   Weight of the block to used while placing it.
    */
-  protected function placeBlockContentToRegion(BlockContentInterface $block_content, string $region, string $context = 'all_pages') {
+  protected function placeBlockContentToRegion(BlockContentInterface $block_content, string $region, string $context = 'all_pages', int $weight = 0): void {
     $layout_config = $this->container->get('config.factory')->getEditable('os_widgets.layout_context.' . $context);
     $data = $layout_config->get('data');
     $data[] = [
       'id' => 'block_content|' . $block_content->uuid(),
       'region' => $region,
-      'weight' => '0',
+      'weight' => $weight,
     ];
     $layout_config->set('data', $data);
     $layout_config->save();
@@ -560,6 +563,23 @@ trait ExistingSiteTestTrait {
     $this->markEntityForCleanup($paragraph);
 
     return $paragraph;
+  }
+
+  /**
+   * Retrieves the destination parameter value from a link.
+   *
+   * @param \Behat\Mink\Element\NodeElement $element
+   *   The link element.
+   *
+   * @return string
+   *   The destination.
+   */
+  protected function getDestinationParameterValue(NodeElement $element): string {
+    $href = $element->getAttribute('href');
+    list(, $query) = explode('?', $href);
+    list(, $value) = explode('=', $query);
+
+    return $value;
   }
 
 }

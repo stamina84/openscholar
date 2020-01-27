@@ -56,4 +56,12 @@ abstract class VsiteExistingSiteTestBase extends OsExistingSiteTestBase {
     return (new CssSelectorConverter($html))->toXPath($selector, $prefix);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    $this->cleanUpProperties(self::class);
+  }
+
 }

@@ -7,4 +7,8 @@ label: Minimal
 description: 'Minimal preset with little enabled'
 applicableTo:
   personal: personal
-creationTasks: ''
+enabledApps:
+  class: class
+  page: page
+  publications: publications
+privateApps: {  }

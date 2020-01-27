@@ -222,7 +222,7 @@
             }
           }
         }
-        &.slideshow {
+        &.slideshow, &.slider {
           a {
             &:before {
               background-position: -20px -134px;
@@ -243,7 +243,7 @@
             }
           }
         }
-        &.dataverse-dataset, &.dataverse-list, &.dataverse-search-box {
+        &.dataverse-dataset, &.dataverse-list, &.dataverse-search-box, &.dataverse-dataset-citation {
           a {
             &:before {
               background-position: -23px -970px;

@@ -45,6 +45,9 @@ class WidgetLibraryController extends ControllerBase {
     }
     elseif ($block_content = $form_state->getFormObject()->getEntity()) {
       $instances = $block_content->getInstances();
+      $block_type = $block_content->bundle();
+      $block_type_label = $block_content->type->entity->label();
+
       if (!$instances) {
         $plugin_id = 'block_content:' . $block_content->uuid();
         $block_id = 'block_content|' . $block_content->uuid();
@@ -57,9 +60,10 @@ class WidgetLibraryController extends ControllerBase {
       $block_markup = \Drupal::entityTypeManager()->getViewBuilder('block')->view($block);
       $markup = [
         '#type' => 'inline_template',
-        '#template' => '<div class="block" data-block-id="{{ id }}"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
+        '#template' => '<div class="block" data-block-type="{{ type }}" data-block-id="{{ id }}"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
         '#context' => [
           'id' => $block->id(),
+          'type' => $block_type,
           'title' => $block->label(),
           'content' => $block_markup,
         ],
@@ -69,7 +73,14 @@ class WidgetLibraryController extends ControllerBase {
       $response->addCommand(new CloseModalDialogCommand());
       $response->addCommand(new InvokeCommand('#block-list', 'sortable', ['refresh']));
       $response->addCommand(new InvokeCommand('#factory-wrapper .close', 'click'));
+      $response->addCommand(new InvokeCommand(NULL, 'updateWidgetType', [$block_type_label]));
 
+      $status_messages = ['#type' => 'status_messages'];
+      $messages = \Drupal::service('renderer')->renderRoot($status_messages);
+
+      if ($messages) {
+        $response->addCommand(new PrependCommand('div.region-content', $messages));
+      }
     }
 
     return $response;

@@ -1,0 +1,23 @@
+uuid: d7b92893-325b-4c63-a951-2fce70214837
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.filter_taxonomy
+    - field.field.block_content.filter_taxonomy.field_widget_title
+id: block_content.filter_taxonomy.default
+targetEntityType: block_content
+bundle: filter_taxonomy
+mode: default
+content:
+  field_widget_title:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true
