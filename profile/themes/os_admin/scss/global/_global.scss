@@ -14,9 +14,16 @@
 }
 /**** media page ****/
 td.manage-media {
-  a{
+  a {
     &:first-child {
       margin-right: 10px;
+    }
+  }
+}
+.chosen-container-multi {
+  .chosen-drop {
+    .result-selected {
+      color: $color-text;
     }
   }
 }
