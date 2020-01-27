@@ -17,7 +17,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Class CpImportTest.
  *
  * @group kernel
- * @group cp
+ * @group cp-1
  */
 class CpImportTest extends OsExistingSiteTestBase {
 

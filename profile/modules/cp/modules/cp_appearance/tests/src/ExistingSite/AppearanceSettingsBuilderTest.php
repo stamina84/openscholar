@@ -267,10 +267,10 @@ class AppearanceSettingsBuilderTest extends TestBase {
    * {@inheritdoc}
    */
   public function tearDown() {
-    parent::tearDown();
     /** @var \Drupal\Core\Config\Config $theme_config_mut */
     $theme_config_mut = $this->configFactory->getEditable('system.theme');
     $theme_config_mut->set('default', $this->defaultTheme)->save();
+    parent::tearDown();
   }
 
 }

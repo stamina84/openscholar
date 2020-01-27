@@ -1505,3 +1505,16 @@ function os_widgets_alter_slider_block_form(array &$form, FormStateInterface $fo
   $form['field_slider_height']['#group'] = 'display_options';
   $form['field_transition_speed']['#group'] = 'display_options';
 }
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Attaching os_widgets contextualChanges library to a page
+ * to handle changes in delete contextual link.
+ */
+function os_widgets_page_attachments(array &$page) {
+  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
+    return;
+  }
+  $page['#attached']['library'][] = 'os_widgets/contextualChanges';
+}

@@ -10,7 +10,7 @@ use Drupal\group\Entity\GroupType;
  *
  * @coversDefaultClass \Drupal\cp_users\CpRolesHelper
  * @group kernel
- * @group cp
+ * @group cp-2
  */
 class CpRolesHelperTest extends CpUsersExistingSiteTestBase {
 

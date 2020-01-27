@@ -9,7 +9,7 @@ use Drupal\group\Access\CalculatedGroupPermissionsItemInterface;
  *
  * @coversDefaultClass \Drupal\cp_users\Access\CustomRolePermissionCalculator
  * @group kernel
- * @group cp
+ * @group cp-2
  */
 class CustomRolePermissionCalculatorTest extends CpUsersExistingSiteTestBase {
 

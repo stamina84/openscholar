@@ -75,7 +75,7 @@ final class BooksHelper implements BooksHelperInterface {
     foreach ($matching_nids as $id) {
       if (in_array($id, $vsite_nids)) {
         $node = $this->nodeStorage->load($id);
-        if ($this->visibilityHelper->isBookPage($node) && $node->book['bid'] !== $current_node->book['bid']) {
+        if ($node->book['bid'] !== $current_node->book['bid']) {
           $results[] = [
             'value' => EntityAutocomplete::getEntityLabels([$node]),
             'label' => EntityAutocomplete::getEntityLabels([$node]),

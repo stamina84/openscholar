@@ -20,7 +20,8 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *     },
  *   },
  *   id = "presentations",
- *   contextualRoute = "view.presentations.page_1"
+ *   contextualRoute = "view.presentations.page_1",
+ *   listPageRoute = "view.presentations.page_1",
  * )
  */
 class PresentationsApp extends AppPluginBase {

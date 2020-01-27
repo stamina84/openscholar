@@ -35,4 +35,12 @@ class EventsJavascriptTestBase extends OsExistingSiteJavascriptTestBase {
     $this->adminUser = $this->createUser([], '', TRUE);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    $this->cleanUpProperties(self::class);
+  }
+
 }

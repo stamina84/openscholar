@@ -13,20 +13,6 @@ namespace Drupal\Tests\cp_taxonomy\ExistingSite;
 class CpTaxonomyVocabResetFormTest extends TestBase {
 
   /**
-   * The Group object for the site.
-   *
-   * @var \Drupal\group\Entity\GroupInterface
-   */
-  protected $group;
-
-  /**
-   * The PURL of the site.
-   *
-   * @var string
-   */
-  protected $groupAlias;
-
-  /**
    * The admin user we're testing as.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -46,7 +32,6 @@ class CpTaxonomyVocabResetFormTest extends TestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->group = $this->createGroup();
     $this->groupAdmin = $this->createUser();
     $this->addGroupAdmin($this->groupAdmin, $this->group);
     $this->drupalLogin($this->groupAdmin);

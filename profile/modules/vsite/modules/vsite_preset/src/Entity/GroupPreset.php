@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\vsite\Entity;
+namespace Drupal\vsite_preset\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\StorageInterface;
@@ -21,11 +21,11 @@ use Drupal\vsite\Config\VsiteStorageDefinition;
  *   ),
  *   handlers = {
  *     "form" = {
- *       "add" = "Drupal\vsite\Entity\Form\GroupPresetForm",
- *       "edit" = "Drupal\vsite\Entity\Form\GroupPresetForm",
- *       "delete" = "Drupal\vsite\Entity\Form\GroupPresetDeleteForm"
+ *       "add" = "Drupal\vsite_preset\Entity\Form\GroupPresetForm",
+ *       "edit" = "Drupal\vsite_preset\Entity\Form\GroupPresetForm",
+ *       "delete" = "Drupal\vsite_preset\Entity\Form\GroupPresetDeleteForm"
  *     },
- *     "list_builder" = "Drupal\vsite\Entity\Controller\GroupPresetListBuilder",
+ *     "list_builder" = "Drupal\vsite_preset\Entity\Controller\GroupPresetListBuilder",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider"
  *     }
@@ -48,21 +48,54 @@ use Drupal\vsite\Config\VsiteStorageDefinition;
  *     "label",
  *     "description",
  *     "applicableTo",
- *     "creationTasks"
+ *     "enabledApps",
+ *     "privateApps"
  *   }
  * )
  */
 class GroupPreset extends ConfigEntityBase implements GroupPresetInterface {
 
+  /**
+   * Preset id.
+   *
+   * @var string
+   */
   protected $id;
 
+  /**
+   * Preset label.
+   *
+   * @var string
+   */
   protected $label;
 
+  /**
+   * Preset description.
+   *
+   * @var string
+   */
   protected $description;
 
+  /**
+   * Group type applicable to.
+   *
+   * @var array
+   */
   protected $applicableTo;
 
-  protected $creationTasks;
+  /**
+   * List of apps to be enabled.
+   *
+   * @var array
+   */
+  protected $enabledApps;
+
+  /**
+   * List of apps to be made private.
+   *
+   * @var array
+   */
+  protected $privateApps;
 
   /**
    * {@inheritdoc}
@@ -77,8 +110,25 @@ class GroupPreset extends ConfigEntityBase implements GroupPresetInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCreationTasks() {
-    return $this->creationTasks;
+  public function getCreationFilePaths(): array {
+    foreach ($this->applicableTo as $gid => $label) {
+      $fileUri[$gid] = file_scan_directory(drupal_get_path('module', 'vsite_preset') . "/presets/$gid/$this->id", '/.csv/');
+    }
+    return $fileUri;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEnabledApps(): array {
+    return $this->enabledApps;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPrivateApps() : array {
+    return $this->privateApps;
   }
 
   /**

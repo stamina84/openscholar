@@ -234,6 +234,7 @@ abstract class TestBase extends OsExistingSiteTestBase {
     }
 
     parent::tearDown();
+    $this->cleanUpProperties(self::class);
   }
 
 }

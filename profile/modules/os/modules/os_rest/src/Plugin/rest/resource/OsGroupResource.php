@@ -10,6 +10,7 @@ use Drupal\vsite\Config\VsiteStorageDefinition;
 use Drupal\Core\Entity\EntityInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Overrides the standard entity resource interface.
@@ -25,6 +26,13 @@ class OsGroupResource extends OsEntityResource {
    * @var \Drupal\vsite\Config\HierarchicalStorageInterface
    */
   protected $hierarchicalStorage;
+
+  /**
+   * Request stack service.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
 
   /**
    * Constructs a Drupal\rest\Plugin\rest\resource\EntityResource object.
@@ -47,13 +55,18 @@ class OsGroupResource extends OsEntityResource {
    *   The link relation type manager.
    * @param \Drupal\vsite\Config\HierarchicalStorageInterface $hierarchicalStorage
    *   Hierarchical storage object.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   Request stack instance.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, array $serializer_formats, LoggerInterface $logger, ConfigFactoryInterface $config_factory, PluginManagerInterface $link_relation_type_manager, HierarchicalStorageInterface $hierarchicalStorage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, array $serializer_formats, LoggerInterface $logger, ConfigFactoryInterface $config_factory, PluginManagerInterface $link_relation_type_manager, HierarchicalStorageInterface $hierarchicalStorage, RequestStack $requestStack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $serializer_formats, $logger, $config_factory, $link_relation_type_manager);
     $this->entityType = $entity_type_manager->getDefinition($plugin_definition['entity_type']);
     $this->configFactory = $config_factory;
     $this->linkRelationTypeManager = $link_relation_type_manager;
     $this->hierarchicalStorage = $hierarchicalStorage;
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -69,7 +82,8 @@ class OsGroupResource extends OsEntityResource {
       $container->get('logger.factory')->get('rest'),
       $container->get('config.factory'),
       $container->get('plugin.manager.link_relation_type'),
-      $container->get('hierarchical.storage')
+      $container->get('hierarchical.storage'),
+      $container->get('request_stack')
     );
   }
 
@@ -91,14 +105,21 @@ class OsGroupResource extends OsEntityResource {
       $this->hierarchicalStorage->clearWriteOverride();
       $storage = $this->hierarchicalStorage->createCollection('vsite:' . $entity->id());
       $this->hierarchicalStorage->addStorage($storage, VsiteStorageDefinition::VSITE_STORAGE);
-      $config = \Drupal::configFactory()->getEditable('system.theme');
+      $config = $this->configFactory->getEditable('system.theme');
       $config->set('default', $theme);
       $config->save();
     }
 
-    // Send the batch ID as a header so the client can handle it properly.
-    if ($batch = batch_get()) {
-      $response->headers->set('X-Drupal-Batch-Id', $batch['id']);
+    // Send the batch url as a header so the client can handle it properly.
+    if (batch_get()) {
+      $redirectObject = batch_process();
+      $target_url = $redirectObject->getTargetUrl();
+      // Prepend vsite url to batch target url so that all batch operations run
+      // in vsite context we don't have to worry about activating it explicitly.
+      $location = $response->headers->get('location');
+      $site_url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
+      $target_url = str_replace($site_url, $location, $target_url);
+      $response->headers->set('X-Drupal-Batch-Url', $target_url);
     }
 
     return $response;

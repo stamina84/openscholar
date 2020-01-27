@@ -21,7 +21,8 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *     },
  *   },
  *   id = "news",
- *   contextualRoute = "view.news.page_1"
+ *   contextualRoute = "view.news.page_1",
+ *   listPageRoute = "view.news.page_1",
  * )
  */
 class NewsApp extends AppPluginBase {

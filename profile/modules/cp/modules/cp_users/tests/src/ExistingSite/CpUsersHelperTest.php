@@ -7,7 +7,7 @@ namespace Drupal\Tests\cp_users\ExistingSite;
  *
  * @coversDefaultClass \Drupal\cp_users\CpUsersHelper
  * @group kernel
- * @group cp
+ * @group cp-2
  */
 class CpUsersHelperTest extends CpUsersExistingSiteTestBase {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\vsite\Entity\Form;
+namespace Drupal\vsite_preset\Entity\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;

@@ -3,8 +3,8 @@
 namespace Drupal\Tests\openscholar\ExistingSite;
 
 use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
+use Drupal\Tests\openscholar\Traits\OsCleanupClassTestTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
-use Drupal\vsite\Plugin\VsiteContextManager;
 
 /**
  * OS kernel and functional test base.
@@ -12,6 +12,7 @@ use Drupal\vsite\Plugin\VsiteContextManager;
 abstract class OsExistingSiteTestBase extends ExistingSiteBase {
 
   use ExistingSiteTestTrait;
+  use OsCleanupClassTestTrait;
 
   /**
    * Test group.
@@ -19,7 +20,6 @@ abstract class OsExistingSiteTestBase extends ExistingSiteBase {
    * @var \Drupal\group\Entity\GroupInterface
    */
   protected $group;
-
 
   /**
    * Group Plugin manager.
@@ -29,18 +29,18 @@ abstract class OsExistingSiteTestBase extends ExistingSiteBase {
   protected $pluginManager;
 
   /**
+   * Vsite Plugin manager.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManager
+   */
+  protected $vsiteContextManager;
+
+  /**
    * Test group alias.
    *
    * @var string
    */
   protected $groupAlias;
-
-  /**
-   * The object to test.
-   *
-   * @var \Drupal\vsite\Plugin\VsiteContextManager
-   */
-  protected $vsiteContextManager;
 
   /**
    * Config factory.
@@ -85,6 +85,8 @@ abstract class OsExistingSiteTestBase extends ExistingSiteBase {
       }
     }
     $this->group->delete();
+
+    $this->cleanUpProperties(self::class);
   }
 
   /**

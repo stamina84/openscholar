@@ -34,13 +34,13 @@ jobs:
     - script: robo job:check-coding-standards
     - script: robo job:run-unit-tests
     - script: robo job:check-module-circular-dependency
-    - script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3"
-    - script: robo job:run-kernel-tests "publications-1,wysiwyg,vsite,os,os-theme-preview"
-    - script: robo job:run-kernel-tests "cp,other,cp-menu,profiles,redirect,cp-appearance,os-search"
-    - script: robo job:run-kernel-tests "widgets-4,publications-2"
+    - script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4"
+    - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
+    - script: robo job:run-kernel-tests "cp-1,cp-2,other,cp-menu,profiles,redirect,cp-appearance,os-search"
     - script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
     - script: robo job:run-functional-tests "analytics,publications,cp-appearance,redirect,twitter,os,vsite,cp-import"
-    - script: robo job:run-functional-javascript-tests "classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect,os-search"
+    - script: robo job:run-functional-javascript-tests "classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
+    - script: robo job:run-functional-javascript-tests "os-search"
     - script: robo job:run-functional-javascript-tests "events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
     - stage: codecov
       script: robo job:run-unit-tests-code-coverage
@@ -70,10 +70,16 @@ jobs:
       script: robo job:run-kernel-tests-code-coverage "os"
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
-      script: robo job:run-kernel-tests-code-coverage "cp"
+      script: robo job:run-kernel-tests-code-coverage "cp-1"
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
-      script: robo job:run-kernel-tests-code-coverage "other,cp-menu"
+      script: robo job:run-kernel-tests-code-coverage "cp-2"
+      after_success: bash <(curl -s https://codecov.io/bash)
+    - stage: codecov
+      script: robo job:run-kernel-tests-code-coverage "other"
+      after_success: bash <(curl -s https://codecov.io/bash)
+    - stage: codecov
+      script: robo job:run-kernel-tests-code-coverage "cp-menu"
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "os-search"

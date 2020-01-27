@@ -5,12 +5,15 @@ namespace Drupal\Tests\os_fullcalendar\ExistingSite;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\openscholar\Traits\OsCleanupClassTestTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
  * Test base for event tests.
  */
 abstract class EventTestBase extends ExistingSiteBase {
+
+  use OsCleanupClassTestTrait;
 
   /**
    * The entity type manager service.
@@ -126,6 +129,14 @@ abstract class EventTestBase extends ExistingSiteBase {
     ]);
 
     return $event;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    $this->cleanUpProperties(self::class);
   }
 
 }

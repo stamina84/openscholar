@@ -1,0 +1,8 @@
+name: 'Vsite Site Presets'
+description: 'Site presets for a new vsite'
+type: module
+core: 8.x
+dependencies:
+  - "drupal:vsite"
+  - "drupal:os_app_access"
+  - "drupal:cp_menu"
