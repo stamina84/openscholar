@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Action(
  *   id = "cp_taxonomy_add_terms_bibcite_reference_action",
  *   label = @Translation("Apply Taxonomy term"),
- *   type = "",
+ *   type = "bibcite_reference",
  *   confirm_form_route_name =
  *     "cp.taxonomy.add_terms_bibcite_reference_multiple_form",
  * )

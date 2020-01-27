@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Action(
  *   id = "cp_taxonomy_remove_terms_bibcite_reference_action",
  *   label = @Translation("Remove Taxonomy term"),
- *   type = "",
+ *   type = "bibcite_reference",
  *   confirm_form_route_name =
  *     "cp.taxonomy.remove_terms_bibcite_reference_multiple_form",
  * )

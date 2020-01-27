@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Action(
  *   id = "cp_taxonomy_remove_terms_node_action",
  *   label = @Translation("Remove Taxonomy term"),
- *   type = "",
+ *   type = "node",
  *   confirm_form_route_name = "cp.taxonomy.remove_terms_node_multiple_form",
  * )
  */
