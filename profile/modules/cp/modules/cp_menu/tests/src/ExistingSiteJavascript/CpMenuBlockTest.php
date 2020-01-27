@@ -13,6 +13,13 @@ use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTest
 class CpMenuBlockTest extends OsExistingSiteJavascriptTestBase {
 
   /**
+   * The cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagsInvalidator;
+
+  /**
    * Test group.
    *
    * @var \Drupal\group\Entity\GroupInterface
@@ -38,7 +45,7 @@ class CpMenuBlockTest extends OsExistingSiteJavascriptTestBase {
    */
   public function setUp() {
     parent::setUp();
-
+    $this->cacheTagsInvalidator = $this->container->get('cache_tags.invalidator');
     $this->adminUser = $this->createUser([], '', TRUE);
 
     $this->group = $this->createGroup([
@@ -85,6 +92,7 @@ class CpMenuBlockTest extends OsExistingSiteJavascriptTestBase {
     $session->waitForElementVisible('css', '#cp-build-menu-table');
 
     $this->submitForm([], 'Save changes');
+    $this->cacheTagsInvalidator->invalidateTags(['theme_registry']);
     $this->visit('/test-menu/blog');
 
     $this->assertSession()->waitForElementVisible('css', ".menu--menu-primary-{$this->group->id()}");
