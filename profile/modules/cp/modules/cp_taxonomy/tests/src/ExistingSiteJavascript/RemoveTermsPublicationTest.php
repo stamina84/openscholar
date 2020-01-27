@@ -29,7 +29,6 @@ class RemoveTermsPublicationTest extends CpTaxonomyExistingSiteJavascriptTestBas
     ];
     $this->createGroupVocabulary($this->group, 'vocab_group_1', $allowed_types);
     $this->term = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
-    $this->vsiteContextManager->activateVsite($this->group);
   }
 
   /**
