@@ -35,3 +35,10 @@ os_publictions.citation_export_multiple:
     parameters:
       bibcite_format:
         type: bibcite_format
+os_publictions.contributor_parse_autocomplete:
+  path: '/contributor/parse/autocomplete/{name}'
+  defaults:
+    _controller: '\Drupal\os_publications\Controller\AutocompleteController::parseContributorName'
+    _format: json
+  requirements:
+    _group_permission: 'create publications'
