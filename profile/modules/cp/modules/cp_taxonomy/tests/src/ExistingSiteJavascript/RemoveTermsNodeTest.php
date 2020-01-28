@@ -3,7 +3,6 @@
 namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 
 use Drupal\node\Entity\Node;
-use Drupal\Tests\cp_taxonomy\Traits\CpTaxonomyTestTrait;
 
 /**
  * Tests taxonomy terms remove from nodes.
@@ -14,9 +13,19 @@ use Drupal\Tests\cp_taxonomy\Traits\CpTaxonomyTestTrait;
  */
 class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
 
-  use CpTaxonomyTestTrait;
-
+  /**
+   * Test term entity.
+   *
+   * @var \Drupal\taxonomy\Entity\Term
+   *   Taxonomy term.
+   */
   protected $term;
+
+  /**
+   * Test group admin.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
   protected $groupAdmin;
 
   /**
