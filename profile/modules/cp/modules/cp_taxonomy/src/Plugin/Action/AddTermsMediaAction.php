@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Action(
  *   id = "cp_taxonomy_add_terms_media_action",
  *   label = @Translation("Apply Taxonomy term"),
- *   type = "node",
+ *   type = "media",
  *   confirm_form_route_name = "cp.taxonomy.add_terms_media_multiple_form",
  * )
  */
