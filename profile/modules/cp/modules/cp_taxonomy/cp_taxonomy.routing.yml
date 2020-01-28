@@ -69,7 +69,6 @@ cp.taxonomy.add_terms_node_multiple_form:
     entity_type_id: 'node'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.remove_terms_node_multiple_form:
@@ -79,7 +78,6 @@ cp.taxonomy.remove_terms_node_multiple_form:
     entity_type_id: 'node'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.add_terms_media_multiple_form:
@@ -89,7 +87,6 @@ cp.taxonomy.add_terms_media_multiple_form:
     entity_type_id: 'media'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.remove_terms_media_multiple_form:
@@ -99,7 +96,6 @@ cp.taxonomy.remove_terms_media_multiple_form:
     entity_type_id: 'media'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.add_terms_bibcite_reference_multiple_form:
@@ -109,7 +105,6 @@ cp.taxonomy.add_terms_bibcite_reference_multiple_form:
     entity_type_id: 'bibcite_reference'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.remove_terms_bibcite_reference_multiple_form:
@@ -119,6 +114,5 @@ cp.taxonomy.remove_terms_bibcite_reference_multiple_form:
     entity_type_id: 'bibcite_reference'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
