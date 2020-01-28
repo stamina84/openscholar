@@ -5,7 +5,6 @@ cp.taxonomy:
     _entity_list: taxonomy_vocabulary
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.add:
@@ -15,7 +14,6 @@ cp.taxonomy.add:
     _entity_type_id: 'taxonomy_vocabulary'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.edit:
@@ -24,7 +22,6 @@ cp.taxonomy.edit:
     _entity_form: 'taxonomy_vocabulary.default'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.delete:
@@ -33,7 +30,6 @@ cp.taxonomy.delete:
     _entity_form: 'taxonomy_vocabulary.delete'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.list:
@@ -42,7 +38,6 @@ cp.taxonomy.list:
     _form: '\Drupal\taxonomy\Form\OverviewTerms'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.term.add:
@@ -51,7 +46,6 @@ cp.taxonomy.term.add:
     _controller: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
   requirements:
     _group_permission: 'manage taxonomy'
-    _group_member: 'TRUE'
   options:
     _admin_route: 'TRUE'
 cp.taxonomy.reset.vocab:
