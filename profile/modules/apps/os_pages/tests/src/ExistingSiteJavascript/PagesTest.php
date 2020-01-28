@@ -177,4 +177,29 @@ class PagesTest extends TestBase {
     $web_assert->elementExists('css', '.book-printer');
   }
 
+  /**
+   * Tests for Add child page link.
+   */
+  public function testNoAddChildLink() {
+    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
+    $path_alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\node\NodeInterface $book1 */
+    $book = $this->createBookPage([
+      'title' => 'Book page',
+    ]);
+    $child = $this->createBookPage([
+      'title' => 'Child page',
+    ], $book->id());
+
+    $web_assert = $this->assertSession();
+    $this->visit($path_alias_manager->getAliasByPath("/node/{$book->id()}"));
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('Book page');
+    $web_assert->linkNotExists('Add child page');
+    $this->visit($path_alias_manager->getAliasByPath("/node/{$child->id()}"));
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('Child page');
+    $web_assert->linkNotExists('Add child page');
+  }
+
 }
