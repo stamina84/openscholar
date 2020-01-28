@@ -70,6 +70,8 @@ cp.taxonomy.add_terms_node_multiple_form:
   requirements:
     _group_permission: 'manage taxonomy'
     _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
 cp.taxonomy.remove_terms_node_multiple_form:
   path: '/cp/content/remove-terms-from-node'
   defaults:
@@ -78,6 +80,8 @@ cp.taxonomy.remove_terms_node_multiple_form:
   requirements:
     _group_permission: 'manage taxonomy'
     _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
 cp.taxonomy.add_terms_media_multiple_form:
   path: '/cp/content/add-terms-to-media'
   defaults:
@@ -86,6 +90,8 @@ cp.taxonomy.add_terms_media_multiple_form:
   requirements:
     _group_permission: 'manage taxonomy'
     _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
 cp.taxonomy.remove_terms_media_multiple_form:
   path: '/cp/content/remove-terms-from-media'
   defaults:
@@ -94,6 +100,8 @@ cp.taxonomy.remove_terms_media_multiple_form:
   requirements:
     _group_permission: 'manage taxonomy'
     _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
 cp.taxonomy.add_terms_bibcite_reference_multiple_form:
   path: '/cp/content/add-terms-to-publication'
   defaults:
@@ -102,6 +110,8 @@ cp.taxonomy.add_terms_bibcite_reference_multiple_form:
   requirements:
     _group_permission: 'manage taxonomy'
     _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
 cp.taxonomy.remove_terms_bibcite_reference_multiple_form:
   path: '/cp/content/remove-terms-from-publication'
   defaults:
@@ -110,3 +120,5 @@ cp.taxonomy.remove_terms_bibcite_reference_multiple_form:
   requirements:
     _group_permission: 'manage taxonomy'
     _group_member: 'TRUE'
+  options:
+    _admin_route: 'TRUE'
