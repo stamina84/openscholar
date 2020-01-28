@@ -25,13 +25,6 @@ use Drupal\cp_settings\CpSettingBase;
 class OsRedirectMaximumSetting extends CpSettingBase {
 
   /**
-   * Vsite Context Manager.
-   *
-   * @var \Drupal\cp_settings\CpSettingBase
-   */
-  protected $vsiteContextManager;
-
-  /**
    * {@inheritdoc}
    */
   public function getEditableConfigNames(): array {
