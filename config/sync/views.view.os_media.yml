@@ -352,15 +352,13 @@ display:
             field_media_oembed_content: field_media_oembed_content
             nothing_3: nothing_3
             os_media_file_name: os_media_file_name
-            filesize: filesize
-            filesize_1: filesize_1
-            nothing: nothing
+            os_media_file_size: os_media_file_size
             created: created
+            changed: changed
             delete_media: delete_media
             mid: mid
             nothing_4: nothing_4
             nothing_1: nothing_1
-            os_media_file_size: os_media_file_size
           info:
             media_bulk_form:
               align: ''
@@ -430,28 +428,21 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            filesize:
+            os_media_file_size:
               sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            filesize_1:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            nothing:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
             created:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            changed:
               sortable: true
               default_sort_order: desc
               align: ''
@@ -486,14 +477,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            os_media_file_size:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          default: created
+          default: changed
           empty_table: false
       defaults:
         style: false
