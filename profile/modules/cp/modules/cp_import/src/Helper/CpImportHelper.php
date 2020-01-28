@@ -133,7 +133,7 @@ class CpImportHelper implements CpImportHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getMedia($media_val, $contentType) : 
+  public function getMedia($media_val, $contentType) :
   Media {
     $media = NULL;
     // Only load the bundles which are enabled for the content type's field.
