@@ -82,8 +82,7 @@ class CpImportTest extends OsExistingSiteTestBase {
    * Tests Cp import helper media creation.
    */
   public function testCpImportHelperMediaCreation() {
-    // Disable this test while don't fixed.
-    return;
+    $this->markTestSkipped("Skip this test while don't fixed.");
     // Test Media creation with File.
     $url = 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf';
     $media1 = $this->cpImportHelper->getMedia($url, 'faq');
@@ -95,6 +94,7 @@ class CpImportTest extends OsExistingSiteTestBase {
     $url = 'https://www.youtube.com/watch?v=WadTyp3FcgU&t';
     $media2 = $this->cpImportHelper->getMedia($url, 'faq');
     $this->assertNull($media2);
+    $this->assertFalse(TRUE);
   }
 
   /**

@@ -95,8 +95,7 @@ class ModalSignupFormTest extends EventsJavascriptTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testRegistrationCreation() {
-    // Disable this test while don't fixed.
-    return;
+    $this->markTestSkipped("Skip this test while don't fixed.");
 
     $url = $this->createEventFunctionalJs();
     $this->visit($url);

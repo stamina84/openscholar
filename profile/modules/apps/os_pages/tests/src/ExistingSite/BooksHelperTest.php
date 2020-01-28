@@ -20,8 +20,7 @@ class BooksHelperTest extends TestBase {
    * Tests matching pages in Autocomplete list in add-other-books form.
    */
   public function testMatchingBooks() {
-    // Disable this test while don't fixed.
-    return;
+    $this->markTestSkipped("Skip this test while don't fixed.");
     $data_nids = [];
     /** @var \Drupal\node\NodeInterface $book */
     $book = $this->createBookPage([
