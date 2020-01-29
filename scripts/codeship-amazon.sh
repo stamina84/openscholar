@@ -24,9 +24,9 @@ function buildComposer() {
         git branch | grep -v "master" | xargs git branch -D
         cd -
         mv $1/$2/sites/$site/modules/$MODULE/.git $1/$2/sites/$site/modules/$MODULE/gitdir
-        if [ -d "$1/$2/sites/$site/custom" ]; then
+#        if [ -d "$1/$2/sites/$site/custom" ]; then
 #          ln -s ../custom $1/$2/sites/$site/modules/custom 2>&1>/dev/null
-        fi
+#        fi
         git add $1/$2/sites/$site
         cd $1
     done
