@@ -6,8 +6,8 @@ dependencies:
     - core.entity_view_mode.paragraph.slideshow_standard
     - field.field.paragraph.slideshow.field_slide_alt_text
     - field.field.paragraph.slideshow.field_slide_description
+    - field.field.paragraph.slideshow.field_slide_file_image
     - field.field.paragraph.slideshow.field_slide_headline
-    - field.field.paragraph.slideshow.field_slide_image
     - field.field.paragraph.slideshow.field_slide_link
     - field.field.paragraph.slideshow.field_slide_title_text
     - paragraphs.paragraphs_type.slideshow
@@ -31,6 +31,14 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  field_slide_file_image:
+    type: os_widgets_slideshow_image
+    weight: 0
+    region: content
+    label: visually_hidden
+    settings:
+      layout_type: standard
+    third_party_settings: {  }
   field_slide_headline:
     weight: 1
     label: visually_hidden
@@ -38,14 +46,6 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
-    region: content
-  field_slide_image:
-    type: os_widgets_slideshow_image
-    weight: 0
-    label: visually_hidden
-    settings:
-      layout_type: standard
-    third_party_settings: {  }
     region: content
 hidden:
   field_slide_alt_text: true

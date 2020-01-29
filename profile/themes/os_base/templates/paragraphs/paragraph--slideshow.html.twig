@@ -51,9 +51,9 @@
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
       <div class="widget--slideshow-main clearfix">
-        {{ content.field_slide_image }}
+        {{ content.field_slide_file_image }}
         <div class="slide-caption">
-          {{content|without('field_slide_image')}}
+          {{content|without('field_slide_file_image')}}
         </div>
       </div>
     {% endblock %}
