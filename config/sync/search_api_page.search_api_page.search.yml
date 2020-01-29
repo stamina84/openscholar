@@ -72,3 +72,4 @@ view_mode_configuration:
       software_release: ''
 show_search_form: true
 parse_mode: terms
+parse_mode_conjunction: OR
