@@ -12,7 +12,6 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\media\Entity\Media;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -180,27 +179,6 @@ class SlideshowImageFormatter extends FormatterBase implements ContainerFactoryP
       ],
     ];
     return $elements;
-  }
-
-  /**
-   * Get Image file from given Media entity.
-   *
-   * @param \Drupal\media\Entity\Media $image_media
-   *   Media entity.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   Found slide image File entity.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  protected function getImageFromMedia(Media $image_media) {
-    $file_storage = $this->entityTypeManager->getStorage('file');
-    /** @var \Drupal\media\MediaSourceInterface $source */
-    $source = $image_media->getSource();
-    $fid = $source->getSourceFieldValue($image_media);
-    $image = $file_storage->load($fid);
-    return $image;
   }
 
   /**
