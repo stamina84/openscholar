@@ -3,6 +3,7 @@
 namespace Drupal\cp_menu;
 
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -80,5 +81,22 @@ interface MenuHelperInterface {
    *   A key-value pair of options.
    */
   public function getVsiteMenuOptions(GroupInterface $vsite): array;
+
+  /**
+   * Create a vsite specific menu.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $vsite
+   *   Group/vsite.
+   * @param bool $primary
+   *   If primary or secondary menu.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   Menu entity.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createMenu(GroupInterface $vsite, $primary = TRUE) : EntityInterface;
 
 }

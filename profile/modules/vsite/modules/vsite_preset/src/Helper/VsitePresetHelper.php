@@ -85,9 +85,9 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
    */
   public function enableApps(GroupInterface $group, $appsToEnable, $appsToSetPrivate): void {
     $this->vsiteContextManager->activateVsite($group);
-    $app_definitions = $this->appManager->getDefinitions();
     $access = $this->configFactory->getEditable('os_app_access.access');
-    foreach ($app_definitions as $name => $app) {
+    $appDefinitions = $this->appManager->getDefinitions();
+    foreach ($appDefinitions as $name => $app) {
       if (in_array($name, $appsToEnable)) {
         $access->set($name, AppAccessLevels::PUBLIC);
       }
@@ -99,8 +99,6 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
       }
     }
     $access->save();
-    // Enable menu links for the enabled apps.
-    $this->enableAppMenuLinks($group, $app_definitions, $appsToEnable);
   }
 
   /**
@@ -132,6 +130,10 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
 
       case 'block_content':
         $this->createWidget($data, $bundle, $group);
+        break;
+
+      case 'menu_link_content':
+        $this->createMenuLinks($data, $group);
         break;
     }
   }
@@ -206,36 +208,31 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
   }
 
   /**
-   * Create and enable menu links for enabled apps.
+   * Creates Menu links as per csv data.
    *
+   * @param array $data
+   *   Data read from the csv.
    * @param \Drupal\group\Entity\GroupInterface $group
-   *   The newly created vsite in context.
-   * @param array $app_definitions
-   *   App definitions.
-   * @param array $appsToEnable
-   *   Apps which are enabled.
+   *   The group to create links for.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function enableAppMenuLinks(GroupInterface $group, array $app_definitions, array $appsToEnable) {
-    $this->menuHelper->resetVsiteMenus($group);
-
-    $menu_id = $this->menuHelper::DEFAULT_VSITE_MENU_MAPPING['main'] . $group->id();
+  protected function createMenuLinks(array $data, GroupInterface $group): void {
     $storage = $this->entityTypeManager->getStorage('menu_link_content');
-    // Sort to make sure menu links are weighted in alphabetical order.
-    sort($appsToEnable);
-    foreach ($appsToEnable as $weight => $id) {
-      if (!isset($app_definitions[$id]['listPageRoute'])) {
-        continue;
-      }
-      $route_name = $app_definitions[$id]['listPageRoute'];
+    // Creates new vsite specific menus only once.
+    $this->menuHelper->createMenu($group);
+    $this->menuHelper->createMenu($group, FALSE);
+
+    foreach ($data as $row) {
+      $route_name = $row['Route'];
+      $parent = $this->menuHelper::DEFAULT_VSITE_MENU_MAPPING[$row['Parent']] . $group->id();
       $storage->create([
-        'title' => $app_definitions[$id]['title'],
+        'title' => $row['Title'],
         'link' => ['uri' => "route:$route_name"],
-        'menu_name' => $menu_id,
-        'weight' => $weight + 1,
+        'menu_name' => $parent,
+        'weight' => $row['Weight'],
         'expanded' => TRUE,
       ])->save();
     }

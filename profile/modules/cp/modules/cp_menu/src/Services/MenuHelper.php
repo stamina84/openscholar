@@ -304,21 +304,9 @@ class MenuHelper implements MenuHelperInterface {
   }
 
   /**
-   * Create a vsite specific menu.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $vsite
-   *   Group/vsite.
-   * @param bool $primary
-   *   If primary or secondary menu.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   Menu entity.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * {@inheritdoc}
    */
-  protected function createMenu(GroupInterface $vsite, $primary = TRUE) : EntityInterface {
+  public function createMenu(GroupInterface $vsite, $primary = TRUE) : EntityInterface {
     $id = $primary ? 'menu-primary-' . $vsite->id() : 'menu-secondary-' . $vsite->id();
     $label = $primary ? $this->t('Primary menu') : $this->t('Secondary menu');
 
