@@ -1,0 +1,14 @@
+uuid: 53525e43-c4a8-43b4-bb81-f27f857533fe
+langcode: en
+status: true
+dependencies:
+  module:
+    - cp_taxonomy
+    - node
+_core:
+  default_config_hash: tptnyd7jG9C4ckt1pgN8jKkRCaCKdPGP7XBTKjxPZnc
+id: cp_taxonomy_add_terms_node_action
+label: 'Apply Taxonomy term'
+type: node
+plugin: cp_taxonomy_add_terms_node_action
+configuration: {  }

@@ -72,6 +72,26 @@ class CpTaxonomyHelper implements CpTaxonomyHelperInterface {
   /**
    * {@inheritdoc}
    */
+  public function checkIsAllowedBundle(string $vid, string $entity_type_id, string $bundle): bool {
+    $config_vocab = $this->configFactory->getEditable('taxonomy.vocabulary.' . $vid);
+    $allowed_types = $config_vocab->get('allowed_vocabulary_reference_types');
+    $vocab_entities = $this->explodeEntityBundles($allowed_types);
+    if (empty($vocab_entities[$entity_type_id])) {
+      return FALSE;
+    }
+    $handled_bundles = $vocab_entities[$entity_type_id];
+    if (count($handled_bundles) == 1 && $handled_bundles[0] == '*') {
+      return TRUE;
+    }
+    if (in_array($bundle, $handled_bundles)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getVocabularySettings(string $vid): array {
     $settings = [];
     $config_vocab = $this->configFactory->getEditable('taxonomy.vocabulary.' . $vid);

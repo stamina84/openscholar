@@ -547,6 +547,8 @@ display:
           action_title: Action
           include_exclude: include
           selected_actions:
+            - cp_taxonomy_add_terms_media_action
+            - cp_taxonomy_remove_terms_media_action
             - media_delete_action
           entity_type: media
           plugin_id: bulk_form

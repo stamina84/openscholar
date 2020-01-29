@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - cp_taxonomy
+    - media
+id: cp_taxonomy_remove_terms_media_action
+label: 'Remove Taxonomy term'
+type: media
+plugin: cp_taxonomy_remove_terms_media_action
+configuration: {  }
