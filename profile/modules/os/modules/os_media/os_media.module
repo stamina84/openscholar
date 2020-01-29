@@ -66,7 +66,7 @@ function os_media_form_views_exposed_form_alter(&$form, FormStateInterface $form
     }
 
     $form['add_files'] = [
-      '#markup' => '<div class="cp-controls-wrapper"><div class="add_new" mb-open-modal panes="upload,web" types="image,video,audio,document,executable,html" on-select="reload($inserted)">Add file</div></div>',
+      '#markup' => '<div class="cp-controls-wrapper"><div class="add_new button button--success" mb-open-modal panes="upload,web" types="image,video,audio,document,executable,html" on-select="reload($inserted)">Add file</div></div>',
       '#weight' => 100,
     ];
     $form['#attached']['drupalSettings']['isBrowseMedia'] = TRUE;
