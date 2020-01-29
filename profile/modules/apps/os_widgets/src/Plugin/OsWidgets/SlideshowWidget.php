@@ -41,8 +41,6 @@ class SlideshowWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#attributes' => [
         'class' => [
           'use-ajax',
-          'button',
-          'button--small',
           'btn',
           'btn-success',
         ],
