@@ -35,7 +35,7 @@ services:
       - ./:/var/www/html:cached
 
   elasticsearch:
-    image: wodby/elasticsearch:7-5.3.0
+    image: wodby/elasticsearch:7.1
     container_name: "${PROJECT_NAME}_elasticsearch"
     environment:
       ES_JAVA_OPTS: "-Xms500m -Xmx500m"

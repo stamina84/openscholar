@@ -17,7 +17,7 @@ searched_fields:
 style: view_modes
 view_mode_configuration:
   'entity:bibcite_reference':
-    default: default
+    default: citation
     overrides:
       artwork: ''
       audiovisual: ''
