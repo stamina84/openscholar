@@ -61,7 +61,7 @@ aside {
 .path-front {
   .content-inner {
     .block {
-      @extend %border-top;
+      border-top: 3px solid $color-blue;
       padding-top: 12px;
     }
     nav {

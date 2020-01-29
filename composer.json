@@ -167,7 +167,7 @@
         "cweagans/composer-patches": "^1.6",
         "doctrine/lexer": "dev-master",
         "drupal-composer/drupal-scaffold": "^2.6",
-        "drupal/admin_toolbar": "^1.25",
+        "drupal/admin_toolbar": "2.0",
         "drupal/advancedqueue": "^1.0@beta",
         "drupal/anchor_link": "^2.0",
         "drupal/bibcite": "1.x-dev",
@@ -426,6 +426,9 @@
             },
             "drupal/node_revision_delete": {
                 "Fix last execute and period logic": "https://www.drupal.org/files/issues/2019-12-20/fix-last-execute-logic-3102382-2.patch"
+            },
+            "drupal/search_api_page": {
+                "Conjunction selection with Parse Mode": "https://www.drupal.org/files/issues/2020-01-24/search_api_page-3108496-4.patch"
             }
         },
         "patches-ignore": {

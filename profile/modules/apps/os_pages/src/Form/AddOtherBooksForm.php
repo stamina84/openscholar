@@ -135,6 +135,7 @@ class AddOtherBooksForm extends FormBase {
       }
       else {
         $selected_book->book = [
+          'nid' => $book_entity_id,
           'bid' => $this->entity->book['bid'],
           'pid' => $this->entity->book['bid'],
           'weight' => $last_child_weight + 1,
