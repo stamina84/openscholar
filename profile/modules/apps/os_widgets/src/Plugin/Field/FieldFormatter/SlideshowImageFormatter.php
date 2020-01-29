@@ -22,7 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "os_widgets_slideshow_image",
  *   label = @Translation("Slideshow image"),
  *   description = @Translation("Render image with proper alt/title and link if
- *   exists."), field_types = {
+ *                 exists."),
+ *   field_types = {
  *     "image"
  *   }
  * )
