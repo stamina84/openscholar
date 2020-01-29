@@ -1,7 +1,7 @@
 /**** navbar background ****/
 .navbar-collapse {
   border: 1px solid $color-light-gray1;
-  @include nav($color-white,$color-green,$color-light-gray,$color-green,$color-green,$color-gray1,$color-white,$color-green,$color-green,12px,700,16px,700);
+  @include nav($color-white,$color-green,$color-light-gray,$color-green1,$color-green1,$color-gray1,$color-white,$color-green,$color-green,12px,700,16px,700);
   /***** navbar nav *****/
   .navbar-nav {
     > li {
