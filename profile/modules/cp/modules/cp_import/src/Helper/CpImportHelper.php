@@ -133,8 +133,7 @@ class CpImportHelper implements CpImportHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getMedia($media_val, $contentType) :
-  Media {
+  public function getMedia($media_val, $contentType) : ?Media {
     $media = NULL;
     // Only load the bundles which are enabled for the content type's field.
     $bundle_fields = $this->fieldManager->getFieldDefinitions('node', $contentType);
