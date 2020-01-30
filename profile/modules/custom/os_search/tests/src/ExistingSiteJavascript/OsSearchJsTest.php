@@ -28,7 +28,6 @@ class OsSearchJsTest extends SearchJavascriptTestBase {
 
     // Assert that page contains results.
     $page = $this->getCurrentPage();
-    file_put_contents('search_admin_2.html', $page->getHtml());
     $this->assertContains('27 results found', $page->getHtml());
   }
 
