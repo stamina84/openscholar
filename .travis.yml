@@ -38,89 +38,89 @@ jobs:
       script: robo job:check-module-circular-dependency
       after_success:
         - docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql
-        - aws s3 sync ./web s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER
+        - aws s3 sync . s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER
     - stage: test
       script: robo job:run-unit-tests
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
     - stage: test
       script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
     - stage: test
       script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
     - stage: test
       script: robo job:run-kernel-tests "cp-1,cp-2,other,cp-menu,profiles,redirect,cp-appearance,os-search"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
     - stage: test
       script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
     - stage: test
       script: robo job:run-functional-tests "os-search,analytics,publications,cp-appearance,redirect,twitter,os,vsite,cp-import"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
     - stage: test
       script: robo job:run-functional-javascript-tests "classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
     - stage: test
       script: robo job:run-functional-javascript-tests "os-search"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
     - stage: test
       script: robo job:run-functional-javascript-tests "events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
     - stage: codecov
       script: robo job:run-unit-tests-code-coverage
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "widgets-1"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "widgets-2"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "widgets-3"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "widgets-4"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "os-theme-preview,cp-appearance,profiles"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "publications-1,redirect,vsite"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "publications-2,wysiwyg"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "os"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "cp-1"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "cp-2"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "other"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "cp-menu"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "os-search"
-      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER ./web
+      before_install: aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
       after_success: bash <(curl -s https://codecov.io/bash)
 
 before_install:
