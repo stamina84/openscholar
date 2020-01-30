@@ -80,7 +80,6 @@ class PublicationAuthorDisplayFormatTest extends OsExistingSiteJavascriptTestBas
     $page = $this->getSession()->getPage();
     $autocomplete_field = $page->findField($field_name . '[0][target_id]');
     $autocomplete_field->setValue($name);
-    file_put_contents('public://page-name.html', $this->getCurrentPageContent());
     $web_assert->waitForText($name);
     $this->getSession()
       ->getDriver()
