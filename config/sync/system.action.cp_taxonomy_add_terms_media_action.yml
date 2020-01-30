@@ -1,0 +1,12 @@
+uuid: 08ce4dd1-2e04-4fe0-876c-58a7d7f33c32
+langcode: en
+status: true
+dependencies:
+  module:
+    - cp_taxonomy
+    - media
+id: cp_taxonomy_add_terms_media_action
+label: 'Apply Taxonomy term'
+type: media
+plugin: cp_taxonomy_add_terms_media_action
+configuration: {  }

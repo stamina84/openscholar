@@ -9,3 +9,6 @@ drupal.os_publications:
 drupal.os_publications.misc:
   js:
     js/os_publications.toggle.js: {}
+drupal.os_publications.author:
+  js:
+    js/os_publications.author_parse.js: {}

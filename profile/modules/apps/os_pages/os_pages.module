@@ -495,6 +495,10 @@ function os_pages_preprocess_book_export_html(&$variables) {
  * Setting print-friendly page export link for Page.
  */
 function os_pages_node_links_alter(array &$links, NodeInterface $node, array &$context) {
+  if ($node->bundle() == "page" && !empty($node->book)) {
+    unset($links['book']['#links']['book_add_child']);
+  }
+
   if ($node->bundle() == "page" && $context['view_mode'] == 'full' && node_is_page($node) && empty($node->book)) {
     $book_links['book_printer'] = [
       'title' => t('Printer-friendly version'),

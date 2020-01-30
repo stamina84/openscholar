@@ -21,6 +21,21 @@ interface CpTaxonomyHelperInterface {
   public function searchAllowedVocabulariesByType(string $bundle_key): array;
 
   /**
+   * Check accessibility of bundle to vocab depends on allowed config.
+   *
+   * @param string $vid
+   *   Vocabulary id.
+   * @param string $entity_type_id
+   *   Entity type id.
+   * @param string $bundle
+   *   Bundle information.
+   *
+   * @return bool
+   *   Is allowed bool.
+   */
+  public function checkIsAllowedBundle(string $vid, string $entity_type_id, string $bundle): bool;
+
+  /**
    * Get vocabulary settings from stored config.
    *
    * @param string $vid

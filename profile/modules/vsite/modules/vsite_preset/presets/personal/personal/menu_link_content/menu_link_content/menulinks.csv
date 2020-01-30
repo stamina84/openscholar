@@ -1,0 +1,4 @@
+Title,Route,Weight,Parent
+Home,<front>,-10,main
+Class,view.os_classes.page_1,5,main
+Publication,view.publications.page_1,6,main

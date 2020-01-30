@@ -32,10 +32,8 @@ class SlideshowBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test render slideshow slick data (wide).
    */
   public function testRenderSlideshowSlickDataWide() {
-    $image1 = $this->createMediaImage();
     $slideshow_paragraph = $this->createParagraph([
       'type' => 'slideshow',
-      'field_slide_image' => $image1,
     ]);
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
     $block_content = $this->createBlockContent([
@@ -45,8 +43,6 @@ class SlideshowBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       ],
     ]);
     $this->group->addContent($block_content, 'group_entity:block_content');
-    $this->group->addContent($image1, 'group_entity:media');
-
     $view_builder = $this->entityTypeManager
       ->getViewBuilder('block_content');
     $render = $view_builder->view($block_content);
@@ -74,10 +70,8 @@ class SlideshowBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test render slideshow slick data (standard view mode).
    */
   public function testRenderSlideshowSlickDataStandardLayout() {
-    $image1 = $this->createMediaImage();
     $slideshow_paragraph = $this->createParagraph([
       'type' => 'slideshow',
-      'field_slide_image' => $image1,
     ]);
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
     $block_content = $this->createBlockContent([
@@ -88,12 +82,10 @@ class SlideshowBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       ],
     ]);
     $this->group->addContent($block_content, 'group_entity:block_content');
-    $this->group->addContent($image1, 'group_entity:media');
 
     $view_builder = $this->entityTypeManager
       ->getViewBuilder('block_content');
     $render = $view_builder->view($block_content);
-
     $this->assertNotEmpty($render['field_slideshow']['#build']);
     $this->assertSame('slideshow_standard', $render['field_slideshow']['#build']['settings']['view_mode']);
     $this->assertSame('slideshow_standard', $render['field_slideshow']['#build']['settings']['view_mode']);
@@ -107,10 +99,10 @@ class SlideshowBlockRenderTest extends OsWidgetsExistingSiteTestBase {
    * Test render slideshow with all fields.
    */
   public function testRenderSlideshowWithAllFields() {
-    $image = $this->createMediaImage();
+    $image = $this->createFile('image');
     $slideshow_paragraph = $this->createParagraph([
       'type' => 'slideshow',
-      'field_slide_image' => $image,
+      'field_slide_file_image' => $image,
       'field_slide_link' => 'http://' . $this->randomMachineName() . '.com',
       'field_slide_alt_text' => $this->randomMachineName(),
       'field_slide_title_text' => $this->randomMachineName(),
@@ -126,13 +118,13 @@ class SlideshowBlockRenderTest extends OsWidgetsExistingSiteTestBase {
       ],
     ]);
     $this->group->addContent($block_content, 'group_entity:block_content');
-    $this->group->addContent($image, 'group_entity:media');
 
     $view_builder = $this->entityTypeManager
       ->getViewBuilder('block_content');
     $render = $view_builder->view($block_content);
     $markup = $this->container->get('renderer')->renderRoot($render);
 
+    $this->assertContains($image->getFilename(), $markup->__toString());
     $this->assertContains($slideshow_paragraph->get('field_slide_link')->getString(), $markup->__toString());
     $this->assertContains($slideshow_paragraph->get('field_slide_alt_text')->getString(), $markup->__toString());
     $this->assertContains($slideshow_paragraph->get('field_slide_title_text')->getString(), $markup->__toString());

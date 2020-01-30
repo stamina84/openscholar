@@ -61,6 +61,7 @@ field_settings:
     label: 'Custom Title (text)'
     property_path: custom_title
     type: text
+    boost: !!float 5
   custom_type:
     label: 'Custom Type (text)'
     property_path: custom_type
