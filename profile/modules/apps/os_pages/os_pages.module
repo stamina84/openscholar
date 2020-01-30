@@ -285,10 +285,10 @@ function os_pages_node_page_alter(array &$form, FormStateInterface $form_state) 
   $form['book']['#access'] = $access;
   $form['book']['bid']['#access'] = $access;
 
+  // Here, set NID value to new if a new book is to be created.
   $nid = !$node->isNew() ? $node->id() : 'new';
 
-  if (($nid === 'new' || ($nid != $node->book['original_bid'])) &&
-  $active_vsite->hasPermission('create new books', $current_user)) {
+  if ($nid === 'new' && $active_vsite->hasPermission('create new books', $current_user)) {
     $form['book']['bid']['#access'] = FALSE;
     $form['book']['pid']['#access'] = FALSE;
     unset($form['book']['weight']);
@@ -312,7 +312,7 @@ function os_pages_node_page_alter(array &$form, FormStateInterface $form_state) 
     ];
   }
 
-  // Setting bid as parent. New value if its a new book.
+  // Setting bid as parent or 'new' if its a new book.
   if (isset($parent)) {
     $parent_node = Node::load($parent);
     $bid = ($parent_node->book['pid'] != 0) ? $parent_node->book['pid'] : $parent_node->book['bid'];
