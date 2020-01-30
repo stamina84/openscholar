@@ -28,6 +28,7 @@ function os_search_theme($existing, $type, $theme, $path) {
 function os_search_search_api_query_alter(QueryInterface &$query) {
   $group_context = \Drupal::service('vsite.context_manager');
   $group = $group_context->getActiveVsite();
+  $request = \Drupal::request();
 
   // Load grouped content if search belongs to vsite.
   if ($group) {
@@ -36,8 +37,10 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
   }
 
   // Add unreal condition to remove default search results from global search.
-  if (!$group && !$query->getKeys()) {
-    $query->addCondition('custom_search_group', 0, '=');
+  if (!$group && !$query->getKeys() && !$query->hasTag('global_search_group')) {
+
+    $vsite_id = $request->query->get('vsite') ?? 0;
+    $query->addCondition('custom_search_group', $vsite_id, '=');
   }
 
   // Allow enabled Apps only.
@@ -59,8 +62,6 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
   if ($enabled_apps_list) {
     $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
   }
-
-  $request = \Drupal::request();
 
   // Os Search Helper for filter date by post.
   $year = $request->query->get('year');
