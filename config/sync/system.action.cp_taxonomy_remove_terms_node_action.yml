@@ -1,0 +1,12 @@
+uuid: 5a4f5a54-0e8c-4ae3-89b2-14f665c467ac
+langcode: en
+status: true
+dependencies:
+  module:
+    - cp_taxonomy
+    - node
+id: cp_taxonomy_remove_terms_node_action
+label: 'Remove Taxonomy term'
+type: node
+plugin: cp_taxonomy_remove_terms_node_action
+configuration: {  }

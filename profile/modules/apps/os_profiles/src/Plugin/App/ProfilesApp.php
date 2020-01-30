@@ -20,7 +20,7 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *     },
  *   },
  *   id = "profiles",
- *   contextualRoute = "view.people.page_1"
+ *   contextualRoute = "view.people.page_1",
  * )
  */
 class ProfilesApp extends AppPluginBase {

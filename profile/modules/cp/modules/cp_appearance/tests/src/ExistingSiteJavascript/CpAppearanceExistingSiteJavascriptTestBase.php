@@ -42,6 +42,7 @@ abstract class CpAppearanceExistingSiteJavascriptTestBase extends OsExistingSite
     $theme_setting_mut->set('default', $this->defaultTheme)->save();
 
     parent::tearDown();
+    $this->cleanUpProperties(self::class);
   }
 
 }

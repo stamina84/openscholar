@@ -38,6 +38,7 @@ abstract class AppAccessTestBase extends OsExistingSiteTestBase {
     $mut_app_access_config->setData($this->defaultAppAccesses)->save(TRUE);
 
     parent::tearDown();
+    $this->cleanUpProperties(self::class);
   }
 
 }

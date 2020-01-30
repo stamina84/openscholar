@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a5a29c5f69b4b6596fc35b95b5db12d",
+    "content-hash": "508a7bd473c8f41bd07a8b6cd132f21f",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -665,9 +665,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colorbutton_4.11.3.zip?raw=true",
-                "reference": null,
-                "shasum": null
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colorbutton_4.11.3.zip?raw=true"
             },
             "type": "drupal-library"
         },
@@ -676,9 +674,7 @@
             "version": "4.12.1",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colordialog_4.12.1.zip?raw=true",
-                "reference": null,
-                "shasum": null
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/colordialog_4.12.1.zip?raw=true"
             },
             "type": "drupal-library"
         },
@@ -687,9 +683,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/fakeobjects_4.11.3.zip?raw=true",
-                "reference": null,
-                "shasum": null
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/fakeobjects_4.11.3.zip?raw=true"
             },
             "type": "drupal-library"
         },
@@ -698,9 +692,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/link_4.11.3.zip?raw=true",
-                "reference": null,
-                "shasum": null
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/link_4.11.3.zip?raw=true"
             },
             "type": "drupal-library"
         },
@@ -709,9 +701,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/mathjax_4.11.3.zip?raw=true",
-                "reference": null,
-                "shasum": null
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/mathjax_4.11.3.zip?raw=true"
             },
             "type": "drupal-library",
             "extra": {
@@ -725,9 +715,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/pagebreak_4.11.3.zip?raw=true",
-                "reference": null,
-                "shasum": null
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/pagebreak_4.11.3.zip?raw=true"
             },
             "type": "drupal-library"
         },
@@ -736,9 +724,7 @@
             "version": "4.11.3",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/panelbutton_4.11.3.zip?raw=true",
-                "reference": null,
-                "shasum": null
+                "url": "https://github.com/openscholar/openscholar/blob/e1b8bf75047256f9cc63fef386582836ed6b61f2/sources/ckeditor/panelbutton_4.11.3.zip?raw=true"
             },
             "type": "drupal-library"
         },
@@ -2794,17 +2780,17 @@
         },
         {
             "name": "drupal/admin_toolbar",
-            "version": "1.27.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/admin_toolbar.git",
-                "reference": "8.x-1.27"
+                "reference": "8.x-2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/admin_toolbar-8.x-1.27.zip",
-                "reference": "8.x-1.27",
-                "shasum": "fed1fbbdf8f805b1da63d73e7e2c54750f354d61"
+                "url": "https://ftp.drupal.org/files/projects/admin_toolbar-8.x-2.0.zip",
+                "reference": "8.x-2.0",
+                "shasum": "568de63dbaa8046a82d327dbd0b892ab79fb87aa"
             },
             "require": {
                 "drupal/core": "*"
@@ -2812,11 +2798,11 @@
             "type": "drupal-module",
             "extra": {
                 "branch-alias": {
-                    "dev-1.x": "1.x-dev"
+                    "dev-2.x": "2.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.27",
-                    "datestamp": "1558553350",
+                    "version": "8.x-2.0",
+                    "datestamp": "1573751237",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5708,66 +5694,6 @@
             }
         },
         {
-            "name": "drupal/facets",
-            "version": "1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/facets.git",
-                "reference": "8.x-1.4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/facets-8.x-1.4.zip",
-                "reference": "8.x-1.4",
-                "shasum": "ee2d584b8a225ab981e313f6050e13bc9c98e40b"
-            },
-            "require": {
-                "drupal/core": "~8.0"
-            },
-            "require-dev": {
-                "drupal/search_api": "~1.5"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "8.x-1.4",
-                    "datestamp": "1556645881",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "See all contributors",
-                    "homepage": "https://www.drupal.org/node/2348769/committers"
-                },
-                {
-                    "name": "StryKaizer",
-                    "homepage": "https://www.drupal.org/user/462700"
-                },
-                {
-                    "name": "borisson_",
-                    "homepage": "https://www.drupal.org/user/2393360"
-                }
-            ],
-            "description": "The Facet module allows site builders to easily create and manage faceted search interfaces.",
-            "homepage": "https://www.drupal.org/project/facets",
-            "support": {
-                "source": "git://git.drupal.org/project/facets.git",
-                "issues": "https://www.drupal.org/project/issues/facets",
-                "irc": "irc://irc.freenode.org/drupal-search-api"
-            }
-        },
-        {
             "name": "drupal/fakeobjects",
             "version": "1.0.0",
             "source": {
@@ -6059,7 +5985,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.0-rc4",
-                    "datestamp": "1563460085",
+                    "datestamp": "1576854190",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -6131,7 +6057,8 @@
                 },
                 "patches_applied": {
                     "Prevent base path from interfering with purl detection": "https://www.drupal.org/files/issues/2019-04-12/group_purl.3026646-3.basepath.patch",
-                    "Don't attempt to redirect to subdomains by default": "https://www.drupal.org/files/issues/2019-03-05/group_purl.3036879-4.subdomain_disable.patch"
+                    "Don't attempt to redirect to subdomains by default": "https://www.drupal.org/files/issues/2019-03-05/group_purl.3036879-4.subdomain_disable.patch",
+                    "Page not found error if the request path contains the group prefix": "https://www.drupal.org/files/issues/2020-01-21/3107728-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -9480,6 +9407,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "abandoned": true,
             "time": "2018-07-31T13:22:33+00:00"
         },
         {
@@ -10343,8 +10271,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/mreq/slick-lightbox/archive/master.zip",
-                "reference": "master",
-                "shasum": null
+                "reference": "master"
             },
             "type": "drupal-library",
             "time": "2019-01-02T17:57:38+00:00"
@@ -10502,9 +10429,7 @@
             "version": "1.8.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/blazy/-/blazy-1.8.2.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "https://registry.npmjs.org/blazy/-/blazy-1.8.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -10516,9 +10441,7 @@
             "version": "1.8.7",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/chosen-js/-/chosen-js-1.8.7.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "https://registry.npmjs.org/chosen-js/-/chosen-js-1.8.7.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -10530,9 +10453,7 @@
             "version": "1.8.1",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/slick-carousel/-/slick-carousel-1.8.1.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "https://registry.npmjs.org/slick-carousel/-/slick-carousel-1.8.1.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -12897,8 +12818,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/swordapp/swordappv2-php-library/archive/master.zip",
-                "reference": "master",
-                "shasum": null
+                "reference": "master"
             },
             "type": "drupal-library",
             "time": "2019-05-17T18:21:20+00:00"
@@ -15174,6 +15094,17 @@
         {
             "name": "webflo/drupal-core-require-dev",
             "version": "8.7.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webflo/drupal-core-require-dev.git",
+                "reference": "0230f86e2813d8a44ffa3e497036d6990591c61f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webflo/drupal-core-require-dev/zipball/0230f86e2813d8a44ffa3e497036d6990591c61f",
+                "reference": "0230f86e2813d8a44ffa3e497036d6990591c61f",
+                "shasum": ""
+            },
             "require": {
                 "behat/mink": "1.7.x-dev",
                 "behat/mink-goutte-driver": "^1.2",
@@ -15758,7 +15689,7 @@
                     "datestamp": "1555407785",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "message": "Alpha releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -15836,7 +15767,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.0",
-                    "datestamp": "1490755685",
+                    "datestamp": "1575666184",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -16099,6 +16030,10 @@
                     "homepage": "https://www.drupal.org/user/2828287"
                 },
                 {
+                    "name": "oknate",
+                    "homepage": "https://www.drupal.org/user/471638"
+                },
+                {
                     "name": "phenaproxima",
                     "homepage": "https://www.drupal.org/user/205645"
                 },
@@ -16223,7 +16158,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.0-rc1",
-                    "datestamp": "1527030784",
+                    "datestamp": "1568446684",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -16244,12 +16179,24 @@
                     "homepage": "https://www.drupal.org/user/99340"
                 },
                 {
+                    "name": "geek-merlin",
+                    "homepage": "https://www.drupal.org/user/229048"
+                },
+                {
                     "name": "joachim",
                     "homepage": "https://www.drupal.org/user/107701"
                 },
                 {
+                    "name": "jsacksick",
+                    "homepage": "https://www.drupal.org/user/972218"
+                },
+                {
                     "name": "kaythay",
                     "homepage": "https://www.drupal.org/user/2182186"
+                },
+                {
+                    "name": "oknate",
+                    "homepage": "https://www.drupal.org/user/471638"
                 },
                 {
                     "name": "rszrama",

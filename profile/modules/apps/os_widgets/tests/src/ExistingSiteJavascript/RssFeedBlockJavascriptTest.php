@@ -6,6 +6,7 @@ use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Config\FileStorage;
 use Drupal\os_widgets\Entity\LayoutContext;
+use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
 use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
@@ -15,6 +16,9 @@ use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
  * @group widgets
  */
 class RssFeedBlockJavascriptTest extends ExistingSiteWebDriverTestBase {
+
+  use ExistingSiteTestTrait;
+
   /**
    * The entity type manager service.
    *
@@ -83,27 +87,6 @@ class RssFeedBlockJavascriptTest extends ExistingSiteWebDriverTestBase {
     $this->clickLink('Subscribe');
     $result = $web_assert->waitForElementVisible('named', ['link', 'Feed URL copied to clipboard']);
     $this->assertNotNull($result, 'Changed link is not visible, link is not copied.');
-  }
-
-  /**
-   * Creates a block content.
-   *
-   * @param array $values
-   *   (optional) The values used to create the entity.
-   *
-   * @return \Drupal\block_content\Entity\BlockContent
-   *   The created block content entity.
-   */
-  protected function createBlockContent(array $values = []) {
-    $block_content = $this->entityTypeManager->getStorage('block_content')->create($values + [
-      'type' => 'basic',
-    ]);
-    $block_content->enforceIsNew();
-    $block_content->save();
-
-    $this->markEntityForCleanup($block_content);
-
-    return $block_content;
   }
 
   /**

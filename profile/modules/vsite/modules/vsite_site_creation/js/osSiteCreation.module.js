@@ -249,8 +249,8 @@
         $scope.submitted = true;
         $scope.siteCreated = true;
         let headers = response.headers();
-        if (headers['x-drupal-batch-id']) {
-          $scope.vsiteUrl = headers['location'] + '/batch?id=' + headers['x-drupal-batch-id'] + '&op=start';
+        if (headers['x-drupal-batch-url']) {
+          $scope.vsiteUrl = headers['x-drupal-batch-url'];
         } else {
           $scope.vsiteUrl = headers['location'];
         }

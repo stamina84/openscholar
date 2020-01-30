@@ -122,14 +122,26 @@ class AddOtherBooksForm extends FormBase {
       $book_data = $this->bookManager->bookTreeGetFlat($this->entity->book);
       $last_child_weight = (int) end($book_data)['weight'];
       // Saving selected node to book.
-      $link = $this->bookManager->loadBookLink($book_entity_id, FALSE);
-      $link['bid'] = $this->entity->book['bid'];
-      $link['pid'] = $this->entity->book['bid'];
-      $link['weight'] = $last_child_weight + 1;
-      $link['has_children'] = $selected_book->book['has_children'];
-      $this->bookManager->saveBookLink($link, FALSE);
-      if ($selected_book->book['has_children'] > 0) {
-        $this->setBidForChildren($selected_book->book, $this->entity->book['bid']);
+      if (!empty($selected_book->book['bid'])) {
+        $link = $this->bookManager->loadBookLink($book_entity_id, FALSE);
+        $link['bid'] = $this->entity->book['bid'];
+        $link['pid'] = $this->entity->book['bid'];
+        $link['weight'] = $last_child_weight + 1;
+        $link['has_children'] = $selected_book->book['has_children'];
+        $this->bookManager->saveBookLink($link, FALSE);
+        if ($selected_book->book['has_children'] > 0) {
+          $this->setBidForChildren($selected_book->book, $this->entity->book['bid']);
+        }
+      }
+      else {
+        $selected_book->book = [
+          'nid' => $book_entity_id,
+          'bid' => $this->entity->book['bid'],
+          'pid' => $this->entity->book['bid'],
+          'weight' => $last_child_weight + 1,
+          'has_children' => 0,
+        ];
+        $this->bookManager->saveBookLink($selected_book->book, TRUE);
       }
       $this->messenger()->addMessage('Page added to the book.');
     }

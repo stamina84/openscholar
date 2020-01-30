@@ -37,9 +37,9 @@ class PublicationsRedirectTest extends TestBase {
    */
   public function testRedirect(): void {
     $this->drupalLogin($this->groupAdmin);
-
-    $this->visit("{$this->group->get('path')->first()->getValue()['alias']}/cp/settings/apps-settings/publications");
-    $this->assertSession()->statusCodeEquals(200);
+    $web_assert = $this->assertSession();
+    $this->visitViaVsite('cp/settings/apps-settings/publications', $this->group);
+    $web_assert->statusCodeEquals(200);
 
     $this->drupalPostForm(NULL, [
       'os_publications_preferred_bibliographic_format' => 'harvard_chicago_author_date',
@@ -52,11 +52,10 @@ class PublicationsRedirectTest extends TestBase {
       'os_publications_export_format[ris]' => 'ris',
     ], 'Save configuration');
 
-    $this->visit("{$this->group->get('path')->first()->getValue()['alias']}/publications");
+    $this->visitViaVsite("publications", $this->group);
 
-    $web_assert = $this->assertSession();
-
-    $web_assert->pageTextContains('Publications by Year');
+    $web_assert->pageTextNotContains('Publications by Year');
+    $web_assert->pageTextContains('Publications');
   }
 
 }

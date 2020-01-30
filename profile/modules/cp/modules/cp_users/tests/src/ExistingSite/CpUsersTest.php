@@ -8,7 +8,7 @@ use Drupal\group\Entity\GroupRole;
  * CpUsersTest.
  *
  * @group kernel
- * @group cp
+ * @group cp-2
  */
 class CpUsersTest extends CpUsersExistingSiteTestBase {
 

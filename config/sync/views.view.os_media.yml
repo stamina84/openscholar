@@ -352,15 +352,13 @@ display:
             field_media_oembed_content: field_media_oembed_content
             nothing_3: nothing_3
             os_media_file_name: os_media_file_name
-            filesize: filesize
-            filesize_1: filesize_1
-            nothing: nothing
+            os_media_file_size: os_media_file_size
             created: created
+            changed: changed
             delete_media: delete_media
             mid: mid
             nothing_4: nothing_4
             nothing_1: nothing_1
-            os_media_file_size: os_media_file_size
           info:
             media_bulk_form:
               align: ''
@@ -430,28 +428,21 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            filesize:
+            os_media_file_size:
               sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            filesize_1:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            nothing:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
             created:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            changed:
               sortable: true
               default_sort_order: desc
               align: ''
@@ -486,14 +477,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            os_media_file_size:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          default: created
+          default: changed
           empty_table: false
       defaults:
         style: false
@@ -563,6 +547,8 @@ display:
           action_title: Action
           include_exclude: include
           selected_actions:
+            - cp_taxonomy_add_terms_media_action
+            - cp_taxonomy_remove_terms_media_action
             - media_delete_action
           entity_type: media
           plugin_id: bulk_form
@@ -1169,8 +1155,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Updated Date'
-          exclude: false
+          label: 'Upload Date'
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -1228,6 +1214,73 @@ display:
           field_api_classes: false
           entity_type: media
           entity_field: created
+          plugin_id: field
+        changed:
+          id: changed
+          table: media_field_data
+          field: changed
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Updated Date'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: timestamp
+          settings:
+            date_format: short
+            custom_date_format: ''
+            timezone: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: media
+          entity_field: changed
           plugin_id: field
         delete_media:
           id: delete_media

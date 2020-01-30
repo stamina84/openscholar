@@ -141,9 +141,9 @@ class MediaAdminUiTest extends OsExistingSiteTestBase {
     $rows = $this->getSession()->getPage()->findAll('css', $media_results_selector);
     $this->assertCount(3, $rows);
 
-    $this->assertEquals("Adler's Ranch", $rows[0]->find('css', 'td.views-field-nothing-4')->getText());
+    $this->assertEquals("Witch's Cauldron, Witch's Cauldron, Reverend Swanson's Bible", $rows[0]->find('css', 'td.views-field-nothing-4')->getText());
     $this->assertEquals('Horseshoe Overlook Chapter 1', $rows[1]->find('css', 'td.views-field-nothing-4')->getText());
-    $this->assertEquals("Witch's Cauldron, Witch's Cauldron, Reverend Swanson's Bible", $rows[2]->find('css', 'td.views-field-nothing-4')->getText());
+    $this->assertEquals("Adler's Ranch", $rows[2]->find('css', 'td.views-field-nothing-4')->getText());
 
     // Check if "used in" filter is working.
     // Check if only the content matching the "used in" value are only shown.

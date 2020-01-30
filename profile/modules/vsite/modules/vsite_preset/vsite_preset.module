@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for the vsite_preset module.
+ */
+
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\vsite_preset\Entity\GroupPreset;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_group_insert() for all the tasks which are needed for setting up a new vsite.
+ */
+function vsite_preset_group_insert(GroupInterface $group) {
+  if ($group->hasField('field_preset') && !$group->get('field_preset')->isEmpty()) {
+    $preset_id = $group->get('field_preset')->get(0)->getValue()['target_id'];
+    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
+    if ($preset = GroupPreset::load($preset_id)) {
+
+      // Gets apps list.
+      $appsToEnable = $preset->getEnabledApps();
+      $appsToSetPrivate = $preset->getPrivateApps();
+      // Call helper to enable apps as per preset settings.
+      /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
+      $preset_helper = \Drupal::service('vsite_preset.preset_helper');
+      $preset_helper->enableApps($group, $appsToEnable, $appsToSetPrivate);
+
+      $fileArr = $preset->getCreationFilePaths();
+      // If for this group type no preset files exists then we need not proceed.
+      if (!$fileArr[$group->getGroupType()->id()]) {
+        return;
+      }
+      if (isset($fileArr[$group->getGroupType()->id()])) {
+        $uriArr = array_keys($fileArr[$group->getGroupType()->id()]);
+      }
+
+      // Set batch for creating default content if source files exist.
+      $batch = [
+        'title' => t('Setting up your new OpenScholar site'),
+        'operations' => [],
+        'finished' => 'vsite_preset_batch_finished',
+        'init_message' => t('Preparing for setup'),
+        'progress_message' => t('Set up tasks @current of @total completed. Estimated time for completion is @estimate'),
+      ];
+
+      foreach ($uriArr as $uri) {
+        $batch['operations'][] = [
+          'vsite_preset_process_preset_task',
+          [$group, $uri],
+        ];
+      }
+    }
+    batch_set($batch);
+  }
+}
+
+/**
+ * Performs a single preset task.
+ *
+ * @param \Drupal\group\Entity\GroupInterface $group
+ *   The group being operated on.
+ * @param string $uri
+ *   The file uri.
+ * @param mixed $context
+ *   The batch context.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function vsite_preset_process_preset_task(GroupInterface $group, $uri, &$context) {
+  $alias = $group->get('path')->getValue()[0]['alias'];
+  $context['results']['alias'] = $alias;
+  /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
+  $preset_helper = \Drupal::service('vsite_preset.preset_helper');
+  $preset_helper->createDefaultContent($group, $uri);
+}
+
+/**
+ * Vsite creation finished callback.
+ */
+function vsite_preset_batch_finished($success, $results, $operations) {
+  return new RedirectResponse($results['alias']);
+}
+
+/**
+ * Implements hook_entity_field_access() for the user to allow access for creating path aliases for a group.
+ */
+function vsite_preset_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getType() === 'path' &&  $field_definition->getTargetEntityTypeId() === 'group' && $operation === 'edit') {
+    // Get the group type from request to check permission for.
+    $payload = \Drupal::request()->getContent();
+    $type = json_decode($payload, TRUE)['type'];
+    if ($account->hasPermission("create $type group")) {
+      return AccessResult::allowed();
+    }
+  }
+  return AccessResult::neutral();
+}

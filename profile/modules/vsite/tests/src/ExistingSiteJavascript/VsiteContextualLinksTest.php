@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\vsite\ExistingSiteJavascript;
 
-use Behat\Mink\Element\NodeElement;
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
 
 /**
@@ -131,23 +130,6 @@ class VsiteContextualLinksTest extends OsExistingSiteJavascriptTestBase {
     $delete_contextual_link = $this->getSession()->getPage()->find('css', '.contextual-links .entitybibcite-referencedelete-form a');
     $this->assertNotNull($delete_contextual_link);
     $this->assertEquals("{$this->groupAlias}/publications", $this->getDestinationParameterValue($delete_contextual_link));
-  }
-
-  /**
-   * Retrieves the destination parameter value from a link.
-   *
-   * @param \Behat\Mink\Element\NodeElement $element
-   *   The link element.
-   *
-   * @return string
-   *   The destination.
-   */
-  protected function getDestinationParameterValue(NodeElement $element): string {
-    $href = $element->getAttribute('href');
-    list(, $query) = explode('?', $href);
-    list(, $value) = explode('=', $query);
-
-    return $value;
   }
 
 }

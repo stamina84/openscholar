@@ -40,11 +40,7 @@ class OsRssFunctionalTest extends OsExistingSiteTestBase {
    * {@inheritdoc}
    */
   public function setUp() {
-
     parent::setUp();
-    $this->configFactory = $this->container->get('config.factory');
-    $this->vsiteContextManager = $this->container->get('vsite.context_manager');
-
     // Create test vocabulary.
     $this->vid = $this->randomMachineName();
     $this->createGroupVocabulary($this->group, $this->vid, ['node:blog']);

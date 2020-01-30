@@ -1,0 +1,12 @@
+uuid: 12195f75-f01f-4b14-a9cc-7e4829ee00f6
+langcode: en
+status: true
+dependencies:
+  module:
+    - bibcite
+    - cp_taxonomy
+id: cp_taxonomy_add_terms_bibcite_reference_action
+label: 'Apply Taxonomy term'
+type: bibcite_reference
+plugin: cp_taxonomy_add_terms_bibcite_reference_action
+configuration: {  }

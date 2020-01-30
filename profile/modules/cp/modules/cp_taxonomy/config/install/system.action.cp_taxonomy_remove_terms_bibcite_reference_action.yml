@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - bibcite
+    - cp_taxonomy
+id: cp_taxonomy_remove_terms_bibcite_reference_action
+label: 'Remove Taxonomy term'
+type: bibcite_reference
+plugin: cp_taxonomy_remove_terms_bibcite_reference_action
+configuration: {  }

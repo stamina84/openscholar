@@ -509,7 +509,7 @@ display:
           entity_type: bibcite_reference
           entity_field: bibcite_year
           plugin_id: standard
-      title: 'Publications by Type'
+      title: Publications
       header: {  }
       footer: {  }
       empty: {  }
@@ -536,11 +536,13 @@ display:
         - 'languages:language_interface'
         - url.query_args
       tags:
-        - 'config:core.entity_view_display.bibcite_reference.artwork.default'
-        - 'config:core.entity_view_display.bibcite_reference.artwork.teaser'
+        - 'config:core.entity_view_display.bibcite_reference.data.default'
+        - 'config:core.entity_view_display.bibcite_reference.data.teaser'
         - 'config:core.entity_view_display.bibcite_reference.artwork.citation'
+        - 'config:core.entity_view_display.bibcite_reference.artwork.default'
         - 'config:core.entity_view_display.bibcite_reference.artwork.slide_teaser'
         - 'config:core.entity_view_display.bibcite_reference.artwork.table'
+        - 'config:core.entity_view_display.bibcite_reference.artwork.teaser'
         - 'config:core.entity_view_display.bibcite_reference.audiovisual.citation'
         - 'config:core.entity_view_display.bibcite_reference.audiovisual.default'
         - 'config:core.entity_view_display.bibcite_reference.audiovisual.slide_teaser'
@@ -592,10 +594,8 @@ display:
         - 'config:core.entity_view_display.bibcite_reference.conference_proceedings.table'
         - 'config:core.entity_view_display.bibcite_reference.conference_proceedings.teaser'
         - 'config:core.entity_view_display.bibcite_reference.data.citation'
-        - 'config:core.entity_view_display.bibcite_reference.data.default'
         - 'config:core.entity_view_display.bibcite_reference.data.slide_teaser'
         - 'config:core.entity_view_display.bibcite_reference.data.table'
-        - 'config:core.entity_view_display.bibcite_reference.data.teaser'
         - 'config:core.entity_view_display.bibcite_reference.database.citation'
         - 'config:core.entity_view_display.bibcite_reference.database.default'
         - 'config:core.entity_view_display.bibcite_reference.database.slide_teaser'
@@ -790,6 +790,8 @@ display:
           selected_actions:
             - bibcite_export_multiple
             - cp_bibcite_entity_reference_delete
+            - cp_taxonomy_add_terms_bibcite_reference_action
+            - cp_taxonomy_remove_terms_bibcite_reference_action
           entity_type: bibcite_reference
           plugin_id: bulk_form
         title:
@@ -1803,7 +1805,7 @@ display:
           separator: ''
           hide_empty: false
           default_field_elements: true
-      title: 'Publications by Title'
+      title: Publications
       sorts:
         title_first_char_excl_prep:
           id: title_first_char_excl_prep
@@ -2191,7 +2193,7 @@ display:
           view_mode: teaser
           entity_type: bibcite_reference
           plugin_id: rendered_entity
-      title: 'Publications by Author'
+      title: Publications
       sorts:
         first_letter_last_name_author:
           id: first_letter_last_name_author
@@ -2512,7 +2514,7 @@ display:
         metatag_display_extender: {  }
       path: publications/year
       display_description: ''
-      title: 'Publications by Year'
+      title: Publications
       defaults:
         title: false
         style: false
@@ -2719,7 +2721,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          order: ASC
+          order: DESC
           exposed: false
           expose:
             label: ''

@@ -3,7 +3,7 @@
 namespace Drupal\vsite;
 
 use Drupal\group\Entity\GroupInterface;
-use Drupal\vsite\Entity\GroupPresetInterface;
+use Drupal\vsite_preset\Entity\GroupPresetInterface;
 
 /**
  * This class solely exists to test presets.

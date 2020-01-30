@@ -7,7 +7,7 @@ use Drupal\views\Views;
 /**
  * Class ReferenceViewTest.
  *
- * @group cp
+ * @group cp-1
  * @group kernel
  *
  * @package Drupal\Tests\cp_taxonomy\ExistingSite

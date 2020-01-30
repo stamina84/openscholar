@@ -167,7 +167,7 @@
         "cweagans/composer-patches": "^1.6",
         "doctrine/lexer": "dev-master",
         "drupal-composer/drupal-scaffold": "^2.6",
-        "drupal/admin_toolbar": "^1.25",
+        "drupal/admin_toolbar": "2.0",
         "drupal/advancedqueue": "^1.0@beta",
         "drupal/anchor_link": "^2.0",
         "drupal/bibcite": "1.x-dev",
@@ -367,7 +367,8 @@
             },
             "drupal/group_purl": {
                 "Prevent base path from interfering with purl detection": "https://www.drupal.org/files/issues/2019-04-12/group_purl.3026646-3.basepath.patch",
-                "Don't attempt to redirect to subdomains by default": "https://www.drupal.org/files/issues/2019-03-05/group_purl.3036879-4.subdomain_disable.patch"
+                "Don't attempt to redirect to subdomains by default": "https://www.drupal.org/files/issues/2019-03-05/group_purl.3036879-4.subdomain_disable.patch",
+                "Page not found error if the request path contains the group prefix": "https://www.drupal.org/files/issues/2020-01-21/3107728-2.patch"
             },
             "drupal/fullcalendar": {
                 "Fullcalendar incompatible with Date Recur 2.x": "https://www.drupal.org/files/issues/2019-01-09/3023612-5.patch"
@@ -404,8 +405,7 @@
                 "New group content created when node edited": "https://www.drupal.org/files/issues/2019-06-04/3059300-3.patch",
                 "Prevent resaving of deleted entities": "https://raw.githubusercontent.com/openscholar/openscholar/ae879229e866cbc96d91d2b2a8273292fa26fd34/patches/group.fix_saving_deleted_entity.patch",
                 "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-10-17/group-support_string_entity_ids-2797793-171.patch",
-                "Group creator must complete their membership Wizard duplicates membership": "https://www.drupal.org/files/issues/2019-07-09/group_membership_duplication-3016197-10.patch",
-                "Bypass group module forced redirection for term creation": "patches/12812-term-redirection.patch"
+                "Group creator must complete their membership Wizard duplicates membership": "https://www.drupal.org/files/issues/2019-07-09/group_membership_duplication-3016197-10.patch"
             },
             "drupal/shorten": {
                 "Update is.gd service api url": "https://www.drupal.org/files/issues/2019-07-03/update-isgd-api-3065567-2.patch"
@@ -426,6 +426,9 @@
             },
             "drupal/node_revision_delete": {
                 "Fix last execute and period logic": "https://www.drupal.org/files/issues/2019-12-20/fix-last-execute-logic-3102382-2.patch"
+            },
+            "drupal/search_api_page": {
+                "Conjunction selection with Parse Mode": "https://www.drupal.org/files/issues/2020-01-24/search_api_page-3108496-4.patch"
             }
         },
         "patches-ignore": {

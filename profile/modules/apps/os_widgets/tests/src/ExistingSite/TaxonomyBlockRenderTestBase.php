@@ -66,4 +66,12 @@ abstract class TaxonomyBlockRenderTestBase extends OsWidgetsExistingSiteTestBase
     return $this->createBlockContent($values);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown() {
+    parent::tearDown();
+    $this->cleanUpProperties(self::class);
+  }
+
 }
