@@ -29,8 +29,7 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *     },
  *   },
  *   id = "event",
- *   contextualRoute = "view.upcoming_calendar.page",
- *   listPageRoute = "view.view.calendar.page_1"
+ *   contextualRoute = "view.upcoming_calendar.page"
  * )
  */
 class EventsApp extends AppPluginBase {

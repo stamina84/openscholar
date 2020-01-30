@@ -27,7 +27,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   },
  *   id = "faq",
  *   contextualRoute = "view.os_faq.page_1",
- *   listPageRoute = "view.os_faq.page_1",
  *   cpImportId = "os_faq_import",
  *   cpImportFilePath = "public://importcsv/os_faq.csv"
  * )

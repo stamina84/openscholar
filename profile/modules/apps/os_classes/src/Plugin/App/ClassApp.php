@@ -20,8 +20,7 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *     },
  *   },
  *   id = "class",
- *   contextualRoute = "view.os_classes.page_1",
- *   listPageRoute = "view.os_classes.page_1"
+ *   contextualRoute = "view.os_classes.page_1"
  * )
  */
 class ClassApp extends AppPluginBase {
