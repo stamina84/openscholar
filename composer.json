@@ -417,7 +417,7 @@
             },
             "drupal/config_ignore": {
                 "Override drush cim/cex for filtering": "https://www.drupal.org/files/issues/2019-01-08/2973431-supplementary-drush-commands-17.patch",
-                "Allow adding continer filtering": "https://www.drupal.org/files/issues/2019-01-09/2973431-ignore-collections-18.patch"
+                "Allow adding continer filtering": "https://www.drupal.org/files/issues/2019-12-27/config-ignore-collections-2973431-26.patch"
             },
             "drupal/disqus": {
                 "Disqus migrate support is broken": "https://www.drupal.org/files/issues/disqus-migrate-support-2879592-14.patch"
