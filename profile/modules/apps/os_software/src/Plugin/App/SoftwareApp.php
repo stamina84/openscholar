@@ -25,8 +25,7 @@ use Drupal\vsite\Plugin\AppPluginBase;
  *     },
  *   },
  *   id = "software",
- *   contextualRoute = "view.os_software_projects.page_1",
- *   listPageRoute = "view.os_software_projects.page_1",
+ *   contextualRoute = "view.os_software_projects.page_1"
  * )
  */
 class SoftwareApp extends AppPluginBase {

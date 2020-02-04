@@ -4,7 +4,6 @@ namespace Drupal\Tests\os_search\ExistingSiteJavascript;
 
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
 use Drupal\Tests\os_search\Traits\SearchTestTrait;
-use Drupal\search_api\Entity\Index;
 
 /**
  * Base class for Search (os-search) tests.
@@ -46,7 +45,8 @@ abstract class SearchJavascriptTestBase extends OsExistingSiteJavascriptTestBase
   public function setUp() {
     parent::setUp();
 
-    $this->index = Index::load('os_search_index');
+    $this->setUpSearch();
+
     $this->anotherGroup = $this->createGroup();
     $this->anotherGroupAlias = $this->anotherGroup->get('path')->first()->getValue()['alias'];
 
@@ -59,15 +59,17 @@ abstract class SearchJavascriptTestBase extends OsExistingSiteJavascriptTestBase
 
     // Wait is required as Elastic Server
     // takes sometime to respond to queries.
-    while ($this->getIndexQueryStatus($this->differentiator) <= 0) {
-      $this->waitForSeconds();
-    }
+    $this->getIndexQueryStatus($this->differentiator);
   }
 
   /**
    * {@inheritdoc}
    */
   public function tearDown() {
+    // Revert search_api_page to use original index.
+    $this->originalPage->set('index', 'os_search_index');
+    $this->originalPage->save();
+
     parent::tearDown();
 
     // Cleanup Object properties.
