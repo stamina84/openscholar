@@ -12,11 +12,14 @@
         if (k == top_level) {
           context_found = true;
         }
+
         if (context_found) {
+          console.log(" pushed context " + k);
           active_limited.push(k);
         }
       }
 
+      console.log("top_level " + top_level);
       if (top_level) {
         $('#block-place-context-selector', context).val(top_level);
       }
@@ -144,6 +147,7 @@
           blocks: items
         };
         let url = Drupal.url(drupalSettings.path.layout.saveLayout);
+
         $.post(url, payload).done(function (data, status, xhr) {
           vars = parseQuery();
           delete vars.context;
@@ -157,6 +161,7 @@
         e.target.disabled = true;
       });
 
+      // Layout - Reset button functionality.
       $('#block-place-actions-wrapper button[value="Reset"]', context).click(function (e) {
         let payload = {
           contexts: active_limited
