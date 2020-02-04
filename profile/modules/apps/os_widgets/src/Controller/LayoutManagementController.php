@@ -216,8 +216,6 @@ class LayoutManagementController extends ControllerBase {
     // Fields to check for changes.
     $block_fields = [
       'region',
-      'status',
-      'title',
       'weight',
     ];
 

@@ -14,12 +14,10 @@
         }
 
         if (context_found) {
-          console.log(" pushed context " + k);
           active_limited.push(k);
         }
       }
 
-      console.log("top_level " + top_level);
       if (top_level) {
         $('#block-place-context-selector', context).val(top_level);
       }
