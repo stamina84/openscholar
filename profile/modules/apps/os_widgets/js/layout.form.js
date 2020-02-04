@@ -4,8 +4,6 @@
   Drupal.behaviors.osWidgetsLayoutForm = {
     attach: function (context, settings) {
       let all_contexts = drupalSettings.layoutContexts,
-        // Currently context is not being passed in url.
-        // ToDo - to remove this code block if not needed.
         top_level = (new URLSearchParams(window.location.search)).get('context'),
         active_limited = [],
         context_found = !top_level;
