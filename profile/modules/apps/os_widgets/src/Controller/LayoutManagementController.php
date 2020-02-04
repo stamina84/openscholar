@@ -54,9 +54,10 @@ class LayoutManagementController extends ControllerBase {
     $contexts = $this->entityTypeManager()->getStorage('layout_context')->loadMultiple($context_ids);
 
     uasort($contexts, [ConfigEntityBase::class, 'sort']);
-    $target = array_shift($contexts);
 
     $contexts = array_reverse($contexts);
+    $target = array_shift($contexts);
+
     $parent_blocks = [];
     foreach ($contexts as $a) {
       $context_blocks = $a->getBlockPlacements();
