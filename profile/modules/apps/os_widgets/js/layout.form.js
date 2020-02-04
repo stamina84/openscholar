@@ -12,7 +12,6 @@
         if (k == top_level) {
           context_found = true;
         }
-
         if (context_found) {
           active_limited.push(k);
         }
@@ -145,7 +144,6 @@
           blocks: items
         };
         let url = Drupal.url(drupalSettings.path.layout.saveLayout);
-
         $.post(url, payload).done(function (data, status, xhr) {
           vars = parseQuery();
           delete vars.context;
