@@ -266,6 +266,7 @@ JS;
     // Drag widget to content region for all_pages.
     $link->dragTo($page->find('css', '.region-content'));
     $page->pressButton('Save');
+    $this->getSession()->wait(5);
     $web_assert->statusCodeEquals(200);
     $web_assert->pageTextContains('All pages widget');
 
@@ -278,8 +279,7 @@ JS;
     // Drag widget from page to blocks list.
     $link->dragTo($page->find('css', '#block-list'));
     $page->pressButton('Save');
-    $web_assert->statusCodeEquals(200);
-    $this->visitViaVsite('news', $this->group);
+    $this->getSession()->wait(10);
     $web_assert->statusCodeEquals(200);
     $web_assert->pageTextNotContains('All pages widget');
     // Removed widget from news page, checking other pages if widget is removed.
