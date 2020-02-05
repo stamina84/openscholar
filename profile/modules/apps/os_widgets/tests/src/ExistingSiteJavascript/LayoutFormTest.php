@@ -47,6 +47,7 @@ JS;
     $this->getSession()->wait(5);
     $this->getSession()->executeScript($script);
     $this->getSession()->getPage()->pressButton('Save');
+
     $url = $this->getSession()->evaluateScript('window.phpunit__ajax_url');
     $this->assertContains($this->groupAlias . '/cp/layout/save', $url);
 
@@ -234,6 +235,57 @@ JS;
     $delete_link = $this->getSession()->getPage()->find('css', '.contextual-links .block-contentblock-delete a');
     $this->assertNotNull($delete_link);
     $this->assertEquals("{$this->groupAlias}/blog", $this->getDestinationParameterValue($delete_link));
+  }
+
+  /**
+   * Test moved widgets on different pages.
+   */
+  public function testMovedWidgetsOnPages() {
+    $web_assert = $this->assertSession();
+    $block1 = $this->createBlockContent([
+      'type' => 'custom_text_html',
+      'info' => [
+        'value' => 'All pages widget',
+      ],
+      'body' => [
+        'Lorem Ipsum content 1',
+      ],
+      'field_widget_title' => ['All pages widget'],
+    ]);
+    $this->group->addContent($block1, 'group_entity:block_content');
+
+    // Adding widget to content region on all_pages.
+    $this->visitViaVsite('', $this->group);
+    $this->getSession()->getDriver()->click('//a[contains(.,"Layout")]');
+    $web_assert->pageTextContains('Filter Widgets by Title');
+    $web_assert->pageTextContains('All pages widget');
+    $page = $this->getSession()->getPage();
+    $page->fillField('filter-widgets', 'All pages widget');
+    $this->getSession()->executeScript('document.querySelector("#block-place-widget-selector-wrapper").scrollTo(5, 5);');
+    $link = $page->find('css', '#block-list .block-active');
+    // Drag widget to content region for all_pages.
+    $link->dragTo($page->find('css', '.region-content'));
+    $page->pressButton('Save');
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('All pages widget');
+
+    // Removing block1 widget from News page.
+    $this->visitViaVsite('news', $this->group);
+    $web_assert->pageTextContains('All pages widget');
+    $this->getSession()->getDriver()->click('//a[contains(.,"Layout")]');
+    $block1_uuid = '.block-block-content' . $block1->uuid();
+    $link = $page->find('css', $block1_uuid);
+    // Drag widget from page to blocks list.
+    $link->dragTo($page->find('css', '#block-list'));
+    $page->pressButton('Save');
+    $web_assert->statusCodeEquals(200);
+    $this->visitViaVsite('news', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextNotContains('All pages widget');
+    // Removed widget from news page, checking other pages if widget is removed.
+    $this->visitViaVsite('blog', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('All pages widget');
   }
 
 }
