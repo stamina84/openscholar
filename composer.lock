@@ -6033,17 +6033,17 @@
         },
         {
             "name": "drupal/group",
-            "version": "1.0.0-rc4",
+            "version": "1.0.0-rc5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/group.git",
-                "reference": "8.x-1.0-rc4"
+                "reference": "8.x-1.0-rc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/group-8.x-1.0-rc4.zip",
-                "reference": "8.x-1.0-rc4",
-                "shasum": "d5d55167523a3ddccef7f66159b4c417d950d6f5"
+                "url": "https://ftp.drupal.org/files/projects/group-8.x-1.0-rc5.zip",
+                "reference": "8.x-1.0-rc5",
+                "shasum": "234831baa8816d98d1093a37e5c66bb993a271eb"
             },
             "require": {
                 "drupal/core": "^8.6",
@@ -6055,7 +6055,7 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-rc4",
+                    "version": "8.x-1.0-rc5",
                     "datestamp": "1576854190",
                     "security-coverage": {
                         "status": "not-covered",
@@ -6064,10 +6064,10 @@
                 },
                 "patches_applied": {
                     "/views/ajax?_wrapper_format=drupal_ajax HTTP/1.1 - HTTP/1.1 403 Forbidden": "https://www.drupal.org/files/issues/2018-08-15/group-route-match-ajax-views-d8-2942657-11.patch",
-                    "Integrity constraint violation: Duplicate entry for key PRIMARY in node_access": "https://www.drupal.org/files/issues/2018-08-17/group-duplicate-node-access-entries-2892512-15.patch",
+                    "Integrity constraint violation: Duplicate entry for key PRIMARY in node_access": "https://www.drupal.org/files/issues/2019-12-30/2892512-31.patch",
                     "New group content created when node edited": "https://www.drupal.org/files/issues/2019-06-04/3059300-3.patch",
                     "Prevent resaving of deleted entities": "https://raw.githubusercontent.com/openscholar/openscholar/ae879229e866cbc96d91d2b2a8273292fa26fd34/patches/group.fix_saving_deleted_entity.patch",
-                    "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-10-17/group-support_string_entity_ids-2797793-171.patch",
+                    "Entities identified by strings as group content": "https://www.drupal.org/files/issues/2019-12-23/group-support_string_entity_ids-2797793-188.patch",
                     "Group creator must complete their membership Wizard duplicates membership": "https://www.drupal.org/files/issues/2019-07-09/group_membership_duplication-3016197-10.patch"
                 }
             },
@@ -6096,17 +6096,17 @@
         },
         {
             "name": "drupal/group_purl",
-            "version": "1.0.0-alpha1",
+            "version": "1.0.0-alpha2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/group_purl.git",
-                "reference": "8.x-1.0-alpha1"
+                "reference": "8.x-1.0-alpha2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/group_purl-8.x-1.0-alpha1.zip",
-                "reference": "8.x-1.0-alpha1",
-                "shasum": "33c7d85d7822f74ab961154177dd9532deba13ee"
+                "url": "https://ftp.drupal.org/files/projects/group_purl-8.x-1.0-alpha2.zip",
+                "reference": "8.x-1.0-alpha2",
+                "shasum": "73cc148305022cd256a963b62975d37b91569f88"
             },
             "require": {
                 "drupal/core": "~8.0",
@@ -6119,7 +6119,7 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-alpha1",
+                    "version": "8.x-1.0-alpha2",
                     "datestamp": "1559164381",
                     "security-coverage": {
                         "status": "not-covered",
@@ -6127,7 +6127,6 @@
                     }
                 },
                 "patches_applied": {
-                    "Prevent base path from interfering with purl detection": "https://www.drupal.org/files/issues/2019-04-12/group_purl.3026646-3.basepath.patch",
                     "Don't attempt to redirect to subdomains by default": "https://www.drupal.org/files/issues/2019-03-05/group_purl.3036879-4.subdomain_disable.patch",
                     "Page not found error if the request path contains the group prefix": "https://www.drupal.org/files/issues/2020-01-21/3107728-2.patch"
                 }
@@ -8445,17 +8444,17 @@
         },
         {
             "name": "drupal/views_accordion",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_accordion.git",
-                "reference": "8.x-1.2"
+                "reference": "8.x-1.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_accordion-8.x-1.2.zip",
-                "reference": "8.x-1.2",
-                "shasum": "4822df2084bd3e05fc9b1ff7b2f99768c123341c"
+                "url": "https://ftp.drupal.org/files/projects/views_accordion-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "22f211dd825db51428748bad3f4ad67c0584e7c8"
             },
             "require": {
                 "drupal/core": "*"
@@ -8466,8 +8465,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.2",
-                    "datestamp": "1544298180",
+                    "version": "8.x-1.3",
+                    "datestamp": "1568186884",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -8493,17 +8492,17 @@
         },
         {
             "name": "drupal/views_advanced_routing",
-            "version": "1.0.0-rc2",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_advanced_routing.git",
-                "reference": "8.x-1.0-rc2"
+                "reference": "8.x-1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_advanced_routing-8.x-1.0-rc2.zip",
-                "reference": "8.x-1.0-rc2",
-                "shasum": "1ad13a750169ad7d246ca7d67a5dc8e7426c6626"
+                "url": "https://ftp.drupal.org/files/projects/views_advanced_routing-8.x-1.0.zip",
+                "reference": "8.x-1.0",
+                "shasum": "11e90e442dbf3c03804f604cdf48e62c7f0e1fc9"
             },
             "require": {
                 "drupal/core": "~8.0"
@@ -8514,11 +8513,11 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-rc2",
-                    "datestamp": "1463926739",
+                    "version": "8.x-1.0",
+                    "datestamp": "1569923885",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -8567,17 +8566,17 @@
         },
         {
             "name": "drupal/views_infinite_scroll",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_infinite_scroll.git",
-                "reference": "8.x-1.5"
+                "reference": "8.x-1.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_infinite_scroll-8.x-1.5.zip",
-                "reference": "8.x-1.5",
-                "shasum": "fa19d65a9f6421fe64463b8b64169c6f13d423c3"
+                "url": "https://ftp.drupal.org/files/projects/views_infinite_scroll-8.x-1.6.zip",
+                "reference": "8.x-1.6",
+                "shasum": "614a2b01d57e2a75255883294bfd6b9246c85efd"
             },
             "require": {
                 "drupal/core": "*"
@@ -8588,8 +8587,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.5",
-                    "datestamp": "1503109444",
+                    "version": "8.x-1.6",
+                    "datestamp": "1561996386",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
