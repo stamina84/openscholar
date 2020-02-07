@@ -47,7 +47,6 @@ JS;
     $this->getSession()->wait(5);
     $this->getSession()->executeScript($script);
     $this->getSession()->getPage()->pressButton('Save');
-
     $url = $this->getSession()->evaluateScript('window.phpunit__ajax_url');
     $this->assertContains($this->groupAlias . '/cp/layout/save', $url);
 
