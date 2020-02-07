@@ -1,0 +1,8 @@
+uuid: 2de18941-af45-4c7b-9145-c7f7c663bcf9
+langcode: en
+status: true
+dependencies: {  }
+id: section_navigation
+label: 'Section navigation'
+revision: 1
+description: 'This widget is used in books.'
