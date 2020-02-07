@@ -27,10 +27,12 @@ interface CpImportHelperInterface {
    *
    * @param string $id
    *   Entity to be added to the vsite.
-   * @param string $plugin_id
-   *   Plugin id of the entity in context.
+   * @param string $pluginId
+   *   Plugin id.
+   * @param string $entityType
+   *   Entity type id.
    */
-  public function addContentToVsite(string $id, string $plugin_id): void;
+  public function addContentToVsite(string $id, string $pluginId, $entityType): void;
 
   /**
    * Handles content path to uniquify or create aliases if needed.
