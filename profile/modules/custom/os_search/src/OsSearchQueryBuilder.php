@@ -159,6 +159,8 @@ class OsSearchQueryBuilder {
       $this->applyFilterConditions($filters, $query);
     }
 
+    $this->applySortConditions($query);
+
   }
 
   /**
@@ -218,7 +220,6 @@ class OsSearchQueryBuilder {
     }
 
     $this->applyEnabledAppsConditions($query);
-    $this->applySortConditions($query);
   }
 
   /**
