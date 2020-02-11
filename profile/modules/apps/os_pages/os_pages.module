@@ -9,7 +9,6 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
-use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Url;
@@ -35,43 +34,34 @@ function os_pages_entity_insert(EntityInterface $entity) {
   $alias_manager = \Drupal::service('path.alias_manager');
 
   $layout_context_storage = \Drupal::entityTypeManager()->getStorage('layout_context');
-  $layout_context_storage->create([
-    'id' => "os_pages_page_{$entity->id()}",
-    'label' => t('Page Layout For @label', ['@label' => $entity->label()]),
-    'activationRules' => $alias_manager->getAliasByPath("/node/{$entity->id()}"),
-    'weight' => 100,
-  ])->save();
 
-  /** @var \Drupal\os_pages\VisibilityStorageInterface $visibility_storage */
-  $visibility_storage = \Drupal::service('os_pages.visibility_storage');
+  if ($visibility_helper->isBookPage($entity)) {
+    $layout_context_storage->create([
+      'id' => "os_pages_page_{$entity->id()}",
+      'label' => t('Page Layout For @label', ['@label' => $entity->label()]),
+      'activationRules' => $alias_manager->getAliasByPath("/node/{$entity->id()}"),
+      'weight' => 100,
+      'data' => [
+        'book_navigation' => [
+          'id' => 'book_navigation',
+          'region' => 'sidebar_first',
+          'weight' => 0,
+        ],
+      ],
+    ])->save();
+  }
+  else {
+    $layout_context_storage->create([
+      'id' => "os_pages_page_{$entity->id()}",
+      'label' => t('Page Layout For @label', ['@label' => $entity->label()]),
+      'activationRules' => $alias_manager->getAliasByPath("/node/{$entity->id()}"),
+      'weight' => 100,
+    ])->save();
+  }
 
-  // Create page visibility group.
-  $visibility_storage->create([
-    'id' => "os_pages_page_{$entity->id()}",
-    'label' => t('OS Pages: Page @name', [
-      '@name' => $entity->label(),
-    ]),
-    'status' => TRUE,
-    'allow_other_conditions' => TRUE,
-    'logic' => 'and',
-  ], [
-    [
-      'id' => 'node_type',
-      'bundles' => [
-        $entity->bundle() => $entity->bundle(),
-      ],
-      'negate' => FALSE,
-      'context_mapping' => [
-        'node' => '@node.node_route_context:node',
-      ],
-    ],
-    [
-      'id' => 'request_path',
-      'pages' => "/node/{$entity->id()}",
-      'negate' => FALSE,
-      'context_mapping' => [],
-    ],
-  ]);
+  $ent_id = "os_pages_page_{$entity->id()}";
+  $ent_layout = \Drupal::entityTypeManager()->getStorage('layout_context')->load($ent_id);
+  \Drupal::logger('os_pages book blocks')->notice('<pre>' . print_r($ent_layout->getBlockPlacements(), TRUE) . '</pre>');
 
   if (!$visibility_helper->isBookPage($entity)) {
     return;
@@ -113,71 +103,6 @@ function os_pages_entity_insert(EntityInterface $entity) {
     $section_layout->save();
   }
 
-  /** @var \Drupal\block_visibility_groups\Entity\BlockVisibilityGroup|null $section_visibility_group */
-  $section_visibility_group = BlockVisibilityGroup::load($section_id);
-
-  // Create/update section visibility group.
-  if (!$section_visibility_group) {
-    if ($visibility_helper->isBookFirstPage($entity)) {
-
-      $visibility_storage->create([
-        'id' => "os_pages_section_{$book->id()}",
-        'label' => t('OS Pages: Section @book_name', [
-          '@book_name' => $book->label(),
-        ]),
-        'status' => TRUE,
-        'allow_other_conditions' => TRUE,
-        'logic' => 'and',
-      ], [
-        [
-          'id' => 'node_type',
-          'bundles' => [
-            $entity->bundle() => $entity->bundle(),
-          ],
-          'negate' => FALSE,
-          'context_mapping' => [
-            'node' => '@node.node_route_context:node',
-          ],
-        ],
-        [
-          'id' => 'request_path',
-          'pages' => "/node/{$book->id()}\n/node/{$entity->id()}",
-          'negate' => FALSE,
-          'context_mapping' => [],
-        ],
-      ]);
-    }
-  }
-  else {
-    // Update the path condition for section visibility group.
-    // Making sure that it appears for the newly created page as well.
-    /** @var array $conditions */
-    $conditions = $section_visibility_group->getConditions()->getConfiguration();
-
-    foreach ($conditions as $condition) {
-      if ($condition['id'] === 'request_path') {
-        /** @var string $condition_id */
-        $condition_id = $condition['uuid'];
-        /** @var string $pages */
-        $pages = $condition['pages'];
-      }
-    }
-
-    if (!isset($condition_id) && !isset($pages)) {
-      return;
-    }
-
-    $section_visibility_group->removeCondition($condition_id);
-
-    $section_visibility_group->addCondition([
-      'id' => 'request_path',
-      'pages' => "$pages\n/node/{$entity->id()}",
-      'negate' => 0,
-      'context_mapping' => [],
-    ]);
-
-    $section_visibility_group->save();
-  }
 }
 
 /**
