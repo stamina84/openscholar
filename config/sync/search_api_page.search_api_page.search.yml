@@ -58,18 +58,18 @@ view_mode_configuration:
       website: ''
       working_paper: ''
   'entity:node':
-    default: default
+    default: teaser
     overrides:
-      blog: ''
-      class: ''
-      events: ''
-      faq: ''
-      news: ''
-      page: ''
-      person: ''
-      presentation: ''
-      software_project: ''
-      software_release: ''
+      blog: teaser
+      class: teaser
+      events: teaser
+      faq: teaser
+      news: teaser
+      page: teaser
+      person: teaser
+      presentation: teaser
+      software_project: teaser
+      software_release: teaser
 show_search_form: true
 parse_mode: terms
 parse_mode_conjunction: OR
