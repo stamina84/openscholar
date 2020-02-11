@@ -15,6 +15,7 @@ blacklist:
   - 'block.block.booknavigation*'
   - 'block.block.entityviewcontent*'
 graylist:
+  - advagg.settings
   - elasticsearch_connector.cluster.elasticsearch_default
   - os_media.settings
   - os_publications.settings
