@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b27d7e9707a3516193be207371e7ef80",
+    "content-hash": "cc2c75d06ab53ecfd816a1c809f3941f",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -2857,6 +2857,91 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/admin_toolbar",
                 "issues": "https://www.drupal.org/project/issues/admin_toolbar"
+            }
+        },
+        {
+            "name": "drupal/advagg",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/advagg.git",
+                "reference": "8.x-4.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/advagg-8.x-4.0.zip",
+                "reference": "8.x-4.0",
+                "shasum": "2987efa3922fd9fc4931cf853de3104092ff236e"
+            },
+            "require": {
+                "drupal/core": "^8.6"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-4.x": "4.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-4.0",
+                    "datestamp": "1560358534",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Mike Carper (mikeytown2)",
+                    "homepage": "https://www.drupal.org/u/mikeytown2",
+                    "role": "Creator, Maintainer"
+                },
+                {
+                    "name": "Nick Wilde (nickwilde)",
+                    "homepage": "https://www.drupal.org/u/nickwilde",
+                    "email": "design@briarmoon.ca",
+                    "role": "Drupal 8 Port/maintainer"
+                },
+                {
+                    "name": "doublejosh",
+                    "homepage": "https://www.drupal.org/user/199720"
+                },
+                {
+                    "name": "iamcarrico",
+                    "homepage": "https://www.drupal.org/user/1300542"
+                },
+                {
+                    "name": "markcarver",
+                    "homepage": "https://www.drupal.org/user/501638"
+                },
+                {
+                    "name": "mikeytown2",
+                    "homepage": "https://www.drupal.org/user/282446"
+                },
+                {
+                    "name": "rupl",
+                    "homepage": "https://www.drupal.org/user/411999"
+                },
+                {
+                    "name": "thalles",
+                    "homepage": "https://www.drupal.org/user/3589086"
+                }
+            ],
+            "description": "Improved aggregation of CSS/JS files to speed up page load times.",
+            "homepage": "https://drupal.org/project/advagg",
+            "support": {
+                "source": "https://cgit.drupalcode.org/advagg",
+                "issues": "https://drupal.org/project/issues/advagg",
+                "irc": "irc://irc.freenode.org/drupal-contribute"
             }
         },
         {
@@ -7189,7 +7274,7 @@
             "description": "Allows users to redirect from old URLs to new URLs.",
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
-                "source": "https://git.drupalcode.org/project/redirect"
+                "source": "http://cgit.drupalcode.org/redirect"
             }
         },
         {
@@ -7471,7 +7556,7 @@
             "description": "Improved Views integration for RNG.",
             "homepage": "https://www.drupal.org/project/rng",
             "support": {
-                "source": "http://cgit.drupalcode.org/rng"
+                "source": "https://git.drupalcode.org/project/rng"
             }
         },
         {
@@ -8498,7 +8583,7 @@
             "description": "Provides an accordion views display plugin.",
             "homepage": "https://www.drupal.org/project/views_accordion",
             "support": {
-                "source": "https://git.drupalcode.org/project/views_accordion",
+                "source": "http://cgit.drupalcode.org/views_accordion",
                 "issues": "https://www.drupal.org/project/issues/views_accordion"
             }
         },
@@ -8546,7 +8631,7 @@
             "description": "Provides advanced route customisation for Views.",
             "homepage": "https://www.drupal.org/project/views_advanced_routing",
             "support": {
-                "source": "https://git.drupalcode.org/project/views_advanced_routing"
+                "source": "http://cgit.drupalcode.org/views_advanced_routing"
             }
         },
         {
@@ -8613,10 +8698,6 @@
             ],
             "authors": [
                 {
-                    "name": "Bobík",
-                    "homepage": "https://www.drupal.org/user/123612"
-                },
-                {
                     "name": "Remon",
                     "homepage": "https://www.drupal.org/user/143827"
                 },
@@ -8628,7 +8709,7 @@
             "description": "A pager which allows an infinite scroll effect for views.",
             "homepage": "https://www.drupal.org/project/views_infinite_scroll",
             "support": {
-                "source": "https://git.drupalcode.org/project/views_infinite_scroll"
+                "source": "http://cgit.drupalcode.org/views_infinite_scroll"
             }
         },
         {
@@ -16127,7 +16208,7 @@
                 },
                 "drupal": {
                     "version": "8.x-2.0",
-                    "datestamp": "1550236984",
+                    "datestamp": "1536328684",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -16139,10 +16220,6 @@
                 "GPL-2.0-or-later"
             ],
             "authors": [
-                {
-                    "name": "Berdir",
-                    "homepage": "https://www.drupal.org/user/214652"
-                },
                 {
                     "name": "Dave Reid",
                     "homepage": "https://www.drupal.org/user/53892"
@@ -16164,10 +16241,6 @@
                     "homepage": "https://www.drupal.org/user/77320"
                 },
                 {
-                    "name": "oknate",
-                    "homepage": "https://www.drupal.org/user/471638"
-                },
-                {
                     "name": "samuel.mortenson",
                     "homepage": "https://www.drupal.org/user/2582268"
                 },
@@ -16179,7 +16252,7 @@
             "description": "Entity browser inline entity form integration.",
             "homepage": "https://www.drupal.org/project/entity_browser",
             "support": {
-                "source": "https://git.drupalcode.org/project/entity_browser"
+                "source": "http://cgit.drupalcode.org/entity_browser"
             }
         },
         {
