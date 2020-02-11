@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Entity\EntityForm;
 
 /**
  * Implements hook_entity_insert().
@@ -234,6 +235,38 @@ function os_pages_node_prepare_form(NodeInterface $node, $operation, FormStateIn
  */
 function os_pages_form_node_page_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   os_pages_node_page_alter($form, $form_state);
+  os_pages_meta_tags_alter($form, $form_state);
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Manage book outline meta tag form element.
+ */
+function os_pages_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof EntityForm) {
+    _os_pages_remove_book_outline_form_element($form, $form_object->getEntity());
+  }
+}
+
+/**
+ * Remove book outline form element from not allowed node forms.
+ *
+ * @param array $form
+ *   Form array.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   Form state entity.
+ */
+function _os_pages_remove_book_outline_form_element(array &$form, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() != 'node' || !isset($form['book'])) {
+    return;
+  }
+  if (book_type_is_allowed($entity->bundle())) {
+    return;
+  }
+  $form['book']['#access'] = FALSE;
+  $form['book']['bid']['#access'] = FALSE;
 }
 
 /**
@@ -243,6 +276,7 @@ function os_pages_form_node_page_edit_form_alter(&$form, FormStateInterface $for
  */
 function os_pages_form_node_page_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   os_pages_node_page_alter($form, $form_state);
+  os_pages_meta_tags_alter($form, $form_state);
 }
 
 /**
@@ -547,4 +581,21 @@ function os_pages_form_node_page_book_outline_form_alter(&$form, FormStateInterf
       '#weight' => -10,
     ];
   }
+}
+
+/**
+ * Custom function to handle meta tags for pages.
+ */
+function os_pages_meta_tags_alter(array &$form, FormStateInterface $form_state) {
+  $form['field_meta_tags']['widget']['0']['#title'] = t('Search Engine Optimization (SEO)');
+  $form['field_meta_tags']['widget']['0']['basic']['title']['#access'] = FALSE;
+  $form['field_meta_tags']['widget']['0']['basic']['abstract']['#access'] = FALSE;
+  $form['field_meta_tags']['widget']['0']['basic']['keywords']['#access'] = FALSE;
+  $form['field_meta_tags']['widget']['0']['basic']['vsite_privacy_robots']['#access'] = FALSE;
+  $form['field_meta_tags']['widget']['0']['basic']['#description'] = FALSE;
+  $form['field_meta_tags']['widget']['0']['basic']['description']['#title'] = t('Meta Description');
+  $form['field_meta_tags']['widget']['0']['basic']['description']['#description'] = t('Best if 150 characters or less. Used as a meta description tag and instead of trimmed body in certain lists.');
+  unset($form['field_meta_tags']['widget']['0']['intro_text']['#markup']);
+  unset($form['field_meta_tags']['widget']['0']['tokens']);
+  unset($form['field_meta_tags']['widget']['0']['basic']['#type']);
 }

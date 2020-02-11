@@ -479,6 +479,7 @@ hidden:
   citation: true
   created: true
   field_redirect_to_source: true
+  html_abstract: true
   html_title: true
   langcode: true
   publishers_version: true

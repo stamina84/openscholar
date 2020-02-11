@@ -5,7 +5,6 @@ namespace Drupal\cp_import\Helper;
 use Drupal\Component\Datetime\Time;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\File\FileSystem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Session\AccountProxy;
@@ -21,7 +20,7 @@ use League\Csv\Writer;
  *
  * @package Drupal\cp_import\Helper
  */
-class CpImportHelper implements CpImportHelperInterface {
+class CpImportHelper extends CpImportHelperBase {
 
   /**
    * Csv row limit.
@@ -32,13 +31,6 @@ class CpImportHelper implements CpImportHelperInterface {
    * Csv row limit string.
    */
   const OVER_LIMIT = 'rows_over_allowed_limit';
-
-  /**
-   * Vsite Manager service.
-   *
-   * @var \Drupal\vsite\Plugin\VsiteContextManager
-   */
-  protected $vsiteManager;
 
   /**
    * Media Helper service.
@@ -97,18 +89,25 @@ class CpImportHelper implements CpImportHelperInterface {
   protected $pathAutoGenerator;
 
   /**
+   * Logger service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $logger;
+
+  /**
    * CpImportHelper constructor.
    *
    * @param \Drupal\vsite\Plugin\VsiteContextManager $vsiteContextManager
    *   VsiteContextManager instance.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
+   *   EntityTypeManager instance.
    * @param \Drupal\os_media\MediaEntityHelper $mediaHelper
    *   MediaEntityHelper instance.
    * @param \Drupal\Core\Session\AccountProxy $user
    *   AccountProxy instance.
    * @param \Drupal\Core\Language\LanguageManager $languageManager
    *   LanguageManager instance.
-   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
-   *   EntityTypeManager instance.
    * @param \Drupal\Core\Entity\EntityFieldManager $entityFieldManager
    *   EntityFieldManager instance.
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
@@ -118,12 +117,11 @@ class CpImportHelper implements CpImportHelperInterface {
    * @param \Drupal\pathauto\PathautoGenerator $pathautoGenerator
    *   PathAutoGenerator instance.
    */
-  public function __construct(VsiteContextManager $vsiteContextManager, MediaEntityHelper $mediaHelper, AccountProxy $user, LanguageManager $languageManager, EntityTypeManager $entityTypeManager, EntityFieldManager $entityFieldManager, FileSystemInterface $fileSystem, Time $time, PathautoGenerator $pathautoGenerator) {
-    $this->vsiteManager = $vsiteContextManager;
+  public function __construct(VsiteContextManager $vsiteContextManager, EntityTypeManager $entityTypeManager, MediaEntityHelper $mediaHelper, AccountProxy $user, LanguageManager $languageManager, EntityFieldManager $entityFieldManager, FileSystemInterface $fileSystem, Time $time, PathautoGenerator $pathautoGenerator) {
+    parent::__construct($vsiteContextManager, $entityTypeManager);
     $this->mediaHelper = $mediaHelper;
     $this->currentUser = $user;
     $this->languageManager = $languageManager;
-    $this->entityTypeManager = $entityTypeManager;
     $this->fieldManager = $entityFieldManager;
     $this->fileSystem = $fileSystem;
     $this->time = $time;
@@ -131,7 +129,19 @@ class CpImportHelper implements CpImportHelperInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Get the media to be attached to the node.
+   *
+   * @param string $media_val
+   *   The media value entered in the csv.
+   * @param string $contentType
+   *   Content type.
+   *
+   * @return \Drupal\media\Entity\Media|null
+   *   Media entity/Null when not able to fetch/download media.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function getMedia($media_val, $contentType) : ?Media {
     $media = NULL;
@@ -157,19 +167,15 @@ class CpImportHelper implements CpImportHelperInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function addContentToVsite(string $id, $plugin_id): void {
-    $vsite = $this->vsiteManager->getActiveVsite();
-    // If in vsite context add content to vsite otherwise do nothing.
-    if ($vsite) {
-      $entity = $this->entityTypeManager->getStorage('node')->load($id);
-      $vsite->addContent($entity, $plugin_id);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
+   * Handles content path to uniquify or create aliases if needed.
+   *
+   * @param string $entityType
+   *   Entity type id.
+   * @param int $id
+   *   Entity id in context for which to update alias.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function handleContentPath(string $entityType, int $id): void {
     $entity = $this->entityTypeManager->getStorage($entityType)->load($id);
@@ -177,7 +183,18 @@ class CpImportHelper implements CpImportHelperInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Helper method to convert csv to array.
+   *
+   * @param string $filename
+   *   File uri.
+   * @param string $encoding
+   *   Encoding of the file.
+   *
+   * @return array|string
+   *   Data as an array or error string.
+   *
+   * @throws \League\Csv\CannotInsertRecord
+   * @throws \League\Csv\Exception
    */
   public function csvToArray($filename, $encoding) {
 

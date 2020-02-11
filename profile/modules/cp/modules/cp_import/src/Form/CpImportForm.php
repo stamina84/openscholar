@@ -2,13 +2,8 @@
 
 namespace Drupal\cp_import\Form;
 
-use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\File\FileSystem;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\migrate\MigrateMessage;
-use Drupal\migrate\Plugin\MigrationPluginManager;
-use Drupal\migrate_tools\MigrateBatchExecutable;
 use Drupal\vsite\Plugin\AppManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -24,12 +19,6 @@ class CpImportForm extends FormBase {
    */
   protected $vsiteAppManager;
 
-  /**
-   * Migration plugin manager service.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManager
-   */
-  protected $migrationManager;
 
   /**
    * App plugin base.
@@ -39,19 +28,10 @@ class CpImportForm extends FormBase {
   protected $appPlugin;
 
   /**
-   * Entity Type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManager
-   */
-  protected $entityTypeManager;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(AppManager $vsite_app_manager, MigrationPluginManager $manager, EntityTypeManager $entityTypeManager) {
+  public function __construct(AppManager $vsite_app_manager) {
     $this->vsiteAppManager = $vsite_app_manager;
-    $this->migrationManager = $manager;
-    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -59,9 +39,7 @@ class CpImportForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('vsite.app.manager'),
-      $container->get('plugin.manager.migration'),
-      $container->get('entity_type.manager')
+      $container->get('vsite.app.manager')
     );
   }
 
@@ -91,18 +69,7 @@ class CpImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $fileId = $form_state->getValue('import_file');
-    $fileId = array_shift($fileId);
-    /** @var \Drupal\file\Entity\File $file */
-    $file = $this->entityTypeManager->getStorage('file')->load($fileId);
-
-    $definition = $this->vsiteAppManager->getDefinition($form_state->getValue('app_id'));
-    // Replace existing source file.
-    file_move($file, $definition['cpImportFilePath'], FileSystem::EXISTS_REPLACE);
-    /** @var \Drupal\migrate\Plugin\Migration $migration */
-    $migration = $this->migrationManager->createInstance($definition['cpImportId']);
-    $executable = new MigrateBatchExecutable($migration, new MigrateMessage());
-    $executable->batchImport();
+    $this->appPlugin->submitImportForm($form_state);
   }
 
   /**
