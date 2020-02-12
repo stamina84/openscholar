@@ -34,7 +34,7 @@ jobs:
     - script: robo job:check-coding-standards
     - script: robo job:run-unit-tests
     - script: robo job:check-module-circular-dependency
-    - script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4"
+    - script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
     - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
     - script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
     - script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
@@ -59,10 +59,16 @@ jobs:
       script: robo job:run-kernel-tests-code-coverage "widgets-4"
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
+      script: robo job:run-kernel-tests-code-coverage "widgets-5"
+      after_success: bash <(curl -s https://codecov.io/bash)
+    - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "os-theme-preview,cp-appearance,profiles"
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
-      script: robo job:run-kernel-tests-code-coverage "publications-1,redirect,vsite"
+      script: robo job:run-kernel-tests-code-coverage "publications-1,redirect"
+      after_success: bash <(curl -s https://codecov.io/bash)
+    - stage: codecov
+      script: robo job:run-kernel-tests-code-coverage "vsite"
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "publications-2,wysiwyg"
