@@ -444,6 +444,7 @@ hidden:
   field_publication_image: true
   field_redirect_to_source: true
   field_taxonomy_terms: true
+  html_abstract: true
   html_title: true
   langcode: true
   publishers_version: true

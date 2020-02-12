@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d1088fc1b672c16bed98d1262c6bd3d5",
+    "content-hash": "b27d7e9707a3516193be207371e7ef80",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -3193,17 +3193,17 @@
         },
         {
             "name": "drupal/bootstrap",
-            "version": "3.17.0",
+            "version": "3.21.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/bootstrap.git",
-                "reference": "8.x-3.17"
+                "reference": "8.x-3.21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/bootstrap-8.x-3.17.zip",
-                "reference": "8.x-3.17",
-                "shasum": "7fec8e6bc1435b97952844315035b36c2dbc07b2"
+                "url": "https://ftp.drupal.org/files/projects/bootstrap-8.x-3.21.zip",
+                "reference": "8.x-3.21",
+                "shasum": "e431093eb4f64712b02e691660a85cfa4fb49c88"
             },
             "require": {
                 "drupal/core": "~8.0"
@@ -3214,16 +3214,12 @@
                     "dev-3.x": "3.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-3.17",
-                    "datestamp": "1557526081",
+                    "version": "8.x-3.21",
+                    "datestamp": "1574427108",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
-                },
-                "patches_applied": {
-                    "Unsupported operand types during providers JSON discovery #8": "https://www.drupal.org/files/issues/2019-01-24/3027569-8.x-3.x-8.patch",
-                    "Fix modal elements getting lost after reusing modal": "https://raw.githubusercontent.com/openscholar/openscholar/e4d27051b02cb9c92e44e76c5e9f4f4a57c2e874/patches/bootstrap.11027.footer.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -5634,6 +5630,10 @@
             ],
             "authors": [
                 {
+                    "name": "Berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
+                {
                     "name": "Frans",
                     "homepage": "https://www.drupal.org/user/514222"
                 },
@@ -5649,7 +5649,7 @@
             "description": "Adds a Entity Reference field type with revision support.",
             "homepage": "https://www.drupal.org/project/entity_reference_revisions",
             "support": {
-                "source": "http://cgit.drupalcode.org/entity_reference_revisions"
+                "source": "https://git.drupalcode.org/project/entity_reference_revisions"
             }
         },
         {
@@ -6414,8 +6414,16 @@
                     "homepage": "https://www.drupal.org/user/3181721"
                 },
                 {
+                    "name": "aprice42",
+                    "homepage": "https://www.drupal.org/user/369147"
+                },
+                {
                     "name": "gcb",
                     "homepage": "https://www.drupal.org/user/1682976"
+                },
+                {
+                    "name": "julia.leah.ford",
+                    "homepage": "https://www.drupal.org/user/3590443"
                 },
                 {
                     "name": "levelos",
@@ -6449,7 +6457,7 @@
             "description": "Mailchimp is an integration with the Mailchimp Mass email tool.",
             "homepage": "http://drupal.org/project/mailchimp",
             "support": {
-                "source": "http://cgit.drupalcode.org/mailchimp"
+                "source": "https://git.drupalcode.org/project/mailchimp"
             }
         },
         {
@@ -7024,6 +7032,10 @@
                     "homepage": "https://www.drupal.org/user/1853532"
                 },
                 {
+                    "name": "jstoller",
+                    "homepage": "https://www.drupal.org/user/99012"
+                },
+                {
                     "name": "miro_dietiker",
                     "homepage": "https://www.drupal.org/user/227761"
                 }
@@ -7177,7 +7189,7 @@
             "description": "Allows users to redirect from old URLs to new URLs.",
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
-                "source": "http://cgit.drupalcode.org/redirect"
+                "source": "https://git.drupalcode.org/project/redirect"
             }
         },
         {
@@ -8486,7 +8498,7 @@
             "description": "Provides an accordion views display plugin.",
             "homepage": "https://www.drupal.org/project/views_accordion",
             "support": {
-                "source": "http://cgit.drupalcode.org/views_accordion",
+                "source": "https://git.drupalcode.org/project/views_accordion",
                 "issues": "https://www.drupal.org/project/issues/views_accordion"
             }
         },
@@ -8534,7 +8546,7 @@
             "description": "Provides advanced route customisation for Views.",
             "homepage": "https://www.drupal.org/project/views_advanced_routing",
             "support": {
-                "source": "http://cgit.drupalcode.org/views_advanced_routing"
+                "source": "https://git.drupalcode.org/project/views_advanced_routing"
             }
         },
         {
@@ -8601,6 +8613,10 @@
             ],
             "authors": [
                 {
+                    "name": "Bobík",
+                    "homepage": "https://www.drupal.org/user/123612"
+                },
+                {
                     "name": "Remon",
                     "homepage": "https://www.drupal.org/user/143827"
                 },
@@ -8612,7 +8628,7 @@
             "description": "A pager which allows an infinite scroll effect for views.",
             "homepage": "https://www.drupal.org/project/views_infinite_scroll",
             "support": {
-                "source": "http://cgit.drupalcode.org/views_infinite_scroll"
+                "source": "https://git.drupalcode.org/project/views_infinite_scroll"
             }
         },
         {
@@ -15773,10 +15789,6 @@
                     "homepage": "https://www.drupal.org/node/3236/committers"
                 },
                 {
-                    "name": "pcambra",
-                    "homepage": "https://www.drupal.org/user/122101"
-                },
-                {
                     "name": "salvis",
                     "homepage": "https://www.drupal.org/user/82964"
                 },
@@ -15790,6 +15802,70 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/devel",
                 "issues": "http://drupal.org/project/devel",
+                "irc": "irc://irc.freenode.org/drupal-contribute"
+            }
+        },
+        {
+            "name": "drupal/devel_entity_updates",
+            "version": "2.0.0-rc1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/devel_entity_updates.git",
+                "reference": "8.x-2.0-rc1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/devel_entity_updates-8.x-2.0-rc1.zip",
+                "reference": "8.x-2.0-rc1",
+                "shasum": "27a872038c5f583308c305a3cd4f0b7ea9e18944"
+            },
+            "require": {
+                "drupal/core": "^8.7.0",
+                "drupal/devel": "*"
+            },
+            "conflict": {
+                "drupal/core": "<8.7",
+                "drush/drush": ">=9.0 <9.6"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-2.0-rc1",
+                    "datestamp": "1576707488",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "RC releases are not covered by Drupal security advisories."
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9 || ^10"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Francesco Placella (plach)",
+                    "homepage": "https://www.drupal.org/u/plach",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "plach",
+                    "homepage": "https://www.drupal.org/user/183211"
+                }
+            ],
+            "description": "Provides developers an API and drush command to perform automatic entity updates.",
+            "homepage": "http://drupal.org/project/devel_entity_updates",
+            "support": {
+                "source": "https://cgit.drupalcode.org/devel_entity_updates",
+                "issues": "https://drupal.org/project/issues/devel_entity_updates",
                 "irc": "irc://irc.freenode.org/drupal-contribute"
             }
         },

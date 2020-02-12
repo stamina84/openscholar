@@ -105,7 +105,8 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $field_id = '';
     $field_label = '';
 
-    if (strpos($route_name, 'search_api_page') !== FALSE) {
+    if (strpos($route_name, 'search_api_page') !== FALSE || strpos($route_name, 'os_search.app_global') !== FALSE) {
+      // Load search page.
       $query = $this->searchQueryBuilder->getQuery();
       $search_page_index = $query->getIndex();
 
@@ -166,15 +167,14 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $summary_items = [];
     $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
+    $route_parameters = $this->routeMatch->getParameters()->all();
 
     foreach ($buckets as $bucket) {
       $item_label = isset($bucket['label']) ? $bucket['label'] : ucwords($bucket['key']);
       $item_label = is_array($item_label) ? reset($item_label) : $item_label;
-
-      $path = Url::fromRoute($route_name, [
-        'f' => array_merge($filters, $bucket['query']),
-        'keys' => $keys,
-      ]);
+      $route_parameters['f'] = array_merge($filters, $bucket['query']);
+      $route_parameters['keys'] = $keys;
+      $path = Url::fromRoute($route_name, $route_parameters);
 
       $items[] = Link::fromTextAndUrl($this->t('@label (@count)', ['@label' => $item_label, '@count' => $bucket['doc_count']]), $path)->toString();
     }
@@ -190,7 +190,10 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
         $item_label = isset($reduced_filter['label']) ? $reduced_filter['label'] : '';
         $item_label = is_array($item_label) ? reset($item_label) : $item_label;
-        $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
+
+        $route_parameters['f'] = $querys;
+        $route_parameters['keys'] = $keys;
+        $path = Url::fromRoute($route_name, $route_parameters);
         $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
         $summary_items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
       }

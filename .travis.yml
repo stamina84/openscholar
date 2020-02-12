@@ -41,7 +41,8 @@ jobs:
     - script: robo job:run-functional-tests "os-search,analytics,publications,cp-appearance,redirect,twitter,os,vsite,cp-import"
     - script: robo job:run-functional-javascript-tests "classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
     - script: robo job:run-functional-javascript-tests "os-search"
-    - script: robo job:run-functional-javascript-tests "events,os,vsite,os-theme-preview,widgets,blog,faq,news,presentations"
+    - script: robo job:run-functional-javascript-tests "events,vsite,widgets"
+    - script: robo job:run-functional-javascript-tests "os,os-theme-preview,blog,faq,news,presentations"
     - stage: codecov
       script: robo job:run-unit-tests-code-coverage
       after_success: bash <(curl -s https://codecov.io/bash)

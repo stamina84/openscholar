@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\os_redirect\ExistingSite;
 
+use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
+
 /**
  * Tests os_redirect module.
  *
@@ -10,7 +12,7 @@ namespace Drupal\Tests\os_redirect\ExistingSite;
  *
  * @coversDefaultClass \Drupal\os_redirect\Form\OsRedirectForm
  */
-class CreateRedirectTest extends OsRedirectTestBase {
+class CreateRedirectTest extends OsExistingSiteTestBase {
 
   /**
    * {@inheritdoc}
@@ -20,6 +22,8 @@ class CreateRedirectTest extends OsRedirectTestBase {
     $site_user = $this->createUser();
     $this->addGroupAdmin($site_user, $this->group);
     $this->drupalLogin($site_user);
+    // Prevent to set global config.
+    $this->container->get('vsite.context_manager')->activateVsite($this->group);
   }
 
   /**
@@ -28,25 +32,21 @@ class CreateRedirectTest extends OsRedirectTestBase {
   public function testAddRedirectInVsiteSuccess() {
     $web_assert = $this->assertSession();
 
-    // Set global maximum number.
-    /** @var \Drupal\Core\Config\ConfigFactoryInterface $configFactory */
-    $configFactory = $this->container->get('config.factory');
-    $config = $configFactory->getEditable('os_redirect.settings');
-    $config->set('maximum_number', 10);
-    $config->save(TRUE);
-
-    $this->visit($this->group->get('path')->getValue()[0]['alias'] . "/cp/redirects/add");
+    $this->visitViaVsite("cp/redirects/add", $this->group);
     $web_assert->statusCodeEquals(200);
 
+    $test_uri = 'http://' . $this->randomMachineName() . '.com';
     $add_values = [
       'redirect_source[0][path]' => 'lorem1-new',
-      'redirect_redirect[0][uri]' => 'http://example.com',
+      'redirect_redirect[0][uri]' => $test_uri,
     ];
     $this->drupalPostForm(NULL, $add_values, 'Save');
     $this->assertContains('The redirect has been saved.', $this->getCurrentPageContent());
 
+    $this->cleanUpRedirectByUri($test_uri);
+
     // Check new content on list page.
-    $this->visit($this->group->get('path')->getValue()[0]['alias'] . "/cp/redirects/list");
+    $this->visitViaVsite("cp/redirects/list", $this->group);
     $web_assert->statusCodeEquals(200);
     $this->assertContains('lorem1-new', $this->getCurrentPageContent(), 'Test redirect is source not visible.');
 
@@ -69,7 +69,7 @@ class CreateRedirectTest extends OsRedirectTestBase {
   public function testAddRedirectInVsiteLimit() {
     $web_assert = $this->assertSession();
 
-    // Set global maximum number.
+    // Set vsite maximum number.
     $configFactory = $this->container->get('config.factory');
     $config = $configFactory->getEditable('os_redirect.settings');
     $config->set('maximum_number', 0);
@@ -86,7 +86,32 @@ class CreateRedirectTest extends OsRedirectTestBase {
     $web_assert->statusCodeEquals(200);
     $this->assertContains('Maximum number of redirects', $this->getCurrentPageContent());
     $this->assertNotContains('The redirect has been saved.', $this->getCurrentPageContent());
+  }
 
+  /**
+   * Test redirect creation when source is exists.
+   */
+  public function testCreateExistsRedirect() {
+    $web_assert = $this->assertSession();
+    $path = $this->randomMachineName();
+    $redirect = $this->createRedirect([
+      'redirect_source' => [
+        'path' => '[vsite:' . $this->group->id() . ']/' . $path,
+      ],
+      'redirect_redirect' => [
+        'uri' => 'http://example.com',
+      ],
+    ]);
+    $this->group->addContent($redirect, 'group_entity:redirect');
+    $this->visitViaVsite('cp/redirects/add', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $page = $this->getCurrentPage();
+    $page->fillField('redirect_source[0][path]', $path);
+    $page->fillField('redirect_redirect[0][uri]', '/' . $this->randomMachineName());
+    $page->pressButton('Save');
+    $web_assert->statusCodeEquals(200);
+    // Error message should printed without vsite and edit link.
+    $web_assert->pageTextContains('The source path /' . $path . ' is already being redirected.');
   }
 
 }

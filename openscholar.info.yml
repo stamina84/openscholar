@@ -13,7 +13,6 @@ dependencies:
   - bibcite:bibcite_entity
   - bibcite:bibcite_export
   - bibcite:bibcite_marc
-  - bibcite:bibcite_ris
   - drupal:blazy
   - drupal:block
   - drupal:block_content
