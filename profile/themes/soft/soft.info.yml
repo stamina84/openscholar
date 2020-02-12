@@ -4,6 +4,7 @@ description: 'Soft theme.'
 base theme: os_base
 core: 8.x
 type: theme
+vsite_theme: true
 
 regions:
   branding_header: 'Branding Header'

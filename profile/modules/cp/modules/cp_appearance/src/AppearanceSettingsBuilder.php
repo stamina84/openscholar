@@ -354,7 +354,8 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
   protected function osInstalledThemes(): array {
     if (!$this->osInstalledThemes) {
       $this->osInstalledThemes = array_filter($this->themeHandler->listInfo(), function (Extension $theme) {
-        return (isset($theme->base_themes) &&  $theme->status && $theme->origin != 'core') && $theme->info['base theme'] != 'bootstrap';
+        return (isset($theme->base_themes) &&  $theme->status && $theme->origin != 'core') && $theme->info['base theme'] != 'bootstrap' &&
+          isset($theme->info['vsite_theme']) && $theme->info['vsite_theme'];
       });
     }
     return $this->osInstalledThemes;
