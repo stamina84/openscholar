@@ -200,7 +200,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
     }
 
     $build[$field_name]['facets'] = [
-      '#theme' => 'item_list',
+      '#theme' => 'item_list__search_widget',
       '#empty' => $this->t('No filters available'),
       '#list_type' => 'ul',
       '#title' => $this->t('Filter By @field_label', ['@field_label' => $field_label]),
