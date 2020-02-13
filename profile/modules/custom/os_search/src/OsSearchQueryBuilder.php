@@ -80,6 +80,7 @@ class OsSearchQueryBuilder {
   public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory, RequestStack $request_stack, VsiteContextManager $vsite_context, AppLoader $app_loader, AccountProxy $current_user, OsSearchFacetBuilder $facet_builder, CurrentRouteMatch $route_match) {
     $this->entityTypeManager = $entity_type_manager;
     $this->blockContent = $entity_type_manager->getStorage('block_content');
+    $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
     $this->configFactory = $config_factory;
     $this->requestStack = $request_stack;
     $this->vsiteContext = $vsite_context;
@@ -139,10 +140,8 @@ class OsSearchQueryBuilder {
       $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
       $query->keys($keys);
     }
-
     // Consider only 'f' array key as facet filters from querystring.
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
-
     // Add unreal group condition for global search with no keys.
     if (!$group && !$keys && !$query->hasTag('get_all_facets') && !$filters) {
       $filters = ["custom_search_group:0"];
@@ -172,7 +171,6 @@ class OsSearchQueryBuilder {
   protected function validateFacetFilters(array &$filters = []) {
     $available_facets = $this->configFactory->get('os.search.settings')->get('facet_widget');
     $enabled_facets = array_filter($available_facets);
-
     foreach ($filters as $key => $filter) {
       $field_name = substr($filter, 0, strpos($filter, ':'));
       if (!in_array($field_name, $enabled_facets)) {
@@ -198,6 +196,17 @@ class OsSearchQueryBuilder {
       'minute' => '00',
     ];
     $date_field = FALSE;
+
+    if ($query->hasTag('group_terms_by_taxonomy')) {
+      $term_filters = [];
+      foreach ($filters as $key => $filter) {
+        if (strpos($filter, 'custom_taxonomy') !== FALSE) {
+          $term_filters[] = $filter;
+          unset($filters[$key]);
+        }
+      }
+      $this->applyTaxonomyFilterConditions($term_filters, $query);
+    }
 
     foreach ($filters as $filter) {
       $criteria = explode(':', Html::escape($filter));
@@ -258,6 +267,7 @@ class OsSearchQueryBuilder {
    *   Query object to be altered.
    */
   private function applySortConditions(QueryInterface $query) {
+
     // Get the sort url parameter.
     $sort = $this->requestStack->getCurrentRequest()->query->get('sort');
     $sort_direction = $this->requestStack->getCurrentRequest()->query->get('dir') ?? 'ASC';
@@ -304,6 +314,37 @@ class OsSearchQueryBuilder {
 
     $query->addCondition($date_field, $start_timestamp, '>=');
     $query->addCondition($date_field, $end_timestamp, '<=');
+  }
+
+  /**
+   * Applied this fucntion in order to support 'OR within 'AND' between vocabs.
+   *
+   * @param array $filters
+   *   Array of allowed/enabled filters.
+   * @param Drupal\search_api\Query\QueryInterface $query
+   *   Query object to be altered.
+   */
+  protected function applyTaxonomyFilterConditions(array $filters, QueryInterface $query) {
+    $termStorage = $this->entityTypeManager->getStorage('taxonomy_term');
+    $term_ids = [];
+
+    foreach ($filters as $key => $filter) {
+      $filter_part = explode(':', Html::escape($filter));
+      $term_ids[$key] = end($filter_part);
+    }
+
+    $terms = $termStorage->loadMultiple($term_ids);
+    $vocabs = [];
+
+    foreach ($terms as $key => $term) {
+      $vid = $term->getVocabularyId();
+      $vocabs[$vid][] = $term->id();
+    }
+
+    foreach ($vocabs as $vocab) {
+      $query->addCondition('custom_taxonomy', $vocab, 'IN');
+    }
+
   }
 
 }

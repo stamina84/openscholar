@@ -8,7 +8,7 @@ use Drupal\views\Views;
  * Class RssFeedBlockRenderTest.
  *
  * @group kernel
- * @group widgets-1
+ * @group widgets-5
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\RssFeedWidget
  */
 class RssFeedBlockRenderTest extends OsWidgetsExistingSiteTestBase {

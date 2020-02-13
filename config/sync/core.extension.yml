@@ -13,7 +13,6 @@ module:
   bibcite_import: 0
   bibcite_preview: 0
   bibcite_revision_delete: 0
-  bibcite_ris: 0
   big_pipe: 0
   blazy: 0
   block: 0
