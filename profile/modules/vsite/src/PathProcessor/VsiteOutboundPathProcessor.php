@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\vsite\Pathprocessor;
+namespace Drupal\vsite\PathProcessor;
 
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -13,11 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
 
-  protected $nonVsitePaths = [
-    'admin',
-    'admin/*',
-    'user',
-    'user/*',
+  public const NON_VSITE_PATHS = [
+    '/admin',
+    '/user',
   ];
 
   /**
@@ -28,6 +26,13 @@ class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
   protected $vsiteContextManager;
 
   /**
+   * The regex pattern for the NON_VSITE_PATHS.
+   *
+   * @var string
+   */
+  protected $nonVsitePathsRegexPattern = NULL;
+
+  /**
    * Constructor.
    */
   public function __construct(VsiteContextManagerInterface $vsiteContextManager) {
@@ -35,20 +40,31 @@ class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Converts the non-vsite paths into a single regex pattern.
+   *
+   * @return string
+   *   The pattern.
    */
-  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
-    foreach ($this->nonVsitePaths as $p) {
-      $pattern = '|^/' . str_replace('*', '.+?', $p) . '|';
-      if (preg_match($pattern, $path)) {
-        $options['purl_context'] = FALSE;
-      }
+  protected function nonVsitePathsRegexPattern(): string {
+    if ($this->nonVsitePathsRegexPattern) {
+      return $this->nonVsitePathsRegexPattern;
     }
 
-    /** @var string $purl */
-    $purl = $this->vsiteContextManager->getActivePurl();
-    if (((bool) $purl) && strpos($path, $purl) !== FALSE) {
-      $options['purl_exit'] = TRUE;
+    $individual_path_pattern = array_map(static function ($path) {
+      return "\\$path";
+    }, self::NON_VSITE_PATHS);
+
+    $this->nonVsitePathsRegexPattern = '/^(' . implode('|', $individual_path_pattern) . ')/';
+
+    return $this->nonVsitePathsRegexPattern;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL): string {
+    if (preg_match($this->nonVsitePathsRegexPattern(), $path) === 1) {
+      $options['purl_context'] = FALSE;
     }
 
     $group = NULL;
