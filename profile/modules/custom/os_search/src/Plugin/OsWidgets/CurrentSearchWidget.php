@@ -136,7 +136,7 @@ class CurrentSearchWidget extends OsWidgetsBase implements OsWidgetsInterface {
     }
 
     $build['current_search_summary'] = [
-      '#theme' => 'item_list',
+      '#theme' => 'item_list__search_widget',
       '#empty' => $this->t('No Summary'),
       '#list_type' => 'ul',
       '#title' => $this->t('Current search'),

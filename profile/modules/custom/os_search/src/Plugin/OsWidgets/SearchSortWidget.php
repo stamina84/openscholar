@@ -129,7 +129,7 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
 
       $build['link-list'] = [
-        '#theme' => 'item_list',
+        '#theme' => 'item_list__search_widget',
         '#list_type' => 'ul',
         '#title' => $this->t('Sort by'),
         '#items' => $items,

@@ -298,13 +298,20 @@ class OsSearchFacetBuilder {
     ];
 
     $i = 0;
+    $reduced_filter_links = [];
+    $field_processor = $this->getFieldProcessor($field_id);
     foreach ($filters as $filter) {
+      if ($field_processor != 'date') {
+        $reduced_filter_links[] = $filter;
+      }
+
       if (strpos($filter, $field_id) !== FALSE) {
         $value = str_replace("{$field_id}:", '', $filter);
+        $reduced_filter_links[] = $filter;
         $summary['needed'] = TRUE;
         $summary['reduced_filter'][$i]['filter'] = $filter;
         $summary['reduced_filter'][$i]['label'] = $this->prepareSingleLabel($this->getFieldProcessor($field_id), $field_id, $value);
-        $summary['reduced_filter'][$i]['query'] = $filters;
+        $summary['reduced_filter'][$i]['query'] = ($field_processor == 'date') ? $reduced_filter_links : $filters;
         $summary['reduced_filter'][$i]['value'] = $value;
         $i++;
       }

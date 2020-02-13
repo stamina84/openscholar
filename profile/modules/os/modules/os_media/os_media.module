@@ -39,6 +39,7 @@ function os_media_library_info_alter(&$libraries, $extension) {
 
       // Need this provide media thumbnail style urls to media browser.
       $media = \Drupal::entityTypeManager()->getStorage('media')->loadByProperties(['bundle' => 'image']);
+      $thumbnail_uri = [];
       foreach ($media as $image) {
         $id = $image->field_media_image->target_id;
         $file = File::load($id);
