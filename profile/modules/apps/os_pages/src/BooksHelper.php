@@ -87,4 +87,20 @@ final class BooksHelper implements BooksHelperInterface {
     return $results;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getVsiteBooks($vsite, $current_node): array {
+    $results = [];
+    foreach ($vsite->getContent('group_node:page') as $group_content) {
+      $id = $group_content->entity_id->target_id;
+      $node = $this->nodeStorage->load($id);
+      if ($this->visibilityHelper->isBookPage($node) && $node->book['bid'] == $id && $node->book['bid'] !== $current_node->book['bid']) {
+        $results[$id] = $node->label();
+      }
+    }
+
+    return $results;
+  }
+
 }

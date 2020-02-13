@@ -17,6 +17,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Entity\EntityForm;
+use Drupal\block\Entity\Block;
 
 /**
  * Implements hook_entity_insert().
@@ -96,7 +97,7 @@ function os_pages_entity_insert(EntityInterface $entity) {
         'weight' => 50,
         'data' => [
           'book_navigation' => [
-            'id' => 'book_navigation',
+            'id' => 'booknavigation',
             'region' => 'sidebar_first',
             'weight' => 0,
           ],
@@ -470,6 +471,9 @@ function os_pages_contextual_links_view_alter(&$element, $items) {
 function os_pages_node_view_alter(array &$build, NodeInterface $entity, EntityViewDisplayInterface $display) {
   if ($entity->bundle() == 'page' && !empty($entity->book['bid'])) {
     $build['#attached']['library'][] = 'os_pages/contextualChanges';
+    $block = Block::load('booknavigation');
+    $block->setRegion('sidebar_first');
+    $block->save();
   }
 }
 
@@ -598,4 +602,14 @@ function os_pages_meta_tags_alter(array &$form, FormStateInterface $form_state) 
   unset($form['field_meta_tags']['widget']['0']['intro_text']['#markup']);
   unset($form['field_meta_tags']['widget']['0']['tokens']);
   unset($form['field_meta_tags']['widget']['0']['basic']['#type']);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Hiding book traversal links block.
+ */
+function os_pages_preprocess_book_navigation(&$variables) {
+  unset($variables['tree']);
+  $variables['has_links'] = FALSE;
 }

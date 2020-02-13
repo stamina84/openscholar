@@ -48,3 +48,19 @@ os_pages.autocomplete.books:
   requirements:
     _permission: 'access content'
     _group_permission: 'administer book outlines'
+
+os_pages.section_outline:
+  path: '/node/{node}/section-outline'
+  defaults:
+    _form: '\Drupal\os_pages\Form\SectionOutlineForm'
+    _title: 'Section Outline'
+  options:
+    _node_operation_route: TRUE
+    parameters:
+      node:
+        type: entity:node
+  requirements:
+    _permission: 'access content'
+    _group_permission: 'administer book outlines'
+    _entity_access: 'node.view'
+    node: \d+
