@@ -17,7 +17,6 @@ use Drupal\Core\Link;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\block\Entity\Block;
 
 /**
  * Implements hook_entity_insert().
@@ -97,7 +96,7 @@ function os_pages_entity_insert(EntityInterface $entity) {
         'weight' => 50,
         'data' => [
           'book_navigation' => [
-            'id' => 'booknavigation',
+            'id' => 'book_navigation',
             'region' => 'sidebar_first',
             'weight' => 0,
           ],
@@ -471,9 +470,6 @@ function os_pages_contextual_links_view_alter(&$element, $items) {
 function os_pages_node_view_alter(array &$build, NodeInterface $entity, EntityViewDisplayInterface $display) {
   if ($entity->bundle() == 'page' && !empty($entity->book['bid'])) {
     $build['#attached']['library'][] = 'os_pages/contextualChanges';
-    $block = Block::load('booknavigation');
-    $block->setRegion('sidebar_first');
-    $block->save();
   }
 }
 
