@@ -9,14 +9,14 @@
   ul.nav {
     li {
       a {
-        &:hover {
+        &:hover, &:focus {
           background: none;
         }
       }
       &.open {
         a {
           background: none;
-          &:hover {
+          &:hover, &:focus {
             background: none;
           }
         }

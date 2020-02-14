@@ -2,16 +2,16 @@ uuid: 9e028085-ebb5-4e0d-82e5-4f4b545418ce
 langcode: en
 status: true
 dependencies:
-  module:
-    - os_publications
-    - bibcite_entity
-    - node
-    - search_api
-    - os_search
   config:
     - field.storage.node.body
     - field.storage.node.field_year_offered
     - search_api.server.os_search
+  module:
+    - node
+    - os_publications
+    - bibcite_entity
+    - search_api
+    - os_search
 id: os_search_index
 name: 'OS Search Index'
 description: 'Main OS Search Index'
@@ -197,11 +197,9 @@ processor_settings:
   language_with_fallback: {  }
   rendered_item: {  }
   stemmer:
-    all_fields: true
+    all_fields: false
     fields:
       - body
-      - custom_title
-      - reference_title
     exceptions:
       mexican: mexic
       texan: texa
@@ -216,7 +214,7 @@ processor_settings:
       - reference_title
     spaces: ''
     overlap_cjk: 1
-    minimum_word_size: '3'
+    minimum_word_size: '2'
     weights:
       preprocess_index: -6
       preprocess_query: -44
