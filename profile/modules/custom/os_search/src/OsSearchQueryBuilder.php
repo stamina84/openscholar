@@ -123,6 +123,12 @@ class OsSearchQueryBuilder {
     // Allow to alter query based on tags.
     $query->addTag('get_all_facets');
 
+    // Adding tag for terms condition.
+    $route_name = $this->routeMatch->getRouteName();
+    if ($route_name == 'os_search.app_global') {
+      $query->addTag('group_terms_by_taxonomy');
+    }
+
     return $query;
   }
 
