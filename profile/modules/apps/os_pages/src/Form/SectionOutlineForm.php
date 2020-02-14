@@ -108,6 +108,7 @@ class SectionOutlineForm extends FormBase {
     $form['save'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save book pages'),
+      '#button_type' => 'primary',
     ];
 
     return $form;
@@ -128,7 +129,7 @@ class SectionOutlineForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save elements in the same order as defined in post rather than the form.
     // This ensures parent is updated before its children, preventing orphans.
-    $user_input = $form_state->getUserInput();
+    $user_input = $form_state->getValues();
     if (isset($user_input['table'])) {
       $order = array_flip(array_keys($user_input['table']));
       $form['table'] = array_merge($order, $form['table']);
@@ -164,7 +165,7 @@ class SectionOutlineForm extends FormBase {
   }
 
   /**
-   * Builds the table portion of the form for the book administration page.
+   * Builds the table portion of the form for the section outline page.
    *
    * @param \Drupal\node\NodeInterface $node
    *   The node of the top-level page in the book.
@@ -200,6 +201,8 @@ class SectionOutlineForm extends FormBase {
           'group' => 'book-weight',
         ],
       ],
+      '#prefix' => "<div id='section-outline-wrapper'>",
+      '#suffix' => '</div>',
     ];
 
     $tree = $this->bookManager->bookSubtreeData($node->book);
@@ -222,7 +225,7 @@ class SectionOutlineForm extends FormBase {
   }
 
   /**
-   * Helps build the main table in the book administration page form.
+   * Helps build the main table in the section outline page form.
    *
    * @param array $tree
    *   A subtree of the book menu hierarchy.
@@ -238,7 +241,7 @@ class SectionOutlineForm extends FormBase {
 
     // The delta must be big enough to give each node a distinct value.
     $count = count($tree);
-    $delta = ($count < 30) ? 15 : intval($count / 2) + 1;
+    $delta = ($count < 30) ? 15 : (int) ($count / 2) + 1;
 
     foreach ($tree as $data) {
       $nid = $data['link']['nid'];
@@ -313,14 +316,50 @@ class SectionOutlineForm extends FormBase {
       ];
 
       $form[$id]['move_navigation']['move'] = [
-        '#type' => 'button',
-        '#title' => $this->t('Move'),
+        '#type' => 'submit',
+        '#value' => $this->t('Move'),
+        '#submit' => ['::addToOtherBooks'],
+        '#ajax' => [
+          'callback' => '::moveSectionCallback',
+          'wrapper' => 'section-outline-wrapper',
+        ],
+        '#button_type' => 'default',
       ];
 
       if ($data['below']) {
         $this->bookAdminTableTree($data['below'], $form, $node);
       }
     }
+  }
+
+  /**
+   * AJAX callback method for moving books.
+   */
+  public function moveSectionCallback(array &$form, FormStateInterface $form_state) {
+    $button = $form_state->getTriggeringElement();
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $form_state->setRebuild();
+    return $element;
+  }
+
+  /**
+   * Method to move book pages to selected book.
+   */
+  public function addToOtherBooks(array &$form, FormStateInterface $form_state) {
+    $button = $form_state->getTriggeringElement();
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $values = $form_state->getValue('table', $element['#id']);
+    if (isset($values['table'])) {
+      $order = array_flip(array_keys($values['table']));
+      $form['table'] = array_merge($order, $form['table']);
+      foreach (Element::children($form['table']) as $key) {
+        if ($form['table'][$key]['#item']) {
+          // @todo - WIP.
+          // $values = $form_state->getValue(['table', $key]);.
+        }
+      }
+    }
+    $form_state->setRebuild();
   }
 
 }

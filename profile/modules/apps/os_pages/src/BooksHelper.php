@@ -91,7 +91,7 @@ final class BooksHelper implements BooksHelperInterface {
    * {@inheritdoc}
    */
   public function getVsiteBooks($vsite, $current_node): array {
-    $results = [];
+    $results = ['' => 'Select new section'];
     foreach ($vsite->getContent('group_node:page') as $group_content) {
       $id = $group_content->entity_id->target_id;
       $node = $this->nodeStorage->load($id);

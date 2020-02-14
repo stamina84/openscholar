@@ -216,7 +216,6 @@ class PagesTest extends TestBase {
     $web_assert = $this->assertSession();
     $this->visit($path_alias_manager->getAliasByPath("/node/{$sub_page->id()}"));
     $web_assert->statusCodeEquals(200);
-    file_put_contents('public://books.html', $this->getCurrentPageContent());
     $web_assert->pageTextContains('Sub page');
     $web_assert->pageTextNotContains('Book Traversal links for Sub page');
     $web_assert->linkNotExists('Up');
