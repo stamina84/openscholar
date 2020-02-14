@@ -59,16 +59,21 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
     'type' => 'theme',
   ];
 
+  // TODO: Maybe use advagg optimizers for custom theme library.
   public const CUSTOM_THEME_LIBRARIES_INFO_TEMPLATE = [
     self::CUSTOM_THEME_GLOBAL_STYLING_NAMESPACE => [
       'version' => -1,
       'css' => [
         'theme' => [
-          self::CUSTOM_THEMES_STYLE_LOCATION => [],
+          self::CUSTOM_THEMES_STYLE_LOCATION => [
+            'preprocess' => FALSE,
+          ],
         ],
       ],
       'js' => [
-        self::CUSTOM_THEMES_SCRIPT_LOCATION => [],
+        self::CUSTOM_THEMES_SCRIPT_LOCATION => [
+          'preprocess' => FALSE,
+        ],
       ],
     ],
   ];

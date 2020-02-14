@@ -67,6 +67,7 @@ function cp_appearance_cp_custom_theme_update(CustomThemeInterface $custom_theme
   // old styles and scripts.
   if (($custom_theme->getStyles() !== $original->getStyles()) ||
     ($custom_theme->getScripts() !== $original->getScripts())) {
+    // TODO: Remove this after figuring out how refresh specific browser asset.
     _drupal_flush_css_js();
   }
 }
