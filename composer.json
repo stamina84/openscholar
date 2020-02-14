@@ -168,7 +168,6 @@
         "doctrine/lexer": "dev-master",
         "drupal-composer/drupal-scaffold": "^2.6",
         "drupal/admin_toolbar": "2.0",
-        "drupal/advagg": "^4.0",
         "drupal/advancedqueue": "^1.0@beta",
         "drupal/anchor_link": "^2.0",
         "drupal/bibcite": "1.x-dev",
