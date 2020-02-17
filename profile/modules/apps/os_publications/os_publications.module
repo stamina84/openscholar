@@ -1040,13 +1040,19 @@ function os_publications_bibcite_reference_view_alter(array &$build, EntityInter
   }
 
   // If publication has pmid entered, show pubmed link.
-  if ($mode === 'citation') {
-    // Last updated on information.
-    $changed = $entity->changed->value;
-    $build['changed'] = [
-      '#markup' => '<span class="last-updated"><em>' . t("Last updated on@sp", ['@sp' => ' ']) . \Drupal::service('date.formatter')->format($changed, 'custom', 'm/d/Y') . '</em></span></br>',
-      '#weight' => 14,
-    ];
+  if ($mode === 'citation' || $mode === 'search_citation') {
+    if ($mode === 'citation') {
+      // Last updated on information.
+      $changed = $entity->changed->value;
+      $build['changed'] = [
+        '#markup' => '<span class="last-updated"><em>' . t(
+            "Last updated on@sp", ['@sp' => ' ']
+        ) . \Drupal::service('date.formatter')->format(
+            $changed, 'custom', 'm/d/Y'
+        ) . '</em></span></br>',
+        '#weight' => 14,
+      ];
+    }
 
     if ($build['#bibcite_reference']->bibcite_pmid->value) {
       // Use bibcite module's bibcite link plugin to generate the pubmed link.
