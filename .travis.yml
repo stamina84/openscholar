@@ -1,5 +1,5 @@
 language: php
-dist: trusty
+dist: xenial
 
 cache:
   directories:
@@ -105,7 +105,7 @@ jobs:
 
 before_install:
   - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - pyenv install 3.7.1
+  - pyenv global 3.7.1
   - pip install -U pip
   - pip install awscli
 
