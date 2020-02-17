@@ -32,8 +32,8 @@ stages:
 
 jobs:
   include:
-    - stage: prepare for tests
-      script: robo job:check-coding-standards
+#    - stage: prepare for tests
+#      script: robo job:check-coding-standards
     - stage: prepare for tests
       script: robo job:check-module-circular-dependency
       after_success:
@@ -105,6 +105,8 @@ jobs:
 
 before_install:
   - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - pyenv global 3.7.1
+  - pip install -U pip
   - pip install awscli
 
 install:
