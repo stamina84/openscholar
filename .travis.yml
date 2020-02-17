@@ -23,6 +23,8 @@ env:
     - DRUPAL_BASE_URL="http://127.0.0.1:8080"
     - PATH="$PATH:$HOME/.composer/vendor/bin"
     - TRAVIS_NODE_VERSION="4"
+    - AWS_ACCESS_KEY_ID=$ARTIFACTS_KEY
+    - AWS_SECRET_ACCESS_KEY=$ARTIFACTS_SECRET
 
 stages:
   - prepare for tests
@@ -38,7 +40,7 @@ jobs:
       script: robo job:check-module-circular-dependency
       after_success:
         - docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql
-        - la -la
+        - ls -la
         - aws configure list
         - aws s3 sync . s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER
     - stage: test
