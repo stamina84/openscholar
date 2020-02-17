@@ -40,7 +40,8 @@ jobs:
       script: robo job:check-module-circular-dependency
       after_success:
         - docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql
-        - docker-compose exec -T php rm -rf node_modules
+        - docker-compose exec -T php sudo rm -rf node_modules
+        - sudo rm -rf node_modules
         - ls -la
         - aws s3 sync . s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER
     - stage: test
