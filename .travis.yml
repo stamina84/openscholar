@@ -41,8 +41,8 @@ jobs:
       after_success:
         - docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql
         - sudo rm -rf node_modules
-        - tar -czf /tmp/os-build.tar.gz .
-        - aws s3 sync /tmp/os-build.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER
+        - tar -czf ../os-build.tar.gz .
+        - aws s3 sync ../os-build.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER
     - stage: test
       script: robo job:run-unit-tests
       before_install:

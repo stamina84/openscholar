@@ -90,7 +90,7 @@ class RoboFile extends \Robo\Tasks
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->buildComposer());
-        $collection->addTaskList($this->installDrupal());
+        //$collection->addTaskList($this->installDrupal());
         $collection->addTaskList($this->runCheckModuleCircularDependency());
         return $collection->run();
     }
