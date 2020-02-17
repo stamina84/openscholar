@@ -49,4 +49,14 @@ interface BooksHelperInterface {
    */
   public function getVsiteBooks(GroupInterface $vsite, NodeInterface $node): array;
 
+  /**
+   * Save selected book page into book.
+   *
+   * @param \Drupal\node\NodeInterface $selected_book
+   *   Selected book page node entity.
+   * @param \Drupal\node\NodeInterface $book_entity
+   *   Book entity - pages should be added to.
+   */
+  public function saveOtherBookPages(NodeInterface $selected_book, NodeInterface $book_entity);
+
 }

@@ -14,6 +14,7 @@ use Drupal\os_pages\BooksHelper;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 
 /**
  * Provides a form for section Outline form.
@@ -56,6 +57,13 @@ class SectionOutlineForm extends FormBase {
   protected $renderer;
 
   /**
+   * Form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * Constructor for SectionOutlineForm.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
@@ -68,13 +76,16 @@ class SectionOutlineForm extends FormBase {
    *   Books helper service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   Form builder.
    */
-  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager, VsiteContextManagerInterface $vsiteContextManager, BooksHelper $books_helper, RendererInterface $renderer) {
+  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager, VsiteContextManagerInterface $vsiteContextManager, BooksHelper $books_helper, RendererInterface $renderer, FormBuilderInterface $form_builder) {
     $this->nodeStorage = $node_storage;
     $this->bookManager = $book_manager;
     $this->booksHelper = $books_helper;
     $this->vsiteManager = $vsiteContextManager;
     $this->renderer = $renderer;
+    $this->formBuilder = $form_builder;
   }
 
   /**
@@ -87,7 +98,8 @@ class SectionOutlineForm extends FormBase {
       $container->get('book.manager'),
       $container->get('vsite.context_manager'),
       $container->get('os_pages.books_helper'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('form_builder')
     );
   }
 
@@ -238,7 +250,6 @@ class SectionOutlineForm extends FormBase {
    */
   protected function bookAdminTableTree(array $tree, array &$form, NodeInterface $node) {
     $options = $this->booksHelper->getVsiteBooks($this->vsiteManager->getActiveVsite(), $node);
-
     // The delta must be big enough to give each node a distinct value.
     $count = count($tree);
     $delta = ($count < 30) ? 15 : (int) ($count / 2) + 1;
@@ -310,56 +321,15 @@ class SectionOutlineForm extends FormBase {
         ],
       ];
 
-      $form[$id]['move_navigation']['books_list'] = [
-        '#type' => 'select',
-        '#options' => $options,
-      ];
-
-      $form[$id]['move_navigation']['move'] = [
-        '#type' => 'submit',
-        '#value' => $this->t('Move'),
-        '#submit' => ['::addToOtherBooks'],
-        '#ajax' => [
-          'callback' => '::moveSectionCallback',
-          'wrapper' => 'section-outline-wrapper',
-        ],
-        '#button_type' => 'default',
+      $ajaxSectionForm = new AjaxSectionOutlineForm($node, $this->booksHelper, $options);
+      $form[$id]['move_navigation'] = [
+        '#markup' => $this->formBuilder->getForm($ajaxSectionForm),
       ];
 
       if ($data['below']) {
         $this->bookAdminTableTree($data['below'], $form, $node);
       }
     }
-  }
-
-  /**
-   * AJAX callback method for moving books.
-   */
-  public function moveSectionCallback(array &$form, FormStateInterface $form_state) {
-    $button = $form_state->getTriggeringElement();
-    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
-    $form_state->setRebuild();
-    return $element;
-  }
-
-  /**
-   * Method to move book pages to selected book.
-   */
-  public function addToOtherBooks(array &$form, FormStateInterface $form_state) {
-    $button = $form_state->getTriggeringElement();
-    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
-    $values = $form_state->getValue('table', $element['#id']);
-    if (isset($values['table'])) {
-      $order = array_flip(array_keys($values['table']));
-      $form['table'] = array_merge($order, $form['table']);
-      foreach (Element::children($form['table']) as $key) {
-        if ($form['table'][$key]['#item']) {
-          // @todo - WIP.
-          // $values = $form_state->getValue(['table', $key]);.
-        }
-      }
-    }
-    $form_state->setRebuild();
   }
 
 }
