@@ -2,25 +2,49 @@
   border: 0 none;
   padding: 50px 0 50px;
   margin: 0;
-
   .region {
     margin-bottom: 20px;
   }
   ul.nav {
     li {
+      padding-left: 10px;
       a {
-        &:hover {
+        padding: 2px 7px;
+        &:hover, &:focus {
           background: none;
+          color: currentColor;
+        }
+        &.dropmenu-child {
+          display: none;
         }
       }
       &.open {
         a {
           background: none;
-          &:hover {
+          &:hover, &:focus {
             background: none;
           }
         }
       }
+      .dropdown-menu {
+        visibility: visible;
+        opacity: 1;
+        display: block;
+        background: none;
+        box-shadow: none;
+        border: 0;
+        padding: 0;
+        position: initial;
+        min-width: auto;
+        li {
+          a {
+            color: currentColor;
+          }
+        }
+      }
     }
+  }
+  ul.nav > li > a {
+    font-weight: bold;
   }
 }

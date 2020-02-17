@@ -202,9 +202,16 @@ function os_publications_bibcite_reference_presave(EntityInterface $entity) {
   $publications_listing_helper = \Drupal::service('os_publications.listing_helper');
 
   $label = strip_tags(html_entity_decode($entity->html_title->value));
+  $abstract = strip_tags(html_entity_decode($entity->html_abstract->value));
   // Set the label anyway to be used in places such as breadcrumbs.
   // For other uses we will use html title field.
-  $entity->title->value = $label;
+  if ($label) {
+    $entity->title->value = $label;
+  }
+  // Set original abstract field value too.
+  if ($abstract) {
+    $entity->bibcite_abst_e->value = $abstract;
+  }
 
   $entity->set('title_first_char_excl_prep', [
     'value' => $publications_listing_helper->convertLabel($label),
@@ -383,6 +390,20 @@ function os_publications_entity_base_field_info(EntityTypeInterface $entity_type
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['html_abstract'] = BaseFieldDefinition::create('text_long')
+      ->setLabel(t('Abstract'))
+      ->setTranslatable(TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'text_textarea',
+        'weight' => -10,
+        'settings' => [
+          'rows' => 4,
+        ],
+      ])
+      ->setRevisionable(TRUE)
+      ->setDisplayConfigurable('form', TRUE);
+
     return $fields;
   }
 }
@@ -415,6 +436,10 @@ function os_publications_form_bibcite_reference_form_alter(&$form, FormStateInte
   $form['html_title']['widget']['0']['#format'] = 'title_filter';
   $form['#attached']['library'][] = 'os_publications/drupal.os_publications';
   $form['title']['#access'] = FALSE;
+  $form['bibcite_abst_e']['#access'] = FALSE;
+
+  $form['html_abstract']['#group'] = $form['bibcite_abst_e']['#group'];
+  $form['html_abstract']['widget']['0']['#format'] = 'filtered_html';
 
   // Put the delete button at the end of the actions list.
   // Cancel button's weight is 30, this needs to be higher than that.
@@ -1008,20 +1033,26 @@ function os_publications_bibcite_reference_view_alter(array &$build, EntityInter
     if (!$note_in_teaser) {
       unset($build['notes']);
     }
-    $build['bibcite_abst_e']['#title'] = Link::fromTextAndUrl('Abstract', Url::fromUri('internal:#'));
+    $build['html_abstract']['#title'] = Link::fromTextAndUrl(t('Abstract'), Url::fromUri('internal:#'));
     // Do not remove, important for proper citation rendering.
     $build['citation']['#data']['entity'] = $entity;
     $build['#attached']['library'][] = 'os_publications/drupal.os_publications.misc';
   }
 
   // If publication has pmid entered, show pubmed link.
-  if ($mode === 'citation') {
-    // Last updated on information.
-    $changed = $entity->changed->value;
-    $build['changed'] = [
-      '#markup' => '<span class="last-updated"><em>' . t("Last updated on@sp", ['@sp' => ' ']) . \Drupal::service('date.formatter')->format($changed, 'custom', 'm/d/Y') . '</em></span></br>',
-      '#weight' => 14,
-    ];
+  if ($mode === 'citation' || $mode === 'search_citation') {
+    if ($mode === 'citation') {
+      // Last updated on information.
+      $changed = $entity->changed->value;
+      $build['changed'] = [
+        '#markup' => '<span class="last-updated"><em>' . t(
+            "Last updated on@sp", ['@sp' => ' ']
+        ) . \Drupal::service('date.formatter')->format(
+            $changed, 'custom', 'm/d/Y'
+        ) . '</em></span></br>',
+        '#weight' => 14,
+      ];
+    }
 
     if ($build['#bibcite_reference']->bibcite_pmid->value) {
       // Use bibcite module's bibcite link plugin to generate the pubmed link.
@@ -1086,7 +1117,7 @@ function os_publications_bibcite_reference_form_submit(&$form, FormStateInterfac
 function os_publications_preprocess_field(&$variables) {
   // If abstract field hide the item at first on publication view page.
   $route_name = \Drupal::routeMatch()->getRouteName();
-  if ((strpos($route_name, 'view.publications') !== FALSE) && $variables['field_name'] == 'bibcite_abst_e') {
+  if ((strpos($route_name, 'view.publications') !== FALSE) && $variables['field_name'] == 'html_abstract') {
     $field = $variables['items'];
     $field = array_shift($field);
     $field['attributes']->setAttribute('class', ['visually-hidden', 'abstract--content']);

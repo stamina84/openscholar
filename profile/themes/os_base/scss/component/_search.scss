@@ -11,3 +11,34 @@
   }
 }
 
+/**** sort by ****/
+.block-fixed-block-contentglobal-search-sort {
+  li {
+    a {
+      &.active {
+        color: $color-black;
+        &:before {
+          content: "";
+          display: inline-block;
+          width: 0;
+          height: 0;
+          margin-top: -4px;
+          margin-right: 2px;
+          vertical-align: middle;
+          border-right: 6px solid transparent;
+          border-left: 6px solid transparent;
+        }
+        &.DESC {
+          &:before {
+            border-bottom: 6px dashed;
+          }
+        }
+        &.ASC {
+          &:before {
+            border-top: 6px dashed;
+          }
+        }
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\cp_import\AppImport\os_faq_import\AppImport;
+use Drupal\cp_import\AppImport\os_blog_import\AppImport as BlogAppImport;
 use Drupal\media\Entity\Media;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate_tools\MigrateExecutable;
@@ -109,7 +110,7 @@ class CpImportTest extends OsExistingSiteTestBase {
     $this->assertCount(0, $content);
 
     // Call helper method and check again. Test vsite.
-    $this->cpImportHelper->addContentToVsite($node->id(), 'group_node:faq');
+    $this->cpImportHelper->addContentToVsite($node->id(), 'group_node:faq', 'node');
     $content = $vsite->getContentByEntityId('group_node:faq', $node->id());
     $this->assertCount(1, $content);
   }
@@ -307,6 +308,128 @@ class CpImportTest extends OsExistingSiteTestBase {
     // If count is now 2 it means same content is imported again.
     $node2 = $storage->loadByProperties(['title' => 'Some Question 2']);
     $this->assertCount(2, $node2);
+
+    // Delete all the test data created.
+    $executable->rollback();
+  }
+
+  /**
+   * Tests CpImport Blog AppImport factory.
+   */
+  public function testCpImportBlogAppImportFactory() {
+    /** @var \Drupal\cp_import\AppImportFactory $appImportFactory */
+    $appImportFactory = $this->container->get('app_import_factory');
+    $instance = $appImportFactory->create('os_blog_import');
+    $this->assertInstanceOf(BlogAppImport::class, $instance);
+  }
+
+  /**
+   * Tests CpImport Blog header validations.
+   */
+  public function testCpImportBlogHeaderValidation() {
+    /** @var \Drupal\cp_import\AppImportFactory $appImportFactory */
+    $appImportFactory = $this->container->get('app_import_factory');
+    $instance = $appImportFactory->create('os_blog_import');
+
+    // Test header errors.
+    $data[0] = [
+      'Title' => 'Blog1',
+      'Body' => 'Blog1 Test Body',
+      'Files' => '',
+      'Created date' => '2015-01-01',
+    ];
+    $message = $instance->validateHeaders($data);
+    $this->assertEmpty($message['@Title']);
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@Path']);
+
+    // Test No header errors.
+    $data[0] = [
+      'Title' => 'Blog2',
+      'Body' => 'Body2 Test Body',
+      'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
+      'Created date' => '2015-01-01',
+      'Path' => 'test1',
+    ];
+    $message = $instance->validateHeaders($data);
+    $this->assertEmpty($message);
+  }
+
+  /**
+   * Tests CpImport Blog row validations.
+   */
+  public function testCpImportBlogRowValidation() {
+    /** @var \Drupal\cp_import\AppImportFactory $appImportFactory */
+    $appImportFactory = $this->container->get('app_import_factory');
+    $instance = $appImportFactory->create('os_blog_import');
+
+    // Test errors.
+    $data[0] = [
+      'Title' => '',
+      'Body' => 'Body1',
+      'Files' => '',
+      'Created date' => '2015-01-01',
+      'Path' => 'test1',
+    ];
+    $message = $instance->validateRows($data);
+    $this->assertEmpty($message['@date']);
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@title']);
+
+    // Test no errors in row.
+    $data[0] = [
+      'Title' => 'Blog1',
+      'Body' => 'Body1',
+      'Files' => '',
+      'Created date' => '2015-01-01',
+      'Path' => 'test1',
+    ];
+    $message = $instance->validateRows($data);
+    $this->assertEmpty($message);
+  }
+
+  /**
+   * Tests Migration/import for os_blog_import.
+   *
+   * @throws \Drupal\migrate\MigrateException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function testCpImportMigrationBlog() {
+    $filename = drupal_get_path('module', 'cp_import_csv_test') . '/artifacts/blog.csv';
+    // Replace existing source file.
+    $path = 'public://importcsv';
+    $this->fileSystem->delete($path . '/os_blog.csv');
+    $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    file_save_data(file_get_contents($filename), $path . '/os_blog.csv', FileSystemInterface::EXISTS_REPLACE);
+
+    $storage = $this->entityTypeManager->getStorage('node');
+    // Test Negative case.
+    $node1 = $storage->loadByProperties(['title' => 'Test Blog 1']);
+    $this->assertCount(0, $node1);
+    $node2 = $storage->loadByProperties(['title' => 'Test Blog 8']);
+    $this->assertCount(0, $node2);
+
+    /** @var \Drupal\migrate\Plugin\Migration $migration */
+    $migration = $this->migrationManager->createInstance('os_blog_import');
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable->import();
+
+    // Test positive case.
+    $node1 = $storage->loadByProperties(['title' => 'Test Blog 1']);
+    $this->assertCount(1, $node1);
+    $node2 = $storage->loadByProperties(['title' => 'Test Blog 3']);
+    $this->assertCount(1, $node2);
+
+    // Import same content again to check if adding timestamp works.
+    $filename2 = drupal_get_path('module', 'cp_import_csv_test') . '/artifacts/blog_small.csv';
+    $this->cpImportHelper->csvToArray($filename2, 'utf-8');
+    $this->fileSystem->delete($path . '/os_blog.csv');
+    $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    file_save_data(file_get_contents($filename2), $path . '/os_blog.csv', FileSystemInterface::EXISTS_REPLACE);
+    $migration = $this->migrationManager->createInstance('os_blog_import');
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable->import();
+    // If count is now 2 it means same content is imported again.
+    $node1 = $storage->loadByProperties(['title' => 'Test Blog 1']);
+    $this->assertCount(2, $node1);
 
     // Delete all the test data created.
     $executable->rollback();

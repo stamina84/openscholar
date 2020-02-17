@@ -9,9 +9,9 @@ module:
   bibcite_endnote: 0
   bibcite_entity: 0
   bibcite_export: 0
+  bibcite_import: 0
   bibcite_preview: 0
   bibcite_revision_delete: 0
-  bibcite_ris: 0
   big_pipe: 0
   blazy: 0
   block: 0
@@ -70,6 +70,7 @@ module:
   field_ui: 0
   file: 0
   filter: 0
+  fixed_block_content: 0
   fullcalendar: 0
   fullcalendar_options: 0
   gnode: 0
@@ -129,7 +130,6 @@ module:
   os_privacy_policy: 0
   os_profiles: 0
   os_publications: 0
-  os_redirect: 0
   os_redirect_to_source: 0
   os_rest: 0
   os_rss: 0
@@ -200,6 +200,7 @@ module:
   cp_menu: 1
   menu_link_content: 1
   pathauto: 1
+  os_redirect: 10
   views: 10
   paragraphs: 11
   openscholar: 1000

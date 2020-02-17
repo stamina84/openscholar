@@ -7,7 +7,6 @@ dependencies:
   - drupal:cp_settings
   - drupal:bibcite_bibtex
   - drupal:bibcite_endnote
-  - drupal:bibcite_ris
   - drupal:redirect
   - drupal:repec
   - drupal:shorten

@@ -111,15 +111,18 @@ class SubsiteSearchBlock extends BlockBase implements ContainerFactoryPluginInte
       $facets = $results->getExtraData('elasticsearch_response', []);
 
       // Get indexed bundle types.
-      $buckets = $facets['aggregations']['custom_search_group']['buckets'];
+      $buckets = isset($facets['aggregations']['custom_search_group']) ? $facets['aggregations']['custom_search_group']['buckets'] : [];
+      $items = [];
 
       $groupStorage = $this->entityTypeManager->getStorage('group');
+      $route_parameters = $this->routeMatch->getParameters()->all();
       foreach ($buckets as $bucket) {
         $vsite = $groupStorage->load($bucket['key']);
         if ($vsite) {
           $privacy_level = $vsite->get('field_privacy_level')->first()->getValue()['value'];
           if ($this->privacyManager->checkAccessForPlugin($this->currentUser, $privacy_level)) {
-            $url = Url::fromRoute($route_name, ['vsite' => $bucket['key']]);
+            $route_parameters['vsite'] = $bucket['key'];
+            $url = Url::fromRoute($route_name, $route_parameters);
             $title = $this->t('@app_title (@count)', ['@app_title' => $vsite->get('label')->value, '@count' => $bucket['doc_count']]);
             $items[] = Link::fromTextAndUrl($title, $url)->toString();
           }

@@ -1,0 +1,34 @@
+uuid: 27a87eed-8809-4de8-af3b-4f9e32a6e607
+langcode: en
+status: true
+dependencies: {  }
+id: globalapp
+label: 'Global App'
+description: 'This layout will be used for Global App page'
+activationRules: 'browse/*'
+weight: 0
+data:
+  -
+    id: globalcurrentsearchsummary
+    region: sidebar_second
+    weight: -1
+  -
+    id: globalsearchsort
+    region: sidebar_second
+    weight: 0
+  -
+    id: globalfilterbypostdate
+    region: sidebar_second
+    weight: 1
+  -
+    id: globalfilterbyposttype
+    region: sidebar_second
+    weight: 2
+  -
+    id: globalfilterbyothersites
+    region: sidebar_second
+    weight: 3
+  -
+    id: globalfilterbytaxonomy
+    region: sidebar_second
+    weight: 4

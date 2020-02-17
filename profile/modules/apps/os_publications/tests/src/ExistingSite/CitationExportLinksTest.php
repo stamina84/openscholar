@@ -125,7 +125,6 @@ class CitationExportLinksTest extends TestBase {
       'os_publications_export_format[endnote8]' => FALSE,
       'os_publications_export_format[endnote7]' => FALSE,
       'os_publications_export_format[tagged]' => FALSE,
-      'os_publications_export_format[ris]' => FALSE,
     ], 'Save configuration');
 
     $this->drupalLogout();
@@ -152,7 +151,6 @@ class CitationExportLinksTest extends TestBase {
       'os_publications_export_format[endnote8]' => FALSE,
       'os_publications_export_format[endnote7]' => FALSE,
       'os_publications_export_format[tagged]' => FALSE,
-      'os_publications_export_format[ris]' => FALSE,
     ], 'Save configuration');
 
     $this->drupalLogout();

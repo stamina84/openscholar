@@ -2,16 +2,16 @@ uuid: 9e028085-ebb5-4e0d-82e5-4f4b545418ce
 langcode: en
 status: true
 dependencies:
-  module:
-    - os_publications
-    - bibcite_entity
-    - node
-    - search_api
-    - os_search
   config:
     - field.storage.node.body
     - field.storage.node.field_year_offered
     - search_api.server.os_search
+  module:
+    - node
+    - os_publications
+    - bibcite_entity
+    - search_api
+    - os_search
 id: os_search_index
 name: 'OS Search Index'
 description: 'Main OS Search Index'
@@ -42,28 +42,28 @@ field_settings:
       module:
         - node
   custom_date:
-    label: 'Custom Created Date (text)'
+    label: 'Post Date'
     property_path: custom_date
-    type: integer
+    type: date
   custom_search_bundle:
-    label: 'Custom Bundle (text)'
+    label: 'Post Type'
     property_path: custom_search_bundle
     type: string
   custom_search_group:
-    label: 'Group (text)'
+    label: 'Other Sites'
     property_path: custom_search_group
     type: integer
   custom_taxonomy:
-    label: 'Custom Taxonomy (text)'
+    label: Taxonomy
     property_path: custom_taxonomy
-    type: integer
+    type: string
   custom_title:
-    label: 'Custom Title (text)'
+    label: 'Sort: Post Title'
     property_path: custom_title
     type: text
     boost: !!float 5
   custom_type:
-    label: 'Custom Type (text)'
+    label: 'Sort: Type'
     property_path: custom_type
     type: string
   field_year_offered:
@@ -160,6 +160,7 @@ processor_settings:
       - body
       - content_type
       - custom_search_bundle
+      - custom_taxonomy
       - custom_title
       - custom_type
       - field_year_offered
@@ -183,6 +184,7 @@ processor_settings:
       - body
       - content_type
       - custom_search_bundle
+      - custom_taxonomy
       - custom_title
       - custom_type
       - field_year_offered
@@ -195,11 +197,9 @@ processor_settings:
   language_with_fallback: {  }
   rendered_item: {  }
   stemmer:
-    all_fields: true
+    all_fields: false
     fields:
       - body
-      - custom_title
-      - reference_title
     exceptions:
       mexican: mexic
       texan: texa
@@ -214,7 +214,7 @@ processor_settings:
       - reference_title
     spaces: ''
     overlap_cjk: 1
-    minimum_word_size: '3'
+    minimum_word_size: '2'
     weights:
       preprocess_index: -6
       preprocess_query: -44

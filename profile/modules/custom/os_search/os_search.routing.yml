@@ -1,0 +1,18 @@
+os_search.search_api_index.facets_widgets:
+  path: '/admin/config/search/search-api/index/{search_api_index}/facet-widget'
+  options:
+    parameters:
+      search_api_index:
+      type: 'entity:search_api_index'
+  defaults:
+    _form: '\Drupal\os_search\Form\FacetWidgetForm'
+    _title: 'Facet Widgets'
+  requirements:
+    _permission: 'administer search_api_page'
+os_search.app_global:
+  path: '/browse/{app}'
+  defaults:
+    _title_callback: '\Drupal\os_search\Controller\AppGlobalContentController::getTitle'
+    _controller: '\Drupal\os_search\Controller\AppGlobalContentController::getAppList'
+  requirements:
+    _global_app_access: 'TRUE'

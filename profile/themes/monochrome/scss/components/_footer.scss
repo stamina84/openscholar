@@ -1,4 +1,4 @@
-footer {
+footer.footer {
   background: $color_rangoon_green_approx;
   color: $white;
   a {
@@ -14,13 +14,6 @@ footer {
     li {
       a {
         text-transform: none;
-
-        &.menu-heading {
-          text-transform: uppercase;
-        }
-      }
-      ul li a {
-        @extend %font;
       }
     }
   }

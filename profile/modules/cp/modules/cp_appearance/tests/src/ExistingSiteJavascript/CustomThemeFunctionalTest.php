@@ -410,4 +410,51 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     $theme_handler->refreshInfo();
   }
 
+  /**
+   * Tests the case when vsite purl is used as machine name.
+   *
+   * @covers \Drupal\vsite\PathProcessor\VsiteOutboundPathProcessor::processOutbound
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function testPurlAsMachineName(): void {
+    $vsite_purl = strtolower($this->randomMachineName());
+    $vsite = $this->createGroup([
+      'path' => [
+        'alias' => "/$vsite_purl",
+      ],
+    ]);
+
+    // Setup.
+    $group_admin = $this->createUser();
+    $this->addGroupAdmin($group_admin, $vsite);
+    $this->drupalLogin($group_admin);
+
+    // Tests.
+    $this->visitViaVsite('cp/appearance/themes/custom-themes/add', $vsite);
+    $this->getSession()->getPage()->fillField('Custom Theme Name', "$vsite_purl HS");
+    $this->assertSession()->waitForElementVisible('css', '.machine-name-value');
+    $this->getSession()->getPage()->selectFieldOption('Parent Theme', 'clean');
+    $this->getSession()->getPage()->findField('styles')->setValue('body { color: black; }');
+    $this->getSession()->getPage()->findField('scripts')->setValue('alert("Hello World")');
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->getSession()->getPage()->pressButton('Confirm');
+
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $vsite_context_manager->activateVsite($vsite);
+    /** @var \Drupal\cp_appearance\Entity\CustomThemeInterface $custom_theme */
+    $custom_theme = CustomTheme::load(CustomTheme::CUSTOM_THEME_ID_PREFIX . $vsite->id() . '_' . "{$vsite_purl}_hs");
+    $this->assertNotNull($custom_theme);
+
+    // Clean up.
+    $custom_theme->delete();
+    /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+    $theme_handler = $this->container->get('theme_handler');
+    $theme_handler->refreshInfo();
+  }
+
 }

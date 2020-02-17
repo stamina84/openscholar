@@ -25,7 +25,7 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
   /**
    * Search sort type.
    */
-  const SORT_TYPE = ['title', 'type', 'date'];
+  const SORT_TYPE = ['relevance', 'title', 'type', 'date'];
 
   /**
    * Route Match service.
@@ -83,7 +83,19 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $items = [];
       $sort_dir = [];
       // Check if there is an exists sort param in query and flip the direction.
-      if ($query_params['sort']) {
+      foreach ($link_types as $link_type) {
+        if ($query_params['sort'] == $link_type) {
+          $link_active[$link_type] = 'active';
+        }
+        else {
+          $link_active[$link_type] = 'inactive';
+        }
+      }
+      if (!$query_params['sort']) {
+        $link_active['relevance'] = 'active';
+      }
+
+      if (isset($query_params['sort'])) {
         if ($query_params['dir'] == 'ASC') {
           $sort_dir[$query_params['sort']] = 'DESC';
         }
@@ -100,17 +112,26 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
         else {
           $query_params['dir'] = 'ASC';
         }
-        if ($sort_dir[$link_type]) {
+        if (isset($sort_dir[$link_type])) {
           $query_params['dir'] = $sort_dir[$link_type];
         }
+        if ($link_type == 'relevance') {
+          unset($query_params['sort'], $query_params['dir']);
+        }
         $url = Url::fromRoute($route_name, $query_params);
+        $url->setOptions([
+          'attributes' => [
+            'class' => [$query_params['dir'], $link_active[$link_type]],
+          ],
+        ]
+        );
         $items[] = Link::fromTextAndUrl($this->t('@text', ['@text' => ucfirst($link_type)]), $url)->toString();
       }
 
       $build['link-list'] = [
-        '#theme' => 'item_list',
+        '#theme' => 'item_list__search_widget',
         '#list_type' => 'ul',
-        '#title' => $this->t('Relevance'),
+        '#title' => $this->t('Sort by'),
         '#items' => $items,
         '#cache' => [
           'max-age' => 0,

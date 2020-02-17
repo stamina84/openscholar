@@ -9,13 +9,12 @@ label: Global
 tags:
   title: '[current-page:title] | [os_metatag:site_title]'
   canonical_url: '[current-page:url]'
-  description: '[os_metatag:meta_description]'
   shortcut_icon: '[vsite:site_favicon]'
+  og_title: '[os_metatag:site_title]'
   og_type: '[vsite:site_type]'
   og_image: '[vsite:site_logo]'
-  og_title: '[os_metatag:site_title]'
-  twitter_cards_image: '[vsite:site_logo]'
-  twitter_cards_description: '[vsite:site_description]'
   twitter_cards_title: '[os_metatag:site_title]'
   twitter_cards_type: summary
+  twitter_cards_description: '[vsite:site_description]'
+  twitter_cards_image: '[vsite:site_logo]'
   vsite_privacy_robots: 1

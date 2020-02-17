@@ -6,7 +6,7 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
  * Class FollowMeBlockRenderTest.
  *
  * @group kernel
- * @group widgets-1
+ * @group widgets-5
  * @covers \Drupal\os_widgets\Plugin\OsWidgets\FollowMeWidget
  */
 class FollowMeBlockRenderTest extends OsWidgetsExistingSiteTestBase {

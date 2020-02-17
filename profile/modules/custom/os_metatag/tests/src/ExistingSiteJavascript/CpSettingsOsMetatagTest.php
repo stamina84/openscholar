@@ -72,9 +72,8 @@ class CpSettingsOsMetatagTest extends OsExistingSiteJavascriptTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
     $web_assert->statusCodeEquals(200);
-
     $this->visitViaVsite('', $this->group);
-    $expectedHtmlValue = '<meta name="description" content="LoremIpsumDolor<&quot;&quot;>">';
+    $expectedHtmlValue = '<meta name="description" content="LoremIpsumDolor&amp;lt;&amp;quot;&amp;quot;&amp;gt;">';
     $this->assertContains($expectedHtmlValue, $this->getCurrentPageContent(), 'HTML head is not contains description.');
     $expectedHtmlValue = '<meta property="og:title" content="Test Site Title<>">';
     $this->assertContains($expectedHtmlValue, $this->getCurrentPageContent(), 'HTML head is not contains og title.');
