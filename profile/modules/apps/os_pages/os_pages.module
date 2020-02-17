@@ -584,7 +584,7 @@ function os_pages_form_node_page_book_outline_form_alter(&$form, FormStateInterf
 }
 
 /**
- * Custom function to handle meta tags for pages.
+ * Custom function to handle meta tags for pages content.
  */
 function os_pages_meta_tags_alter(array &$form, FormStateInterface $form_state) {
   $form['field_meta_tags']['widget']['0']['#title'] = t('Search Engine Optimization (SEO)');
