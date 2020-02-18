@@ -1,10 +1,10 @@
 language: php
 dist: xenial
 
-#cache:
-#  directories:
-#    - $HOME/.composer/cache/files
-#
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
 addons:
   artifacts:
     s3_region: $ARTIFACTS_S3_REGION
@@ -142,7 +142,7 @@ before_install:
   - pip install awscli
 
 install:
-  - composer global require consolidation/robo
+  - composer global require consolidation/robo:2.0.0
 
 before_script:
   - cp .travis/RoboFile.php .
