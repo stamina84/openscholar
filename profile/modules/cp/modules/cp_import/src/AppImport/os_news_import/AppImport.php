@@ -136,7 +136,7 @@ class AppImport extends Base {
   }
 
   /**
-   * Validates Rows for csv import.
+   * Validates Rows for News csv import.
    *
    * @param array $data
    *   Array derived from csv file.
@@ -152,6 +152,7 @@ class AppImport extends Base {
     $dateRows = '';
     $newsDateRows = '';
     $imageRows = '';
+    $emptyDateRows = '';
     $message = [
       '@title' => '',
       '@news_date' => '',
@@ -172,6 +173,9 @@ class AppImport extends Base {
         if (!$date || !($date->format('Y-m-d') == $news_date || $date->format('Y-n-j') == $news_date)) {
           $newsDateRows .= $row_number . ',';
         }
+      }
+      else {
+        $emptyDateRows .= $row_number . ',';
       }
       // Validate Body.
       if (!$row['Body']) {
@@ -207,6 +211,11 @@ class AppImport extends Base {
     $newsDateRows = rtrim($newsDateRows, ',');
     if ($newsDateRows) {
       $message['@news_date'] = $this->t('Date/Date Format is invalid for row/rows @newsDateRows</br>', ['@newsDateRows' => $newsDateRows]);
+      $hasError = TRUE;
+    }
+    $dateRows = rtrim($emptyDateRows, ',');
+    if ($emptyDateRows) {
+      $message['@news_date'] = $this->t('Date is empty for row/rows @emptyDateRows</br>', ['@emptyDateRows' => $emptyDateRows]);
       $hasError = TRUE;
     }
     $imageRows = rtrim($fileRows, ',');
