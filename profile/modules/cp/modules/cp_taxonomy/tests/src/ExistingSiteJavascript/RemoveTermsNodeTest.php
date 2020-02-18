@@ -129,6 +129,7 @@ class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page->pressButton('Remove');
     $web_assert->statusCodeEquals(200);
 
+    $web_assert->waitForElement('css', '.messages--status');
     $status_wrapper = $page->find('css', '.messages--status');
     $this->assertContains($blog->label(), $status_wrapper->getHtml());
 
