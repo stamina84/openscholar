@@ -5,6 +5,7 @@ namespace Drupal\os_pages\Form;
 use Drupal\book\BookManager;
 use Drupal\book\BookManagerInterface;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -15,6 +16,9 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\core\Url;
+use Drupal\Core\Ajax\RedirectCommand;
 
 /**
  * Provides a form for section Outline form.
@@ -192,9 +196,9 @@ class SectionOutlineForm extends FormBase {
       '#header' => [
         $this->t('Title'),
         $this->t('Hide from section navigation'),
+        $this->t('Move to section navigation'),
         $this->t('Weight'),
         $this->t('Parent'),
-        $this->t('Move to section navigation'),
       ],
       '#empty' => $this->t('No book content available.'),
       '#tabledrag' => [
@@ -280,7 +284,25 @@ class SectionOutlineForm extends FormBase {
 
       $form[$id]['hide'] = [
         '#type' => 'checkbox',
+        '#name' => "hide-checkbox-{$id}",
         '#default_value' => $data['link']['hide'] ?? '',
+      ];
+
+      $form[$id]['move_navigation']['books_list'] = [
+        '#type' => 'select',
+        '#options' => $options,
+        '#name' => "books-list-{$id}",
+      ];
+
+      $form[$id]['move_navigation']['move'] = [
+        '#type' => 'button',
+        '#name' => "move-btn-{$id}",
+        '#value' => $this->t('Move'),
+        '#ajax' => [
+          'callback' => '::moveSectionCallback',
+          'event' => 'click',
+          'wrapper' => 'section-outline-wrapper',
+        ],
       ];
 
       $form[$id]['weight'] = [
@@ -321,15 +343,31 @@ class SectionOutlineForm extends FormBase {
         ],
       ];
 
-      $ajaxSectionForm = new AjaxSectionOutlineForm($node, $this->booksHelper, $options);
-      $form[$id]['move_navigation'] = [
-        '#markup' => $this->formBuilder->getForm($ajaxSectionForm),
-      ];
-
       if ($data['below']) {
         $this->bookAdminTableTree($data['below'], $form, $node);
       }
     }
+  }
+
+  /**
+   * Method to move book pages to selected book.
+   */
+  public function moveSectionCallback(array &$form, FormStateInterface $form_state) {
+    $button = $form_state->getTriggeringElement();
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -2));
+    $values = $form_state->getUserInput();
+    $key = 'books-list-' . $button['#array_parents'][1];
+    $selected_book_entity = $values[$key];
+    if (!empty($selected_book_entity) && !empty($element)) {
+      $current_page = $this->nodeStorage->load($element['#nid']);
+      $book_entity = $this->nodeStorage->load($selected_book_entity);
+      $this->booksHelper->saveOtherBookPages($current_page, $book_entity);
+      $response = new AjaxResponse();
+      $currentURL = Url::fromRoute('<current>');
+      $response->addCommand(new RedirectCommand($currentURL->toString()));
+      return $response;
+    }
+    $form_state->setRebuild();
   }
 
 }
