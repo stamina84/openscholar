@@ -1,0 +1,20 @@
+uuid: ca51af7a-4918-4aa8-b90a-c3f1e9dc1fe1
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+    - node.type.software_release
+  module:
+    - gnode
+    - node
+id: group_content_type_70083e7167843
+label: 'Project: Group node (Software Release)'
+description: 'Adds <em class="placeholder">Software Release</em> content to groups both publicly and privately.'
+group_type: project
+content_plugin: 'group_node:software_release'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: true
+  node_form_group_menu: 1

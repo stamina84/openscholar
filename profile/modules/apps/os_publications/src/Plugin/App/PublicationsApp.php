@@ -115,7 +115,7 @@ class PublicationsApp extends AppPluginBase {
       '#description' => $this->t('Note: Import files with more than @rowLimit entries are not permitted. Try creating multiple import files in 100 entry increments.', ['@rowLimit' => CpImportHelper::CSV_ROW_LIMIT]),
       '#upload_location' => 'public://importcsv/',
       '#upload_validators' => [
-        'file_validate_extensions' => ['bib'],
+        'file_validate_extensions' => ['bib xml'],
       ],
     ];
 

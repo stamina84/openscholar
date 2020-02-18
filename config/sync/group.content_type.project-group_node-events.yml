@@ -1,0 +1,20 @@
+uuid: 892ad5fd-6b0a-4c66-8776-48e3eb93431f
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+    - node.type.events
+  module:
+    - gnode
+    - node
+id: project-group_node-events
+label: 'Project: Group node (Events)'
+description: 'Adds <em class="placeholder">Events</em> content to groups both publicly and privately.'
+group_type: project
+content_plugin: 'group_node:events'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false
+  node_form_group_menu: 1

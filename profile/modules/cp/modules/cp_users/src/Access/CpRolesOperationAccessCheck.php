@@ -8,7 +8,6 @@ use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\cp_users\CpRolesHelperInterface;
 use Drupal\group\Entity\GroupRoleInterface;
-use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 
 /**
@@ -50,13 +49,12 @@ class CpRolesOperationAccessCheck implements AccessInterface {
    *   The account to check access for.
    * @param \Drupal\group\Entity\GroupRoleInterface $group_role
    *   The cp role.
-   * @param \Drupal\group\Entity\GroupTypeInterface $group_type
-   *   The group type.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(AccountInterface $account, GroupRoleInterface $group_role, GroupTypeInterface $group_type): AccessResultInterface {
+  public function access(AccountInterface $account, GroupRoleInterface $group_role): AccessResultInterface {
+
     /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
     $active_vsite = $this->vsiteContextManager->getActiveVsite();
 

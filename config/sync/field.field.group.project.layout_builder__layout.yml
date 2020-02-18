@@ -1,0 +1,21 @@
+uuid: 76ebce8a-5d3d-48f8-9152-12723330391b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.layout_builder__layout
+    - group.type.project
+  module:
+    - layout_builder
+id: group.project.layout_builder__layout
+field_name: layout_builder__layout
+entity_type: group
+bundle: project
+label: Layout
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: layout_section

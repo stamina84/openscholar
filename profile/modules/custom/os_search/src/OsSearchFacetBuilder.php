@@ -54,13 +54,21 @@ class OsSearchFacetBuilder {
   protected $bundleInfo;
 
   /**
+   * Search Helper.
+   *
+   * @var Drupal\os_search\OsSearchHelper
+   */
+  protected $searchHelper;
+
+  /**
    * Class constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory, RequestStack $request_stack, EntityTypeBundleInfo $bundle_info) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory, RequestStack $request_stack, EntityTypeBundleInfo $bundle_info, OsSearchHelper $search_helper) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
     $this->requestStack = $request_stack;
     $this->bundleInfo = $bundle_info;
+    $this->searchHelper = $search_helper;
   }
 
   /**
@@ -292,10 +300,16 @@ class OsSearchFacetBuilder {
    */
   public function getCurrentSearchSummary($field_id) {
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
+    $available_facets = $this->searchHelper->getAllowedFacetIds() ?? [];
+
     $summary = [
       'reduced_filter' => [],
       'needed' => FALSE,
     ];
+
+    if (!isset($available_facets[$field_id])) {
+      return $summary;
+    }
 
     $i = 0;
     $reduced_filter_links = [];
