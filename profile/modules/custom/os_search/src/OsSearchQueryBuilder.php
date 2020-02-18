@@ -4,7 +4,6 @@ namespace Drupal\os_search;
 
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Config\ConfigFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Component\Utility\Html;
 use Drupal\vsite\Plugin\VsiteContextManager;
@@ -24,13 +23,6 @@ class OsSearchQueryBuilder {
    * @var Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
-
-  /**
-   * Configuration Factory.
-   *
-   * @var Drupal\Core\Config\ConfigFactory
-   */
-  protected $configFactory;
 
   /**
    * Configuration Factory.
@@ -75,19 +67,26 @@ class OsSearchQueryBuilder {
   protected $facetBuilder;
 
   /**
+   * Search Helper.
+   *
+   * @var Drupal\os_search\OsSearchHelper
+   */
+  protected $searchHelper;
+
+  /**
    * Class constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory, RequestStack $request_stack, VsiteContextManager $vsite_context, AppLoader $app_loader, AccountProxy $current_user, OsSearchFacetBuilder $facet_builder, CurrentRouteMatch $route_match) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, VsiteContextManager $vsite_context, AppLoader $app_loader, AccountProxy $current_user, OsSearchFacetBuilder $facet_builder, CurrentRouteMatch $route_match, OsSearchHelper $search_helper) {
     $this->entityTypeManager = $entity_type_manager;
     $this->blockContent = $entity_type_manager->getStorage('block_content');
     $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
-    $this->configFactory = $config_factory;
     $this->requestStack = $request_stack;
     $this->vsiteContext = $vsite_context;
     $this->appLoader = $app_loader;
     $this->currentUser = $current_user;
     $this->facetBuilder = $facet_builder;
     $this->routeMatch = $route_match;
+    $this->searchHelper = $search_helper;
   }
 
   /**
@@ -175,8 +174,9 @@ class OsSearchQueryBuilder {
    *   Array of filters from querystring.
    */
   protected function validateFacetFilters(array &$filters = []) {
-    $available_facets = $this->configFactory->get('os.search.settings')->get('facet_widget');
-    $enabled_facets = array_filter($available_facets);
+    $available_facets = $this->searchHelper->getAllowedFacetIds() ?? [];
+    $enabled_facets = array_keys($available_facets);
+
     foreach ($filters as $key => $filter) {
       $field_name = substr($filter, 0, strpos($filter, ':'));
       if (!in_array($field_name, $enabled_facets)) {
