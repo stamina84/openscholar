@@ -148,4 +148,5 @@ before_script:
   - cp .travis/RoboFile.php .
 
 after_failure:
+  - docker-compose logs mariadb
   - artifacts upload
