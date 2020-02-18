@@ -43,7 +43,8 @@ jobs:
         - sudo rm -rf node_modules
         - echo ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz
         - tar -zcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz .
-        - aws s3 sync . s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER --quiet
+        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER
+#        - aws s3 sync . s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/build --quiet
     - stage: test
       script: robo job:run-unit-tests
       before_install:
