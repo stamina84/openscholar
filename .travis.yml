@@ -49,8 +49,8 @@ jobs:
         - ls -la
         - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.gz
         - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz
-        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz
-        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xzvbn
+        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz
+        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz
     - stage: test
       script: robo job:run-unit-tests
       before_install:
@@ -76,7 +76,7 @@ jobs:
         - tar -zxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.gz
         - tar -zxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz
         - chmod +x vendor/bin/phpunit
-        - sudo chmod 755 web/modules/test
+        - sudo chmod 777 web/modules
         - sudo chmod 777 web/sites/default/files
         - sudo chmod 777 web/sites/default/simpletest
 #    - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
