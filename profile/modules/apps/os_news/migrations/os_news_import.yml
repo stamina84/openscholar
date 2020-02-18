@@ -5,6 +5,7 @@ label: 'Os News CSV Migration'
 source:
   plugin: csv
   path: public://importcsv/os_news.csv
+  ids: [Title, Date]
   constants:
     view: '/news/'
 process:
@@ -18,15 +19,11 @@ process:
     from_format: Y-m-d
     to_format: U
     source: Created date
-  field_date:
-    plugin: format_date
-    from_format: Y-m-d
-    to_format: U
-    source: Date
-  field_photo:
-    plugin: file_import
-    source: Image
+  field_date: Date
   field_redirect_to_source: Redirect
+  field_photo:
+    plugin: image_import
+    source: Image
   field_attached_media/target_id: Files
   path/pathauto:
     plugin: default_value
