@@ -6,7 +6,7 @@ use Drupal\Core\Asset\AssetCollectionRendererInterface;
 use Drupal\cp_appearance\Entity\CustomTheme;
 
 /**
- * Makes sure custom theme styles are only refreshed in browser.
+ * Makes sure only custom theme styles are refreshed in browser.
  */
 class CssCollectionRenderer implements AssetCollectionRendererInterface {
 
@@ -33,7 +33,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   public function render(array $assets): array {
     $elements = $this->coreCssCollectionRenderer->render($assets);
 
-    // Only alter the query string for any custom theme resource.
+    // Only alter the query string for any custom theme style.
     array_walk($elements, static function (&$item, $index) use ($assets) {
       if (strpos($item['#attributes']['href'], CustomTheme::CUSTOM_THEME_ID_PREFIX) !== FALSE) {
         $query_string_separator = (strpos($assets[$index]['data'], '?') !== FALSE) ? '&' : '?';
