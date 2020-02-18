@@ -41,6 +41,8 @@ jobs:
       after_success:
         - docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql
         - sudo rm -rf node_modules
+        - echo ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz
+        - tar -zcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz .
         - aws s3 sync . s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER --quiet
     - stage: test
       script: robo job:run-unit-tests
@@ -49,7 +51,7 @@ jobs:
         - pyenv global 3.7.1
         - pip install -U pip
         - pip install awscli
-        - aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
+        - aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER . --quiet
 #    - script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
 #    - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
 #    - script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
