@@ -72,6 +72,8 @@ jobs:
         - sudo chmod 777 web/modules
         - sudo chmod 777 web/sites/default/files
         - sudo chmod 777 web/sites/simpletest
+        - ls -la web
+        - sudo chmod 777 web/travis-backup.sql
 #    - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
 #    - script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
 #    - script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"

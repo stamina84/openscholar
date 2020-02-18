@@ -228,7 +228,7 @@ class RoboFile extends \Robo\Tasks
   }
 
   /**
-   * Imports the datbase.
+   * Imports the database.
    *
    * @return \Robo\Task\Base\Exec[]
    *   An array of tasks.
