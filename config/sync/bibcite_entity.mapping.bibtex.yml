@@ -6,7 +6,7 @@ types:
   bill: bill
   book: book
   bookchapter: book_chapter
-  booklet: ''
+  booklet: miscellaneous
   broadcast: broadcast
   case: case
   chart: chart
@@ -43,7 +43,7 @@ types:
   webprojectpage: web_project_page
   webservice: web_service
   website: website
-  workingpaper: ''
+  workingpaper: working_paper
 fields:
   author: author
   title: title
