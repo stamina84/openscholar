@@ -1,0 +1,10 @@
+uuid: 1b1717d9-24a0-4409-99f1-9c75d9c9bdb4
+langcode: en
+status: true
+dependencies:
+  module:
+    - bibcite_entity
+id: bibcite_reference.search_citation
+label: 'Search Citation'
+targetEntityType: bibcite_reference
+cache: true

@@ -39,6 +39,7 @@ class EventsCalendarTest extends EventTestBase {
     $this->group->addContent($upcoming_event, "group_node:{$upcoming_event->bundle()}");
     $this->visit("{$this->group->get('path')->first()->getValue()['alias']}/calendar/upcoming");
     $web_assert->statusCodeEquals(200);
+
     $this->assertSession()->pageTextContains('Upcoming test event');
   }
 
