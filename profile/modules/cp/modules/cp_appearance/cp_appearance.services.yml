@@ -18,11 +18,8 @@ services:
     arguments: ['@config.factory', '@theme.manager', '@theme.initialization']
     tags:
       - {name: event_subscriber}
-  # TODO: Revisit this decorator - maybe use something Drupal aligned.
   cp_appearance.css_collection_renderer:
     class: \Drupal\cp_appearance\CssCollectionRenderer
     public: false
     decorates: asset.css.collection_renderer
     arguments: ['@cp_appearance.css_collection_renderer.inner']
-    properties:
-      _serviceId: 'asset.css.collection_renderer'
