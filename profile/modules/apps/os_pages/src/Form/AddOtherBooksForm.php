@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
+use Drupal\os_pages\BooksHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\vsite\Plugin\VsiteContextManager;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
@@ -70,10 +71,10 @@ class AddOtherBooksForm extends FormBase {
    *   The BookManager service.
    * @param \Drupal\vsite\Plugin\VsiteContextManager $vsite_manager
    *   The vsite Manager service.
-   * @param \Drupal\os_pages\BooksHelper $books_helper
+   * @param \Drupal\os_pages\BooksHelperInterface $books_helper
    *   Books helper service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager, VsiteContextManager $vsite_manager, BooksHelper $books_helper) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager, VsiteContextManager $vsite_manager, BooksHelperInterface $books_helper) {
     $this->bookManager = $book_manager;
     $this->vsiteManager = $vsite_manager;
     $this->vsite = $this->vsiteManager->getActiveVsite();
