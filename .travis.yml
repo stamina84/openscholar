@@ -43,7 +43,12 @@ jobs:
         - sudo rm -rf node_modules
         - echo ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz
         - tar -zcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz .
+        - tar -zcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.gz web
+        - tar -zcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz vendor
+        - ls -la
         - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}.tar.gz
+        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.gz
+        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz
     - stage: test
       script: robo job:run-unit-tests
       before_install:
@@ -53,7 +58,9 @@ jobs:
         - pip install awscli
         - aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
         - ls -la
-        - tar -zxf os-build-${TRAVIS_BUILD_NUMBER}.tar.gz
+        - tar -zxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.gz
+        - ls -la
+        - tar -zxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz
         - ls -la
         - chmod +x vendor/bin/phpunit
 #    - script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
