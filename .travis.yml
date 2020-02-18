@@ -42,11 +42,11 @@ jobs:
         - docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql
         - sudo rm -rf node_modules
         - echo ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz
-        - tar -zcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz .
         - tar -zcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.gz web
         - tar -zcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz vendor
+        - tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz web
+        - tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz vendor
         - ls -la
-        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}.tar.gz
         - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.gz
         - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz
     - stage: test
@@ -63,7 +63,17 @@ jobs:
         - tar -zxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz
         - ls -la
         - chmod +x vendor/bin/phpunit
-#    - script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
+    - stage: test
+      script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
+      before_install:
+        - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+        - pyenv global 3.7.1
+        - pip install -U pip
+        - pip install awscli
+        - aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
+        - tar -zxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.gz
+        - tar -zxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.gz
+        - chmod +x vendor/bin/phpunit
 #    - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
 #    - script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
 #    - script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
