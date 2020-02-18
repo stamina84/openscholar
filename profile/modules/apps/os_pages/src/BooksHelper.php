@@ -143,23 +143,20 @@ final class BooksHelper implements BooksHelperInterface {
    */
   protected function setBidForChildren(array $book_link, $bid) {
     $flat = $this->bookManager->bookTreeGetFlat($book_link);
-
-    if ($book_link['has_children']) {
-      // Walk through the array until we find the current page.
-      do {
-        $link = array_shift($flat);
-      } while ($link && ($link['nid'] != $book_link['nid']));
-      // Continue though the array and collect links whose parent is this page.
-      while (($link = array_shift($flat)) && $link['pid'] == $book_link['nid']) {
-        $child = $this->nodeStorage->load($link['nid']);
-        if ($child->book['has_children'] > 0) {
-          $this->setBidForChildren($child->book, $bid);
-        }
-        $link = $this->bookManager->loadBookLink($link['nid'], FALSE);
-        $link['bid'] = $bid;
-        $link['pid'] = $book_link['nid'];
-        $this->bookManager->saveBookLink($link, FALSE);
+    // Walk through the array until we find the current page.
+    do {
+      $link = array_shift($flat);
+    } while ($link && ($link['nid'] != $book_link['nid']));
+    // Continue though the array and collect links whose parent is this page.
+    while (($link = array_shift($flat)) && $link['pid'] == $book_link['nid']) {
+      $child = $this->nodeStorage->load($link['nid']);
+      if ($child->book['has_children'] > 0) {
+        $this->setBidForChildren($child->book, $bid);
       }
+      $link = $this->bookManager->loadBookLink($link['nid'], FALSE);
+      $link['bid'] = $bid;
+      $link['pid'] = $book_link['nid'];
+      $this->bookManager->saveBookLink($link, FALSE);
     }
 
   }
