@@ -70,3 +70,9 @@ form {
     }
   }
 }
+/**** select 2 highlighted ****/
+.select2-container--default {
+  .select2-results__option--highlighted[aria-selected] {
+    background: $color-blue;
+  }
+}
