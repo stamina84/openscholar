@@ -1,10 +1,10 @@
 language: php
 dist: xenial
 
-cache:
-  directories:
-    - $HOME/.composer/cache/files
-
+#cache:
+#  directories:
+#    - $HOME/.composer/cache/files
+#
 addons:
   artifacts:
     s3_region: $ARTIFACTS_S3_REGION
