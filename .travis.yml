@@ -53,6 +53,8 @@ jobs:
         - pip install awscli
         - aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
         - ls -la
+        # Try to speed up compression.
+        - export XZ_OPT="-T0"
         - tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz
         - ls -la
         - tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz
@@ -73,7 +75,6 @@ jobs:
         - sudo chmod 777 web/sites/default/files
         - sudo chmod 777 web/sites/simpletest
         - ls -la web
-        - sudo chmod 777 web/travis-backup.sql
 #    - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
 #    - script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
 #    - script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
