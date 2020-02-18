@@ -1,0 +1,23 @@
+uuid: 761eaceb-b1a3-4170-a9c8-7d945a261749
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_privacy_level
+    - group.type.project
+  module:
+    - options
+id: group.project.field_privacy_level
+field_name: field_privacy_level
+entity_type: group
+bundle: project
+label: 'Privacy Level'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: public
+default_value_callback: ''
+settings: {  }
+field_type: list_string

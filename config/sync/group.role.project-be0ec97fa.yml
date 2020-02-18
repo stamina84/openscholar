@@ -1,0 +1,18 @@
+uuid: 2f60a582-99d8-4f5b-9675-c8f31dcbdd1c
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+  enforced:
+    config:
+      - user.role.support_team
+id: project-be0ec97fa
+label: 'Support Team'
+weight: 3
+internal: true
+audience: outsider
+group_type: project
+permissions_ui: false
+permissions: {  }
+description: null

@@ -1,0 +1,18 @@
+uuid: 0a496081-ba04-4c78-892e-6fb4137cd84f
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.personal
+id: group.personal.label
+field_name: label
+entity_type: group
+bundle: personal
+label: Title
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

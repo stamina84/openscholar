@@ -1,0 +1,23 @@
+uuid: 6f527b6f-cde8-4aed-8c9b-7a9a2bfbc535
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_preset
+    - group.type.project
+id: group.project.field_preset
+field_name: field_preset
+entity_type: group
+bundle: project
+label: Preset
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_preset'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+field_type: entity_reference
