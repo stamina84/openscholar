@@ -1,0 +1,83 @@
+format: pubmed
+types:
+  Autobiography: null
+  Bibliography: null
+  Biography: null
+  'Case Reports': null
+  'Classical Article': null
+  'Clinical Conference': null
+  'Clinical Study': null
+  'Clinical Trial': null
+  'Clinical Trial, Phase I': null
+  'Clinical Trial, Phase II': null
+  'Clinical Trial, Phase III': null
+  'Clinical Trial, Phase IV': null
+  'Collected Works': null
+  'Comparative Study': null
+  Congresses: null
+  'Consensus Development Conference': null
+  'Consensus Development Conference, NIH': null
+  'Controlled Clinical Trial': null
+  Dataset: null
+  Dictionary: null
+  Directory: null
+  'Duplicate Publication': null
+  Editorial: null
+  Festschrift: null
+  'Government Publications': null
+  Guideline: null
+  'Historical Article': null
+  'Interactive Tutorial': null
+  Interview: null
+  'Introductory Journal Article': null
+  'Journal Article': journal_article
+  Lectures: null
+  'Legal Cases': null
+  Legislation: null
+  Letter: null
+  Meta-Analysis: null
+  'Multicenter Study': null
+  News: null
+  'Newspaper Article': null
+  'Observational Study': null
+  Overall: null
+  'Patient Education Handout': null
+  'Periodical Index': null
+  'Personal Narratives': null
+  Portraits: null
+  'Practice Guideline': null
+  'Pragmatic Clinical Trial': null
+  'Publication Components': null
+  'Publication Formats': null
+  'Publication Type Category': null
+  'Randomized Controlled Trial': null
+  'Research Support, American Recovery and Reinvestment Act': null
+  Review: null
+  'Scientific Integrity Review': null
+  'Study Characteristics': null
+  'Support of Research': null
+  'Technical Report': null
+  'Twin Study': null
+  'Validation Studies': null
+  'Video-Audio Media': null
+  Webcasts: null
+fields:
+  AuthorList: author
+  ArticleTitle: title
+  PublicationType: type
+  KeywordList: keywords
+  Abstract: bibcite_abst_e
+  Year: bibcite_year
+  JournalTitle: bibcite_secondary_title
+  Volume: bibcite_volume
+  Issue: bibcite_issue
+  Pagination: bibcite_pages
+  PubDate: bibcite_date
+  Language: bibcite_lang
+  ISSN: bibcite_issn
+  url: bibcite_custom1
+  doi: bibcite_doi
+  ISOAbbreviation: bibcite_alternate_title
+  PMID: bibcite_pmid
+_core:
+  default_config_hash: OwNsHEv8tFmMFwye_E4T4sdVUaNYBMPVI5nBpfl_zvo

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b27d7e9707a3516193be207371e7ef80",
+    "content-hash": "e120bef5cbc7f13699a0db7a8622a248",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -3069,6 +3069,120 @@
                 "issues": "https://www.drupal.org/project/issues/bibcite"
             },
             "time": "2019-08-02T10:44:42+00:00"
+        },
+        {
+            "name": "drupal/bibcite_entity",
+            "version": "dev-1.x",
+            "require": {
+                "drupal/bibcite": "self.version",
+                "drupal/core": "^8 || ^9",
+                "drupal/entity": "*"
+            },
+            "type": "metapackage",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-alpha10+42-dev",
+                    "datestamp": "1580957977",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "adci_contributor",
+                    "homepage": "https://www.drupal.org/user/1830536"
+                },
+                {
+                    "name": "adcillc",
+                    "homepage": "https://www.drupal.org/user/366450"
+                },
+                {
+                    "name": "antongp",
+                    "homepage": "https://www.drupal.org/user/1060446"
+                },
+                {
+                    "name": "usdv",
+                    "homepage": "https://www.drupal.org/user/2476206"
+                }
+            ],
+            "description": "Storage for your bibliographic data.",
+            "homepage": "https://www.drupal.org/project/bibcite",
+            "support": {
+                "source": "https://git.drupalcode.org/project/bibcite"
+            }
+        },
+        {
+            "name": "drupal/bibcite_pubmed",
+            "version": "dev-1.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/bibcite_pubmed.git",
+                "reference": "a74904a760d733030ecaf86bc96e1d21a47fa4e4"
+            },
+            "require": {
+                "drupal/bibcite": "^1.0",
+                "drupal/bibcite_entity": "*",
+                "drupal/core": "^8 || ^9",
+                "ext-simplexml": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.x-dev",
+                    "datestamp": "1555846085",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Anton Shubkin (antongp)",
+                    "homepage": "https://www.drupal.org/u/antongp",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "adci_contributor",
+                    "homepage": "https://www.drupal.org/u/adci_contributor",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "antongp",
+                    "homepage": "https://www.drupal.org/user/1060446"
+                },
+                {
+                    "name": "usdv",
+                    "homepage": "https://www.drupal.org/user/2476206"
+                }
+            ],
+            "description": "Provides PubMed import and lookup functionality for the Bibliography & Citation module.",
+            "homepage": "https://www.drupal.org/project/bibcite_pubmed",
+            "keywords": [
+                "Bibliography",
+                "Drupal"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/bibcite_pubmed",
+                "issues": "https://www.drupal.org/project/issues/bibcite_pubmed"
+            },
+            "time": "2020-01-22T03:03:36+00:00"
         },
         {
             "name": "drupal/blazy",
@@ -16677,6 +16791,7 @@
         "doctrine/lexer": 20,
         "drupal/advancedqueue": 10,
         "drupal/bibcite": 20,
+        "drupal/bibcite_pubmed": 20,
         "drupal/config_sync": 15,
         "drupal/context": 10,
         "drupal/date_recur_modular": 15,
