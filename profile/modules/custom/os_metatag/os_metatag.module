@@ -12,6 +12,16 @@ function os_metatag_preprocess_html(&$variables) {
   if (\Drupal::service('path.matcher')->isFrontPage()) {
     $token = Drupal::token();
     $title = $token->replace('[os_metatag:site_title]');
+    $description_value = $token->replace('[os_metatag:meta_description]');
+
+    $description = [
+      '#tag' => 'meta',
+      '#attributes' => [
+        'name' => 'description',
+        'content' => $description_value,
+      ],
+    ];
+    $variables['page']['#attached']['html_head'][] = [$description, 'description'];
     $variables['head_title']['title'] = $title;
   }
 }

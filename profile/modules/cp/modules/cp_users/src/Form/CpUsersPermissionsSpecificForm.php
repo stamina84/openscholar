@@ -71,4 +71,14 @@ final class CpUsersPermissionsSpecificForm extends CpUsersPermissionsForm {
     return parent::buildForm($form, $form_state);
   }
 
+  /**
+   * Generates title as per vsite role being edited.
+   *
+   * @return string
+   *   Returns related title string.
+   */
+  public function getTitle(GroupRoleInterface $group_role = NULL) {
+    return t('Edit vsite <em>@role</em> role permissions', ['@role' => $group_role->label()]);
+  }
+
 }

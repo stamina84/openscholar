@@ -58,11 +58,11 @@ function os_metatag_tokens($type, $tokens, array $data, array $options, Bubbleab
           $config = \Drupal::config('os_metatag.settings');
           $bubbleable_metadata->addCacheableDependency($config);
           $meta_description = $config->get('meta_description');
-          $replacements[$original] = !empty($meta_description) ? Html::escape($meta_description) : '';
+
+          $replacements[$original] = !empty($meta_description) ? $meta_description : '';
           break;
       }
     }
   }
-
   return $replacements;
 }

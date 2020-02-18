@@ -3,15 +3,15 @@
 namespace Drupal\Tests\vsite\Unit;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\vsite\Pathprocessor\VsiteOutboundPathProcessor;
+use Drupal\vsite\PathProcessor\VsiteOutboundPathProcessor;
+use Symfony\Component\HttpFoundation\Request;
+use Drupal\vsite\Plugin\VsiteContextManager;
 
 /**
  * Class VsiteOutboundPathProcessorTest.
  *
- * @package Drupal\Tests\vsite\Unit
  * @group unit
  * @group vsite
- * @group wip
  * @coversDefaultClass \Drupal\vsite\PathProcessor\VsiteOutboundPathProcessor
  */
 class VsiteOutboundPathProcessorTest extends UnitTestCase {
@@ -26,7 +26,7 @@ class VsiteOutboundPathProcessorTest extends UnitTestCase {
   /**
    * Mock for the ContextManager.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\vsite\Plugin\VsiteContextManagerInterface
    */
   protected $vsiteContextManager;
 
@@ -34,32 +34,49 @@ class VsiteOutboundPathProcessorTest extends UnitTestCase {
    * Set up testing object and mocks.
    */
   public function setUp() {
-    $this->vsiteContextManager = $this->createMock('\Drupal\vsite\Plugin\VsiteContextManager');
+    $this->vsiteContextManager = $this->createMock(VsiteContextManager::class);
 
     $this->pathProcessor = new VsiteOutboundPathProcessor($this->vsiteContextManager);
   }
 
   /**
-   * Test that admin paths don't get purls added.
+   * Tests the paths that don't get purls added.
+   *
+   * @dataProvider nonPurlPathsProvider
    */
-  public function testAdminPaths() {
+  public function testNonPurlPaths($path): void {
     $options = [];
-    $output_path = $this->pathProcessor->processOutbound('admin', $options);
+    $output_path = $this->pathProcessor->processOutbound($path, $options);
     $this->assertArrayHasKey('purl_context', $options);
     $this->assertEquals(FALSE, $options['purl_context']);
-    $this->assertEquals('admin', $output_path);
+    $this->assertEquals($path, $output_path);
 
     $options = [];
-    $output_path = $this->pathProcessor->processOutbound('admin/foo', $options);
+    $output_path = $this->pathProcessor->processOutbound($path, $options);
     $this->assertArrayHasKey('purl_context', $options);
     $this->assertEquals(FALSE, $options['purl_context']);
-    $this->assertEquals('admin/foo', $output_path);
+    $this->assertEquals($path, $output_path);
+  }
+
+  /**
+   * Test data provider - Non purl paths.
+   *
+   * @return array
+   *   The paths.
+   */
+  public function nonPurlPathsProvider(): array {
+    return [
+      ['/admin'],
+      ['/admin/foo'],
+      ['/user'],
+      ['/user/bar'],
+    ];
   }
 
   /**
    * Test that urls outside of vsites don't get purls added.
    */
-  public function testOutsideVsite() {
+  public function testOutsideVsite(): void {
     $this->vsiteContextManager->method('getActivePurl')
       ->willReturn(FALSE);
 
@@ -68,7 +85,8 @@ class VsiteOutboundPathProcessorTest extends UnitTestCase {
     $this->assertArrayNotHasKey('purl_exit', $options);
     $this->assertEquals('bar', $output_path);
 
-    $request = $this->createMock('\Symfony\Component\HttpFoundation\Request');
+    /** @var \Symfony\Component\HttpFoundation\Request|\PHPUnit\Framework\MockObject\MockObject $request */
+    $request = $this->createMock(Request::class);
     $request->method('get')
       ->willReturn(FALSE);
 
@@ -80,27 +98,18 @@ class VsiteOutboundPathProcessorTest extends UnitTestCase {
   /**
    * Test that urls in vsites are handled properly.
    */
-  public function testInVsite() {
+  public function testInVsite(): void {
     $this->vsiteContextManager->method('getActivePurl')
       ->willReturn('foo');
-    $this->vsiteContextManager->method('getAbsoluteUrl')
-      ->willReturnCallback(function ($path) {
-        return 'http://localhost/foo/' . $path;
-      });
 
-    $request = $this->createMock('\Symfony\Component\HttpFoundation\Request');
+    /** @var \Symfony\Component\HttpFoundation\Request|\PHPUnit\Framework\MockObject\MockObject $request */
+    $request = $this->createMock(Request::class);
     $request->method('get')
       ->willReturn(TRUE);
 
     $options = [];
     $output_path = $this->pathProcessor->processOutbound('foo/bar', $options);
-    $this->assertArrayHasKey('purl_exit', $options);
-    $this->assertEquals(TRUE, $options['purl_exit']);
     $this->assertEquals('foo/bar', $output_path);
-
-    $options = [];
-    $output_path = $this->pathProcessor->processOutbound('bar', $options, $request);
-    $this->assertEquals('http://localhost/foo/bar', $output_path, $request);
 
     $options = [
       'purl_exit' => TRUE,

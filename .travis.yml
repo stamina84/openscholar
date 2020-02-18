@@ -39,10 +39,10 @@ jobs:
     - script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
     - script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
     - script: robo job:run-functional-tests "os-search,analytics,publications,cp-appearance,redirect,twitter,os,vsite,cp-import"
-    - script: robo job:run-functional-javascript-tests "classes,pages,publications,cp-appearance,cp-menu,profiles,cp,mailchimp,metatag,redirect"
-    - script: robo job:run-functional-javascript-tests "os-search"
+    - script: robo job:run-functional-javascript-tests "publications,mailchimp,metatag,redirect,cp-appearance"
+    - script: robo job:run-functional-javascript-tests "os-search,cp,profiles,classes,pages"
     - script: robo job:run-functional-javascript-tests "events,vsite,widgets"
-    - script: robo job:run-functional-javascript-tests "os,os-theme-preview,blog,faq,news,presentations"
+    - script: robo job:run-functional-javascript-tests "os,os-theme-preview,blog,faq,news,presentations,cp-menu"
     - stage: codecov
       script: robo job:run-unit-tests-code-coverage
       after_success: bash <(curl -s https://codecov.io/bash)

@@ -106,8 +106,13 @@ class CpRolesListBuilder extends DraggableListBuilder {
     $this->cpRolesHelper = $cp_roles_helper;
     $this->currentUser = $current_user;
 
-    $parameters = $route_match->getParameters();
-    $group_type = $parameters->get('group_type');
+    if ($this->activeVsite) {
+      $group_type = $this->activeVsite->getGroupType();
+    }
+    else {
+      // If role is being edited outsite vsite context (Default settings).
+      $group_type = $route_match->getParameter('group_type');
+    }
 
     if ($group_type instanceof GroupTypeInterface) {
       $this->groupType = $group_type;
