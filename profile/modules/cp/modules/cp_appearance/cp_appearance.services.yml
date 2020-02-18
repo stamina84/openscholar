@@ -23,3 +23,8 @@ services:
     public: false
     decorates: asset.css.collection_renderer
     arguments: ['@cp_appearance.css_collection_renderer.inner']
+  cp_appearance.js_collection_renderer:
+    class: \Drupal\cp_appearance\JsCollectionRenderer
+    public: false
+    decorates: asset.js.collection_renderer
+    arguments: ['@cp_appearance.js_collection_renderer.inner']
