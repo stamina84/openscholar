@@ -299,7 +299,7 @@ class os_sv_list extends os_boxes_default {
       $plugin_name = $this->entity_type . '_' . $bundle;
       $actual_ids = $this->_plugins_invoke('get_number_of_results');
       $actual_ids = !empty($actual_ids[$plugin_name]) ? $actual_ids[$plugin_name] : $ids;
-      if ($actual_ids > $this->options['number_of_items']) {
+      if ($actual_ids >= $this->options['number_of_items'] || $page_num) {
         $more = ($this->options['more']) ? l($this->options['more_text'], $this->options['more_link'], array('attributes' => array('class' => array('more-link')))) : '';
       }
 
