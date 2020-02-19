@@ -114,9 +114,4 @@ class VsiteContextManager implements VsiteContextManagerInterface {
     return '/' . $this->getActivePurl() . '/' . ltrim($path, '/');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getStorage(GroupInterface $group = NULL) {}
-
 }
