@@ -3,6 +3,7 @@
 namespace Drupal\vsite\Plugin;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\State\State;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\vsite\Event\VsiteActivatedEvent;
 use Drupal\vsite\VsiteEvents;
@@ -15,6 +16,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * class responds and dispatches an event for other modules to listen to.
  */
 class VsiteContextManager implements VsiteContextManagerInterface {
+
+  public const VSITE_CSS_JS_QUERY_STRING_STATE_KEY_PREFIX = 'vsite.css_js_query_string.';
 
   /**
    * The active vsite.
@@ -112,6 +115,14 @@ class VsiteContextManager implements VsiteContextManagerInterface {
     }
 
     return '/' . $this->getActivePurl() . '/' . ltrim($path, '/');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function vsiteFlushCssJs(GroupInterface $vsite): void {
+    // TODO: Write kernel test.
+    \Drupal::state()->set(self::VSITE_CSS_JS_QUERY_STRING_STATE_KEY_PREFIX . $vsite->id(), base_convert(\Drupal::time()->getCurrentTime(), 10, 36));
   }
 
 }

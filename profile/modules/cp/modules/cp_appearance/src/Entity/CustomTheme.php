@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\cp_appearance\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

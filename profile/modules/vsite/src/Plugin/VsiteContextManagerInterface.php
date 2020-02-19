@@ -41,4 +41,15 @@ interface VsiteContextManagerInterface {
    */
   public function getActiveVsiteAbsoluteUrl(string $path = ''): string;
 
+  /**
+   * Changes the dummy query string added to CSS and JS files of a vsite.
+   *
+   * Changing the dummy query string appended to CSS and JavaScript files forces
+   * all browsers to reload fresh files.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $vsite
+   *   The vsite.
+   */
+  public static function vsiteFlushCssJs(GroupInterface $vsite): void;
+
 }
