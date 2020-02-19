@@ -5,6 +5,7 @@ namespace Drupal\Tests\os_pages\ExistingSite;
 use Drupal\Component\Serialization\Json;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\os_pages\Controller\BooksAutocompleteController;
+use Drupal\os_pages\BooksHelper;
 
 /**
  * Tests for BooksHelper.
@@ -14,6 +15,21 @@ use Drupal\os_pages\Controller\BooksAutocompleteController;
  * @coversDefaultClass \Drupal\os_pages\BooksHelper
  */
 class BooksHelperTest extends TestBase {
+
+  /**
+   * The books Helper.
+   *
+   * @var \Drupal\os_pages\BooksHelper
+   */
+  protected $booksHelper;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->booksHelper = $this->container->get('os_pages.books_helper');
+  }
 
   /**
    * Tests matching pages in Autocomplete list in add-other-books form.
@@ -130,6 +146,42 @@ class BooksHelperTest extends TestBase {
     $target = [$value1, $value2];
     $this->assertIdentical($result[0], $value1);
     $this->assertNotIdentical($result, $target);
+  }
+
+  /**
+   * Test saveOtherBookPages method.
+   */
+  public function testSetBidChildren() {
+    // Creating first book.
+    $book1 = $this->createBookPage([
+      'title' => 'First outline book',
+    ]);
+    // Creating sub pages.
+    $sub_page = $this->createBookPage([
+      'title' => 'Sub page',
+    ], $book1->id());
+
+    $grand_child = $this->createBookPage([
+      'title' => 'Grand child',
+    ], $book1->id(), $sub_page->id());
+
+    // Second book.
+    $book2 = $this->createBookPage([
+      'title' => 'Second book',
+    ]);
+
+    $this->addGroupContent($book1, $this->group);
+    $this->addGroupContent($book2, $this->group);
+    $this->addGroupContent($sub_page, $this->group);
+    $this->addGroupContent($grand_child, $this->group);
+
+    $sub_page_node = $this->getNodeByTitle('Sub page');
+    $book2_node = $this->getNodeByTitle('Second book');
+    $this->booksHelper->saveOtherBookPages($sub_page_node, $book2_node);
+    // Fetching grand child node after moving to book2.
+    $gc = $this->getNodeByTitle('Grand child');
+    $this->assertEquals($book2->id(), $gc->book['bid']);
+    $this->assertEquals($sub_page->id(), $gc->book['pid']);
   }
 
 }

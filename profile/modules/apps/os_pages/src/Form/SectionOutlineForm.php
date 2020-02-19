@@ -277,21 +277,27 @@ class SectionOutlineForm extends FormBase {
       $form[$id]['title'] = [
         '#prefix' => !empty($indentation) ? $this->renderer->render($indentation) : '',
         '#type' => 'textfield',
+        '#title' => $this->t('Title'),
         '#default_value' => $data['link']['title'],
         '#maxlength' => 255,
         '#size' => 40,
+        '#title_display' => 'invisible',
       ];
 
       $form[$id]['hide'] = [
         '#type' => 'checkbox',
         '#name' => "hide-checkbox-{$id}",
+        '#title' => $this->t('Hide from navigation'),
         '#default_value' => $data['link']['hide'] ?? '',
+        '#title_display' => 'invisible',
       ];
 
       $form[$id]['move_navigation']['books_list'] = [
         '#type' => 'select',
+        '#title' => $this->t('Select from books list'),
         '#options' => $options,
         '#name' => "books-list-{$id}",
+        '#title_display' => 'invisible',
       ];
 
       $form[$id]['move_navigation']['move'] = [

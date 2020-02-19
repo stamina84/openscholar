@@ -19,7 +19,7 @@ class SectionOutlineFormTest extends TestBase {
     $this->drupalLogin($groupAdmin);
     $web_assert = $this->assertSession();
     /** @var \Drupal\node\NodeInterface $book */
-    // Creating book.
+    // Creating first book.
     $book1 = $this->createBookPage([
       'title' => 'First outline book',
     ]);
@@ -63,8 +63,13 @@ class SectionOutlineFormTest extends TestBase {
     $web_assert->fieldExists("table[book-admin-{$sub_page2->id()}][title]");
     $this->visitViaVsite("node/{$sub_page->id()}", $this->group);
     $web_assert->statusCodeEquals(200);
-    $breadcrumb_links = $page->find('css', '.breadcrumb li a');
-    $breadcrumb_links->hasLink('Second book');
+    // Fetching grand child node after moving to book2.
+    $gc = $this->getNodeByTitle('Grand child');
+    $this->assertEquals($book2->id(), $gc->book['bid']);
+    // Fetching sub page node after moving to book2.
+    $sp = $this->getNodeByTitle('Sub page');
+    $this->assertEquals($book2->id(), $sp->book['bid']);
+    $this->assertEquals($sp->id(), $gc->book['pid']);
   }
 
 }
