@@ -1,0 +1,12 @@
+uuid: cfb9c1a0-5823-41da-983a-9df2917957f7
+langcode: en
+status: true
+dependencies: {  }
+id: os_department
+label: 'Minimal Department'
+description: 'Blank site with no pre-set menu links or pages.'
+applicableTo:
+  department: department
+enabledApps:
+  page: page
+privateApps: {  }
