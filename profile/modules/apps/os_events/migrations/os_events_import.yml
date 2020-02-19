@@ -1,0 +1,51 @@
+id: os_events_import
+migration_tags:
+  - CSV
+label: 'Events CSV Import'
+source:
+  plugin: csv
+  path: public://importcsv/os_events.csv
+  ids: [Timestamp, Title, Path]
+  constants:
+    view: '/calendar/upcoming/'
+process:
+  type:
+    plugin: default_value
+    default_value: events
+  title: Title
+  body: Body
+  created:
+    plugin: format_date
+    from_format: Y-m-d
+    to_format: U
+    source: Created date
+  field_attached_media/target_id: Files
+  field_location: Location
+  field_signup: Registration
+  field_recurring_date:
+    plugin: sub_process
+    source: field_date
+    process:
+      value:
+        plugin: format_date
+        from_format: 'Y-m-d H:i:s'
+        to_format: 'Y-m-d\TH:i:s'
+        source: Start date
+      end_value:
+        plugin: format_date
+        from_format: 'Y-m-d H:i:s'
+        to_format: 'Y-m-d\TH:i:s'
+        source: End date
+  path/pathauto:
+    plugin: default_value
+    default_value: 0 # Disable pathauto
+  path/alias:
+    plugin: concat
+    source:
+      - constants/view
+      - Path
+destination:
+  plugin: 'entity:node'
+migration_dependencies:
+  required: {  }
+  optional: {  }

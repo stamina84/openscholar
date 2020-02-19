@@ -1,0 +1,5 @@
+Title,Body,Start date,End date,Location,Registration,Files,Created date,Path
+Event with registration (including hour),This is event with registration,2020-11-30 3:20 PM,2020-11-30 3:50 PM,Boston,On,http://college.harvard.edu/sites/default/files/harvard-fy.pdf,2020-12-31,
+Event without registration (including hour),This is event without registration,2020-9-20 3:20 PM,2020-9-20 3:50 PM,Toronto,,http://college.harvard.edu/sites/default/files/harvard-fy.pdf,2020-12-31,
+Event with registration,This is event with registration,2020-5-15,2020-5-15,Boston,On,http://college.harvard.edu/sites/default/files/harvard-fy.pdf,2020-12-31,
+Event without registration,This is event without registration,2020-6-20,2020-6-20,Toronto,,http://college.harvard.edu/sites/default/files/harvard-fy.pdf,2020-12-31,
