@@ -1,0 +1,15 @@
+uuid: 3fcfa9e5-a1f3-4b4a-bec7-2ee118346ed1
+langcode: en
+status: true
+dependencies: {  }
+id: os_department_academic
+label: Academic
+description: 'Academic Preset for Departments.'
+applicableTo:
+  department: department
+enabledApps:
+  event: event
+  news: news
+  page: page
+  profiles: profiles
+privateApps: {  }
