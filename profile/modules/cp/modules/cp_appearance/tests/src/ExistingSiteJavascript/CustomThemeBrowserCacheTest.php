@@ -77,6 +77,7 @@ class CustomThemeBrowserCacheTest extends CpAppearanceExistingSiteJavascriptTest
     $updated_script_cache = $this->getCustomThemeScriptCacheBuster($custom_theme);
 
     // TODO: Put additional assertion that the updated cache is same as state.
+    // TODO: Put additional assertion that default cache is not changed.
     $this->assertNotEquals($original_style_cache, $updated_style_cache);
     $this->assertNotEquals($original_script_cache, $updated_script_cache);
 

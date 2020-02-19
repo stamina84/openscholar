@@ -75,5 +75,9 @@ function cp_appearance_cp_custom_theme_update(CustomThemeInterface $custom_theme
     (($custom_theme->getStyles() !== $original->getStyles()) ||
     ($custom_theme->getScripts() !== $original->getScripts()))) {
     VsiteContextManager::vsiteFlushCssJs($active_vsite);
+
+    /** @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_invalidator */
+    $cache_invalidator = \Drupal::service('cache_tags.invalidator');
+    $cache_invalidator->invalidateTags(["rendered:vsite:{$active_vsite->id()}"]);
   }
 }
