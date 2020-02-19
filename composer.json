@@ -375,9 +375,6 @@
                 "null route object in big_pipe requests after 8.7.8 upgrade": "https://www.drupal.org/files/issues/2019-10-24/3089913-2.patch",
                 "Contextual links double trigger": "https://www.drupal.org/files/issues/2019-11-15/drupal-contextual_links_double_trigger-2834346-19.patch"
             },
-            "drupal/purl": {
-                "View node revisions in Group context": "patches/purl_view_revisions.patch"
-            },
             "drupal/group_purl": {
                 "Don't attempt to redirect to subdomains by default": "https://www.drupal.org/files/issues/2019-03-05/group_purl.3036879-4.subdomain_disable.patch",
                 "Page not found error if the request path contains the group prefix": "https://www.drupal.org/files/issues/2020-01-21/3107728-2.patch"
