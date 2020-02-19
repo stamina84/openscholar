@@ -1,5 +1,6 @@
 cp_users.role_add:
   route_name: cp_users.role.add_form
   title: 'Add Role'
+  class: '\Drupal\cp_users\Plugin\Menu\LocalAction\AddRoleLocalAction'
   appears_on:
     - cp_users.role.list
