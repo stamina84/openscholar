@@ -64,10 +64,13 @@ class CpUsersTest extends CpUsersExistingSiteJavascriptTestBase {
       'label' => 'The Stooges',
     ]);
 
-    $this->drupalLogin($this->groupAdmin);
+    $group_type = $this->group->getGroupType()->id();
 
+    $this->drupalLogin($this->groupAdmin);
     $this->visitViaVsite("cp/users/roles", $this->group);
-    $group_role_edit_link = $this->getSession()->getPage()->find('css', "[href='{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles/{$group_role->id()}/edit?destination={$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles']");
+    $href = "{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles/{$group_role->id()}/edit?destination={$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles&group_type={$group_type}";
+
+    $group_role_edit_link = $this->getSession()->getPage()->find('css', "[href='$href']");
     $group_role_edit_link->click();
 
     $this->getSession()->getPage()->fillField('Name', 'The Stooges Funhouse');
@@ -89,11 +92,13 @@ class CpUsersTest extends CpUsersExistingSiteJavascriptTestBase {
       'label' => 'The Stooges',
     ]);
 
+    $group_type = $this->group->getGroupType()->id();
+
     $this->drupalLogin($this->groupAdmin);
-
     $this->visitViaVsite("cp/users/roles", $this->group);
+    $href = "{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles/{$group_role->id()}/delete?destination={$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles&group_type={$group_type}";
 
-    $group_role_delete_link = $this->getSession()->getPage()->find('css', "[href='{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles/{$group_role->id()}/delete?destination={$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles']");
+    $group_role_delete_link = $this->getSession()->getPage()->find('css', "[href='$href']");
     $group_role_delete_link->click();
 
     $this->getSession()->getPage()->pressButton('Delete');

@@ -6,7 +6,7 @@ _core:
   default_config_hash: LkcodupOW2ip805bQS1a8B5XlcjfhN8zfU0AiZE417Q
 id: personal
 label: Personal
-description: ''
+description: 'Personal group type.'
 creator_membership: true
 creator_wizard: true
 creator_roles: {  }

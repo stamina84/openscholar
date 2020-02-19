@@ -1,0 +1,48 @@
+uuid: 142d4470-1c8c-4255-ad8e-8476b23e2533
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group.project.field_parent_site
+    - field.field.group.project.field_preset
+    - field.field.group.project.field_privacy_level
+    - field.field.group.project.field_site_description
+    - field.field.group.project.field_site_logo
+    - group.type.project
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: true
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components: {  }
+        third_party_settings: {  }
+id: group.project.default
+targetEntityType: group
+bundle: project
+mode: default
+content:
+  label:
+    label: visually_hidden
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  field_parent_site: true
+  field_preset: true
+  field_privacy_level: true
+  field_site_description: true
+  field_site_logo: true
+  langcode: true
+  layout_builder__layout: true
+  search_api_excerpt: true
+  uid: true

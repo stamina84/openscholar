@@ -5,6 +5,7 @@ cp.users:
     _title: 'Manage Users'
   requirements:
     _group_permission: 'manage cp users'
+
 cp.users.add:
   path: '/cp/users/add'
   defaults:
@@ -12,6 +13,7 @@ cp.users.add:
     _title: 'Add User'
   requirements:
     _group_permission: 'manage cp users'
+
 cp.users.add_new:
   path: '/cp/users/add-new'
   defaults:
@@ -19,6 +21,7 @@ cp.users.add_new:
     _title: 'Add User'
   requirements:
     _group_permission: 'manage cp users'
+
 cp.users.remove:
   path: '/cp/users/remove/{user}'
   defaults:
@@ -26,6 +29,7 @@ cp.users.remove:
     _title_callback: '\Drupal\cp_users\Controller\CpUserMainController::removeUserFormTitle'
   requirements:
     _group_permission: 'manage cp users'
+
 cp.users.owner:
   path: '/cp/users/owner'
   defaults:
@@ -34,6 +38,7 @@ cp.users.owner:
   requirements:
     _change_ownership_access_check: 'TRUE'
 
+# Group type is required here, it is used by Group module.
 cp_users.role.add_form:
   path: '/cp/users/roles/add/{group_type}'
   defaults:
@@ -42,20 +47,13 @@ cp_users.role.add_form:
   requirements:
     _group_permission: 'manage cp roles'
 
-# To un-hardcode the default group_type, this route needs to be generated when a
-# group type is created.
 cp_users.role.permission_form:
-  path: '/cp/users/permissions/{group_type}'
+  path: '/cp/users/permissions'
   defaults:
     _form: '\Drupal\cp_users\Form\CpUsersPermissionsTypeSpecificForm'
     _title: 'Edit vsite permissions'
-    group_type: personal
   requirements:
     _group_permission: 'manage cp roles'
-  options:
-    parameters:
-      group_type:
-        type: entity:group_type
 
 cp_users.role.change:
   path: '/cp/users/change-role/{user}'
@@ -65,65 +63,37 @@ cp_users.role.change:
   requirements:
     _group_permission: 'manage cp roles'
 
-# To un-hardcode the default group_type, this route needs to be generated when a
-# group type is created.
 cp_users.role.list:
-  path: '/cp/users/roles/{group_type}'
+  path: '/cp/users/roles'
   defaults:
     _entity_list: 'group_role'
     _title: 'Vsite roles'
-    group_type: personal
   requirements:
     _group_permission: 'manage cp roles'
-  options:
-    parameters:
-      group_type:
-        type: entity:group_type
 
-# To un-hardcode the default group_type, this route needs to be generated when a
-# group type is created.
 cp_users.role.role_permission_form:
-  path: '/cp/users/permissions/{group_role}/{group_type}'
+  path: '/cp/users/permissions/{group_role}'
   defaults:
     _form: '\Drupal\cp_users\Form\CpUsersPermissionsSpecificForm'
-    _title: 'Edit vsite permissions'
-    group_type: personal
+    _title_callback: '\Drupal\cp_users\Form\CpUsersPermissionsSpecificForm::getTitle'
   requirements:
     _group_permission: 'manage cp roles'
-  options:
-    parameters:
-      group_type:
-        type: entity:group_type
 
-# To un-hardcode the default group_type, this route needs to be generated when a
-# group type is created.
 cp_users.role.edit_form:
-  path: '/cp/users/roles/{group_role}/edit/{group_type}'
+  path: '/cp/users/roles/{group_role}/edit'
   defaults:
     _entity_form: 'group_role.edit'
     _title: 'Edit vsite role'
-    group_type: personal
   requirements:
     _cp_roles_operation_access_check: 'TRUE'
-  options:
-    parameters:
-      group_type:
-        type: entity:group_type
 
-# To un-hardcode the default group_type, this route needs to be generated when a
-# group type is created.
 cp_users.role.delete_form:
-  path: '/cp/users/roles/{group_role}/delete/{group_type}'
+  path: '/cp/users/roles/{group_role}/delete'
   defaults:
     _entity_form: 'group_role.delete'
     _title: 'Delete vsite role'
-    group_type: personal
   requirements:
     _cp_roles_operation_access_check: 'TRUE'
-  options:
-    parameters:
-      group_type:
-        type: entity:group_type
 
 cp_users.existing_user_autocomplete:
   path: '/cp-users/existing-user-autocomplete'

@@ -101,7 +101,6 @@ class CpTaxonomyTest extends VsiteExistingSiteTestBase {
       $this->assertSession()->pageTextContains('No vocabularies available.');
     }
     catch (Exception $e) {
-      file_put_contents(REQUEST_TIME . '.txt', $this->getCurrentPage()->getContent());
       $this->fail($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
     }
 

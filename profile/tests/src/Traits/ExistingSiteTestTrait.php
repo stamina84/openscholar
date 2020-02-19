@@ -645,6 +645,42 @@ trait ExistingSiteTestTrait {
   }
 
   /**
+   * Select given option in given css wrapper.
+   *
+   * @param string $wrapper_class
+   *   CSS class value, that wraps the select tag.
+   * @param string $option
+   *   Option value (title)
+   */
+  public function selectOptionWithSelect2(string $wrapper_class, string $option) {
+    $page = $this->getCurrentPage();
+    $web_assert = $this->assertSession();
+    $select_wrapper = $page->find('css', $wrapper_class);
+    // Select term.
+    $input = $select_wrapper->find('css', '.select2-search__field');
+    $input->click();
+    $result_options = $page->find('css', '.select2-results__options');
+    $result = $web_assert->waitForElementVisible('named', ['content', $option]);
+    $this->assertNotEmpty($result, 'Options are not visible: ' . $option);
+    $result_options->find('named', ['content', $option])->click();
+  }
+
+  /**
+   * Remove given option in given css wrapper.
+   *
+   * @param string $wrapper_class
+   *   CSS class value, that wraps the select tag.
+   * @param string $option
+   *   Option value (title)
+   */
+  public function removeOptionWithSelect2(string $wrapper_class, string $option) {
+    $page = $this->getCurrentPage();
+    $page->find('css', $wrapper_class . ' li[title="' . $option . '"] .select2-selection__choice__remove')->click();
+    // Hide visible options, reset to default state.
+    $page->find('css', $wrapper_class . ' .select2-search__field')->click();
+  }
+
+  /**
    * Clean up redirect entity.
    *
    * @param string $uri
