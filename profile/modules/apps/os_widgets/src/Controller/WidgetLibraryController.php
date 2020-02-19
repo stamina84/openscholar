@@ -106,7 +106,7 @@ class WidgetLibraryController extends ControllerBase {
 
       $block_markup = \Drupal::entityTypeManager()->getViewBuilder('block')->view($block);
 
-      $response->addCommand(new ReplaceCommand('Section[id="block-' . Html::getId($block->id()) . '"]', $block_markup));
+      $response->addCommand(new ReplaceCommand('section[class*="block-' . Html::getId($block->id()) . '"]', $block_markup));
       $response->addCommand(new CloseModalDialogCommand());
     }
 
