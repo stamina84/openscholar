@@ -90,4 +90,69 @@ class CpImportPublicationsTest extends OsExistingSiteTestBase {
     $this->assertEquals($abstract, $pubEntity->get('html_abstract')->getValue()[0]['value']);
   }
 
+  /**
+   * Tests Saving a Pubmed entry works.
+   *
+   * @covers ::savePublicationEntity
+   * @covers ::mapPublicationHtmlFields
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function testCpImportHelperSavePublicationPubmedXml() {
+
+    $storage = $this->entityTypeManager->getStorage('bibcite_reference');
+    $title = $this->randomString();
+
+    // Test Negative.
+    $pubArr = $storage->loadByProperties(['title' => $title]);
+    $this->assertEmpty($pubArr);
+
+    // Prepare data entry array.
+    $abstract = 'This is a journal article pubmed test.';
+    $authors = [
+      [
+        'name' => "Jan L Brozek",
+        'category' => 'primary',
+      ],
+      [
+        'name' => "Monica Kraft",
+        'category' => 'primary',
+      ],
+    ];
+    $entry = [
+      'ArticleTitle' => $title,
+      'PublicationType' => "JOURNAL ARTICLE",
+      'AuthorList' => $authors,
+      'Volume' => '32',
+      'Year' => '2009',
+      'Pagination' => '963-970',
+      'PMID' => '22928176',
+      'Abstract' => $abstract,
+      'url' => "https://www.ncbi.nlm.nih.gov/pubmed/22928176",
+    ];
+
+    $context = $this->cpImportHelper->savePublicationEntity($entry, 'pubmed');
+
+    $pubArr = $storage->loadByProperties([
+      'type' => 'journal_article',
+      'title' => $title,
+    ]);
+
+    // Test Positive.
+    // Assert Saving Pubmed entry worked.
+    $this->assertNotEmpty($pubArr);
+    $this->assertArrayHasKey('success', $context);
+    /** @var \Drupal\bibcite_entity\Entity\Reference $pubEntity */
+    $pubEntity = array_values($pubArr)[0];
+    $this->markEntityForCleanup($pubEntity);
+    // Assert values directly from the loaded entity to be sure.
+    $this->assertEquals('22928176', $pubEntity->get('bibcite_pmid')->getValue()[0]['value']);
+    $this->assertEquals('2009', $pubEntity->get('bibcite_year')->getValue()[0]['value']);
+
+    // Test Mapping worked.
+    $this->assertEquals($title, $pubEntity->get('html_title')->getValue()[0]['value']);
+    $this->assertEquals($abstract, $pubEntity->get('html_abstract')->getValue()[0]['value']);
+  }
+
 }

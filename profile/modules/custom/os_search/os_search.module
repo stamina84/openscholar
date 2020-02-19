@@ -28,11 +28,3 @@ function os_search_search_api_query_alter(QueryInterface &$query) {
   $search_query_builder = \Drupal::service('os_search.os_search_query_builder');
   $search_query_builder->queryBuilder($query);
 }
-
-/**
- * Implements hook_ENTITY_TYPE_insert().
- */
-function os_search_group_insert($entity) {
-  $search_helper = \Drupal::service('os_search.os_search_helper');
-  $search_helper->createGroupBlockWidget($entity);
-}

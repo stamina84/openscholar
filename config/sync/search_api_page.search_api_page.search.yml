@@ -17,46 +17,46 @@ searched_fields:
 style: view_modes
 view_mode_configuration:
   'entity:bibcite_reference':
-    default: citation
+    default: search_citation
     overrides:
-      artwork: citation
-      audiovisual: citation
-      bill: citation
-      book: citation
-      book_chapter: citation
-      broadcast: citation
-      case: citation
-      chart: citation
-      classical: citation
-      conference_paper: citation
-      conference_proceedings: citation
-      data: citation
-      database: citation
-      film: citation
-      government_report: citation
-      hearing: citation
-      journal: citation
-      journal_article: citation
-      legal_ruling: citation
-      magazine_article: citation
-      manuscript: citation
-      map: citation
-      miscellaneous: citation
-      miscellaneous_section: citation
-      newspaper_article: citation
-      patent: citation
-      personal: citation
-      presentation: citation
-      report: citation
-      software: citation
-      statute: citation
-      thesis: citation
-      unpublished: citation
-      web_article: citation
-      web_project_page: citation
-      web_service: citation
-      website: citation
-      working_paper: citation
+      artwork: search_citation
+      audiovisual: search_citation
+      bill: search_citation
+      book: search_citation
+      book_chapter: search_citation
+      broadcast: search_citation
+      case: search_citation
+      chart: search_citation
+      classical: search_citation
+      conference_paper: search_citation
+      conference_proceedings: search_citation
+      data: search_citation
+      database: search_citation
+      film: search_citation
+      government_report: search_citation
+      hearing: search_citation
+      journal: search_citation
+      journal_article: search_citation
+      legal_ruling: search_citation
+      magazine_article: search_citation
+      manuscript: search_citation
+      map: search_citation
+      miscellaneous: search_citation
+      miscellaneous_section: search_citation
+      newspaper_article: search_citation
+      patent: search_citation
+      personal: search_citation
+      presentation: search_citation
+      report: search_citation
+      software: search_citation
+      statute: search_citation
+      thesis: search_citation
+      unpublished: search_citation
+      web_article: search_citation
+      web_project_page: search_citation
+      web_service: search_citation
+      website: search_citation
+      working_paper: search_citation
   'entity:node':
     default: teaser
     overrides:

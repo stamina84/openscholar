@@ -43,6 +43,15 @@ class OsSearchJsTest extends SearchJavascriptTestBase {
     $page = $this->getCurrentPage();
     $this->assertContains('15 results found', $page->getHtml());
 
+    // Test Search widgets.
+    $right_sidebar = $this->getSession()->getPage()->find('css', 'div.region-sidebar-second');
+    $this->assertContains('Current search', $right_sidebar->getHtml());
+    $this->assertContains('Sort by', $right_sidebar->getHtml());
+    $this->assertContains('Filter By Post Date', $right_sidebar->getHtml());
+    $this->assertContains('Filter By Post Type', $right_sidebar->getHtml());
+    $this->assertContains('Filter By Other Sites', $right_sidebar->getHtml());
+    $this->assertContains('Filter By Taxonomy', $right_sidebar->getHtml());
+
     $this->visitViaVsite('search', $this->anotherGroup);
     $web_assert->statusCodeEquals(200);
 

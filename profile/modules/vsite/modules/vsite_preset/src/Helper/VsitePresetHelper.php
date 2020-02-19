@@ -162,7 +162,7 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
       $node->save();
       $group->addContent($node, "group_node:$bundle");
       if ($row['Link'] == 'TRUE') {
-        $this->createContentMenuLink($row['Title'], $group->id(), $node);
+        $this->createContentMenuLink($row['Title'], $group->id(), $node, $row['LinkWeight']);
       }
     }
   }
@@ -247,12 +247,14 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
    *   The group/vsite id.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity for which link is to be created.
+   * @param int $link_weight
+   *   Weight for ordering links in menu.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createContentMenuLink($title, $gid, EntityInterface $entity) {
+  protected function createContentMenuLink($title, $gid, EntityInterface $entity, $link_weight = 0) {
     $entity_id = $entity->id();
     $uri = $entity->getEntityTypeId() === 'bibcite_reference' ? "entity:bibcite_reference/$entity_id" : "entity:node/$entity_id";
     $menu_id = $this->menuHelper::DEFAULT_VSITE_MENU_MAPPING['main'] . $gid;
@@ -261,7 +263,7 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
       'title' => $title,
       'link' => ['uri' => $uri],
       'menu_name' => $menu_id,
-      'weight' => 0,
+      'weight' => $link_weight,
       'expanded' => TRUE,
     ])->save();
   }

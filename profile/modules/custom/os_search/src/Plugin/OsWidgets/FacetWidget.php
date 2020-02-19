@@ -120,18 +120,32 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);
       $this->osSearchFacetBuilder->prepareFacetLinks($buckets, $field_id);
 
+      $field_processor = $this->osSearchFacetBuilder->getFieldProcessor($field_id);
+
       // Get current search summary with (-) link.
       $reduced_filters = $this->osSearchFacetBuilder->getCurrentSearchSummary($field_id);
+      $build = [];
+      $build['current_summary'] = $this->renderReducedfilter($reduced_filters, $field_label, $route_name);
+
       if ($field_type != 'date') {
         $buckets = (count($buckets) > 1) ? $buckets : [];
       }
 
-      // Generate renderable array.
-      $build = $this->renderableArray($buckets, $route_name, $field_id, $field_label, $reduced_filters);
+      switch ($field_id) {
+        case 'custom_taxonomy':
+          $vocab_list = $this->osSearchFacetBuilder->prepareFacetVocaulbaries($buckets, $field_processor);
+          $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label);
+          break;
+
+        default:
+          $build[] = $this->renderableArray($buckets, $route_name, $field_id, $field_label);
+          break;
+      }
+
     }
     else {
       $build['empty_build'] = [
-        '#theme' => 'item_list',
+        '#theme' => 'item_list__search_widget',
         '#empty' => '',
         '#list_type' => 'ul',
         '#title' => $this->t('Not search context.'),
@@ -156,15 +170,14 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
    *   Facets field name.
    * @param string $field_label
    *   Label of facet field.
-   * @param array $reduced_filters
-   *   Array of reduced filters.
+   * @param string $header
+   *   Vocabulary name.
    *
    * @return array
    *   Widget build
    */
-  private function renderableArray(array $buckets, $route_name, string $field_name, string $field_label, array $reduced_filters): array {
+  private function renderableArray(array $buckets, $route_name, string $field_name, string $field_label, string $header = NULL): array {
     $items = [];
-    $summary_items = [];
     $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
     $route_parameters = $this->routeMatch->getParameters()->all();
@@ -179,6 +192,77 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $items[] = Link::fromTextAndUrl($this->t('@label (@count)', ['@label' => $item_label, '@count' => $bucket['doc_count']]), $path)->toString();
     }
 
+    if ($header) {
+      $build[$field_name]['title'] = [
+        '#markup' => $this->t('@header', ['@header' => $header]),
+      ];
+    }
+
+    $build[$field_name]['facets'] = [
+      '#theme' => 'item_list__search_widget',
+      '#empty' => $this->t('No filters available'),
+      '#list_type' => 'ul',
+      '#items' => $items,
+      '#cache' => [
+        'max-age' => 0,
+      ],
+    ];
+
+    if ($header) {
+      unset($build[$field_name]['facets']['#title']);
+    }
+
+    return $build;
+  }
+
+  /**
+   * Building links for taxonomy facets.
+   *
+   * @param array $buckets
+   *   Facets buckets.
+   * @param string $route_name
+   *   Current route name.
+   * @param string $field_name
+   *   Facets field name.
+   * @param string $field_label
+   *   Label of facet field.
+   *
+   * @return array
+   *   Widget build
+   */
+  private function renderableTaxonomyArray(array $buckets, $route_name, string $field_name, string $field_label): array {
+
+    foreach ($buckets as $term_list) {
+      $vocab_name = $term_list['name'];
+
+      $build[] = $this->renderableArray($term_list['children'], $route_name, $field_name, $field_label, $vocab_name);
+    }
+    if (empty($buckets)) {
+      $build[$field_name]['empty-filter'] = [
+        '#markup' => '<div>' . $this->t('No filters available') . '</div>',
+      ];
+    }
+    $build['#cache'] = [
+      'max-age' => 0,
+    ];
+    return $build;
+  }
+
+  /**
+   * Build render array for reduced filter.
+   *
+   * @param array $reduced_filters
+   *   Reduced filters.
+   * @param string $field_label
+   *   Label of facet field.
+   * @param string $route_name
+   *   Current route name.
+   *
+   * @return array
+   *   Widget build
+   */
+  public function renderReducedfilter(array $reduced_filters = NULL, string $field_label, string $route_name): array {
+    $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
     if ($reduced_filters['needed']) {
       foreach ($reduced_filters['reduced_filter'] as $reduced_filter) {
         $querys = isset($reduced_filter['query']) ? $reduced_filter['query'] : [];
@@ -190,26 +274,20 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
         $item_label = isset($reduced_filter['label']) ? $reduced_filter['label'] : '';
         $item_label = is_array($item_label) ? reset($item_label) : $item_label;
-
-        $route_parameters['f'] = $querys;
-        $route_parameters['keys'] = $keys;
-        $path = Url::fromRoute($route_name, $route_parameters);
+        $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
         $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
         $summary_items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
       }
     }
-
-    $build[$field_name]['facets'] = [
-      '#theme' => 'item_list__search_widget',
-      '#empty' => $this->t('No filters available'),
-      '#list_type' => 'ul',
-      '#title' => $this->t('Filter By @field_label', ['@field_label' => $field_label]),
-      '#items' => array_merge($summary_items, $items),
-      '#cache' => [
-        'max-age' => 0,
-      ],
+    $build['current_summary']['title'] = [
+      '#markup' => '<h2 class="block-title">' . $this->t('Filter By @field_label', ['@field_label' => $field_label]) . '</h2>',
     ];
-
+    $build['current_summary'][] = [
+      '#theme' => 'item_list__search_widget',
+      '#empty' => '',
+      '#list_type' => 'ul',
+      '#items' => $summary_items,
+    ];
     return $build;
   }
 
