@@ -64,7 +64,6 @@ class AppImport extends Base {
    */
   public function prepareRowActions(MigratePrepareRowEvent $event) {
     $source = $event->getRow()->getSource();
-    \Drupal::logger('row')->notice(print_r($source, TRUE));
     $createdDate = $source['Created date'];
     if ($createdDate) {
       $date = DateTime::createFromFormat('Y-m-d', $createdDate);
