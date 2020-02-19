@@ -11,7 +11,7 @@ use Drupal\vsite_preset\Entity\GroupPreset;
  * @group vsite-preset
  * @group functional-javascript
  */
-class VsitePresetTest extends OsExistingSiteJavascriptTestBase {
+class VisiteMinimalDepartmentTest extends OsExistingSiteJavascriptTestBase {
 
   /**
    * Test group.
