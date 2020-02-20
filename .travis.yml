@@ -39,12 +39,7 @@ jobs:
     - stage: prepare for tests
       script: robo job:check-module-circular-dependency
       after_success:
-        - docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql
-        - tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz web
-        - tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz vendor
-        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz
-        - aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz
-        - docker-compose exec -T php drush sqlq --file=./travis-backup.sql
+        - robo job:upload-to-aws
     - stage: test
       script: robo job:run-unit-tests
       before_install:
@@ -52,15 +47,7 @@ jobs:
         - pyenv global 3.7.1
         - pip install -U pip
         - pip install awscli
-        - aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
-        - ls -la
-        # Try to speed up compression.
-        - export XZ_OPT="-T0"
-        - tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz
-        - ls -la
-        - tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz
-        - ls -la
-        - chmod +x vendor/bin/phpunit
+        - robo job:extract-from-aws
     - stage: test
       script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
       before_install:
@@ -68,12 +55,7 @@ jobs:
         - pyenv global 3.7.1
         - pip install -U pip
         - pip install awscli
-        - aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .
-        - tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz
-        - tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz
-        - chmod +x vendor/bin/phpunit
-        - sudo chmod 777 -R web
-        - sudo chmod 777 -R vendor
+        - robo job:extract-from-aws
         - ls -la
         - ls -la web
 #    - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"

@@ -241,6 +241,42 @@ class RoboFile extends \Robo\Tasks
   }
 
   /**
+   * Create sql dump and compressed build and upload to S3.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   An array of tasks.
+   */
+  protected function uploadToAws()
+  {
+    $tasks = [];
+    $tasks[] = $this->taskExec('docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz web');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz vendor');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz');
+
+    return $tasks;
+  }
+  /**
+   * Extract from S3.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   An array of tasks.
+   */
+  protected function extractFromAws()
+  {
+    $tasks = [];
+    $tasks[] = $this->taskExec('aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .');
+    $tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz');
+    $tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz');
+    $tasks[] = $this->taskExec('chmod +x vendor/bin/phpunit');
+    $tasks[] = $this->taskExec('sudo chmod 777 -R web');
+    $tasks[] = $this->taskExec('sudo chmod 777 -R vendor');
+
+    return $tasks;
+  }
+
+  /**
    * Builds the Code Base.
    *
    * @return \Robo\Task\Base\Exec[]
