@@ -235,6 +235,7 @@ class RoboFile extends \Robo\Tasks
     $force = true;
     $tasks = [];
 
+    $tasks[] = $this->taskExec('docker-compose exec -T php composer install');
     $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
 
     return $tasks;
@@ -272,7 +273,6 @@ class RoboFile extends \Robo\Tasks
     $tasks[] = $this->taskExec('chmod +x vendor/bin/phpunit');
     $tasks[] = $this->taskExec('sudo chmod 777 -R web');
     $tasks[] = $this->taskExec('sudo chmod 777 -R vendor');
-    $tasks[] = $this->taskExec('docker-compose exec -T php composer install');
 
     return $tasks;
   }
