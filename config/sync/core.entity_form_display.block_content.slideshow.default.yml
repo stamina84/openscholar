@@ -9,7 +9,6 @@ dependencies:
     - field.field.block_content.slideshow.field_slideshow_layout
     - field.field.block_content.slideshow.field_widget_title
   module:
-    - content_moderation
     - field_layout
     - layout_discovery
     - paragraphs
@@ -37,10 +36,10 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed
       closed_mode: summary
       autocollapse: none
-      closed_mode_threshold: 0
+      closed_mode_threshold: 1
       add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: slideshow
