@@ -227,20 +227,18 @@ class RoboFile extends \Robo\Tasks
   /**
    * Imports the database.
    *
-   * @return \Robo\Task\Base\Exec[]
-   *   An array of tasks.
+   * @return \Robo\Collection\CollectionBuilder
+   *   A collection of tasks.
    */
   protected function importDB()
   {
-    $force = true;
-    $tasks = [];
-
-    // Fix import issue.
-    $tasks[] = $this->taskExec('docker-compose exec -T php composer install');
-    // Import sql.
-    $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
-
-    return $tasks;
+    return $this
+      ->collectionBuilder()
+      // Fix import issue.
+      ->addTask($this->taskExec('docker-compose exec -T php composer install'))
+      // Import sql.
+      ->addTask($this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql'))
+      ;
   }
 
   /**
@@ -288,21 +286,19 @@ class RoboFile extends \Robo\Tasks
   /**
    * Builds the Code Base.
    *
-   * @return \Robo\Task\Base\Exec[]
-   *   An array of tasks.
+   * @return \Robo\Collection\CollectionBuilder
+   *   A collection of tasks.
    */
   protected function buildComposer()
   {
-    $force = true;
-    $tasks = [];
-
-    $tasks[] = $this->taskExec('docker-compose exec -T php composer global require hirak/prestissimo');
-    $tasks[] = $this->taskExec('make');
-    $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config/phpunit.xml web/core/phpunit.xml');
-    $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config//bootstrap.php web/core/tests/bootstrap.php');
-    $tasks[] = $this->taskExec('docker-compose exec -T php mkdir -p web/sites/simpletest');
-
-    return $tasks;
+    return $this
+      ->collectionBuilder()
+      ->addTask($this->taskExec('docker-compose exec -T php composer global require hirak/prestissimo'))
+      ->addTask($this->taskExec('make'))
+      ->addTask($this->taskExec('docker-compose exec -T php cp .travis/config/phpunit.xml web/core/phpunit.xml'))
+      ->addTask($this->taskExec('docker-compose exec -T php cp .travis/config//bootstrap.php web/core/tests/bootstrap.php'))
+      ->addTask($this->taskExec('docker-compose exec -T php mkdir -p web/sites/simpletest'))
+      ;
   }
 
     /**
