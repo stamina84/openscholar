@@ -234,8 +234,6 @@ class RoboFile extends \Robo\Tasks
   {
     return $this
       ->collectionBuilder()
-      // Fix import issue.
-      ->addTask($this->taskExec('docker-compose exec -T php composer install'))
       // Import sql.
       ->addTask($this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql'))
       ;
