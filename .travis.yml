@@ -3,7 +3,7 @@ dist: xenial
 
 cache:
   directories:
-    - $HOME/.composer/cache/files
+    - $HOME/.composer/cache
 
 addons:
   artifacts:
