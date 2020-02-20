@@ -91,6 +91,7 @@ class RoboFile extends \Robo\Tasks
         $collection->addTaskList($this->buildComposer());
         $collection->addTaskList($this->installDrupal());
         $collection->addTaskList($this->runCheckModuleCircularDependency());
+        $collection->addTaskList($this->installTestConfigs());
         return $collection->run();
     }
 
@@ -105,7 +106,6 @@ class RoboFile extends \Robo\Tasks
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->importDB());
-        $collection->addTaskList($this->installTestConfigs());
         $collection->addTaskList($this->runKernelTests($groups));
         return $collection->run();
     }
@@ -121,7 +121,6 @@ class RoboFile extends \Robo\Tasks
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->importDB());
-        $collection->addTaskList($this->installTestConfigs());
         $collection->addTaskList($this->enableXDebug());
         $collection->addTaskList($this->runKernelTests($groups));
         return $collection->run();
@@ -140,7 +139,6 @@ class RoboFile extends \Robo\Tasks
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->importDB());
-        $collection->addTaskList($this->installTestConfigs());
         $collection->addTaskList($this->runFunctionalTests($groups));
         return $collection->run();
     }
@@ -158,7 +156,6 @@ class RoboFile extends \Robo\Tasks
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->importDB());
-        $collection->addTaskList($this->installTestConfigs());
         $collection->addTaskList($this->runFunctionalJavascriptTests($groups));
         return $collection->run();
     }
