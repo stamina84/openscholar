@@ -34,6 +34,8 @@ class CustomThemeBrowserCacheTest extends CpAppearanceExistingSiteJavascriptTest
   /**
    * @covers \Drupal\cp_appearance\CssCollectionRenderer
    * @covers \Drupal\cp_appearance\JsCollectionRenderer
+   * @covers \Drupal\vsite\Plugin\VsiteContextManager::vsiteFlushCssJs
+   * @covers ::cp_appearance_cp_custom_theme_update
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
