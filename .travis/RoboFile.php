@@ -238,7 +238,6 @@ class RoboFile extends \Robo\Tasks
     $force = true;
     $tasks = [];
 
-    $tasks[] = $this->taskExec('docker-compose exec -T php composer install');
     $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
 
     return $tasks;
