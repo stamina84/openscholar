@@ -121,7 +121,6 @@ class VsiteContextManager implements VsiteContextManagerInterface {
    * {@inheritdoc}
    */
   public static function vsiteFlushCssJs(GroupInterface $vsite): void {
-    // TODO: Write kernel test.
     \Drupal::state()->set(self::VSITE_CSS_JS_QUERY_STRING_STATE_KEY_PREFIX . $vsite->id(), base_convert(\Drupal::time()->getCurrentTime(), 10, 36));
   }
 
