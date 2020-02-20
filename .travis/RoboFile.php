@@ -202,26 +202,25 @@ class RoboFile extends \Robo\Tasks
   /**
    * Creates the Docker environment.
    *
-   * @return \Robo\Task\Base\Exec[]
-   *   An array of tasks.
+   * @return \Robo\Collection\CollectionBuilder
+   *   A collection of tasks.
    */
   protected function buildDocker()
   {
     $force = true;
-    $tasks = [];
-    $tasks[] = $this->taskFilesystemStack()
-      ->copy('.travis/docker-compose.yml', 'docker-compose.yml', $force)
-      ->copy('.travis/traefik.yml', 'traefik.yml', $force)
-      ->copy('.travis/.env', '.env', $force)
-      ->copy('.travis/config/behat.yml', 'tests/behat.yml', $force);
-
-    $tasks[] = $this->taskExec('echo AWS_ACCESS_KEY_ID=' . getenv('ARTIFACTS_KEY') . ' >> .env');
-    $tasks[] = $this->taskExec('echo AWS_SECRET_ACCESS_KEY=' . getenv('ARTIFACTS_SECRET') . ' >> .env');
-    $tasks[] = $this->taskExec('echo AWS_ES_ACCESS_ENDPOINT=' . getenv('ARTIFACTS_ES_ENDPOINT') . ' >> .env');
-    $tasks[] = $this->taskExec('docker-compose --verbose pull --parallel');
-    $tasks[] = $this->taskExec('docker-compose up -d');
-
-    return $tasks;
+    return $this
+      ->collectionBuilder()
+      ->addTask($this->taskFilesystemStack()
+        ->copy('.travis/docker-compose.yml', 'docker-compose.yml', $force)
+        ->copy('.travis/traefik.yml', 'traefik.yml', $force)
+        ->copy('.travis/.env', '.env', $force)
+        ->copy('.travis/config/behat.yml', 'tests/behat.yml', $force))
+      ->addTask($this->taskExec('echo AWS_ACCESS_KEY_ID=' . getenv('ARTIFACTS_KEY') . ' >> .env'))
+      ->addTask($this->taskExec('echo AWS_SECRET_ACCESS_KEY=' . getenv('ARTIFACTS_SECRET') . ' >> .env'))
+      ->addTask($this->taskExec('echo AWS_ES_ACCESS_ENDPOINT=' . getenv('ARTIFACTS_ES_ENDPOINT') . ' >> .env'))
+      ->addTask($this->taskExec('docker-compose --verbose pull --parallel'))
+      ->addTask($this->taskExec('docker-compose up -d'))
+      ;
   }
 
   /**
@@ -234,6 +233,8 @@ class RoboFile extends \Robo\Tasks
   {
     return $this
       ->collectionBuilder()
+      // Fix import issue.
+      ->addTask($this->taskExec('docker-compose exec -T php composer install'))
       // Import sql.
       ->addTask($this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql'))
       ;
