@@ -155,6 +155,8 @@ class CpImportHelper extends CpImportHelperBase {
 
     $item = get_headers($media_val, 1);
     $type = $item['Content-Type'];
+    // If there is a redirection then only get the value of the last page.
+    $type = is_array($type) ? end($type) : $type;
     if (strpos($type, 'text/html') !== FALSE) {
       $media = $this->createOembedMedia($media_val, $mediaTypes);
     }

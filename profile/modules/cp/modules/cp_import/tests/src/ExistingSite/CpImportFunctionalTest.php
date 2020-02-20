@@ -38,6 +38,7 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
         'alias' => '/test-alias',
       ],
     ]);
+    $this->vsiteContextManager->activateVsite($this->group);
     $this->group->addMember($this->groupMember);
     $this->drupalLogin($this->groupMember);
     $this->levels = $this->configFactory->getEditable('os_app_access.access');
@@ -58,6 +59,25 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
 
     // Test sample download link.
     $this->drupalGet('test-alias/cp/content/import/faq/template');
+    $this->assertSession()->responseHeaderContains('Content-Type', 'text/csv; charset=utf-8');
+    $this->assertSession()->responseHeaderContains('Content-Description', 'File Download');
+  }
+
+  /**
+   * Test Software import form and sample download.
+   */
+  public function testSoftwareImportForm() {
+    $this->visitViaVsite('cp/content/import/software', $this->group);
+    $this->levels->set('software', AppAccessLevels::PUBLIC)->save();
+    $session = $this->assertSession();
+    // Checks Faq import form opens.
+    $session->pageTextContains('Software');
+    // Check sample download link.
+    $url = "/test-alias/cp/content/import/software/template";
+    $session->linkByHrefExists($url);
+
+    // Test sample download link.
+    $this->drupalGet('test-alias/cp/content/import/software/template');
     $this->assertSession()->responseHeaderContains('Content-Type', 'text/csv; charset=utf-8');
     $this->assertSession()->responseHeaderContains('Content-Description', 'File Download');
   }

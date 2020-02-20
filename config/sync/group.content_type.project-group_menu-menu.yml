@@ -1,0 +1,22 @@
+uuid: fd5bda25-7c77-41c0-845e-7e9b08054147
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+  module:
+    - groupmenu
+    - system
+id: project-group_menu-menu
+label: 'Project: Group menu'
+description: 'Adds menus to groups'
+group_type: project
+content_plugin: 'group_menu:menu'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: true
+  node_form_group_menu: 1
+  auto_create_group_menu: 0
+  auto_create_home_link: 0
+  auto_create_home_link_title: Home

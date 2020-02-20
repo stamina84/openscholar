@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Entity\EntityTypeBundleInfo;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -54,13 +55,21 @@ class OsSearchFacetBuilder {
   protected $bundleInfo;
 
   /**
+   * Search Helper.
+   *
+   * @var Drupal\os_search\OsSearchHelper
+   */
+  protected $searchHelper;
+
+  /**
    * Class constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory, RequestStack $request_stack, EntityTypeBundleInfo $bundle_info) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory, RequestStack $request_stack, EntityTypeBundleInfo $bundle_info, OsSearchHelper $search_helper) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
     $this->requestStack = $request_stack;
     $this->bundleInfo = $bundle_info;
+    $this->searchHelper = $search_helper;
   }
 
   /**
@@ -90,7 +99,18 @@ class OsSearchFacetBuilder {
     $results = $query->execute();
     $facets = $results->getExtraData('elasticsearch_response', []);
 
-    return isset($facets['aggregations']) ? $facets['aggregations'][$field_name]['buckets'] : [];
+    $buckets = isset($facets['aggregations']) ? $facets['aggregations'][$field_name]['buckets'] : [];
+    $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
+    foreach ($filters as $filter) {
+      $criteria = explode(':', $filter);
+      foreach ($buckets as $key => $bucket) {
+        if ($bucket['key'] == $criteria[1]) {
+          unset($buckets[$key]);
+        }
+      }
+    }
+
+    return $buckets;
   }
 
   /**
@@ -117,7 +137,10 @@ class OsSearchFacetBuilder {
       $entity_storage = $this->entityTypeManager->getStorage($field_label_processor);
 
       foreach ($buckets as $key => $bucket) {
-        $buckets[$key]['label'] = $entity_storage->load($bucket['key'])->label();
+        $entity = $entity_storage->load($bucket['key']);
+        if ($entity) {
+          $buckets[$key]['label'] = $entity->label();
+        }
       }
     }
     elseif ($field_label_processor == 'date') {
@@ -292,10 +315,16 @@ class OsSearchFacetBuilder {
    */
   public function getCurrentSearchSummary($field_id) {
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
+    $available_facets = $this->searchHelper->getAllowedFacetIds() ?? [];
+
     $summary = [
       'reduced_filter' => [],
       'needed' => FALSE,
     ];
+
+    if (!isset($available_facets[$field_id])) {
+      return $summary;
+    }
 
     $i = 0;
     $reduced_filter_links = [];
@@ -376,6 +405,31 @@ class OsSearchFacetBuilder {
 
       return $value;
     }
+  }
+
+  /**
+   * Prepare list of terms for Filter Taxonomy.
+   *
+   * @param array $buckets
+   *   Facets loaded for a field.
+   * @param string $field_processor
+   *   Field processor name.
+   *
+   * @return array
+   *   List of terms.
+   */
+  public function prepareFacetVocaulbaries(array $buckets, $field_processor = 'taxonomy_term') {
+    $vocab_list = [];
+    $vocabularies = Vocabulary::loadMultiple();
+    $entity_storage = $this->entityTypeManager->getStorage($field_processor);
+    foreach ($buckets as $bucket) {
+      $term = $entity_storage->load($bucket['key']);
+      if ($term) {
+        $vocab_list[$term->bundle()]['children'][] = $bucket;
+      }
+      $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+    }
+    return $vocab_list;
   }
 
 }

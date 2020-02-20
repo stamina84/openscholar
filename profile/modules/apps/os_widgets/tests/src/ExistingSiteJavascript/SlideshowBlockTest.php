@@ -47,4 +47,46 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->pageTextContains('Standard Side');
   }
 
+  /**
+   * Test anonymous should not see Add slide button.
+   *
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testAddSlideButtonAnonymous() {
+    $web_assert = $this->assertSession();
+    $block_content = $this->createBlockContent([
+      'type' => 'slideshow',
+    ]);
+    $this->group->addContent($block_content, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($block_content, 'content');
+    $this->drupalLogout();
+    $this->visitViaVsite("", $this->group);
+    $web_assert->pageTextNotContains('Add slide');
+  }
+
+  /**
+   * Test admin should see Add slide button and modal form.
+   *
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   */
+  public function testAddSlideButtonAdmin() {
+    $web_assert = $this->assertSession();
+    $block_content = $this->createBlockContent([
+      'type' => 'slideshow',
+    ]);
+    $this->group->addContent($block_content, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($block_content, 'content');
+    $this->visitViaVsite("", $this->group);
+    $web_assert->pageTextContains('Add slide');
+    $page = $this->getCurrentPage();
+    $page->findLink('Add slide')->press();
+    $this->waitForAjaxToFinish();
+    $web_assert->waitForText('Add new slideshow');
+    // Check image field is appeared.
+    $web_assert->fieldExists('files[field_slide_file_image_0]');
+  }
+
 }

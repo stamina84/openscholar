@@ -1,0 +1,10 @@
+uuid: b31923b9-dff3-4db6-a59d-bc36458ed36d
+langcode: en
+status: true
+dependencies: {  }
+id: project
+label: Project
+description: 'Project group type.'
+creator_membership: true
+creator_wizard: true
+creator_roles: {  }

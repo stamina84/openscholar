@@ -8,6 +8,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\cp_import\AppImport\os_faq_import\AppImport;
 use Drupal\cp_import\AppImport\os_blog_import\AppImport as BlogAppImport;
+use Drupal\cp_import\AppImport\os_software_import\AppImport as SoftwareAppImport;
 use Drupal\media\Entity\Media;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate_tools\MigrateExecutable;
@@ -429,6 +430,134 @@ class CpImportTest extends OsExistingSiteTestBase {
     $executable->import();
     // If count is now 2 it means same content is imported again.
     $node1 = $storage->loadByProperties(['title' => 'Test Blog 1']);
+    $this->assertCount(2, $node1);
+
+    // Delete all the test data created.
+    $executable->rollback();
+  }
+
+  /**
+   * Tests CpImport Software AppImport factory.
+   */
+  public function testCpImportSoftwareAppImportFactory() {
+    /** @var \Drupal\cp_import\AppImportFactory $appImportFactory */
+    $appImportFactory = $this->container->get('app_import_factory');
+    $instance = $appImportFactory->create('os_software_import');
+    $this->assertInstanceOf(SoftwareAppImport::class, $instance);
+  }
+
+  /**
+   * Tests CpImport Software header validations.
+   */
+  public function testCpImportSoftwareHeaderValidation() {
+    /** @var \Drupal\cp_import\AppImportFactory $appImportFactory */
+    $appImportFactory = $this->container->get('app_import_factory');
+    $instance = $appImportFactory->create('os_software_import');
+
+    // Test header errors.
+    $data[0] = [
+      'Title' => 'Software1',
+      'Body' => 'Software1 Test Body',
+      'Files' => '',
+      'Created date' => '2015-01-01',
+    ];
+    $message = $instance->validateHeaders($data);
+    $this->assertEmpty($message['@Title']);
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@Path']);
+
+    // Test No header errors.
+    $data[0] = [
+      'Title' => 'Software1',
+      'Body' => 'Body2 Test Body',
+      'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
+      'Created date' => '2015-01-01',
+      'Path' => 'test1',
+    ];
+    $message = $instance->validateHeaders($data);
+    $this->assertEmpty($message);
+  }
+
+  /**
+   * Tests CpImport Software row validations.
+   */
+  public function testCpImportSoftwareRowValidation() {
+    /** @var \Drupal\cp_import\AppImportFactory $appImportFactory */
+    $appImportFactory = $this->container->get('app_import_factory');
+    $instance = $appImportFactory->create('os_software_import');
+
+    // Test errors.
+    $data[0] = [
+      'Title' => '',
+      'Body' => 'Body1',
+      'Files' => '',
+      'Created date' => '2015-01-01',
+      'Path' => 'test1',
+    ];
+    $message = $instance->validateRows($data);
+    $this->assertEmpty($message['@date']);
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@title']);
+
+    // Test no errors in row.
+    $data[0] = [
+      'Title' => 'Software1',
+      'Body' => 'Body1',
+      'Files' => '',
+      'Created date' => '2015-01-01',
+      'Path' => 'test1',
+    ];
+    $message = $instance->validateRows($data);
+    $this->assertEmpty($message);
+  }
+
+  /**
+   * Tests Migration/import for os_software_import.
+   *
+   * @throws \Drupal\migrate\MigrateException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function testCpImportMigrationSoftware() {
+    $filename = drupal_get_path('module', 'cp_import_csv_test') . '/artifacts/software.csv';
+    $this->cpImportHelper->csvToArray($filename, 'utf-8');
+    // Replace existing source file.
+    $path = 'public://importcsv';
+    $this->fileSystem->delete($path . '/os_software.csv');
+    $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    file_save_data(file_get_contents($filename), $path . '/os_software.csv', FileSystemInterface::EXISTS_REPLACE);
+
+    $storage = $this->entityTypeManager->getStorage('node');
+    // Test Negative case.
+    $node1 = $storage->loadByProperties(['title' => 'Test Software 1']);
+    $this->assertCount(0, $node1);
+    $node2 = $storage->loadByProperties(['title' => 'Test Software 8']);
+    $this->assertCount(0, $node2);
+
+    /** @var \Drupal\migrate\Plugin\Migration $migration */
+    $migration = $this->migrationManager->createInstance('os_software_import');
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable->import();
+    // Test positive case.
+    $node1 = $storage->loadByProperties(['title' => 'Test Software 1']);
+    $this->assertCount(1, $node1);
+    $node2 = $storage->loadByProperties(['title' => 'Test Software 3']);
+    $this->assertCount(1, $node2);
+    // Test date is converted from Y-n-j to Y-m-d if node is created
+    // successfully it means conversion works.
+    $node3 = $storage->loadByProperties(['title' => 'Test Software 6']);
+    $node3 = array_values($node3)[0];
+    $created = $node3->getCreatedTime();
+    $created_date = date('Y-m-d', $created);
+    $this->assertEquals('2014-01-01', $created_date);
+    // Import same content again to check if adding timestamp works.
+    $filename2 = drupal_get_path('module', 'cp_import_csv_test') . '/artifacts/software_small.csv';
+    $this->cpImportHelper->csvToArray($filename2, 'utf-8');
+    $this->fileSystem->delete($path . '/os_software.csv');
+    $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    file_save_data(file_get_contents($filename2), $path . '/os_software.csv', FileSystemInterface::EXISTS_REPLACE);
+    $migration = $this->migrationManager->createInstance('os_software_import');
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable->import();
+    // If count is now 2 it means same content is imported again.
+    $node1 = $storage->loadByProperties(['title' => 'Test Software 1']);
     $this->assertCount(2, $node1);
 
     // Delete all the test data created.

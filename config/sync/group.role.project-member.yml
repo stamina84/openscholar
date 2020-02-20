@@ -1,0 +1,42 @@
+uuid: ebfc485f-e163-48fa-88bc-0a302cf73a19
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+id: project-member
+label: Viewer
+weight: -100
+internal: false
+audience: member
+group_type: project
+permissions_ui: true
+permissions:
+  - 'access group_node overview'
+  - 'access private apps'
+  - 'create group_node:landing_page entity'
+  - 'delete any group_node:landing_page entity'
+  - 'download media file'
+  - 'leave group'
+  - 'update any group_node:landing_page entity'
+  - 'update own group_membership content'
+  - 'view group'
+  - 'view group_entity:bibcite_reference entity'
+  - 'view group_entity:media entity'
+  - 'view group_entity:taxonomy_term entity'
+  - 'view group_membership content'
+  - 'view group_node:blog entity'
+  - 'view group_node:class entity'
+  - 'view group_node:events entity'
+  - 'view group_node:faq entity'
+  - 'view group_node:landing_page entity'
+  - 'view group_node:link entity'
+  - 'view group_node:news entity'
+  - 'view group_node:page entity'
+  - 'view group_node:person entity'
+  - 'view group_node:presentation entity'
+  - 'view group_node:software_project entity'
+  - 'view group_node:software_release entity'
+  - 'view unpublished group_node:landing_page entity'
+  - 'vsite access group_node overview'
+description: '<em>Viewer</em> may have read-only access to private sites and private apps.'

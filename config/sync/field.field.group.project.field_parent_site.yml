@@ -1,0 +1,27 @@
+uuid: 44bf9eba-aa87-494e-8292-c45d472ea5bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_parent_site
+    - group.type.project
+id: group.project.field_parent_site
+field_name: field_parent_site
+entity_type: group
+bundle: project
+label: 'Parent site'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      project: project
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

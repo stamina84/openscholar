@@ -73,59 +73,53 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $route_name = $this->routeMatch->getRouteName();
     if (strpos($route_name, 'search_api_page') !== FALSE) {
       $request = $this->requestStack->getCurrentRequest();
-      $query_params = $request->query->all();
-      $attributes = $request->attributes->all();
-      if ($attributes['keys']) {
-        $query_params['keys'] = $attributes['keys'];
+      $params = $request->query->all();
+      $keys = $request->attributes->get('keys');
+      $sort = isset($params['sort']) ? $params['sort'] : FALSE;
+      $sort_direction = isset($params['dir']) ? $params['dir'] : FALSE;
+
+      if ($keys && trim($keys) != '') {
+        $params['keys'] = $keys;
       }
 
-      $link_types = self::SORT_TYPE;
-      $items = [];
-      $sort_dir = [];
-      // Check if there is an exists sort param in query and flip the direction.
-      foreach ($link_types as $link_type) {
-        if ($query_params['sort'] == $link_type) {
-          $link_active[$link_type] = 'active';
-        }
-        else {
-          $link_active[$link_type] = 'inactive';
-        }
-      }
-      if (!$query_params['sort']) {
-        $link_active['relevance'] = 'active';
-      }
+      $sort_types = self::SORT_TYPE;
 
-      if (isset($query_params['sort'])) {
-        if ($query_params['dir'] == 'ASC') {
-          $sort_dir[$query_params['sort']] = 'DESC';
-        }
-        else {
-          $sort_dir[$query_params['sort']] = 'ASC';
-        }
-      }
+      foreach ($sort_types as $sort_type) {
+        // Prepare params from beginning.
+        $sort_params = $params;
+        $class_array = [];
 
-      foreach ($link_types as $link_type) {
-        $query_params['sort'] = $link_type;
-        if ($query_params['sort'] == 'date') {
-          $query_params['dir'] = 'DESC';
+        $sort_params['sort'] = $sort_type;
+        $sort_params['dir'] = ($sort_type == 'date') ? 'DESC' : 'ASC';
+        $class_array[] = $sort_params['dir'];
+
+        if ($sort && $sort_type == $sort) {
+          // Add active class to chosen sort.
+          $class_array[] = 'active';
+
+          // Reverse direction only when sort is selected.
+          if ($sort_direction) {
+            $sort_params['dir'] = ($sort_direction == 'ASC') ? 'DESC' : 'ASC';
+          }
         }
-        else {
-          $query_params['dir'] = 'ASC';
+
+        // Search API by default sort by relevance.
+        if ($sort_type == 'relevance') {
+          unset($sort_params['sort'], $sort_params['dir']);
         }
-        if (isset($sort_dir[$link_type])) {
-          $query_params['dir'] = $sort_dir[$link_type];
-        }
-        if ($link_type == 'relevance') {
-          unset($query_params['sort'], $query_params['dir']);
-        }
-        $url = Url::fromRoute($route_name, $query_params);
+
+        // Generate Url from route & params.
+        $url = Url::fromRoute($route_name, $sort_params);
+
+        // Add relevant classes.
         $url->setOptions([
           'attributes' => [
-            'class' => [$query_params['dir'], $link_active[$link_type]],
+            'class' => $class_array,
           ],
-        ]
-        );
-        $items[] = Link::fromTextAndUrl($this->t('@text', ['@text' => ucfirst($link_type)]), $url)->toString();
+        ]);
+
+        // Generate link html.
+        $items[] = Link::fromTextAndUrl($this->t('@text', ['@text' => ucfirst($sort_type)]), $url)->toString();
       }
 
       $build['link-list'] = [

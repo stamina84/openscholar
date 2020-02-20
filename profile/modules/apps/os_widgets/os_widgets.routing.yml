@@ -46,6 +46,7 @@ os_widgets.add_slideshow:
         type: entity:block_content
   requirements:
     _add_slideshow_access_check: 'TRUE'
+    _group_permission: 'manage vsite content'
 os_widgets.widgets_pagination_ajax:
   path: '/refresh-widget-content/{id}'
   defaults:

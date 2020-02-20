@@ -9,7 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\cp_users\CpRolesHelperInterface;
 use Drupal\group\Access\GroupPermissionHandlerInterface;
-use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -170,14 +169,13 @@ final class CpUsersPermissionsTypeSpecificForm extends CpUsersPermissionsForm {
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param \Drupal\group\Entity\GroupTypeInterface $group_type
-   *   The group type used for this form.
    *
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, GroupTypeInterface $group_type = NULL) {
-    $this->groupType = $group_type;
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    // Load group type from vsite context.
+    $this->groupType = $this->vsiteContextManager->getActiveVsite()->getGroupType();
     $form = parent::buildForm($form, $form_state);
 
     // Prevent permission edit for default roles.

@@ -1,0 +1,18 @@
+uuid: 7a24c3a4-ca47-4ace-9594-0cdaf4d2011a
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+  module:
+    - group_entity
+    - media
+id: project-group_entity-media
+label: 'Project: Group media'
+description: 'Adds <em class="placeholder">media</em> content to groups both publicly and privately.'
+group_type: project
+content_plugin: 'group_entity:media'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false
