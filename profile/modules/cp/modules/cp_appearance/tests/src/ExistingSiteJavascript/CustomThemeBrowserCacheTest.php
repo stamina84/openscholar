@@ -42,6 +42,8 @@ class CustomThemeBrowserCacheTest extends CpAppearanceExistingSiteJavascriptTest
     // Setup.
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
     $vsite_context_manager = $this->container->get('vsite.context_manager');
+    /** @var \Drupal\Core\State\StateInterface $state */
+    $state = $this->container->get('state');
 
     $this->visitViaVsite('cp/appearance/themes/custom-themes/add', $this->group);
     $this->getSession()->getPage()->fillField('Custom Theme Name', 'The Doors');
@@ -64,11 +66,13 @@ class CustomThemeBrowserCacheTest extends CpAppearanceExistingSiteJavascriptTest
     $original_script_cache = $this->getCustomThemeScriptCacheBuster($custom_theme);
 
     // Make modifications.
+    $default_css_js_query_string_before_update = $state->get('system.css_js_query_string');
     $this->drupalLogin($this->groupAdmin);
     $this->visitViaVsite("cp/appearance/themes/custom-themes/{$custom_theme->id()}/edit", $this->group);
     $this->getSession()->getPage()->findField('styles')->setValue('body { color: black; font-family: Sans-Serif; };');
     $this->getSession()->getPage()->findField('scripts')->setValue("console.log('Riders On The Storm')");
     $this->getSession()->getPage()->pressButton('Save');
+    $default_css_js_query_string_after_update = $state->get('system.css_js_query_string');
 
     // Test.
     $this->drupalLogout();
@@ -76,10 +80,13 @@ class CustomThemeBrowserCacheTest extends CpAppearanceExistingSiteJavascriptTest
     $updated_style_cache = $this->getCustomThemeStyleCacheBuster($custom_theme);
     $updated_script_cache = $this->getCustomThemeScriptCacheBuster($custom_theme);
 
-    // TODO: Put additional assertion that the updated cache is same as state.
-    // TODO: Put additional assertion that default cache is not changed.
     $this->assertNotEquals($original_style_cache, $updated_style_cache);
     $this->assertNotEquals($original_script_cache, $updated_script_cache);
+
+    $vsite_css_js_query_string = $state->get("vsite.css_js_query_string.{$this->group->id()}");
+    $this->assertEquals($vsite_css_js_query_string, $updated_style_cache);
+    $this->assertEquals($vsite_css_js_query_string, $updated_script_cache);
+    $this->assertEquals($default_css_js_query_string_before_update, $default_css_js_query_string_after_update);
 
     // Cleanup.
     $custom_theme->delete();
