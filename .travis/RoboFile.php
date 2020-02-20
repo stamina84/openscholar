@@ -278,8 +278,8 @@ class RoboFile extends \Robo\Tasks
       ->addTask($this->taskExec('ls -la'))
       ->addTask($this->taskExec('ls -la web'))
       ->addTask($this->taskExec('chmod +x vendor/bin/phpunit'))
-      ->addTask($this->taskExec('sudo chmod 777 -R web'))
-      ->addTask($this->taskExec('sudo chmod 777 -R vendor'))
+      ->addTask($this->taskExec('sudo chown -R 1000:1000 web'))
+      ->addTask($this->taskExec('sudo chown -R 1000:1000 -R vendor'))
       ;
   }
 
