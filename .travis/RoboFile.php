@@ -244,37 +244,37 @@ class RoboFile extends \Robo\Tasks
   /**
    * Create sql dump and compressed build and upload to S3.
    *
-   * @return \Robo\Task\Base\Exec[]
-   *   An array of tasks.
+   * @return \Robo\Collection\CollectionBuilder
+   *   A collection of tasks.
    */
-  protected function uploadToAws()
+  public function jobUploadToAws()
   {
-    $tasks = [];
-    $tasks[] = $this->taskExec('docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql');
-    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz web');
-    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz vendor');
-    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz');
-    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz');
-
-    return $tasks;
+    return $this
+      ->collectionBuilder()
+      ->addTask($this->taskExec('docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql'))
+      ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz web'))
+      ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz vendor'))
+      ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz'))
+      ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz'))
+      ;
   }
   /**
-   * Extract from S3.
+   * Extract from S3 and fix permissions.
    *
-   * @return \Robo\Task\Base\Exec[]
-   *   An array of tasks.
+   * @return \Robo\Collection\CollectionBuilder
+   *   A collection of tasks.
    */
-  protected function extractFromAws()
+  public function jobExtractFromAws()
   {
-    $tasks = [];
-    $tasks[] = $this->taskExec('aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .');
-    $tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz');
-    $tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz');
-    $tasks[] = $this->taskExec('chmod +x vendor/bin/phpunit');
-    $tasks[] = $this->taskExec('sudo chmod 777 -R web');
-    $tasks[] = $this->taskExec('sudo chmod 777 -R vendor');
-
-    return $tasks;
+    return $this
+      ->collectionBuilder()
+      ->addTask($this->taskExec('aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .'))
+      ->addTask($this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz'))
+      ->addTask($this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz'))
+      ->addTask($this->taskExec('chmod +x vendor/bin/phpunit'))
+      ->addTask($this->taskExec('sudo chmod 777 -R web'))
+      ->addTask($this->taskExec('sudo chmod 777 -R vendor'))
+      ;
   }
 
   /**
@@ -308,7 +308,6 @@ class RoboFile extends \Robo\Tasks
         $tasks[] = $this->taskExecStack()
             ->exec('echo PHP_XDEBUG_ENABLED=1 >> .env')
             ->exec('docker-compose up -d');
-
         return $tasks;
     }
 
