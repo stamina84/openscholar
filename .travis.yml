@@ -41,24 +41,15 @@ jobs:
       after_success:
         - robo job:upload-to-aws
     - stage: test
-      script: robo job:run-unit-tests
-      before_install:
-        - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-        - pyenv global 3.7.1
-        - pip install -U pip
-        - pip install awscli
+      script:
         - robo job:extract-from-aws
+        - robo job:run-unit-tests
     - stage: test
       script:
         - robo job:extract-from-aws
         - ls -la
         - ls -la web
         - robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
-      before_install:
-        - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-        - pyenv global 3.7.1
-        - pip install -U pip
-        - pip install awscli
 #    - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
 #    - script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
 #    - script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
