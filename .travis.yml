@@ -72,9 +72,9 @@ jobs:
         - tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz
         - tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz
         - chmod +x vendor/bin/phpunit
-        - sudo chmod 777 web/modules
-        - sudo chmod 777 web/sites/default/files
-        - sudo chmod 777 web/sites/simpletest
+        - sudo chmod 777 -R web
+        - sudo chmod 777 -R vendor
+        - ls -la
         - ls -la web
 #    - script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
 #    - script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
