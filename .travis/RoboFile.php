@@ -288,19 +288,21 @@ class RoboFile extends \Robo\Tasks
   /**
    * Builds the Code Base.
    *
-   * @return \Robo\Collection\CollectionBuilder
-   *   A collection of tasks.
+   * @return \Robo\Task\Base\Exec[]
+   *   An array of tasks.
    */
   protected function buildComposer()
   {
-    return $this
-      ->collectionBuilder()
-      ->addTask($this->taskExec('docker-compose exec -T php composer global require hirak/prestissimo'))
-      ->addTask($this->taskExec('make'))
-      ->addTask($this->taskExec('docker-compose exec -T php cp .travis/config/phpunit.xml web/core/phpunit.xml'))
-      ->addTask($this->taskExec('docker-compose exec -T php cp .travis/config//bootstrap.php web/core/tests/bootstrap.php'))
-      ->addTask($this->taskExec('docker-compose exec -T php mkdir -p web/sites/simpletest'))
-      ;
+    $force = true;
+    $tasks = [];
+
+    $tasks[] = $this->taskExec('docker-compose exec -T php composer global require hirak/prestissimo');
+    $tasks[] = $this->taskExec('make');
+    $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config/phpunit.xml web/core/phpunit.xml');
+    $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config//bootstrap.php web/core/tests/bootstrap.php');
+    $tasks[] = $this->taskExec('docker-compose exec -T php mkdir -p web/sites/simpletest');
+
+    return $tasks;
   }
 
     /**
