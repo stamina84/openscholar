@@ -258,8 +258,8 @@ class RoboFile extends \Robo\Tasks
     $tasks = [];
 
     $tasks[] = $this->taskExec('docker-compose stop mariadb');
-    $tasks[] = $this->taskExec('docker-compose rm -y mariadb');
-    $tasks[] = $this->taskExec('docker-compose up');
+    $tasks[] = $this->taskExec('docker-compose rm -f mariadb');
+    $tasks[] = $this->taskExec('docker-compose up -d');
 
     return $tasks;
   }
