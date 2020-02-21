@@ -105,8 +105,12 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
-        $collection->addTaskList($this->importDB());
-        $collection->addTaskList($this->runKernelTests($groups));
+        $groups = explode(',', $groups);
+        foreach ($groups as $group) {
+          $collection->addTaskList($this->importDB());
+          $collection->addTaskList($this->runKernelTests($group));
+          $collection->addTaskList($this->clearDB());
+        }
         return $collection->run();
     }
 
@@ -239,6 +243,23 @@ class RoboFile extends \Robo\Tasks
     $tasks[] = $this->taskExec('docker-compose exec -T php composer install');
     // Import sql.
     $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
+
+    return $tasks;
+  }
+
+  /**
+   * Clears the database.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   An array of tasks.
+   */
+  protected function clearDB()
+  {
+    $tasks = [];
+
+    $tasks[] = $this->taskExec('docker-compose stop mariadb');
+    $tasks[] = $this->taskExec('docker-compose rm -y mariadb');
+    $tasks[] = $this->taskExec('docker-compose up');
 
     return $tasks;
   }
