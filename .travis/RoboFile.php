@@ -254,12 +254,13 @@ class RoboFile extends \Robo\Tasks
     return $this
       ->collectionBuilder()
       ->addTask($this->taskExec('docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql'))
-      ->addTask($this->taskExec('ls -la vendor'))
-      ->addTask($this->taskExec('ls -la web'))
+      ->addTask($this->taskExec('ls -la'))
       ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz web'))
       ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz vendor'))
+      ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz custom_themes'))
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz'))
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz'))
+      ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz'))
       ;
   }
   /**
@@ -275,12 +276,11 @@ class RoboFile extends \Robo\Tasks
       ->addTask($this->taskExec('aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .'))
       ->addTask($this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz'))
       ->addTask($this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz'))
+      ->addTask($this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz'))
       ->addTask($this->taskExec('chmod +x vendor/bin/phpunit'))
       ->addTask($this->taskExec('sudo chown -R 1000:1000 web'))
       ->addTask($this->taskExec('sudo chown -R 1000:1000 vendor'))
-      ->addTask($this->taskExec('ls -la web/sites/default'))
-      ->addTask($this->taskExec('ls -la web/sites/default/files'))
-      ->addTask($this->taskExec('sudo chmod 777 -R web/sites/default/files'))
+      ->addTask($this->taskExec('sudo chown -R 1000:1000 custom_themes'))
       ;
   }
 
