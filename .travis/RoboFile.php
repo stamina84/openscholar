@@ -247,8 +247,6 @@ class RoboFile extends \Robo\Tasks
     $tasks[] = $this->taskExec('sudo chown -R 1000:1000 vendor');
     $tasks[] = $this->taskExec('sudo chown -R 1000:1000 custom_themes');
     $tasks[] = $this->taskExec('ls -la');
-    // Fix import issue.
-    $tasks[] = $this->taskExec('docker-compose exec -T php composer install');
 
     return $tasks;
   }
@@ -262,6 +260,8 @@ class RoboFile extends \Robo\Tasks
   {
     $tasks = [];
 
+    // Fix import issue.
+    $tasks[] = $this->taskExec('docker-compose exec -T php composer install');
     // Import sql.
     $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
 
