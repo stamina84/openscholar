@@ -57,7 +57,6 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
-        $collection->addTaskList($this->importDB());
         $collection->addTaskList($this->enableXDebug());
         $collection->addTaskList($this->runUnitTests($groups));
         return $collection->run();
@@ -105,12 +104,8 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
-        $groups = explode(',', $groups);
-        foreach ($groups as $group) {
-          $collection->addTaskList($this->importDB());
-          $collection->addTaskList($this->runKernelTests($group));
-          $collection->addTaskList($this->clearDB());
-        }
+        $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->runKernelTests($groups));
         return $collection->run();
     }
 
@@ -124,7 +119,7 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
-        $collection->addTaskList($this->importDB());
+        $collection->addTaskList($this->buildEnvironment());
         $collection->addTaskList($this->enableXDebug());
         $collection->addTaskList($this->runKernelTests($groups));
         return $collection->run();
@@ -142,7 +137,7 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
-        $collection->addTaskList($this->importDB());
+        $collection->addTaskList($this->buildEnvironment());
         $collection->addTaskList($this->runFunctionalTests($groups));
         return $collection->run();
     }
@@ -159,7 +154,7 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
-        $collection->addTaskList($this->importDB());
+        $collection->addTaskList($this->buildEnvironment());
         $collection->addTaskList($this->runFunctionalJavascriptTests($groups));
         return $collection->run();
     }
@@ -175,7 +170,7 @@ class RoboFile extends \Robo\Tasks
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->downloadDatabase());
         $collection->addTaskList($this->buildDocker());
-        $collection->addTaskList($this->importDB());
+        $collection->addTaskList($this->buildEnvironment());
         $collection->addTask($this->waitForDrupal());
         $collection->addTaskList($this->runUpdatePath());
         $collection->addTaskList($this->runBehatTests());
@@ -222,44 +217,35 @@ class RoboFile extends \Robo\Tasks
     $tasks[] = $this->taskExec('echo AWS_ACCESS_KEY_ID=' . getenv('ARTIFACTS_KEY') . ' >> .env');
     $tasks[] = $this->taskExec('echo AWS_SECRET_ACCESS_KEY=' . getenv('ARTIFACTS_SECRET') . ' >> .env');
     $tasks[] = $this->taskExec('echo AWS_ES_ACCESS_ENDPOINT=' . getenv('ARTIFACTS_ES_ENDPOINT') . ' >> .env');
-    $tasks[] = $this->taskExec('docker-compose --verbose pull --parallel');
+    $tasks[] = $this->taskExec('docker-compose pull --parallel');
     $tasks[] = $this->taskExec('docker-compose up -d');
 
     return $tasks;
   }
 
   /**
-   * Imports the database.
+   * Build environment.
    *
    * @return \Robo\Task\Base\Exec[]
    *   An array of tasks.
    */
-  protected function importDB()
+  protected function buildEnvironment()
   {
-    $force = true;
     $tasks = [];
 
+    $tasks[] = $this->taskExec('aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .');
+    $tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz');
+    $tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz');
+    $tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz');
+    $tasks[] = $this->taskExec('chmod +x vendor/bin/phpunit');
+    $tasks[] = $this->taskExec('sudo chown -R 1000:1000 web');
+    $tasks[] = $this->taskExec('sudo chown -R 1000:1000 vendor');
+    $tasks[] = $this->taskExec('sudo chown -R 1000:1000 custom_themes');
+    $tasks[] = $this->taskExec('ls -la');
     // Fix import issue.
     $tasks[] = $this->taskExec('docker-compose exec -T php composer install');
     // Import sql.
     $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
-
-    return $tasks;
-  }
-
-  /**
-   * Clears the database.
-   *
-   * @return \Robo\Task\Base\Exec[]
-   *   An array of tasks.
-   */
-  protected function clearDB()
-  {
-    $tasks = [];
-
-    $tasks[] = $this->taskExec('docker-compose stop mariadb');
-    $tasks[] = $this->taskExec('docker-compose rm -f mariadb');
-    $tasks[] = $this->taskExec('docker-compose up -d');
 
     return $tasks;
   }
@@ -282,26 +268,6 @@ class RoboFile extends \Robo\Tasks
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz'))
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz'))
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz'))
-      ;
-  }
-  /**
-   * Extract from S3 and fix permissions.
-   *
-   * @return \Robo\Collection\CollectionBuilder
-   *   A collection of tasks.
-   */
-  public function jobExtractFromAws()
-  {
-    return $this
-      ->collectionBuilder()
-      ->addTask($this->taskExec('aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .'))
-      ->addTask($this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz'))
-      ->addTask($this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz'))
-      ->addTask($this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz'))
-      ->addTask($this->taskExec('chmod +x vendor/bin/phpunit'))
-      ->addTask($this->taskExec('sudo chown -R 1000:1000 web'))
-      ->addTask($this->taskExec('sudo chown -R 1000:1000 vendor'))
-      ->addTask($this->taskExec('sudo chown -R 1000:1000 custom_themes'))
       ;
   }
 
