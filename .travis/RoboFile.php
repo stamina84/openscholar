@@ -103,8 +103,9 @@ class RoboFile extends \Robo\Tasks
     public function jobRunKernelTests($groups = '')
     {
         $collection = $this->collectionBuilder();
-        $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTaskList($this->runKernelTests($groups));
         return $collection->run();
     }
@@ -118,8 +119,9 @@ class RoboFile extends \Robo\Tasks
     public function jobRunKernelTestsCodeCoverage($groups = '')
     {
         $collection = $this->collectionBuilder();
-        $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTaskList($this->enableXDebug());
         $collection->addTaskList($this->runKernelTests($groups));
         return $collection->run();
@@ -136,8 +138,9 @@ class RoboFile extends \Robo\Tasks
     public function jobRunFunctionalTests($groups = '')
     {
         $collection = $this->collectionBuilder();
-        $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTaskList($this->runFunctionalTests($groups));
         return $collection->run();
     }
@@ -153,8 +156,9 @@ class RoboFile extends \Robo\Tasks
     public function jobRunFunctionalJavascriptTests($groups = '')
     {
         $collection = $this->collectionBuilder();
-        $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTaskList($this->runFunctionalJavascriptTests($groups));
         return $collection->run();
     }
@@ -169,8 +173,9 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->downloadDatabase());
-        $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTask($this->waitForDrupal());
         $collection->addTaskList($this->runUpdatePath());
         $collection->addTaskList($this->runBehatTests());
@@ -244,6 +249,19 @@ class RoboFile extends \Robo\Tasks
     $tasks[] = $this->taskExec('ls -la');
     // Fix import issue.
     $tasks[] = $this->taskExec('docker-compose exec -T php composer install');
+
+    return $tasks;
+  }
+  /**
+   * Import database.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   An array of tasks.
+   */
+  protected function importDatabase()
+  {
+    $tasks = [];
+
     // Import sql.
     $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
 
