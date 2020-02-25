@@ -161,6 +161,7 @@ class RoboFile extends \Robo\Tasks
         //$collection->addTaskList($this->importDatabase());
         $collection->addTaskList($this->buildComposer());
         $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->installTestConfigs());
         $collection->addTaskList($this->runFunctionalJavascriptTests($groups));
         return $collection->run();
     }
