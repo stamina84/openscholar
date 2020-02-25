@@ -247,12 +247,7 @@ class RoboFile extends \Robo\Tasks
     $tasks = [];
 
     $tasks[] = $this->taskExec('aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .');
-    //$tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz');
-    //$tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz');
     $tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz');
-    //$tasks[] = $this->taskExec('chmod +x vendor/bin/phpunit');
-    //$tasks[] = $this->taskExec('sudo chown -R 1000:1000 web');
-    //$tasks[] = $this->taskExec('sudo chown -R 1000:1000 vendor');
     $tasks[] = $this->taskExec('sudo chown -R 1000:1000 custom_themes');
     $tasks[] = $this->taskExec('ls -la');
 
@@ -269,10 +264,12 @@ class RoboFile extends \Robo\Tasks
     $tasks = [];
 
     // Fix import issue.
-    //$tasks[] = $this->taskExec('docker-compose exec -T php composer install');
     $tasks[] = $this->taskExec('sudo tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-db.tar.xz web');
     $tasks[] = $this->taskExec('sudo tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-settings.tar.xz web/sites/default');
+    $tasks[] = $this->taskExec('sudo tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-files.tar.xz web/sites/default');
     $tasks[] = $this->taskExec('sudo chown -R 1000:1000 web');
+    $tasks[] = $this->taskExec('sudo chmod -R 777 web/sites/default/files');
+    $tasks[] = $this->taskExec('ls -la');
     // Import sql.
     $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
 
@@ -293,14 +290,12 @@ class RoboFile extends \Robo\Tasks
       ->addTask($this->taskExec('ls -la'))
       ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-db.tar.xz web/travis-backup.sql'))
       ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-settings.tar.xz web/sites/default/settings.php'))
-      //->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz web'))
-      //->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz vendor'))
       ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz custom_themes'))
+      ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-files.tar.xz web/sites/default/files'))
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-db.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-db.tar.xz'))
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-settings.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-settings.tar.xz'))
-      //->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-web.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-web.tar.xz'))
-      //->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-vendor.tar.xz'))
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz'))
+      ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-files.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-files.tar.xz'))
       ;
   }
 
