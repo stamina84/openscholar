@@ -202,4 +202,24 @@ class PagesTest extends TestBase {
     $web_assert->linkNotExists('Add child page');
   }
 
+  /**
+   * Checks if Book traversal links present on book pages.
+   */
+  public function assertNoTraversalLinks() {
+    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
+    $path_alias_manager = $this->container->get('path.alias_manager');
+    $book = $this->createBookPage([
+      'title' => 'First book',
+    ]);
+    $sub_page = $this->createBookPage(['title' => 'Sub page'], $book->id());
+    // Assertions.
+    $web_assert = $this->assertSession();
+    $this->visit($path_alias_manager->getAliasByPath("/node/{$sub_page->id()}"));
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('Sub page');
+    $web_assert->pageTextNotContains('Book Traversal links for Sub page');
+    $web_assert->linkNotExists('Up');
+    $web_assert->linkNotExists('First book');
+  }
+
 }

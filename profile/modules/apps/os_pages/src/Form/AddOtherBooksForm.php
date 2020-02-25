@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
+use Drupal\os_pages\BooksHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\vsite\Plugin\VsiteContextManager;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
@@ -55,6 +56,13 @@ class AddOtherBooksForm extends FormBase {
   protected $nodeStorage;
 
   /**
+   * The books Helper.
+   *
+   * @var \Drupal\os_pages\BooksHelper
+   */
+  protected $booksHelper;
+
+  /**
    * Constructs a BookOutlineForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -63,12 +71,15 @@ class AddOtherBooksForm extends FormBase {
    *   The BookManager service.
    * @param \Drupal\vsite\Plugin\VsiteContextManager $vsite_manager
    *   The vsite Manager service.
+   * @param \Drupal\os_pages\BooksHelperInterface $books_helper
+   *   Books helper service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager, VsiteContextManager $vsite_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager, VsiteContextManager $vsite_manager, BooksHelperInterface $books_helper) {
     $this->bookManager = $book_manager;
     $this->vsiteManager = $vsite_manager;
     $this->vsite = $this->vsiteManager->getActiveVsite();
     $this->nodeStorage = $entity_type_manager->getStorage('node');
+    $this->booksHelper = $books_helper;
   }
 
   /**
@@ -78,7 +89,8 @@ class AddOtherBooksForm extends FormBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('book.manager'),
-      $container->get('vsite.context_manager')
+      $container->get('vsite.context_manager'),
+      $container->get('os_pages.books_helper')
     );
   }
 
@@ -123,15 +135,7 @@ class AddOtherBooksForm extends FormBase {
       $last_child_weight = (int) end($book_data)['weight'];
       // Saving selected node to book.
       if (!empty($selected_book->book['bid'])) {
-        $link = $this->bookManager->loadBookLink($book_entity_id, FALSE);
-        $link['bid'] = $this->entity->book['bid'];
-        $link['pid'] = $this->entity->book['bid'];
-        $link['weight'] = $last_child_weight + 1;
-        $link['has_children'] = $selected_book->book['has_children'];
-        $this->bookManager->saveBookLink($link, FALSE);
-        if ($selected_book->book['has_children'] > 0) {
-          $this->setBidForChildren($selected_book->book, $this->entity->book['bid']);
-        }
+        $this->booksHelper->saveOtherBookPages($selected_book, $this->entity);
       }
       else {
         $selected_book->book = [
@@ -150,37 +154,6 @@ class AddOtherBooksForm extends FormBase {
       'os_pages.book_outline',
       ['node' => $this->entity->id()]
     );
-
-  }
-
-  /**
-   * Looping through children elements to save all of them.
-   *
-   * @param array $book_link
-   *   Parent node entity's book array.
-   * @param int $bid
-   *   Book Id pages should be added to.
-   */
-  public function setBidForChildren(array $book_link, $bid) {
-    $flat = $this->bookManager->bookTreeGetFlat($book_link);
-
-    if ($book_link['has_children']) {
-      // Walk through the array until we find the current page.
-      do {
-        $link = array_shift($flat);
-      } while ($link && ($link['nid'] != $book_link['nid']));
-      // Continue though the array and collect links whose parent is this page.
-      while (($link = array_shift($flat)) && $link['pid'] == $book_link['nid']) {
-        $child = $this->nodeStorage->load($link['nid']);
-        if ($child->book['has_children'] > 0) {
-          $this->setBidForChildren($child->book, $bid);
-        }
-        $link = $this->bookManager->loadBookLink($link['nid'], FALSE);
-        $link['bid'] = $bid;
-        $link['pid'] = $book_link['nid'];
-        $this->bookManager->saveBookLink($link, FALSE);
-      }
-    }
 
   }
 

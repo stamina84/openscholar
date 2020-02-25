@@ -10,4 +10,4 @@ services:
       - { name: event_subscriber }
   os_pages.books_helper:
     class: Drupal\os_pages\BooksHelper
-    arguments: ['@entity_type.manager', '@os_pages.visibility_helper']
+    arguments: ['@entity_type.manager', '@os_pages.visibility_helper', '@book.manager']

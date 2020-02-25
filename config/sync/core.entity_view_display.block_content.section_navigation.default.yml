@@ -1,0 +1,14 @@
+uuid: 8db7f369-d334-4965-9a4b-820a49c875a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.section_navigation
+id: block_content.section_navigation.default
+targetEntityType: block_content
+bundle: section_navigation
+mode: default
+content: {  }
+hidden:
+  langcode: true
+  search_api_excerpt: true

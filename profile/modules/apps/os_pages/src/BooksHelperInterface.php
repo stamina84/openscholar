@@ -3,6 +3,7 @@
 namespace Drupal\os_pages;
 
 use Drupal\Group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Helper service for block visibility group.
@@ -34,5 +35,28 @@ interface BooksHelperInterface {
    *   Returns vsite matching nodes.
    */
   public function getGroupBookResults(GroupInterface $vsite, array $matching_nids, NodeInterface $node) : array;
+
+  /**
+   * Get all books except current book.
+   *
+   * @param \Drupal\Group\Entity\GroupInterface $vsite
+   *   The current vsite.
+   * @param \Drupal\node\NodeInterface $node
+   *   Current node entity.
+   *
+   * @return array
+   *   Returns vsite books.
+   */
+  public function getVsiteBooks(GroupInterface $vsite, NodeInterface $node): array;
+
+  /**
+   * Save selected book page into book.
+   *
+   * @param \Drupal\node\NodeInterface $selected_book
+   *   Selected book page node entity.
+   * @param \Drupal\node\NodeInterface $book_entity
+   *   Book entity - pages should be added to.
+   */
+  public function saveOtherBookPages(NodeInterface $selected_book, NodeInterface $book_entity);
 
 }
