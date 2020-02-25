@@ -248,4 +248,55 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
     $this->assertEquals('Home', $link->getTitle());
   }
 
+  /**
+   * Tests Project Minimal Preset.
+   */
+  public function testProjectMinimalPreset() {
+    $group = $this->createGroup();
+    $this->vsiteContextManager->activateVsite($group);
+
+    $toEnable = [
+      'event' => 'event',
+      'news' => 'news',
+      'page' => 'page',
+      'profiles' => 'profiles',
+    ];
+
+    $preset = GroupPreset::load('os_project');
+    $paths = $preset->getCreationFilePaths();
+    $uriArr = array_keys($paths['project']);
+
+    // Test negative no menu links exists.
+    $storage = $this->entityTypeManager->getStorage('menu_link_content');
+    $gid = $group->id();
+    $linksArr = $storage->loadByProperties(['menu_name' => "menu-primary-$gid"]);
+    $this->assertEmpty($linksArr);
+
+    $this->vsitePresetHelper->enableApps($group, $toEnable, []);
+    foreach ($uriArr as $uri) {
+      $this->vsitePresetHelper->createDefaultContent($group, $uri);
+    }
+
+    // Test positive case as helper enables apps.
+    /** @var \Drupal\Core\Config\ImmutableConfig $app_access_config */
+    $app_access_config = $this->configFactory->get('os_app_access.access');
+    $this->assertNotEmpty($app_access_config);
+    // Check enabled.
+    $this->assertEquals($app_access_config->get('event'), '0');
+    $this->assertEquals($app_access_config->get('news'), '0');
+    $this->assertEquals($app_access_config->get('page'), '0');
+    $this->assertEquals($app_access_config->get('profiles'), '0');
+    // Check disabled.
+    $this->assertEquals($app_access_config->get('faq'), '2');
+    $this->assertEquals($app_access_config->get('blog'), '2');
+
+    // Tests positive menu link is created too for the preset.
+    $linksArr = $storage->loadByProperties(['menu_name' => "menu-primary-$gid"]);
+    // Count should be one for Home link.
+    $this->assertCount(1, $linksArr);
+    /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $link */
+    $link = array_values($linksArr)[0];
+    $this->assertEquals('Home', $link->getTitle());
+  }
+
 }

@@ -1,0 +1,15 @@
+uuid: 8790f640-e997-424c-bfe9-3aabceecd8ea
+langcode: en
+status: true
+dependencies: {  }
+id: os_project
+label: 'Minimal Project'
+description: 'Blank site with no pre-set menu links or pages.'
+applicableTo:
+  project: project
+enabledApps:
+  event: event
+  news: news
+  page: page
+  profiles: profiles
+privateApps: {  }
