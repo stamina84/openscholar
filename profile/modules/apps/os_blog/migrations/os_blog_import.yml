@@ -5,7 +5,7 @@ label: 'CSV file migration'
 source:
   plugin: csv
   path: public://importcsv/os_blog.csv
-  ids: [Title, Path]
+  ids: [Timestamp, Title, Path]
   constants:
     view: '/blog/'
 process:

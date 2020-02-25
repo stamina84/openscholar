@@ -397,6 +397,7 @@ class CpImportTest extends OsExistingSiteTestBase {
     $filename = drupal_get_path('module', 'cp_import_csv_test') . '/artifacts/blog.csv';
     // Replace existing source file.
     $path = 'public://importcsv';
+    $this->cpImportHelper->csvToArray($filename, 'utf-8');
     $this->fileSystem->delete($path . '/os_blog.csv');
     $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
     file_save_data(file_get_contents($filename), $path . '/os_blog.csv', FileSystemInterface::EXISTS_REPLACE);
