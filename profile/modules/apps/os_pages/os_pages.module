@@ -322,7 +322,7 @@ function os_pages_node_page_alter(array &$form, FormStateInterface $form_state) 
   // Here, set NID value to new if a new book is to be created.
   $nid = !$node->isNew() ? $node->id() : 'new';
 
-  if ($nid === 'new' && $active_vsite->hasPermission('create new books', $current_user)) {
+  if ($active_vsite->hasPermission('create new books', $current_user) && ($nid === 'new' || $node->book['bid'] == 0)) {
     $form['book']['bid']['#access'] = FALSE;
     $form['book']['pid']['#access'] = FALSE;
     unset($form['book']['weight']);
@@ -345,6 +345,10 @@ function os_pages_node_page_alter(array &$form, FormStateInterface $form_state) 
       '#attributes' => ['disabled' => $disabled],
     ];
   }
+
+  // Setting filtered vsite books in node edit book-outline section.
+  $book_options = _os_pages_book_outline_form_options($form['book']['bid']['#options']);
+  $form['book']['bid']['#options'] = $book_options;
 
   // Setting bid as parent or 'new' if its a new book.
   if (isset($parent)) {
@@ -556,6 +560,29 @@ function os_pages_node_links_alter(array &$links, NodeInterface $node, array &$c
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function os_pages_form_node_page_book_outline_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $current_nid = $form['book']['nid']['#value'];
+  $book_options = _os_pages_book_outline_form_options($form['book']['bid']['#options']);
+
+  // Setting filtered books from this vsite.
+  $form['book']['bid']['#options'] = $book_options;
+  $link = Link::fromTextAndUrl(t('Add other book pages to this outline'), Url::fromRoute('os_pages.add_other_books', ['node' => $current_nid]));
+  $link = new FormattableMarkup($link->toString(), []);
+  $form['book']['add_book_pages'] = [
+    '#markup' => $link,
+    '#weight' => -10,
+  ];
+}
+
+/**
+ * Method to filter books within vsite.
+ *
+ * @param array $book_options
+ *   An array of all books.
+ *
+ * @return array
+ *   Returns the filtered books.
+ */
+function _os_pages_book_outline_form_options(array $book_options) {
   /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
   $vsite_context_manager = \Drupal::service('vsite.context_manager');
   /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
@@ -565,22 +592,14 @@ function os_pages_form_node_page_book_outline_form_alter(&$form, FormStateInterf
       $vsite_nids[] = $group_content->entity_id->target_id;
     }
 
-    $current_nid = $form['book']['nid']['#value'];
-    $book_options = $form['book']['bid']['#options'];
     // Removing form options if page is not from this vsite.
     foreach ($book_options as $key => $value) {
       if (!in_array($key, $vsite_nids)) {
         unset($book_options[$key]);
       }
     }
-    $form['book']['bid']['#options'] = $book_options;
-    $link = Link::fromTextAndUrl(t('Add other book pages to this outline'), Url::fromRoute('os_pages.add_other_books', ['node' => $current_nid]));
-    $link = new FormattableMarkup($link->toString(), []);
-    $form['book']['add_book_pages'] = [
-      '#markup' => $link,
-      '#weight' => -10,
-    ];
   }
+  return $book_options;
 }
 
 /**

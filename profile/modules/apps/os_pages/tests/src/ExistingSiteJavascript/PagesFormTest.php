@@ -132,4 +132,60 @@ class PagesFormTest extends TestBase {
     $this->assertSession()->responseNotContains($title);
   }
 
+  /**
+   * Test only vsite books present in Book Outline form.
+   */
+  public function testNodeVsiteBooksList() {
+    $this->groupAdmin = $this->createUser();
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
+    $this->drupalLogin($this->groupAdmin);
+    /** @var \Drupal\node\NodeInterface $book */
+    $book = $this->createBookPage([
+      'title' => 'First outline book',
+    ]);
+    $book2 = $this->createBookPage([
+      'title' => 'Second outline book',
+    ]);
+
+    $this->addGroupContent($book, $this->group);
+    $this->addGroupContent($book2, $this->group);
+
+    // Creating another book page in another vSite.
+    $book3 = $this->createBookPage([
+      'title' => 'Another vsite book',
+    ]);
+    $vsite2 = $this->createGroup();
+    $this->addGroupContent($book3, $vsite2);
+
+    $this->visitViaVsite("node/{$book->id()}/edit", $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->selectExists('edit-book-bid');
+    $this->assertSession()->optionExists('edit-book-bid', 'Second outline book');
+    $this->assertSession()->optionNotExists('edit-book-bid', 'Another vsite book');
+
+    // Checking other vsite book outline.
+    $this->addGroupAdmin($this->groupAdmin, $vsite2);
+    $this->visitViaVsite("node/{$book3->id()}/edit", $vsite2);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->selectExists('edit-book-bid');
+    $this->assertSession()->optionExists('edit-book-bid', 'Another vsite book');
+  }
+
+  /**
+   * Test to check Book checkbox on pages edit.
+   */
+  public function testOutlineOnPages() {
+    $this->groupAdmin = $this->createUser();
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
+    $this->drupalLogin($this->groupAdmin);
+    $page = $this->createNode([
+      'type' => 'page',
+      'title' => 'Standalone page',
+    ]);
+    $this->addGroupContent($page, $this->group);
+    $this->visitViaVsite("node/{$page->id()}/edit", $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->checkboxNotChecked('edit-book-checkbox');
+  }
+
 }
