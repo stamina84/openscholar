@@ -24,7 +24,7 @@ class EventOsFullCalendarTest extends EventExistingSiteJavascriptTestBase {
 
     try {
       $web_assert->statusCodeEquals(200);
-      $web_assert->responseContains('os_fullcalendar.fullcalendar.js');
+      $web_assert->elementExists('css', '.fullcalendar');
       $this->assertTrue(TRUE);
     }
     catch (ExpectationException $e) {

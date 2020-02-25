@@ -52,8 +52,12 @@ class AppearanceSettingsTest extends TestBase {
     $this->getCurrentPage()->selectFieldOption('theme', 'hwpi_lamont');
     $this->getCurrentPage()->pressButton('Save Theme');
 
-    $this->visit('/cp-appearance');
-    $this->assertSession()->responseContains('/profiles/contrib/openscholar/themes/hwpi_lamont/css/style.css');
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $vsite_context_manager->activateVsite($this->group);
+    $this->assertEquals('hwpi_lamont', $config_factory->get('system.theme')->get('default'));
 
     $this->visit('/');
   }
@@ -68,8 +72,12 @@ class AppearanceSettingsTest extends TestBase {
 
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->visit('/cp-appearance');
-    $this->assertSession()->responseContains('/profiles/contrib/openscholar/themes/hwpi_college/css/style.css');
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+    $config_factory = $this->container->get('config.factory');
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $vsite_context_manager->activateVsite($this->group);
+    $this->assertEquals('hwpi_college', $config_factory->get('system.theme')->get('default'));
 
     $this->visit('/');
   }

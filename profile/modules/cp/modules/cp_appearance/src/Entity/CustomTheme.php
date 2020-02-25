@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\cp_appearance\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
@@ -64,11 +66,15 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
       'version' => -1,
       'css' => [
         'theme' => [
-          self::CUSTOM_THEMES_STYLE_LOCATION => [],
+          self::CUSTOM_THEMES_STYLE_LOCATION => [
+            'preprocess' => FALSE,
+          ],
         ],
       ],
       'js' => [
-        self::CUSTOM_THEMES_SCRIPT_LOCATION => [],
+        self::CUSTOM_THEMES_SCRIPT_LOCATION => [
+          'preprocess' => FALSE,
+        ],
       ],
     ],
   ];

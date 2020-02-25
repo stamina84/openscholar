@@ -86,11 +86,13 @@ class PreviewActionOsThemePreviewTest extends OsExistingSiteTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testSave(): void {
+    /** @var \Drupal\Core\Theme\ThemeManagerInterface $theme_manager */
+    $theme_manager = $this->container->get('theme.manager');
     $this->visit('/os-theme-preview/cp/appearance/themes/preview/documental');
     $this->getCurrentPage()->pressButton('Save');
 
-    $this->visit('/os-theme-preview');
-    $this->assertSession()->responseContains('/profiles/contrib/openscholar/themes/documental/css/style.css');
+    $this->vsiteContextManager->activateVsite($this->group);
+    $this->assertEquals('documental', $theme_manager->getActiveTheme()->getName());
 
     // This is part of the cleanup.
     // If this is not done, then it leads to deadlock errors in Travis

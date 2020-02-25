@@ -19,6 +19,7 @@ graylist:
   - os_media.settings
   - os_publications.settings
   - search_api.server.os_search
+  - system.performance
 graylist_dependents: true
 graylist_skip_equal: true
 weight: 0

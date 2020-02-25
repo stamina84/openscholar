@@ -3,6 +3,7 @@
 namespace Drupal\Tests\vsite\ExistingSite;
 
 use Drupal\group\Entity\Group;
+use Drupal\vsite\Plugin\VsiteContextManager;
 
 /**
  * VsiteContextManagerTest.
@@ -81,6 +82,21 @@ class VsiteContextManagerTest extends VsiteExistingSiteTestBase {
     $this->vsiteContextManager->activateVsite($group);
 
     $this->assertEquals('test-alias', $this->vsiteContextManager->getActivePurl());
+  }
+
+  /**
+   * @covers \Drupal\vsite\Plugin\VsiteContextManager::vsiteFlushCssJs
+   */
+  public function testVsiteFlushCssJs(): void {
+    /** @var \Drupal\Core\State\StateInterface $state */
+    $state = $this->container->get('state');
+
+    VsiteContextManager::vsiteFlushCssJs($this->group);
+
+    $vsite_css_js_query_string = $state->get("vsite.css_js_query_string.{$this->group->id()}");
+
+    $this->assertNotNull($vsite_css_js_query_string);
+    $this->assertInternalType('string', $vsite_css_js_query_string);
   }
 
 }

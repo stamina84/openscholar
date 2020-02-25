@@ -18,3 +18,13 @@ services:
     arguments: ['@config.factory', '@theme.manager', '@theme.initialization']
     tags:
       - {name: event_subscriber}
+  cp_appearance.css_collection_renderer:
+    class: \Drupal\cp_appearance\CssCollectionRenderer
+    public: false
+    decorates: asset.css.collection_renderer
+    arguments: ['@cp_appearance.css_collection_renderer.inner', '@state', '@vsite.context_manager']
+  cp_appearance.js_collection_renderer:
+    class: \Drupal\cp_appearance\JsCollectionRenderer
+    public: false
+    decorates: asset.js.collection_renderer
+    arguments: ['@cp_appearance.js_collection_renderer.inner', '@state', '@vsite.context_manager']
