@@ -91,6 +91,16 @@ class CpImportPublicationHelper extends CpImportHelperBase {
       'keyword_deduplication' => $config->get('settings.keyword_deduplication'),
     ];
 
+    // To handle special cases when year is a coded string instead of a number.
+    $yearMapping = $this->configFactory->get('os_publications.settings')->get('publications_years_text');
+    if (isset($entry['year']) && is_string($entry['year'])) {
+      foreach ($yearMapping as $code => $text) {
+        if (strtolower(str_replace(' ', '', $entry['year'])) === strtolower(str_replace(' ', '', $text))) {
+          $entry['year'] = $code;
+        }
+      }
+    }
+
     /** @var \Drupal\bibcite_entity\Entity\Reference $entity */
     try {
       $entity = $this->serializer->denormalize($entry, Reference::class, $format->getPluginId(), $denormalize_context);

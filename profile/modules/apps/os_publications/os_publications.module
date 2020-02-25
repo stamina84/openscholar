@@ -1261,11 +1261,19 @@ function os_publications_bibcite_reference_form_alter_metadata_access(array &$fo
   $has_administer_reference_access = $active_vsite->hasPermission('administer bibcite_reference', $current_user);
   /** @var bool $has_create_alias_access */
   $has_create_alias_access = $active_vsite->hasPermission('create url aliases', $current_user);
+  /** @var bool $has_publish_content_access */
+  $has_publish_content_access = $active_vsite->hasPermission('publish nodes', $current_user);
+  /** @var bool $has_create_access */
+  $has_create_access = $active_vsite->hasPermission('create publications', $current_user);
 
   $form['created']['#access'] = $has_administer_reference_access;
   $form['uid']['#access'] = $has_administer_reference_access;
   $form['path']['widget']['0']['#access'] = $has_create_alias_access;
   $form['path']['#access'] = $has_create_alias_access;
+  $form['status']['#access'] = $has_publish_content_access;
+  $form['revision_information']['#access'] = $has_create_access;
+  $form['revision']['#access'] = $has_create_access;
+
 }
 
 /**

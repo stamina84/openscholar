@@ -91,6 +91,50 @@ class CpImportPublicationsTest extends OsExistingSiteTestBase {
   }
 
   /**
+   * Tests Saving a Bibtex entry works with year as string and correct mapping.
+   *
+   * @covers ::savePublicationEntity
+   * @covers ::mapPublicationHtmlFields
+   */
+  public function testCpImportHelperSavePublicationBibtexCodedYear() {
+
+    $storage = $this->entityTypeManager->getStorage('bibcite_reference');
+    $title = $this->randomString();
+
+    // Prepare data entry array.
+    $abstract = 'This paper presents measurements of spectrally';
+    $entry = [
+      'type' => 'article',
+      'journal' => 'Proceeding of the Combustion Institute',
+      'title' => $title,
+      'volume' => '32',
+      'year' => 'In Press',
+      'pages' => '963-970',
+      'chapter' => '963',
+      'abstract' => $abstract,
+      'author' => ['M. Nind', 'L. Find'],
+    ];
+
+    $context = $this->cpImportHelper->savePublicationEntity($entry, 'bibtex');
+
+    $pubArr = $storage->loadByProperties([
+      'type' => 'journal_article',
+      'title' => $title,
+    ]);
+
+    // Assert Saving Bibtex entry with string year worked.
+    $this->assertNotEmpty($pubArr);
+    $this->assertArrayHasKey('success', $context);
+    /** @var \Drupal\bibcite_entity\Entity\Reference $pubEntity */
+    $pubEntity = array_values($pubArr)[0];
+    $this->markEntityForCleanup($pubEntity);
+    // Assert values.
+    $this->assertEquals($title, $pubEntity->get('title')->getValue()[0]['value']);
+    // Test year is mapped correctly.
+    $this->assertEquals(10030, $pubEntity->get('bibcite_year')->getValue()[0]['value']);
+  }
+
+  /**
    * Tests Saving a Pubmed entry works.
    *
    * @covers ::savePublicationEntity

@@ -47,7 +47,7 @@ class PublicationPreviewFunctionalTest extends OsExistingSiteJavascriptTestBase 
     $preview_button->press();
     $web_assert->statusCodeEquals(200);
 
-    $back_link = $page->findById('edit-backlink');
+    $back_link = $page->findLink('Back to content editing');
     $back_link->press();
     $web_assert->statusCodeEquals(200);
 
@@ -72,7 +72,7 @@ class PublicationPreviewFunctionalTest extends OsExistingSiteJavascriptTestBase 
     $preview_button->press();
     $web_assert->statusCodeEquals(200);
 
-    $back_link = $page->findById('edit-backlink');
+    $back_link = $page->findLink('Back to content editing');
     $back_link->press();
     $web_assert->statusCodeEquals(200);
 
