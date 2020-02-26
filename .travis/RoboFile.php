@@ -43,6 +43,7 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
         $collection->addTaskList($this->runUnitTests($groups));
         return $collection->run();
     }
@@ -57,6 +58,7 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
         $collection->addTaskList($this->enableXDebug());
         $collection->addTaskList($this->runUnitTests($groups));
         return $collection->run();
