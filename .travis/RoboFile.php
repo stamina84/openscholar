@@ -280,33 +280,10 @@ class RoboFile extends \Robo\Tasks
   /**
    * Create sql dump and compressed build and upload to S3.
    *
-   * @return \Robo\Collection\CollectionBuilder
-   *   A collection of tasks.
-   */
-  public function jobUploadToAws()
-  {
-    return $this
-      ->collectionBuilder()
-      ->addTask($this->taskExec('docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql'))
-      ->addTask($this->taskExec('ls -la'))
-      ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-db.tar.xz web/travis-backup.sql'))
-      ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-settings.tar.xz web/sites/default/settings.php'))
-      ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz custom_themes'))
-      ->addTask($this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-files.tar.xz web/sites/default/files'))
-      ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-db.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-db.tar.xz'))
-      ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-settings.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-settings.tar.xz'))
-      ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz'))
-      ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-files.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-files.tar.xz'))
-      ;
-  }
-
-  /**
-   * Create sql dump and compressed build and upload to S3.
-   *
    * @return \Robo\Task\Base\Exec[]
    *   A collection of tasks.
    */
-  public function uploadToAws()
+  protected function uploadToAws()
   {
     $tasks[] = $this->taskExec('docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql');
     $tasks[] = $this->taskExec('ls -la');
