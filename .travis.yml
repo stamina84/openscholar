@@ -40,12 +40,12 @@ jobs:
 #      script: robo job:run-unit-tests
     - stage: prepare for tests
       script: robo job:check-module-circular-dependency
-      after_success:
-        - robo job:upload-to-aws
-    - stage: test
-      script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
-    - stage: test
-      script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
+#      after_success:
+#        - robo job:upload-to-aws
+#    - stage: test
+#      script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
+#    - stage: test
+#      script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
     - stage: test
       script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
     - stage: test
