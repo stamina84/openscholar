@@ -10,6 +10,7 @@ use Drupal\cp_import\Helper\CpImportHelper;
 use Drupal\file\Entity\File;
 use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\vsite\Plugin\AppPluginBase;
+use SimpleXMLElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -166,6 +167,20 @@ class PublicationsApp extends AppPluginBase {
 
     // Read contents of the file as a string.
     $data = file_get_contents($file->getFileUri());
+
+    // Validate the file beforehand if pubmed xml to prevent site from breaking.
+    if (strpos($file->getMimeType(), 'xml') !== FALSE) {
+      try {
+        new SimpleXMLElement($data);
+      }
+      catch (\Exception $e) {
+        // Display only user friendly error messages. If we don't clear, system
+        // displays whole lot of technical errors.
+        $this->messenger->deleteAll();
+        $formState->setError($form['import_file'], $this->t('Could not parse file as PubMed XML.'));
+        return FALSE;
+      }
+    }
     // Get the data array.
     $decoded = $this->serializer->decode($data, $format);
 
