@@ -42,7 +42,8 @@ class RoboFile extends \Robo\Tasks
     public function jobRunUnitTests($groups = '')
     {
         $collection = $this->collectionBuilder();
-        $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
         $collection->addTaskList($this->runUnitTests($groups));
         return $collection->run();
     }
@@ -56,7 +57,8 @@ class RoboFile extends \Robo\Tasks
     public function jobRunUnitTestsCodeCoverage($groups = '')
     {
         $collection = $this->collectionBuilder();
-        $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
         $collection->addTaskList($this->enableXDebug());
         $collection->addTaskList($this->runUnitTests($groups));
         return $collection->run();
@@ -71,7 +73,8 @@ class RoboFile extends \Robo\Tasks
     public function jobCheckCodingStandards()
     {
         $collection = $this->collectionBuilder();
-        $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
         $collection->addTaskList($this->runCheckCodingStandards());
         return $collection->run();
     }
@@ -85,9 +88,12 @@ class RoboFile extends \Robo\Tasks
     public function jobCheckModuleCircularDependency()
     {
         $collection = $this->collectionBuilder();
-        $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
         $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->uploadToAws());
         $collection->addTaskList($this->runCheckModuleCircularDependency());
+        $collection->addTaskList($this->installTestConfigs());
         return $collection->run();
     }
 
@@ -101,7 +107,9 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildEnvironment());
-        $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTaskList($this->installTestConfigs());
         $collection->addTaskList($this->runKernelTests($groups));
         return $collection->run();
@@ -117,7 +125,9 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildEnvironment());
-        $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTaskList($this->installTestConfigs());
         $collection->addTaskList($this->enableXDebug());
         $collection->addTaskList($this->runKernelTests($groups));
@@ -136,7 +146,9 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildEnvironment());
-        $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTaskList($this->installTestConfigs());
         $collection->addTaskList($this->runFunctionalTests($groups));
         return $collection->run();
@@ -154,7 +166,9 @@ class RoboFile extends \Robo\Tasks
     {
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->buildEnvironment());
-        $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->buildComposer());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTaskList($this->installTestConfigs());
         $collection->addTaskList($this->runFunctionalJavascriptTests($groups));
         return $collection->run();
@@ -171,6 +185,8 @@ class RoboFile extends \Robo\Tasks
         $collection = $this->collectionBuilder();
         $collection->addTaskList($this->downloadDatabase());
         $collection->addTaskList($this->buildEnvironment());
+        $collection->addTaskList($this->buildDocker());
+        $collection->addTaskList($this->importDatabase());
         $collection->addTask($this->waitForDrupal());
         $collection->addTaskList($this->runUpdatePath());
         $collection->addTaskList($this->runBehatTests());
@@ -198,35 +214,111 @@ class RoboFile extends \Robo\Tasks
         return $tasks;
     }
 
-    /**
-     * Builds the Docker environment.
-     *
-     * @return \Robo\Task\Base\Exec[]
-     *   An array of tasks.
-     */
-    protected function buildEnvironment()
-    {
-        $force = true;
-        $tasks = [];
-        $tasks[] = $this->taskFilesystemStack()
-            ->copy('.travis/docker-compose.yml', 'docker-compose.yml', $force)
-            ->copy('.travis/traefik.yml', 'traefik.yml', $force)
-            ->copy('.travis/.env', '.env', $force)
-            ->copy('.travis/config/behat.yml', 'tests/behat.yml', $force);
+  /**
+   * Creates the Docker environment.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   An array of tasks.
+   */
+  protected function buildDocker()
+  {
+    $force = true;
+    $tasks = [];
+    $tasks[] = $this->taskFilesystemStack()
+      ->copy('.travis/docker-compose.yml', 'docker-compose.yml', $force)
+      ->copy('.travis/traefik.yml', 'traefik.yml', $force)
+      ->copy('.travis/.env', '.env', $force)
+      ->copy('.travis/config/behat.yml', 'tests/behat.yml', $force);
 
-        $tasks[] = $this->taskExec('echo AWS_ACCESS_KEY_ID=' . getenv('ARTIFACTS_KEY') . ' >> .env');
-        $tasks[] = $this->taskExec('echo AWS_SECRET_ACCESS_KEY=' . getenv('ARTIFACTS_SECRET') . ' >> .env');
-        $tasks[] = $this->taskExec('echo AWS_ES_ACCESS_ENDPOINT=' . getenv('ARTIFACTS_ES_ENDPOINT') . ' >> .env');
-        $tasks[] = $this->taskExec('docker-compose --verbose pull --parallel');
-        $tasks[] = $this->taskExec('docker-compose up -d');
-        $tasks[] = $this->taskExec('docker-compose exec -T php composer global require hirak/prestissimo');
-        $tasks[] = $this->taskExec('make');
-        $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config/phpunit.xml web/core/phpunit.xml');
-        $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config//bootstrap.php web/core/tests/bootstrap.php');
-        $tasks[] = $this->taskExec('docker-compose exec -T php mkdir -p web/sites/simpletest');
+    $tasks[] = $this->taskExec('echo AWS_ACCESS_KEY_ID=' . getenv('ARTIFACTS_KEY') . ' >> .env');
+    $tasks[] = $this->taskExec('echo AWS_SECRET_ACCESS_KEY=' . getenv('ARTIFACTS_SECRET') . ' >> .env');
+    $tasks[] = $this->taskExec('echo AWS_ES_ACCESS_ENDPOINT=' . getenv('ARTIFACTS_ES_ENDPOINT') . ' >> .env');
+    $tasks[] = $this->taskExec('docker-compose pull');
+    $tasks[] = $this->taskExec('docker-compose up -d');
 
-        return $tasks;
-    }
+    return $tasks;
+  }
+
+  /**
+   * Build environment.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   An array of tasks.
+   */
+  protected function buildEnvironment()
+  {
+    $tasks = [];
+
+    $tasks[] = $this->taskExec('aws s3 sync s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER .');
+    $tasks[] = $this->taskExec('tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz');
+    $tasks[] = $this->taskExec('sudo chown -R 1000:1000 custom_themes');
+    $tasks[] = $this->taskExec('ls -la');
+
+    return $tasks;
+  }
+  /**
+   * Import database.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   An array of tasks.
+   */
+  protected function importDatabase()
+  {
+    $tasks = [];
+
+    // Fix import issue.
+    $tasks[] = $this->taskExec('sudo tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-db.tar.xz web');
+    $tasks[] = $this->taskExec('sudo tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-settings.tar.xz web/sites/default');
+    $tasks[] = $this->taskExec('sudo tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-files.tar.xz web/sites/default');
+    $tasks[] = $this->taskExec('sudo chown -R 1000:1000 web/sites/default');
+    $tasks[] = $this->taskExec('ls -la');
+    // Import sql.
+    $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
+
+    return $tasks;
+  }
+
+  /**
+   * Create sql dump and compressed build and upload to S3.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   A collection of tasks.
+   */
+  protected function uploadToAws()
+  {
+    $tasks[] = $this->taskExec('docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql');
+    $tasks[] = $this->taskExec('ls -la');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-db.tar.xz web/travis-backup.sql');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-settings.tar.xz web/sites/default/settings.php');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz custom_themes');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-files.tar.xz web/sites/default/files');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-db.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-db.tar.xz');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-settings.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-settings.tar.xz');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-files.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-files.tar.xz');
+
+    return $tasks;
+  }
+
+  /**
+   * Builds the Code Base.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   An array of tasks.
+   */
+  protected function buildComposer()
+  {
+    $force = true;
+    $tasks = [];
+
+    $tasks[] = $this->taskExec('docker-compose exec -T php composer global require hirak/prestissimo');
+    $tasks[] = $this->taskExec('make');
+    $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config/phpunit.xml web/core/phpunit.xml');
+    $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config//bootstrap.php web/core/tests/bootstrap.php');
+    $tasks[] = $this->taskExec('docker-compose exec -T php mkdir -p web/sites/simpletest');
+
+    return $tasks;
+  }
 
     /**
      * Enables xdebug in the Docker environment.
@@ -239,7 +331,6 @@ class RoboFile extends \Robo\Tasks
         $tasks[] = $this->taskExecStack()
             ->exec('echo PHP_XDEBUG_ENABLED=1 >> .env')
             ->exec('docker-compose up -d');
-
         return $tasks;
     }
 
