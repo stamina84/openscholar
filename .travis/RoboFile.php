@@ -270,8 +270,7 @@ class RoboFile extends \Robo\Tasks
     $tasks[] = $this->taskExec('sudo tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-db.tar.xz web');
     $tasks[] = $this->taskExec('sudo tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-settings.tar.xz web/sites/default');
     $tasks[] = $this->taskExec('sudo tar -Jxf os-build-${TRAVIS_BUILD_NUMBER}-files.tar.xz web/sites/default');
-    $tasks[] = $this->taskExec('sudo chown -R 1000:1000 web');
-    $tasks[] = $this->taskExec('sudo chmod -R 777 web/sites/default/files');
+    $tasks[] = $this->taskExec('sudo chown -R 1000:1000 web/sites/default');
     $tasks[] = $this->taskExec('ls -la');
     // Import sql.
     $tasks[] = $this->taskExec('docker-compose exec -T php drush sqlq --file=./travis-backup.sql');
