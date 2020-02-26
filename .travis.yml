@@ -29,8 +29,7 @@ env:
 stages:
   - prepare for tests
   - test
-  - name: codecov
-    if: branch = 8.x-1.x-dev
+  - codecov
 
 jobs:
   include:
@@ -42,73 +41,56 @@ jobs:
       script: robo job:check-module-circular-dependency
     - stage: test
       script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
-    - stage: test
-      script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
-    - stage: test
-      script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
-    - stage: test
-      script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
-    - stage: test
-      script: robo job:run-functional-tests "os-search,analytics,publications,cp-appearance,redirect,twitter,os,vsite,cp-import"
-    - stage: test
-      script: robo job:run-functional-javascript-tests "publications,mailchimp,metatag,redirect,cp-appearance,vsite-preset"
-    - stage: test
-      script: robo job:run-functional-javascript-tests "os-search,cp,profiles,classes,pages"
-    - stage: test
-      script: robo job:run-functional-javascript-tests "events,vsite,widgets"
-    - stage: test
-      script: robo job:run-functional-javascript-tests "os,os-theme-preview,blog,faq,news,presentations,cp-menu"
+#    - stage: test
+#      script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
+#    - stage: test
+#      script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
+#    - stage: test
+#      script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
+#    - stage: test
+#      script: robo job:run-functional-tests "os-search,analytics,publications,cp-appearance,redirect,twitter,os,vsite,cp-import"
+#    - stage: test
+#      script: robo job:run-functional-javascript-tests "publications,mailchimp,metatag,redirect,cp-appearance,vsite-preset"
+#    - stage: test
+#      script: robo job:run-functional-javascript-tests "os-search,cp,profiles,classes,pages"
+#    - stage: test
+#      script: robo job:run-functional-javascript-tests "events,vsite,widgets"
+#    - stage: test
+#      script: robo job:run-functional-javascript-tests "os,os-theme-preview,blog,faq,news,presentations,cp-menu"
     - stage: codecov
       script: robo job:run-unit-tests-code-coverage
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "widgets-1"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "widgets-2"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "widgets-3"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "widgets-4"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "widgets-5"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "os-theme-preview,cp-appearance,profiles"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "publications-1,redirect"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "vsite"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "publications-2,wysiwyg"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "os"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "cp-1"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "cp-2"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "other-1"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "other-2"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "cp-menu"
-      after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "os-search"
-      after_success: bash <(curl -s https://codecov.io/bash)
 
 before_install:
   - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
