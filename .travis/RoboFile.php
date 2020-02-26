@@ -89,6 +89,7 @@ class RoboFile extends \Robo\Tasks
         $collection->addTaskList($this->buildDocker());
         $collection->addTaskList($this->buildComposer());
         $collection->addTaskList($this->installDrupal());
+        $collection->addTaskList($this->uploadToAws());
         $collection->addTaskList($this->runCheckModuleCircularDependency());
         $collection->addTaskList($this->installTestConfigs());
         return $collection->run();
@@ -297,6 +298,28 @@ class RoboFile extends \Robo\Tasks
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz'))
       ->addTask($this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-files.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-files.tar.xz'))
       ;
+  }
+
+  /**
+   * Create sql dump and compressed build and upload to S3.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   A collection of tasks.
+   */
+  public function uploadToAws()
+  {
+    $tasks[] = $this->taskExec('docker-compose exec -T php drush sql-dump --result-file=./travis-backup.sql');
+    $tasks[] = $this->taskExec('ls -la');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-db.tar.xz web/travis-backup.sql');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-settings.tar.xz web/sites/default/settings.php');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz custom_themes');
+    $tasks[] = $this->taskExec('tar -Jcf ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-files.tar.xz web/sites/default/files');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-db.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-db.tar.xz');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-settings.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-settings.tar.xz');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-custom_themes.tar.xz');
+    $tasks[] = $this->taskExec('aws s3 cp ${TRAVIS_BUILD_DIR}-${TRAVIS_BUILD_NUMBER}-files.tar.xz s3://$ARTIFACTS_BUCKET/build_files/$TRAVIS_BUILD_NUMBER/os-build-${TRAVIS_BUILD_NUMBER}-files.tar.xz');
+
+    return $tasks;
   }
 
   /**
