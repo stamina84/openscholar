@@ -123,6 +123,7 @@ class AppearanceSettingsBuilderTest extends TestBase {
     $this->assertTrue(isset($themes['onepage']));
     $this->assertFalse(isset($themes['stark']));
     $this->assertFalse(isset($themes['seven']));
+    $this->assertFalse(isset($themes['os_admin']));
     $this->assertFalse(isset($themes['os_base']));
     $this->assertFalse(isset($themes['bootstrap']));
 
