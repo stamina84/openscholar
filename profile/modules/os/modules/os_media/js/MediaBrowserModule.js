@@ -901,7 +901,7 @@
           modal.element.dialog(nparams.dialog);
           modal.close.then(function (result) {
 
-            if (settings.fetchSetting('isBrowseMedia')) {
+            if (settings.isBrowseMedia !== undefined && settings.fetchSetting('isBrowseMedia')) {
               window.location.reload();
             }
             $('#upmedia').focus();
