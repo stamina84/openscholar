@@ -3,12 +3,15 @@
 namespace Drupal\cp_import\Helper;
 
 use Drupal\bibcite\Plugin\BibciteFormatManager;
+use Drupal\bibcite_entity\Entity\Contributor;
 use Drupal\bibcite_entity\Entity\Reference;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\vsite\Plugin\VsiteContextManager;
 use Symfony\Component\Serializer\Serializer;
+use Drupal\cp_import\CpImportLatexUnicodeMapping;
 
 /**
  * Class CpImportPublicationHelper.
@@ -81,6 +84,7 @@ class CpImportPublicationHelper extends CpImportHelperBase {
    *   For use in batch contexts.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function savePublicationEntity(array $entry, $formatId): array {
     $result = [];
@@ -101,9 +105,22 @@ class CpImportPublicationHelper extends CpImportHelperBase {
       }
     }
 
+    // Map special characters.
+    $this->mapSpecialChars($entry);
+
     /** @var \Drupal\bibcite_entity\Entity\Reference $entity */
     try {
       $entity = $this->serializer->denormalize($entry, Reference::class, $format->getPluginId(), $denormalize_context);
+      // Handle Editors.
+      if (isset($entry['editor']) && $editors = $entry['editor']) {
+        $authorField = $entity->get('author');
+        $this->saveEditors($editors, $authorField, $format, $denormalize_context);
+      }
+      // Handle url as we need to map it to custom field.
+      if (isset($entry['url']) && $url = $entry['url']) {
+        $publishersVersionField = $entity->get('publishers_version');
+        $this->savePublishersVersionUrl($url, $publishersVersionField);
+      }
     }
     catch (\UnexpectedValueException $e) {
       // Skip import for this row.
@@ -149,6 +166,69 @@ class CpImportPublicationHelper extends CpImportHelperBase {
     // Important for abstract content to recognize html content.
     $entity->html_abstract->format = 'filtered_html';
     $entity->save();
+  }
+
+  /**
+   * Maps special characters from bibtex(others) to publication.
+   *
+   * @param array $entry
+   *   The decoded entry array.
+   */
+  public function mapSpecialChars(array &$entry): void {
+    // Handle special chars.
+    $cpImportMappingObj = new CpImportLatexUnicodeMapping();
+    $searchStrings = $cpImportMappingObj->getSearchPatterns();
+    $replaceStrings = $cpImportMappingObj->getReplaceStrings();
+    foreach ($entry as $key => $item) {
+      // Generally Author and Editor keys will be arrays so we can skip them.
+      if (!is_array($item)) {
+        $entry[$key] = preg_replace($searchStrings, $replaceStrings, $item);
+      }
+    }
+  }
+
+  /**
+   * Handle Editors as they are disregarded currently by contrib module.
+   *
+   * @param string $editors
+   *   The editors string.
+   * @param \Drupal\Core\Field\FieldItemListInterface $authorField
+   *   The field to save editors to.
+   * @param string $format
+   *   The format to use such as bibtex and pubmed.
+   * @param array $context
+   *   Settings to be used for the process.
+   */
+  public function saveEditors($editors, FieldItemListInterface $authorField, $format, array $context): void {
+    $editors = explode(' and ', $editors);
+    foreach ($editors as $editor) {
+      $denormalizedEditor = $this->serializer->denormalize(['name' => [['value' => $editor]]], Contributor::class, $format, $context);
+      // Save editor as contributor entity with proper role and category.
+      $denormalizedEditor->save();
+      $authorField->appendItem([
+        'target_id' => $denormalizedEditor->id(),
+        'category' => 'primary',
+        'role' => 'editor',
+      ]);
+    }
+  }
+
+  /**
+   * Save the url to our custom publisher's version field.
+   *
+   * @param string $url
+   *   The url to save.
+   * @param \Drupal\Core\Field\FieldItemListInterface $publishersVersionField
+   *   The field to save url to.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
+   */
+  public function savePublishersVersionUrl($url, FieldItemListInterface $publishersVersionField) {
+    $publishersVersionField->setValue([
+      'title' => $this->t("Publisher's Version"),
+      'uri' => $url,
+      'options' => [],
+    ]);
   }
 
 }

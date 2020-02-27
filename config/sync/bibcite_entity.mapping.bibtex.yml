@@ -51,13 +51,13 @@ fields:
   keywords: keywords
   abstract: bibcite_abst_e
   year: bibcite_year
-  booktitle: ''
+  booktitle: bibcite_secondary_title
   journal: bibcite_secondary_title
   series: ''
   volume: bibcite_volume
   edition: bibcite_edition
   chapter: bibcite_section
-  number: bibcite_number
+  number: bibcite_issue
   pages: bibcite_pages
   month: bibcite_date
   institution: ''
@@ -67,7 +67,7 @@ fields:
   address: bibcite_place_published
   issn: bibcite_issn
   isbn: bibcite_isbn
-  url: bibcite_url
+  url: publishers_version
   doi: bibcite_doi
   note: bibcite_notes
   language: bibcite_lang

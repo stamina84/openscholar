@@ -17,7 +17,7 @@ class CpImportPublicationsTest extends OsExistingSiteTestBase {
   /**
    * CpImport helper service.
    *
-   * @var \Drupal\cp_import\Helper\CpImportHelper
+   * @var \Drupal\cp_import\Helper\CpImportPublicationHelper
    */
   protected $cpImportHelper;
 
@@ -135,13 +135,95 @@ class CpImportPublicationsTest extends OsExistingSiteTestBase {
   }
 
   /**
+   * Tests Special character mapping works.
+   *
+   * @covers ::mapSpecialChars
+   */
+  public function testCpImportHelperMapSpecialChars() {
+
+    $entry = [
+      // Test some random symbols.
+      'symbols' => '$\#$ \%\&nbsp;\&amp;\&nbsp; + - ( )\&nbsp; * \&amp; ^ \%$ $\#$ @ !\&nbsp;\&nbsp; {\~A}',
+      // Test some random text and symbol combination.
+      'texts' => '{\textyen} {\~A} {\textregistered} "paper" {\textquoteright}presents{\textquoteright} {\textquoteleft}measurements{\textquoteleft}',
+    ];
+
+    // &nbsp appearing is ok as it will be read and handled by the browser not
+    // our mapper.
+    $expectedSymbols = '# %&nbsp;&amp;&nbsp; + - ( )&nbsp; * &amp; ^ %$ # @ !&nbsp;&nbsp; Ã';
+    $expectedTextSymbols = '¥ Ã ® "paper" ’presents’ ‘measurements‘';
+
+    $this->cpImportHelper->mapSpecialChars($entry);
+
+    $this->assertEquals($expectedSymbols, $entry['symbols']);
+    $this->assertEquals($expectedTextSymbols, $entry['texts']);
+  }
+
+  /**
+   * Tests Editors are saved correctly and url mapping.
+   *
+   * @covers ::saveEditors
+   * @covers ::savePublishersVersionUrl
+   */
+  public function testCpImportHelperSaveEditors() {
+
+    $storage = $this->entityTypeManager->getStorage('bibcite_reference');
+    $title = $this->randomString();
+    // Prepare data entry array.
+    $abstract = 'This paper presents measurements of spectrally';
+    $entry = [
+      'type' => 'article',
+      'journal' => 'Proceeding of the Combustion Institute',
+      'title' => $title,
+      'volume' => '32',
+      'year' => '2009',
+      'pages' => '963-970',
+      'chapter' => '963',
+      'url' => 'http://abcde.net/thisarticle',
+      'abstract' => $abstract,
+      'author' => ['F. Goulay', 'L. Nemes'],
+      // Editor not processed by the decoder so they will
+      // be passed as a string for further processing.
+      'editor' => 'Editor One and Editor Two',
+    ];
+
+    $context = $this->cpImportHelper->savePublicationEntity($entry, 'bibtex');
+
+    $pubArr = $storage->loadByProperties([
+      'type' => 'journal_article',
+      'title' => $title,
+    ]);
+
+    // Assert Saving Bibtex entry with editors worked.
+    $this->assertNotEmpty($pubArr);
+    $this->assertArrayHasKey('success', $context);
+    /** @var \Drupal\bibcite_entity\Entity\Reference $pubEntity */
+    $pubEntity = array_values($pubArr)[0];
+    $this->markEntityForCleanup($pubEntity);
+    // Assert values.
+    $this->assertEquals($title, $pubEntity->get('title')->getValue()[0]['value']);
+    // Test editors are saved correctly.
+    $contributors = $pubEntity->get('author')->getValue();
+    $this->assertCount(4, $contributors);
+    $this->assertEquals('editor', $contributors[2]['role']);
+    $this->assertEquals('primary', $contributors[3]['category']);
+
+    // Test url is saved correctly.
+    $urlField = $pubEntity->get('publishers_version')->getValue()[0];
+    $this->assertNotEmpty($urlField['title']);
+    $this->assertEquals('http://abcde.net/thisarticle', $urlField['uri']);
+  }
+
+  /**
    * Tests Saving a Pubmed entry works.
    *
    * @covers ::savePublicationEntity
    * @covers ::mapPublicationHtmlFields
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function testCpImportHelperSavePublicationPubmedXml() {
 
