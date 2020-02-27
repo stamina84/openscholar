@@ -444,3 +444,19 @@ function vsite_views_pre_render(ViewExecutable $view) {
     $os_widget_context->addApp($app);
   }
 }
+
+/**
+ * Implements hook_group_insert() for a new vsite.
+ */
+function vsite_group_insert(GroupInterface $group) {
+  // Call helper service.
+  /** @var \Drupal\vsite\Helper\VsiteRoleHelper $role_helper */
+  $role_helper = \Drupal::service('vsite.role_helper');
+
+  $get_route_parameters = \Drupal::request()->attributes->all();
+  // Admin role assignment is not required when creating from admin.
+  if (isset($get_route_parameters['_route']) && $get_route_parameters['_route'] === 'entity.group.create') {
+    // Assign admin role to owner.
+    $role_helper->assignGroupAdminRoleToOwner($group);
+  }
+}

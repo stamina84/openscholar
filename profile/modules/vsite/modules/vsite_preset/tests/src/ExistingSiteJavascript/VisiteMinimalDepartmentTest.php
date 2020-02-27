@@ -54,6 +54,7 @@ class VisiteMinimalDepartmentTest extends OsExistingSiteJavascriptTestBase {
       $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
     }
 
+    // Check if created group type has home link.
     $web_assert = $this->assertSession();
     $this->visitViaVsite('', $this->group);
     $web_assert->statusCodeEquals(200);

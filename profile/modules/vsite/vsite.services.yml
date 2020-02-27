@@ -66,3 +66,6 @@ services:
   vsite.validate_helper:
     class: Drupal\vsite\Helper\VsiteFieldValidateHelper
     arguments: ['@vsite.context_manager', '@entity_type.manager']
+
+  vsite.role_helper:
+    class: \Drupal\vsite\Helper\VsiteRoleHelper

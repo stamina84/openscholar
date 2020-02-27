@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Implements hook_group_insert() for all the tasks which are needed for setting up a new vsite.
  */
 function vsite_preset_group_insert(GroupInterface $group) {
+  // Call helper to enable apps as per preset settings.
+  /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
+  $preset_helper = \Drupal::service('vsite_preset.preset_helper');
+
   if ($group->hasField('field_preset') && !$group->get('field_preset')->isEmpty()) {
     $preset_id = $group->get('field_preset')->get(0)->getValue()['target_id'];
     /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
@@ -25,9 +29,7 @@ function vsite_preset_group_insert(GroupInterface $group) {
       // Gets apps list.
       $appsToEnable = $preset->getEnabledApps();
       $appsToSetPrivate = $preset->getPrivateApps();
-      // Call helper to enable apps as per preset settings.
-      /** @var \Drupal\vsite_preset\Helper\VsitePresetHelper $preset_helper */
-      $preset_helper = \Drupal::service('vsite_preset.preset_helper');
+
       $preset_helper->enableApps($group, $appsToEnable, $appsToSetPrivate);
 
       $fileArr = $preset->getCreationFilePaths();
