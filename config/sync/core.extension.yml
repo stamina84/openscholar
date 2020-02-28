@@ -101,6 +101,7 @@ module:
   metatag_twitter_cards: 0
   metatag_views: 0
   migrate: 0
+  migrate_file: 0
   migrate_plus: 0
   migrate_source_csv: 0
   migrate_tools: 0
