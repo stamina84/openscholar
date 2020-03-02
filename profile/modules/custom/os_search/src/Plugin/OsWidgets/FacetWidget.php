@@ -290,6 +290,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
    */
   public function renderReducedfilter(array $reduced_filters = NULL, string $field_label, string $route_name): array {
     $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
+    $$summary_items = [];
     if ($reduced_filters['needed']) {
       foreach ($reduced_filters['reduced_filter'] as $reduced_filter) {
         $querys = isset($reduced_filter['query']) ? $reduced_filter['query'] : [];
