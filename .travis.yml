@@ -37,9 +37,9 @@ jobs:
     - stage: prepare for tests
       script: robo job:check-coding-standards
     - stage: prepare for tests
-      script: robo job:run-unit-tests
-    - stage: prepare for tests
       script: robo job:check-module-circular-dependency
+    - stage: test
+      script: robo job:run-unit-tests
     - stage: test
       script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
     - stage: test
