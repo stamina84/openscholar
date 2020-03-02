@@ -2,6 +2,7 @@
 
 namespace Drupal\cp_import\AppImport;
 
+use DateTime;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\cp_import\Helper\CpImportHelper;
@@ -16,6 +17,11 @@ use Drupal\vsite\Path\VsiteAliasStorage;
  */
 abstract class Base implements BaseInterface {
   use StringTranslationTrait;
+
+  /**
+   * Custom date format.
+   */
+  public const CUSTOM_DATE_FORMAT = "m/d/Y";
 
   /**
    * Cp Import helper service.
@@ -60,6 +66,7 @@ abstract class Base implements BaseInterface {
   public function prepareRowActions(MigratePrepareRowEvent $event) {
     $source = $event->getRow()->getSource();
     $type = $event->getMigration()->getProcess()['type'][0]['default_value'];
+    $createdDate = $source['Created date'];
     if ($alias = $source['Path']) {
       if ($this->vsiteAliasStorage->aliasExists("/$type/$alias", $this->languageManager->getDefaultLanguage()->getId())) {
         $event->getRow()->setSourceProperty('NeedsAliasUpdate', TRUE);
@@ -67,6 +74,14 @@ abstract class Base implements BaseInterface {
     }
     else {
       $event->getRow()->setSourceProperty('NeedsAliasUpdate', TRUE);
+    }
+    if ($createdDate) {
+      $date = DateTime::createFromFormat(Base::CUSTOM_DATE_FORMAT, $createdDate);
+      $event->getRow()->setSourceProperty('Created date', $date->format('Y-m-d'));
+    }
+    else {
+      $date = new DateTime();
+      $event->getRow()->setSourceProperty('Created date', $date->format('Y-m-d'));
     }
   }
 

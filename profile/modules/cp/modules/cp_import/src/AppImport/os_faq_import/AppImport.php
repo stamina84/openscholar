@@ -7,7 +7,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\cp_import\AppImport\Base;
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\Event\MigratePreRowSaveEvent;
-use Drupal\migrate_plus\Event\MigratePrepareRowEvent;
 
 /**
  * Class AppImport.
@@ -43,7 +42,7 @@ class AppImport extends Base {
       return;
     }
     // Get the media.
-    $media_entity = $this->cpImportHelper->getMedia($media_val, $this->type);
+    $media_entity = $this->cpImportHelper->getMedia($media_val, $this->type, 'field_attached_media');
     if ($media_entity) {
       $row->setDestinationProperty('field_attached_media/target_id', $media_entity->id());
     }
@@ -58,25 +57,6 @@ class AppImport extends Base {
       $this->cpImportHelper->addContentToVsite($id, $this->groupPluginId, 'node');
     }
     parent::migratePostRowSaveActions($event);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareRowActions(MigratePrepareRowEvent $event) {
-    $source = $event->getRow()->getSource();
-    $createdDate = $source['Created date'];
-    if ($createdDate) {
-      $date = DateTime::createFromFormat('Y-m-d', $createdDate);
-      if ($date->format('Y-n-j') == $createdDate) {
-        $event->getRow()->setSourceProperty('Created date', $date->format('Y-m-d'));
-      }
-    }
-    else {
-      $date = new DateTime();
-      $event->getRow()->setSourceProperty('Created date', $date->format('Y-m-d'));
-    }
-    parent::prepareRowActions($event);
   }
 
   /**
@@ -151,8 +131,8 @@ class AppImport extends Base {
       }
       // Validate Date.
       if ($createdDate = $row['Created date']) {
-        $date = DateTime::createFromFormat('Y-m-d', $createdDate);
-        if (!$date || !($date->format('Y-m-d') == $createdDate || $date->format('Y-n-j') == $createdDate)) {
+        $date = DateTime::createFromFormat(Base::CUSTOM_DATE_FORMAT, $createdDate);
+        if (!$date || !($date->format(Base::CUSTOM_DATE_FORMAT) == $createdDate || $date->format('n/j/Y') == $createdDate)) {
           $dateRows .= $row_number . ',';
         }
       }

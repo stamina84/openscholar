@@ -1,0 +1,50 @@
+id: os_profiles_import
+migration_tags:
+  - CSV
+label: 'CSV file migration'
+source:
+  plugin: csv
+  path: public://importcsv/os_profiles.csv
+  ids: [Timestamp, Email, Path]
+  constants:
+    view: '/profiles/'
+process:
+  type:
+    plugin: default_value
+    default_value: person
+  body: Short bio
+  field_honorific: Prefix
+  field_first_name: First name
+  field_middle_name: Middle name
+  field_last_name: Last name
+  field_email: Email
+  field_address: Address
+  field_phone: Phone
+  field_professional_titles/0: Title 1
+  field_professional_titles/1: Title 2
+  field_professional_titles/2: Title 3
+  field_website:
+    plugin: iterator
+    source: links
+    process:
+      title: title
+      uri: uri
+  created:
+    plugin: format_date
+    from_format: Y-m-d
+    to_format: U
+    source: Created date
+  field_photo_person/target_id: Photo
+  path/pathauto:
+    plugin: default_value
+    default_value: 0 # Disable pathauto
+  path/alias:
+    plugin: concat
+    source:
+      - constants/view
+      - Path
+destination:
+  plugin: 'entity:node'
+migration_dependencies:
+  required: {  }
+  optional: {  }

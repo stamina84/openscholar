@@ -135,6 +135,8 @@ class CpImportHelper extends CpImportHelperBase {
    *   The media value entered in the csv.
    * @param string $contentType
    *   Content type.
+   * @param string $field_name
+   *   Media field name.
    *
    * @return \Drupal\media\Entity\Media|null
    *   Media entity/Null when not able to fetch/download media.
@@ -143,16 +145,22 @@ class CpImportHelper extends CpImportHelperBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function getMedia($media_val, $contentType) : ?Media {
+  public function getMedia($media_val, $contentType, $field_name) : ?Media {
     $media = NULL;
     // Only load the bundles which are enabled for the content type's field.
     $bundle_fields = $this->fieldManager->getFieldDefinitions('node', $contentType);
-    $field_definition = $bundle_fields['field_attached_media'];
+    $field_definition = $bundle_fields[$field_name];
     $settings = $field_definition->getSettings();
-    $bundles = $settings['handler_settings']['target_bundles'];
+    if (!empty($settings['handler_settings'])) {
+      $bundles = $settings['handler_settings']['target_bundles'];
+    }
+    elseif ($settings['target_type'] === 'file') {
+      $bundles = [
+        'image' => 'image',
+      ];
+    }
     /** @var \Drupal\media\Entity\MediaType[] $mediaTypes */
     $mediaTypes = $this->entityTypeManager->getStorage('media_type')->loadMultiple($bundles);
-
     $item = get_headers($media_val, 1);
     $type = $item['Content-Type'];
     // If there is a redirection then only get the value of the last page.

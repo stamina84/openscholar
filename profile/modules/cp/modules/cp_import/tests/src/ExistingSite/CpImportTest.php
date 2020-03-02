@@ -86,14 +86,14 @@ class CpImportTest extends OsExistingSiteTestBase {
   public function testCpImportHelperMediaCreation() {
     // Test Media creation with File.
     $url = 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf';
-    $media1 = $this->cpImportHelper->getMedia($url, 'faq');
+    $media1 = $this->cpImportHelper->getMedia($url, 'faq', 'field_attached_media');
     $this->assertInstanceOf(Media::class, $media1);
     $this->assertEquals('Review_Committee_Report_20181113.pdf', $media1->getName());
     $this->markEntityForCleanup($media1);
 
     // Test Negative case for Media creation of Oembed type.
     $url = 'https://www.youtube.com/watch?v=WadTyp3FcgU&t';
-    $media2 = $this->cpImportHelper->getMedia($url, 'faq');
+    $media2 = $this->cpImportHelper->getMedia($url, 'faq', 'field_attached_media');
     $this->assertNull($media2);
   }
 
@@ -124,7 +124,7 @@ class CpImportTest extends OsExistingSiteTestBase {
     $data = $this->cpImportHelper->csvToArray($filename, 'utf-8');
     $this->assertCount(10, $data);
     $this->assertEquals('Some Question 5', $data[4]['Title']);
-    $this->assertEquals('2015-12-01', $data[9]['Created date']);
+    $this->assertEquals('01/20/2014', $data[9]['Created date']);
   }
 
   /**
@@ -170,7 +170,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Test1',
       'Body' => 'Body1',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
     ];
     $message = $instance->validateHeaders($data);
     $this->assertEmpty($message['@Title']);
@@ -181,7 +181,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Test1',
       'Body' => 'Body1',
       'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateHeaders($data);
@@ -201,7 +201,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => '',
       'Body' => 'Body1',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateRows($data);
@@ -213,7 +213,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Title1',
       'Body' => '',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateRows($data);
@@ -225,7 +225,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Test1',
       'Body' => 'Body1',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateRows($data);
@@ -337,7 +337,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Blog1',
       'Body' => 'Blog1 Test Body',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
     ];
     $message = $instance->validateHeaders($data);
     $this->assertEmpty($message['@Title']);
@@ -348,7 +348,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Blog2',
       'Body' => 'Body2 Test Body',
       'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateHeaders($data);
@@ -368,7 +368,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => '',
       'Body' => 'Body1',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateRows($data);
@@ -380,7 +380,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Blog1',
       'Body' => 'Body1',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateRows($data);
@@ -460,7 +460,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Software1',
       'Body' => 'Software1 Test Body',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
     ];
     $message = $instance->validateHeaders($data);
     $this->assertEmpty($message['@Title']);
@@ -471,10 +471,77 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Software1',
       'Body' => 'Body2 Test Body',
       'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateHeaders($data);
+    $this->assertEmpty($message);
+  }
+
+  /**
+   * Tests CpImport Profiles header validations.
+   */
+  public function testCpImportProfilesHeaderValidation() {
+    /** @var \Drupal\cp_import\AppImportFactory $appImportFactory */
+    $appImportFactory = $this->container->get('app_import_factory');
+    $instance = $appImportFactory->create('os_profiles_import');
+
+    // Test header errors.
+    $data[0] = [
+      'First Name' => '',
+      'Last Name' => '',
+      'Photo' => 'https://i.picsum.photos/id/57/536/354.jpg',
+      'Email' => 'test@test.com',
+      'Created date' => '01/01/2015',
+    ];
+    $message = $instance->validateHeaders($data);
+    $this->assertNotEmpty($message['@First name']);
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@Path']);
+
+    // Test No header errors.
+    $data[0] = [
+      'First name' => 'First name',
+      'Last name' => 'Last name',
+      'Photo' => 'https://i.picsum.photos/id/57/536/354.jpg',
+      'Created date' => '01/01/2015',
+      'Email' => 'test@test.com',
+      'Path' => 'test1',
+    ];
+    $message = $instance->validateHeaders($data);
+    $this->assertEmpty($message);
+  }
+
+  /**
+   * Tests CpImport Profiles row validations.
+   */
+  public function testCpImportProfilesRowValidation() {
+    /** @var \Drupal\cp_import\AppImportFactory $appImportFactory */
+    $appImportFactory = $this->container->get('app_import_factory');
+    $instance = $appImportFactory->create('os_profiles_import');
+
+    // Test errors.
+    $data[0] = [
+      'First name' => '',
+      'Last name' => '',
+      'Photo' => 'https://i.picsum.photos/id/57/536/354.jpg',
+      'Created date' => '01/01/2015',
+      'Path' => 'test1',
+      'Email' => 'test@test.com',
+    ];
+    $message = $instance->validateRows($data);
+    $this->assertEmpty($message['@date']);
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@firstNameRows']);
+
+    // Test no errors in row.
+    $data[0] = [
+      'First name' => 'First name',
+      'Last name' => 'Last name',
+      'Photo' => '',
+      'Created date' => '01/01/2015',
+      'Path' => 'test1',
+      'Email' => 'test@test.com',
+    ];
+    $message = $instance->validateRows($data);
     $this->assertEmpty($message);
   }
 
@@ -491,7 +558,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => '',
       'Body' => 'Body1',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateRows($data);
@@ -503,7 +570,7 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Title' => 'Software1',
       'Body' => 'Body1',
       'Files' => '',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/01/2015',
       'Path' => 'test1',
     ];
     $message = $instance->validateRows($data);
@@ -559,6 +626,61 @@ class CpImportTest extends OsExistingSiteTestBase {
     $executable->import();
     // If count is now 2 it means same content is imported again.
     $node1 = $storage->loadByProperties(['title' => 'Test Software 1']);
+    $this->assertCount(2, $node1);
+
+    // Delete all the test data created.
+    $executable->rollback();
+  }
+
+  /**
+   * Tests Migration/import for os_profiles_import.
+   *
+   * @throws \Drupal\migrate\MigrateException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function testCpImportMigrationProfiles() {
+    $filename = drupal_get_path('module', 'cp_import_csv_test') . '/artifacts/profiles.csv';
+    $this->cpImportHelper->csvToArray($filename, 'utf-8');
+    // Replace existing source file.
+    $path = 'public://importcsv';
+    $this->fileSystem->delete($path . '/os_profiles.csv');
+    $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    file_save_data(file_get_contents($filename), $path . '/os_profiles.csv', FileSystemInterface::EXISTS_REPLACE);
+
+    $storage = $this->entityTypeManager->getStorage('node');
+    // Test Negative case.
+    $node1 = $storage->loadByProperties(['field_first_name' => 'Homer 1']);
+    $this->assertCount(0, $node1);
+    $node2 = $storage->loadByProperties(['field_first_name' => 'Homer 2']);
+    $this->assertCount(0, $node2);
+
+    /** @var \Drupal\migrate\Plugin\Migration $migration */
+    $migration = $this->migrationManager->createInstance('os_profiles_import');
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable->import();
+    // Test positive case.
+    $node1 = $storage->loadByProperties(['field_first_name' => 'Homer 1']);
+    $this->assertCount(1, $node1);
+    $node2 = $storage->loadByProperties(['field_first_name' => 'Homer 2']);
+    $this->assertCount(1, $node2);
+    // Test date is converted from Y-n-j to Y-m-d if node is created.
+    // successfully it means conversion works.
+    $node3 = $storage->loadByProperties(['field_first_name' => 'Homer 6']);
+    $node3 = array_values($node3)[0];
+    $created = $node3->getCreatedTime();
+    $created_date = date('Y-m-d', $created);
+    $this->assertEquals('2020-01-01', $created_date);
+    // Import same content again to check if adding timestamp works.
+    $filename2 = drupal_get_path('module', 'cp_import_csv_test') . '/artifacts/profiles_small.csv';
+    $this->cpImportHelper->csvToArray($filename2, 'utf-8');
+    $this->fileSystem->delete($path . '/os_profiles.csv');
+    $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    file_save_data(file_get_contents($filename2), $path . '/os_profiles.csv', FileSystemInterface::EXISTS_REPLACE);
+    $migration = $this->migrationManager->createInstance('os_profiles_import');
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable->import();
+    // If count is now 2 it means same content is imported again.
+    $node1 = $storage->loadByProperties(['field_first_name' => 'Homer 1']);
     $this->assertCount(2, $node1);
 
     // Delete all the test data created.
