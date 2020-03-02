@@ -1,5 +1,5 @@
-name: 'Branded theme'
-description: 'A modern looking theme for use by departments at Harvard.'
+name: 'Branded'
+description: 'A branded looking theme for use by departments at Harvard.'
 
 base theme: os_base
 core: 8.x

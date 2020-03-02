@@ -1,5 +1,5 @@
-name: 'Themeone'
-description: 'Themeone theme.'
+name: 'Clementine'
+description: 'Clementine theme.'
 
 base theme: os_base
 core: 8.x
