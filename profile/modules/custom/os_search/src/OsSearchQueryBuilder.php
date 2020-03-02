@@ -355,7 +355,7 @@ class OsSearchQueryBuilder {
   }
 
   /**
-   * Apply allowed filters.
+   * Apply app condition for faceted search.
    *
    * @param array $filters
    *   Array of allowed/enabled filters.
@@ -363,9 +363,7 @@ class OsSearchQueryBuilder {
    *   Query object to be altered.
    */
   protected function applyFacetedTaxonomyAppFilterConditions(array $filters, QueryInterface $query) {
-
     $app_requested = $this->requestStack->getCurrentRequest()->attributes->get('app');
-
     $enabled_apps = $this->appManager->getDefinitions();
     $enabled_apps_list = [];
     if (isset($enabled_apps[$app_requested]['bundle'])) {
