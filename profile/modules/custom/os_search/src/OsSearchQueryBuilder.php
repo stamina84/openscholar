@@ -11,6 +11,7 @@ use Drupal\os_app_access\AppLoader;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\os_search\Plugin\OsWidgets\SearchSortWidget;
 use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\vsite\Plugin\AppManagerInterface;
 
 /**
  * Helper class for search query builder.
@@ -74,9 +75,16 @@ class OsSearchQueryBuilder {
   protected $searchHelper;
 
   /**
+   * App manager.
+   *
+   * @var Drupal\vsite\Plugin\AppManagerInterface
+   */
+  protected $appManager;
+
+  /**
    * Class constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, VsiteContextManager $vsite_context, AppLoader $app_loader, AccountProxy $current_user, OsSearchFacetBuilder $facet_builder, CurrentRouteMatch $route_match, OsSearchHelper $search_helper) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, VsiteContextManager $vsite_context, AppLoader $app_loader, AccountProxy $current_user, OsSearchFacetBuilder $facet_builder, CurrentRouteMatch $route_match, OsSearchHelper $search_helper, AppManagerInterface $app_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->blockContent = $entity_type_manager->getStorage('block_content');
     $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
@@ -87,6 +95,7 @@ class OsSearchQueryBuilder {
     $this->facetBuilder = $facet_builder;
     $this->routeMatch = $route_match;
     $this->searchHelper = $search_helper;
+    $this->appManager = $app_manager;
   }
 
   /**
@@ -202,16 +211,8 @@ class OsSearchQueryBuilder {
       'minute' => '00',
     ];
     $date_field = FALSE;
-
-    if ($query->hasTag('group_terms_by_taxonomy')) {
-      $term_filters = [];
-      foreach ($filters as $key => $filter) {
-        if (strpos($filter, 'custom_taxonomy') !== FALSE) {
-          $term_filters[] = $filter;
-          unset($filters[$key]);
-        }
-      }
-      $this->applyTaxonomyFilterConditions($term_filters, $query);
+    if ($query->hasTag('group_by_faceted_taxonomy')) {
+      $this->applyFacetedTaxonomyAppFilterConditions($filters, $query);
     }
 
     foreach ($filters as $filter) {
@@ -351,6 +352,40 @@ class OsSearchQueryBuilder {
       $query->addCondition('custom_taxonomy', $vocab, 'IN');
     }
 
+  }
+
+  /**
+   * Apply allowed filters.
+   *
+   * @param array $filters
+   *   Array of allowed/enabled filters.
+   * @param Drupal\search_api\Query\QueryInterface $query
+   *   Query object to be altered.
+   */
+  protected function applyFacetedTaxonomyAppFilterConditions(array $filters, QueryInterface $query) {
+
+    $app_requested = $this->requestStack->getCurrentRequest()->attributes->get('app');
+
+    $enabled_apps = $this->appManager->getDefinitions();
+    $enabled_apps_list = [];
+    if (isset($enabled_apps[$app_requested]['bundle'])) {
+      $enabled_apps_list = array_merge($enabled_apps_list, $enabled_apps[$app_requested]['bundle']);
+    }
+    else {
+      $enabled_apps_list[] = $enabled_apps[$app_requested]['entityType'];
+    }
+    if ($enabled_apps_list) {
+      $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
+    }
+
+    $term_filters = [];
+    foreach ($filters as $key => $filter) {
+      if (strpos($filter, 'custom_taxonomy') !== FALSE) {
+        $term_filters[] = $filter;
+        unset($filters[$key]);
+      }
+    }
+    $this->applyTaxonomyFilterConditions($term_filters, $query);
   }
 
 }
