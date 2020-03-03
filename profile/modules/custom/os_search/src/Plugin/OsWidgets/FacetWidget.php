@@ -290,6 +290,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
    */
   public function renderReducedfilter(array $reduced_filters = NULL, string $field_label, string $route_name): array {
     $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
+    $route_parameters = $this->routeMatch->getParameters()->all() ?? [];
     $summary_items = [];
     if ($reduced_filters['needed']) {
       foreach ($reduced_filters['reduced_filter'] as $reduced_filter) {
@@ -302,7 +303,9 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
         $item_label = isset($reduced_filter['label']) ? $reduced_filter['label'] : '';
         $item_label = is_array($item_label) ? reset($item_label) : $item_label;
-        $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
+        $route_parameters['f'] = $querys;
+        $route_parameters['keys'] = $keys;
+        $path = Url::fromRoute($route_name, $route_parameters);
         $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
         $summary_items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
       }

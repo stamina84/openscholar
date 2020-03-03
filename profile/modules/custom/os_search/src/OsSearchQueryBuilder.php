@@ -331,7 +331,7 @@ class OsSearchQueryBuilder {
    * @param Drupal\search_api\Query\QueryInterface $query
    *   Query object to be altered.
    */
-  protected function applyTaxonomyFilterConditions(array $filters, QueryInterface &$query) {
+  protected function applyTaxonomyFilterConditions(array $filters, QueryInterface $query) {
     $termStorage = $this->entityTypeManager->getStorage('taxonomy_term');
     $term_ids = [];
 
@@ -362,7 +362,7 @@ class OsSearchQueryBuilder {
    * @param Drupal\search_api\Query\QueryInterface $query
    *   Query object to be altered.
    */
-  protected function applyFacetedTaxonomyAppFilterConditions(array $filters, QueryInterface &$query) {
+  protected function applyFacetedTaxonomyAppFilterConditions(array &$filters, QueryInterface $query) {
     $app_requested = $this->requestStack->getCurrentRequest()->attributes->get('app');
     $enabled_apps = $this->appManager->getDefinitions();
     $enabled_apps_list = [];
