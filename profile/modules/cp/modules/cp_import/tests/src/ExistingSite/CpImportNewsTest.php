@@ -99,7 +99,7 @@ class CpImportNewsTest extends OsExistingSiteTestBase {
       'Redirect' => '',
       'Image' => '',
       'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/15/2015',
       'Path' => 'news-1',
     ];
     $message = $instance->validateHeaders($data);
@@ -114,7 +114,7 @@ class CpImportNewsTest extends OsExistingSiteTestBase {
       'Redirect' => '',
       'Image' => '',
       'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/15/2015',
       'Path' => 'news-1',
     ];
     $message = $instance->validateHeaders($data);
@@ -137,7 +137,7 @@ class CpImportNewsTest extends OsExistingSiteTestBase {
       'Redirect' => '',
       'Image' => '',
       'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/15/2015',
       'Path' => 'news-1',
     ];
     $message = $instance->validateRows($data);
@@ -152,7 +152,7 @@ class CpImportNewsTest extends OsExistingSiteTestBase {
       'Redirect' => '',
       'Image' => '',
       'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/15/2015',
       'Path' => 'news-1',
     ];
     $message = $instance->validateRows($data);
@@ -167,7 +167,7 @@ class CpImportNewsTest extends OsExistingSiteTestBase {
       'Redirect' => '',
       'Image' => '',
       'Files' => 'https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf',
-      'Created date' => '2015-01-01',
+      'Created date' => '01/15/2015',
       'Path' => 'news-1',
     ];
     $message = $instance->validateRows($data);
