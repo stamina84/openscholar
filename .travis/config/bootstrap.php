@@ -16,6 +16,7 @@ use PHPUnit\Runner\Version;
  *
  * @param string $scan_directory
  *   The directory that should be recursively scanned.
+ *
  * @return array
  *   An associative array of extension directories found within the scanned
  *   directory, keyed by extension name.
@@ -78,7 +79,7 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
  * @return array
  *   An associative array of extension directories, keyed by their namespace.
  */
-function drupal_phpunit_get_extension_namespaces($dirs) {
+function drupal_phpunit_get_extension_namespaces(array $dirs) {
   $suite_names = [
     'Unit',
     'Kernel',
@@ -135,6 +136,7 @@ function drupal_phpunit_populate_class_loader() {
   $loader = require __DIR__ . '/../../autoload.php';
 
   // Start with classes in known locations.
+  $loader->add('Drupal\\TestTools', __DIR__);
   $loader->add('Drupal\\Tests', __DIR__);
   $loader->add('Drupal\\TestSite', __DIR__);
   $loader->add('Drupal\\KernelTests', __DIR__);
