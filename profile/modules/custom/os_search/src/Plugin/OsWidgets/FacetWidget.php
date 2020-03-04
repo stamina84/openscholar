@@ -125,19 +125,32 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       // Get current search summary with (-) link.
       $reduced_filters = $this->osSearchFacetBuilder->getCurrentSearchSummary($field_id);
       $build = [];
-      $build['current_summary'] = $this->renderReducedfilter($reduced_filters, $field_label, $route_name);
 
       if ($field_type != 'date') {
         $buckets = (count($buckets) > 1) ? $buckets : [];
       }
 
-      switch ($field_id) {
-        case 'custom_taxonomy':
-          $vocab_list = $this->osSearchFacetBuilder->prepareFacetVocaulbaries($buckets, $field_processor);
+      switch ($field_processor) {
+        case 'taxonomy_term':
+          $total_buckets = [];
+
+          // Embed reduce filter inside buckets for terms.
+          if ($reduced_filters['needed']) {
+            $total_buckets = array_merge($reduced_filters['reduced_filter'], $buckets);
+          }
+          else {
+            $total_buckets = $buckets;
+          }
+
+          $vocab_list = $this->osSearchFacetBuilder->prepareFacetVocaulbaries($total_buckets, $field_processor);
+          $build['title'] = [
+            '#markup' => '<h2 class="block-title">' . $this->t('Filter By @field_label', ['@field_label' => $field_label]) . '</h2>',
+          ];
           $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label);
           break;
 
         default:
+          $build['current_summary'] = $this->renderReducedfilter($reduced_filters, $field_label, $route_name);
           $build[] = $this->renderableArray($buckets, $route_name, $field_id, $field_label);
           break;
       }
@@ -189,7 +202,21 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $route_parameters['keys'] = $keys;
       $path = Url::fromRoute($route_name, $route_parameters);
 
-      $items[] = Link::fromTextAndUrl($this->t('@label (@count)', ['@label' => $item_label, '@count' => $bucket['doc_count']]), $path)->toString();
+      if (isset($bucket['doc_count'])) {
+        $items[] = Link::fromTextAndUrl($this->t('@label (@count)', ['@label' => $item_label, '@count' => $bucket['doc_count']]), $path)->toString();
+      }
+      else {
+        $querys = isset($bucket['query']) ? $bucket['query'] : [];
+        foreach ($querys as $key => $query) {
+          if ($query == $bucket['filter']) {
+            unset($querys[$key]);
+          }
+        }
+
+        $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
+        $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
+        $items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
+      }
     }
 
     if ($header) {
@@ -234,9 +261,9 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
     foreach ($buckets as $term_list) {
       $vocab_name = $term_list['name'];
-
       $build[] = $this->renderableArray($term_list['children'], $route_name, $field_name, $field_label, $vocab_name);
     }
+
     if (empty($buckets)) {
       $build[$field_name]['empty-filter'] = [
         '#markup' => '<div>' . $this->t('No filters available') . '</div>',
@@ -279,6 +306,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
         $summary_items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
       }
     }
+
     $build['current_summary']['title'] = [
       '#markup' => '<h2 class="block-title">' . $this->t('Filter By @field_label', ['@field_label' => $field_label]) . '</h2>',
     ];
@@ -286,7 +314,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#theme' => 'item_list__search_widget',
       '#empty' => '',
       '#list_type' => 'ul',
-      '#items' => $summary_items,
+      '#items' => $summary_items ?? [],
     ];
     return $build;
   }
