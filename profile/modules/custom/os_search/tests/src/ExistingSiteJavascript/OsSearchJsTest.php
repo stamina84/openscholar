@@ -130,4 +130,70 @@ class OsSearchJsTest extends SearchJavascriptTestBase {
     }
   }
 
+  /**
+   * Tests term search facets.
+   */
+  public function testTermFacets() {
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    // Activate vsite and create a vocabulary.
+    $vsite_context_manager->activateVsite($this->group);
+    $vocabulary = $this->createVocabulary();
+    $config = $this->container->get('config.factory');
+    $config_vocab = $config->getEditable('taxonomy.vocabulary.' . $vocabulary->id());
+    $config_vocab->set('allowed_vocabulary_reference_types', ['node:blog'])->save(TRUE);
+    $web_assert = $this->assertSession();
+
+    $term1 = $this->createTerm($vocabulary, ['name' => 'Search Test1']);
+    $term2 = $this->createTerm($vocabulary, ['name' => 'Search Test2']);
+    $term3 = $this->createTerm($vocabulary, ['name' => 'Search Test3']);
+
+    $this->group->addContent($term1, 'group_entity:taxonomy_term');
+    $this->group->addContent($term2, 'group_entity:taxonomy_term');
+    $this->group->addContent($term3, 'group_entity:taxonomy_term');
+
+    $blog = $this->createNode([
+      'type' => 'blog',
+      'status' => 1,
+      'field_taxonomy_terms' => [
+        $term1->id(),
+        $term2->id(),
+        $term3->id(),
+      ],
+    ]);
+    $this->group->addContent($blog, 'group_node:blog');
+
+    $blog = $this->createNode([
+      'type' => 'blog',
+      'status' => 1,
+      'field_taxonomy_terms' => [
+        $term2->id(),
+      ],
+    ]);
+    $this->group->addContent($blog, 'group_node:blog');
+
+    $task_manager = $this->container->get('search_api.index_task_manager');
+    $task_manager->addItemsAll($this->index);
+    $this->index->indexItems();
+
+    // Wait is required as Elastic Server
+    // takes sometime to respond to queries.
+    $this->getIndexQueryStatus($this->differentiator, 1, 15);
+
+    $this->visitViaVsite("search", $this->group);
+    $web_assert->statusCodeEquals(200);
+    $this->assertContains('17 results found', $this->getCurrentPage()->getHtml());
+
+    $this->visitViaVsite("search?f[0]=custom_taxonomy:{$term2->id()}", $this->group);
+    $web_assert->statusCodeEquals(200);
+    $filter_by_taxonomy_links = $this->getSession()->getPage()->findAll('css', '#block-globalfilterbytaxonomy ul li a');
+
+    $this->assertEquals("(-)", $filter_by_taxonomy_links[0]->getText());
+    $this->assertEquals("Search Test1 (1)", $filter_by_taxonomy_links[1]->getText());
+    $this->assertEquals("Search Test3 (1)", $filter_by_taxonomy_links[2]->getText());
+
+    $filter_by_taxonomy_items = $this->getSession()->getPage()->findAll('css', '#block-globalfilterbytaxonomy ul li');
+    $this->assertEquals("(-) Search Test2", $filter_by_taxonomy_items[0]->getText());
+  }
+
 }

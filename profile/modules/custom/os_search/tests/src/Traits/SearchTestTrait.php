@@ -107,8 +107,10 @@ trait SearchTestTrait {
    *   To isolate content from others in way (helps asserting correct texts).
    * @param int $repeat
    *   Repeat max 10 times to check search status.
+   * @param int $expected_count
+   *   Expected max count as per vsite or global context.
    */
-  protected function getIndexQueryStatus($differentiator = 'searchtest', $repeat = 1) {
+  protected function getIndexQueryStatus($differentiator = 'searchtest', $repeat = 1, $expected_count = 27) {
     $this->waitForSeconds();
 
     $query_builder = $this->container->get('os_search.os_search_query_builder');
@@ -117,10 +119,10 @@ trait SearchTestTrait {
     $query_builder->queryBuilder($query);
     $count = $query->execute()->getResultCount();
 
-    if ($count < 27 && $repeat <= 10) {
+    if ($count < $expected_count && $repeat <= 10) {
       $this->getIndexQueryStatus($differentiator, ++$repeat);
     }
-    elseif ($count < 27 && $repeat > 10) {
+    elseif ($count < $expected_count && $repeat > 10) {
       throw new ExpectationException('No response from elastic server or query is not correct.', $this->getSession());
     }
   }

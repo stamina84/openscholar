@@ -126,7 +126,7 @@ class CurrentSearchWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
           $path = Url::fromRoute($route_name, ($reduced_filters + $route_parameters));
           $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
-          $summary_items[$reduced_filter['value']] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
+          $summary_items[$reduced_filter['key']] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
         }
       }
     }

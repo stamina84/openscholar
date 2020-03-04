@@ -339,9 +339,9 @@ class OsSearchFacetBuilder {
         $reduced_filter_links[] = $filter;
         $summary['needed'] = TRUE;
         $summary['reduced_filter'][$i]['filter'] = $filter;
-        $summary['reduced_filter'][$i]['label'] = $this->prepareSingleLabel($this->getFieldProcessor($field_id), $field_id, $value);
+        $summary['reduced_filter'][$i]['label'] = $this->prepareSingleLabel($field_processor, $field_id, $value);
         $summary['reduced_filter'][$i]['query'] = ($field_processor == 'date') ? $reduced_filter_links : $filters;
-        $summary['reduced_filter'][$i]['value'] = $value;
+        $summary['reduced_filter'][$i]['key'] = $value;
         $i++;
       }
     }
@@ -424,10 +424,10 @@ class OsSearchFacetBuilder {
     $entity_storage = $this->entityTypeManager->getStorage($field_processor);
     foreach ($buckets as $bucket) {
       $term = $entity_storage->load($bucket['key']);
-      if ($term) {
+      if ($term && isset($vocabularies[$term->bundle()])) {
         $vocab_list[$term->bundle()]['children'][] = $bucket;
+        $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
       }
-      $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
     }
     return $vocab_list;
   }
