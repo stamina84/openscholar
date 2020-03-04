@@ -7,7 +7,9 @@ _core:
 id: chart
 label: Chart
 description: 'A chart, also called a graph, is a graphical representation of data, in which "the data is represented by symbols.'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true

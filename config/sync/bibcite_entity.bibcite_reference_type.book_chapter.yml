@@ -7,7 +7,9 @@ _core:
 id: book_chapter
 label: 'Book Chapter'
 description: 'A chapter of a book (or section or whatever) and/or a range of pages.'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true

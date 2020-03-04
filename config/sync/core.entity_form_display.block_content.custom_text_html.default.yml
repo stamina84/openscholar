@@ -14,7 +14,8 @@ dependencies:
 third_party_settings:
   field_layout:
     id: layout_onecol
-    settings: {  }
+    settings:
+      label: ''
 id: block_content.custom_text_html.default
 targetEntityType: block_content
 bundle: custom_text_html

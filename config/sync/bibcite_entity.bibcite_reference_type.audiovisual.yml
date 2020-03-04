@@ -7,7 +7,9 @@ _core:
 id: audiovisual
 label: Audiovisual
 description: 'An audiovisual resources such as motion pictures, documentaries, podcasts, or online videos.'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true

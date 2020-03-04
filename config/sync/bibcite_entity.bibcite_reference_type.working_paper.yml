@@ -5,7 +5,9 @@ dependencies: {  }
 id: working_paper
 label: 'Working Paper'
 description: 'Working paper publications'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true

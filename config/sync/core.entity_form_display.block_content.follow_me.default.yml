@@ -15,7 +15,8 @@ dependencies:
 third_party_settings:
   field_layout:
     id: layout_onecol
-    settings: {  }
+    settings:
+      label: ''
 id: block_content.follow_me.default
 targetEntityType: block_content
 bundle: follow_me

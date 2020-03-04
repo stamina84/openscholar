@@ -7,7 +7,9 @@ _core:
 id: manuscript
 label: Manuscript
 description: 'A book, document, or piece of music written by hand rather than typed or printed.'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true

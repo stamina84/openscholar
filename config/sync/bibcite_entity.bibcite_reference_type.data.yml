@@ -5,7 +5,9 @@ dependencies: {  }
 id: data
 label: Data
 description: 'Data type publication'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true

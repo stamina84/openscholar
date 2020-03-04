@@ -7,7 +7,9 @@ _core:
 id: case
 label: Case
 description: 'A legal case is a dispute between opposing parties resolved by a court, or by some equivalent legal process.'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true
