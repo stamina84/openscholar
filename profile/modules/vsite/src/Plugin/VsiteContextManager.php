@@ -88,9 +88,9 @@ class VsiteContextManager implements VsiteContextManagerInterface {
     }
 
     /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
-    $query = $this->dbConnection->select('url_alias', 'ua')
-      ->fields('ua', ['alias'])
-      ->condition('ua.source', "/group/{$group->id()}")
+    $query = $this->dbConnection->select('path_alias', 'pa')
+      ->fields('pa', ['alias'])
+      ->condition('pa.path', "/group/{$group->id()}")
       ->range(0, 1);
     /** @var \Drupal\Core\Database\StatementInterface|null $result */
     $result = $query->execute();
