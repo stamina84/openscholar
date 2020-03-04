@@ -102,7 +102,7 @@ class CpTaxonomyListingTest extends CpTaxonomyExistingSiteJavascriptTestBase {
    */
   protected function assertContainTaxonomyTermOnPage() {
     $page = $this->getCurrentPage();
-    $term_html = $page->find('css', '.field--name-field-taxonomy-terms')->getHtml();
+    $term_html = $page->find('css', '.see-more-tag')->getHtml();
     $this->assertContains($this->term->label(), $term_html);
   }
 
@@ -111,7 +111,7 @@ class CpTaxonomyListingTest extends CpTaxonomyExistingSiteJavascriptTestBase {
    */
   protected function assertNotContainTaxonomyTermOnPage() {
     $page = $this->getCurrentPage();
-    $this->isNull($page->find('css', '.field--name-field-taxonomy-terms'));
+    $this->isNull($page->find('css', '.see-more-tag'));
   }
 
   /**

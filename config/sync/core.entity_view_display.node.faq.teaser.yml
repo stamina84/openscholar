@@ -10,12 +10,8 @@ dependencies:
     - node.type.faq
   module:
     - cp_taxonomy
-    - layout_builder
     - text
     - user
-third_party_settings:
-  layout_builder:
-    sections: {  }
 _core:
   default_config_hash: rI6HbVsnup-jxCtbPt_1FNAIXQpJ99cAAxjber82-Z0
 id: node.faq.teaser
@@ -24,7 +20,7 @@ bundle: faq
 mode: teaser
 content:
   body:
-    label: hidden
+    label: visually_hidden
     type: text_summary_or_trimmed
     weight: 0
     settings:
@@ -35,7 +31,7 @@ content:
     type: cp_taxonomy_comma_separator
     weight: 1
     region: content
-    label: hidden
+    label: visually_hidden
     settings:
       label: 'See also'
       number_of_characters: 94

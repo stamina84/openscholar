@@ -6,16 +6,13 @@ dependencies:
     - field.field.node.faq.body
     - field.field.node.faq.field_attached_media
     - field.field.node.faq.field_taxonomy_terms
+    - image.style.gallery
     - node.type.faq
   module:
     - cp_taxonomy
-    - layout_builder
     - os_media
     - text
     - user
-third_party_settings:
-  layout_builder:
-    sections: {  }
 _core:
   default_config_hash: J5yyMXb6MQffgZFjqX45auhhW1Dh2ehyHs5RIaQFvRc
 id: node.faq.default
@@ -24,7 +21,7 @@ bundle: faq
 mode: default
 content:
   body:
-    label: hidden
+    label: visually_hidden
     type: text_default
     weight: 0
     settings: {  }
@@ -47,7 +44,6 @@ content:
       media_switch: ''
       view_mode: default
       ratio: ''
-      iframe_lazy: '1'
       image: ''
       title: ''
       link: ''
@@ -119,7 +115,7 @@ content:
     region: content
   field_taxonomy_terms:
     weight: 3
-    label: hidden
+    label: visually_hidden
     settings:
       label: 'See also'
       number_of_characters: 94

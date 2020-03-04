@@ -74,11 +74,10 @@ class NodeTagWithTerms extends FieldPluginBase {
     $display_term_under_content_teaser_types = $config->get('display_term_under_content_teaser_types');
     $build = [];
     if (is_null($display_term_under_content_teaser_types) || in_array($node->getEntityType()->id() . ':' . $node->bundle(), $display_term_under_content_teaser_types)) {
-      $build = $node->field_taxonomy_terms->view();
-      $build['#title'] = $this->t('See also');
+      $build = $node->field_taxonomy_terms->view('teaser');
     }
-    if (!empty($node->field_taxonomy_terms->referencedEntities())) {
-      $group = $this->vsiteContextManager->getActiveVsite();
+    $group = $this->vsiteContextManager->getActiveVsite();
+    if (!empty($node->field_taxonomy_terms->referencedEntities()) && !empty($group)) {
       $build['#cache']['tags'][] = 'entity-with-taxonomy-terms:' . $group->id();
     }
     return $build;
