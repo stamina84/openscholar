@@ -165,7 +165,6 @@
         "ckeditor/pagebreak": "^4.11",
         "ckeditor/panelbutton": "^4.11",
         "cweagans/composer-patches": "^1.6",
-        "drupal-composer/drupal-scaffold": "^2.6",
         "drupal/admin_toolbar": "2.0",
         "drupal/advancedqueue": "^1.0@beta",
         "drupal/anchor_link": "^2.0",
@@ -184,6 +183,7 @@
         "drupal/config_sync": "^2.0@alpha",
         "drupal/console": "^1.0.2",
         "drupal/context": "^4.0@beta",
+        "drupal/core-composer-scaffold": "^8.8",
         "drupal/core-dev": "^8.8",
         "drupal/core-recommended": "^8.8",
         "drupal/crop": "^2.0",
@@ -349,6 +349,19 @@
             "drush/Commands/{$name}": ["type:drupal-drush"]
         },
         "drupal-scaffold": {
+            "locations": {
+                "web-root": "web/"
+            },
+            "allowed-packages": [
+                "drupal/core"
+            ],
+            "file-mapping": {
+                "[web-root]/.htaccess": {
+                    "mode": "replace",
+                    "path": "web/core/assets/scaffold/files/htaccess",
+                    "overwrite": false
+                }
+            },
             "initial": {
                 ".editorconfig": "../.editorconfig",
                 ".gitattributes": "../.gitattributes"
