@@ -1,0 +1,8 @@
+uuid: c5542e34-d8f8-4da0-b79b-6adf928b8fb3
+langcode: en
+status: true
+dependencies: {  }
+id: faceted_taxonomy_widget
+label: 'Faceted Taxonomy Widget'
+revision: 1
+description: 'The Faceted Taxonomy widget allows for taxonomies to be handled as Facets.'

@@ -1,0 +1,45 @@
+uuid: bb6e9ac9-4a47-4dea-b92d-247ef2a3f4f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy_widget
+    - field.field.block_content.faceted_taxonomy_widget.body
+  module:
+    - field_layout
+    - layout_discovery
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.faceted_taxonomy_widget.default
+targetEntityType: block_content
+bundle: faceted_taxonomy_widget
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 26
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }
