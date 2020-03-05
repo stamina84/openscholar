@@ -4,20 +4,19 @@ status: true
 dependencies:
   config:
     - block_content.type.faceted_taxonomy_widget
-    - field.field.block_content.faceted_taxonomy_widget.body
-  module:
-    - text
+    - field.field.block_content.faceted_taxonomy_widget.field_widget_title
 id: block_content.faceted_taxonomy_widget.default
 targetEntityType: block_content
 bundle: faceted_taxonomy_widget
 mode: default
 content:
-  body:
-    label: hidden
-    type: text_default
+  field_widget_title:
     weight: 0
-    settings: {  }
+    label: above
+    settings:
+      link_to_entity: false
     third_party_settings: {  }
+    type: string
     region: content
 hidden:
   langcode: true

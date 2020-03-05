@@ -1,22 +1,19 @@
-uuid: 2fd89944-66a0-4d51-bb85-1cda007dce08
+uuid: 8d7d5826-dbd7-4428-a093-634ecf3d3392
 langcode: en
 status: true
 dependencies:
   config:
     - block_content.type.faceted_taxonomy_widget
-    - field.storage.block_content.body
-  module:
-    - text
-id: block_content.faceted_taxonomy_widget.body
-field_name: body
+    - field.storage.block_content.field_widget_title
+id: block_content.faceted_taxonomy_widget.field_widget_title
+field_name: field_widget_title
 entity_type: block_content
 bundle: faceted_taxonomy_widget
-label: Body
+label: 'Widget Title'
 description: ''
 required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings:
-  display_summary: false
-field_type: text_with_summary
+settings: {  }
+field_type: string

@@ -4,11 +4,10 @@ status: true
 dependencies:
   config:
     - block_content.type.faceted_taxonomy_widget
-    - field.field.block_content.faceted_taxonomy_widget.body
+    - field.field.block_content.faceted_taxonomy_widget.field_widget_title
   module:
     - field_layout
     - layout_discovery
-    - text
 third_party_settings:
   field_layout:
     id: layout_onecol
@@ -18,14 +17,13 @@ targetEntityType: block_content
 bundle: faceted_taxonomy_widget
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
+  field_widget_title:
     weight: 26
     settings:
-      rows: 9
-      summary_rows: 3
+      size: 60
       placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
     region: content
   info:
     type: string_textfield
