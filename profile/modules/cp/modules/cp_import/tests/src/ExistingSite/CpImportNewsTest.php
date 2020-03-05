@@ -69,8 +69,21 @@ class CpImportNewsTest extends OsExistingSiteTestBase {
     $this->migrationManager = $this->container->get('plugin.manager.migration');
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->fileSystem = $this->container->get('file_system');
+
+    // Setup role.
+    $group_role = $this->createRoleForGroup($this->group);
+    $group_role->grantPermissions([
+      'create group_node:news entity',
+    ])->save();
+
+    // Setup user.
     $this->groupMember = $this->createUser();
-    $this->group->addMember($this->groupMember);
+    $this->group->addMember($this->groupMember, [
+      'group_roles' => [
+        $group_role->id(),
+      ],
+    ]);
+
     $this->drupalLogin($this->groupMember);
   }
 

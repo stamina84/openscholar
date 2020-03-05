@@ -4,6 +4,7 @@ namespace Drupal\Tests\cp_import\ExistingSite;
 
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Access\AccessResultForbidden;
+use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\cp_import\AppImport\os_faq_import\AppImport;
@@ -14,6 +15,7 @@ use Drupal\migrate\MigrateMessage;
 use Drupal\migrate_tools\MigrateExecutable;
 use Drupal\os_app_access\AppAccessLevels;
 use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
+use Drupal\Tests\openscholar\Traits\ExistingSiteTestTrait;
 
 /**
  * Class CpImportTest.
@@ -22,6 +24,8 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * @group cp-1
  */
 class CpImportTest extends OsExistingSiteTestBase {
+
+  use ExistingSiteTestTrait;
 
   /**
    * CpImport helper service.
@@ -76,7 +80,6 @@ class CpImportTest extends OsExistingSiteTestBase {
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->fileSystem = $this->container->get('file_system');
     $this->groupMember = $this->createUser();
-    $this->group->addMember($this->groupMember);
     $this->drupalLogin($this->groupMember);
   }
 
@@ -233,16 +236,78 @@ class CpImportTest extends OsExistingSiteTestBase {
   }
 
   /**
-   * Checks access for Faq import.
+   * Checks access for Faq and publication import.
    */
   public function testCpImportAccessChecker() {
     $this->cpImportAccessChecker = $this->container->get('cp_import_access.check');
     $levels = $this->configFactory->getEditable('os_app_access.access');
-    // Check Access is allowed.
+
+    // Setup role.
+    $group_role = $this->createRoleForGroup($this->group);
+    $group_role->grantPermissions([
+      'create group_node:faq entity',
+      'create group_entity:bibcite_reference entity',
+    ])->save();
+
+    // Setup user.
+    $member = $this->createUser();
+    $this->group->addMember($member, [
+      'group_roles' => [
+        $group_role->id(),
+      ],
+    ]);
+
+    // Perform tests.
+    $this->drupalLogin($member);
+
     $levels->set('faq', AppAccessLevels::PUBLIC)->save();
     $result = $this->cpImportAccessChecker->access($this->groupMember, 'faq');
     $this->assertInstanceOf(AccessResultAllowed::class, $result);
-    // Check access is disabled.
+
+    $levels->set('publications', AppAccessLevels::PUBLIC)->save();
+    $result = $this->cpImportAccessChecker->access($this->groupMember, 'publications');
+    $this->assertInstanceOf(AccessResultAllowed::class, $result);
+
+    // App access level is Disabled and user has create access.
+    $levels->set('faq', AppAccessLevels::DISABLED)->save();
+    $result = $this->cpImportAccessChecker->access($this->groupMember, 'faq');
+    $this->assertInstanceOf(AccessResultForbidden::class, $result);
+
+    $levels->set('publications', AppAccessLevels::DISABLED)->save();
+    $result = $this->cpImportAccessChecker->access($this->groupMember, 'publications');
+    $this->assertInstanceOf(AccessResultForbidden::class, $result);
+
+    // Update role.
+    $group_role->revokePermissions([
+      'create group_node:faq entity',
+      'create group_entity:bibcite_reference entity',
+    ])->save();
+
+    // Setup user.
+    $member = $this->createUser();
+    $this->group->addMember($member, [
+      'group_roles' => [
+        $group_role->id(),
+      ],
+    ]);
+
+    // Perform tests.
+    $this->drupalLogin($member);
+
+    // App access level is Public and user does not have create access.
+    $levels->set('faq', AppAccessLevels::PUBLIC)->save();
+    $result = $this->cpImportAccessChecker->access($this->groupMember, 'faq');
+    $this->assertInstanceOf(AccessResultNeutral::class, $result);
+
+    $levels->set('publications', AppAccessLevels::PUBLIC)->save();
+    $result = $this->cpImportAccessChecker->access($this->groupMember, 'publications');
+    $this->assertInstanceOf(AccessResultNeutral::class, $result);
+
+    // App access level is Disabled and user does not have create access.
+    $levels->set('faq', AppAccessLevels::DISABLED)->save();
+    $result = $this->cpImportAccessChecker->access($this->groupMember, 'faq');
+    $this->assertInstanceOf(AccessResultForbidden::class, $result);
+
     $levels->set('faq', AppAccessLevels::DISABLED)->save();
     $result = $this->cpImportAccessChecker->access($this->groupMember, 'faq');
     $this->assertInstanceOf(AccessResultForbidden::class, $result);
