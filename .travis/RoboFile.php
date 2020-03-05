@@ -233,6 +233,7 @@ class RoboFile extends \Robo\Tasks
     $tasks[] = $this->taskExec('echo AWS_ACCESS_KEY_ID=' . getenv('ARTIFACTS_KEY') . ' >> .env');
     $tasks[] = $this->taskExec('echo AWS_SECRET_ACCESS_KEY=' . getenv('ARTIFACTS_SECRET') . ' >> .env');
     $tasks[] = $this->taskExec('echo AWS_ES_ACCESS_ENDPOINT=' . getenv('ARTIFACTS_ES_ENDPOINT') . ' >> .env');
+    $tasks[] = $this->taskExec('docker-compose pull');
     $tasks[] = $this->taskExec('docker-compose up -d');
 
     return $tasks;
