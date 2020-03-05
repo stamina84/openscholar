@@ -20,6 +20,7 @@ use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\Tests\cp_users\Traits\CpUsersTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\UserInterface;
 use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
@@ -30,6 +31,7 @@ use weitzman\DrupalTestTraits\Entity\UserCreationTrait;
 trait ExistingSiteTestTrait {
 
   use UserCreationTrait;
+  use CpUsersTestTrait;
   use TestFileCreationTrait {
     getTestFiles as coreGetTestFiles;
   }

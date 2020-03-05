@@ -265,6 +265,11 @@ function os_widgets_theme($existing, $type, $theme, $path) {
         'display_scrollbar' => NULL,
       ],
     ],
+    'os_section_navigation' => [
+      'variables' => [
+        'menu' => [],
+      ],
+    ],
   ];
 }
 

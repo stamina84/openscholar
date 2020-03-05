@@ -1,0 +1,23 @@
+uuid: a3b0c5f2-1004-488e-a1b2-1064e20febea
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_is_hidden_section_nav
+    - node.type.page
+id: node.page.field_is_hidden_section_nav
+field_name: field_is_hidden_section_nav
+entity_type: node
+bundle: page
+label: 'Is hidden section nav'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

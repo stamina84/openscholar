@@ -435,9 +435,6 @@
             "drupal/migrate_tools": {
                 "Warning: session_id(): Cannot change session id when headers already sent": "https://www.drupal.org/files/issues/2019-03-09/3038712-2.patch"
             },
-            "drupal/node_revision_delete": {
-                "Fix last execute and period logic": "https://www.drupal.org/files/issues/2019-12-20/fix-last-execute-logic-3102382-2.patch"
-            },
             "drupal/search_api_page": {
                 "Conjunction selection with Parse Mode": "https://www.drupal.org/files/issues/2020-01-24/search_api_page-3108496-4.patch"
             }

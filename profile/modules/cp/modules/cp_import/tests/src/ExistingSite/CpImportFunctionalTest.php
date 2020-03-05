@@ -3,6 +3,7 @@
 namespace Drupal\Tests\cp_import\ExistingSite;
 
 use Drupal\os_app_access\AppAccessLevels;
+use Drupal\Tests\cp_users\Traits\CpUsersTestTrait;
 use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 
 /**
@@ -12,6 +13,8 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * @group cp-import
  */
 class CpImportFunctionalTest extends OsExistingSiteTestBase {
+
+  use CpUsersTestTrait;
 
   /**
    * Group administrator.
@@ -28,6 +31,13 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
   protected $levels;
 
   /**
+   * Group role.
+   *
+   * @var \Drupal\group\Entity\GroupRoleInterface
+   */
+  protected $groupRole;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -39,8 +49,7 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
       ],
     ]);
     $this->vsiteContextManager->activateVsite($this->group);
-    $this->group->addMember($this->groupMember);
-    $this->drupalLogin($this->groupMember);
+
     $this->levels = $this->configFactory->getEditable('os_app_access.access');
   }
 
@@ -49,6 +58,24 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
    */
   public function testFaqImportForm() {
     $this->levels->set('faq', AppAccessLevels::PUBLIC)->save();
+
+    // Setup role.
+    $group_role = $this->createRoleForGroup($this->group);
+    $group_role->grantPermissions([
+      'create group_node:faq entity',
+    ])->save();
+
+    // Setup user.
+    $member = $this->createUser();
+    $this->group->addMember($member, [
+      'group_roles' => [
+        $group_role->id(),
+      ],
+    ]);
+
+    // Perform tests.
+    $this->drupalLogin($member);
+
     $this->visitViaVsite('cp/content/import/faq', $this->group);
     $session = $this->assertSession();
     // Checks Faq import form opens.
@@ -67,8 +94,27 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
    * Test Software import form and sample download.
    */
   public function testSoftwareImportForm() {
-    $this->visitViaVsite('cp/content/import/software', $this->group);
     $this->levels->set('software', AppAccessLevels::PUBLIC)->save();
+
+    // Setup role.
+    $group_role = $this->createRoleForGroup($this->group);
+    $group_role->grantPermissions([
+      'create group_node:software_release entity',
+      'create group_node:software_project entity',
+    ])->save();
+
+    // Setup user.
+    $member = $this->createUser();
+    $this->group->addMember($member, [
+      'group_roles' => [
+        $group_role->id(),
+      ],
+    ]);
+
+    // Perform tests.
+    $this->drupalLogin($member);
+
+    $this->visitViaVsite('cp/content/import/software', $this->group);
     $session = $this->assertSession();
     // Checks Software import form opens.
     $session->pageTextContains('Software');
@@ -86,8 +132,26 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
    * Test Profile import form and sample download.
    */
   public function testProfilesImportForm() {
+    $this->levels->set('profiles', AppAccessLevels::PUBLIC)->save();
+
+    // Setup role.
+    $group_role = $this->createRoleForGroup($this->group);
+    $group_role->grantPermissions([
+      'create group_node:person entity',
+    ])->save();
+
+    // Setup user.
+    $member = $this->createUser();
+    $this->group->addMember($member, [
+      'group_roles' => [
+        $group_role->id(),
+      ],
+    ]);
+
+    // Perform tests.
+    $this->drupalLogin($member);
+
     $this->visitViaVsite('cp/content/import/profiles', $this->group);
-    $this->levels->set('software', AppAccessLevels::PUBLIC)->save();
     $session = $this->assertSession();
     // Checks Profile import form opens.
     $session->pageTextContains('Person');
@@ -105,6 +169,23 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
    * Test Publication import form.
    */
   public function testPublicationImportForm() {
+    // Setup role.
+    $group_role = $this->createRoleForGroup($this->group);
+    $group_role->grantPermissions([
+      'create group_entity:bibcite_reference entity',
+    ])->save();
+
+    // Setup user.
+    $member = $this->createUser();
+    $this->group->addMember($member, [
+      'group_roles' => [
+        $group_role->id(),
+      ],
+    ]);
+
+    // Perform tests.
+    $this->drupalLogin($member);
+
     $this->visitViaVsite('cp/content/import/publications', $this->group);
     $session = $this->assertSession();
     // Checks Publication import form opens.
@@ -121,6 +202,23 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testFaqImportPermission() {
+    // Setup role.
+    $group_role = $this->createRoleForGroup($this->group);
+    $group_role->grantPermissions([
+      'create group_node:faq entity',
+    ])->save();
+
+    // Setup user.
+    $member = $this->createUser();
+    $this->group->addMember($member, [
+      'group_roles' => [
+        $group_role->id(),
+      ],
+    ]);
+
+    // Perform tests.
+    $this->drupalLogin($member);
+
     $this->visitViaVsite('cp/content/import/faq', $this->group);
     $session = $this->assertSession();
     // Checks Faq import Access is allowed.

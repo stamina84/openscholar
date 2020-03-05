@@ -69,3 +69,7 @@ services:
 
   vsite.role_helper:
     class: \Drupal\vsite\Helper\VsiteRoleHelper
+
+  vsite.token_helper:
+    class: \Drupal\vsite\Helper\VsiteTokenHelper
+    arguments: ['@token']

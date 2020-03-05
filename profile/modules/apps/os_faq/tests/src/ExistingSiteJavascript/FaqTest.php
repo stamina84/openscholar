@@ -3,6 +3,7 @@
 namespace Drupal\Tests\os_faq\ExistingSiteJavascript;
 
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
+use Drupal\Tests\openscholar\Traits\CpTaxonomyTestTrait;
 use Drupal\views\Entity\View;
 
 /**
@@ -12,6 +13,31 @@ use Drupal\views\Entity\View;
  * @group faq
  */
 class FaqTest extends OsExistingSiteJavascriptTestBase {
+
+  use CpTaxonomyTestTrait;
+
+  /**
+   * Config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * Vsite Context Manager.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManagerInterface
+   */
+  protected $vsiteContextManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->vsiteContextManager = $this->container->get('vsite.context_manager');
+    $this->configFactory = $this->container->get('config.factory');
+  }
 
   /**
    * Tests faq listing.
@@ -129,6 +155,37 @@ class FaqTest extends OsExistingSiteJavascriptTestBase {
     $this->getCurrentPage()->clickLink('Load More');
     $web_assert->waitForText($faq->getTitle());
     $web_assert->pageTextContains($faq->getTitle());
+  }
+
+  /**
+   * Tests faq listing taxonomy view format.
+   */
+  public function testFaqTaxonomyViewFormat(): void {
+    $this->createGroupVocabulary($this->group, 'vocab_group', ['node:faq']);
+    $term1 = $this->createGroupTerm($this->group, 'vocab_group');
+    $term2 = $this->createGroupTerm($this->group, 'vocab_group');
+    $web_assert = $this->assertSession();
+    $faq = $this->createNode([
+      'type' => 'faq',
+      'field_taxonomy_terms' => [
+        $term1,
+        $term2,
+      ],
+    ]);
+    $this->addGroupContent($faq, $this->group);
+
+    $this->visitViaVsite('faq', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+
+    $web_assert->pageTextContains($faq->getTitle());
+    $this->getCurrentPage()->clickLink($faq->getTitle());
+    // Wait for collapse open.
+    $this->getSession()->wait(1000);
+    $page = $this->getCurrentPage();
+    $this->assertContains('<div class="see-more-tag">', $page->getHtml());
+    $this->assertContains('<strong>See also:</strong>', $page->getHtml());
+    $web_assert->pageTextContains($term1->label());
+    $web_assert->pageTextContains($term2->label());
   }
 
 }
