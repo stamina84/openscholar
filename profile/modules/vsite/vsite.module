@@ -106,6 +106,40 @@ function vsite_form_bibcite_reference_form_alter(&$form, FormStateInterface $for
 }
 
 /**
+ * Implements hook_form_views_ui_config_item_form_alter().
+ */
+function vsite_form_views_ui_config_item_form_alter(&$form, FormStateInterface $form_state) {
+  $token_items = [];
+  $token_helper = \Drupal::service('vsite.token_helper');
+  $available_tokens = $token_helper->getAvailableGlobalTokens(
+    FALSE,
+    [
+      'vsite',
+      'site',
+      'view',
+    ]
+  );
+  foreach ($available_tokens as $type => $tokens) {
+    $item = [
+      '#markup' => $type,
+      'children' => [],
+    ];
+    foreach ($tokens as $name => $info) {
+      $item['children'][$name] = "[$type:$name]" . ' - ' . $info['name'] . ': ' . $info['description'];
+    }
+
+    $token_items[$type] = $item;
+  }
+  $form['options']['global_tokens']['list'] = [
+    '#theme' => 'item_list',
+    '#items' => $token_items,
+    '#attributes' => [
+      'class' => ['global-tokens'],
+    ],
+  ];
+}
+
+/**
  * Implements hook_form_alter().
  */
 function vsite_form_alter(&$form, FormStateInterface $formState, $form_id) {

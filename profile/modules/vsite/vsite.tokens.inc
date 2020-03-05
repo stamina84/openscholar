@@ -37,6 +37,10 @@ function vsite_token_info() {
     'name' => t("Site favicon"),
     'description' => t("Field site favicon URL of active personal group."),
   ];
+  $settings['base_url'] = [
+    'name' => t('Vsite Url'),
+    'description' => t('Base url of the vsite.'),
+  ];
 
   return [
     'types' => ['vsite' => $type],
@@ -122,6 +126,10 @@ function vsite_tokens($type, $tokens, array $data, array $options, BubbleableMet
             $favicon_url = file_create_url($base_theme_path . '/favicon.ico');
           }
           $replacements[$original] = $favicon_url;
+          break;
+
+        case 'base_url':
+          $replacements[$original] = \Drupal::service('vsite.context_manager')->getActiveVsiteAbsoluteUrl();
           break;
       }
     }
