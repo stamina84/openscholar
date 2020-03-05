@@ -4,12 +4,49 @@ status: true
 dependencies:
   config:
     - block_content.type.faceted_taxonomy_widget
+    - field.field.block_content.faceted_taxonomy_widget.field_select_vocabularies
+    - field.field.block_content.faceted_taxonomy_widget.field_show_number_of_posts
+    - field.field.block_content.faceted_taxonomy_widget.field_vocabulary_order_
+    - field.field.block_content.faceted_taxonomy_widget.field_widget_content_type
     - field.field.block_content.faceted_taxonomy_widget.field_widget_title
+  module:
+    - options
 id: block_content.faceted_taxonomy_widget.default
 targetEntityType: block_content
 bundle: faceted_taxonomy_widget
 mode: default
 content:
+  field_select_vocabularies:
+    weight: 2
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_show_number_of_posts:
+    weight: 4
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_vocabulary_order_:
+    weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_widget_content_type:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
   field_widget_title:
     weight: 0
     label: above

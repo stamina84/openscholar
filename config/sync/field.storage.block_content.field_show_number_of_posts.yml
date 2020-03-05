@@ -1,0 +1,18 @@
+uuid: c85965c9-a6fb-4d25-92a5-10b034cc503b
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: block_content.field_show_number_of_posts
+field_name: field_show_number_of_posts
+entity_type: block_content
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

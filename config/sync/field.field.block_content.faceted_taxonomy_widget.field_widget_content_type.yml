@@ -1,0 +1,21 @@
+uuid: 861b2ee4-c34f-4e11-9450-7f1f5f1aaff3
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy_widget
+    - field.storage.block_content.field_widget_content_type
+  module:
+    - options
+id: block_content.faceted_taxonomy_widget.field_widget_content_type
+field_name: field_widget_content_type
+entity_type: block_content
+bundle: faceted_taxonomy_widget
+label: 'Content type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

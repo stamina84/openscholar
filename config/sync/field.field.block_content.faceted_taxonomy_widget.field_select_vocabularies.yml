@@ -1,0 +1,21 @@
+uuid: e22f2573-8a12-4021-b87e-ef5d10ae75aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy_widget
+    - field.storage.block_content.field_select_vocabularies
+  module:
+    - options
+id: block_content.faceted_taxonomy_widget.field_select_vocabularies
+field_name: field_select_vocabularies
+entity_type: block_content
+bundle: faceted_taxonomy_widget
+label: 'Select vocabularies'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
