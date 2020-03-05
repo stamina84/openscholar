@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - block_content.type.section_navigation
+    - field.field.block_content.section_navigation.field_widget_title
   module:
     - field_layout
     - layout_discovery
@@ -16,6 +17,14 @@ targetEntityType: block_content
 bundle: section_navigation
 mode: default
 content:
+  field_widget_title:
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   info:
     type: string_textfield
     weight: -5

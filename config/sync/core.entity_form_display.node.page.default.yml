@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.page.body
     - field.field.node.page.field_attached_media
+    - field.field.node.page.field_is_hidden_section_nav
     - field.field.node.page.field_meta_tags
     - field.field.node.page.field_taxonomy_terms
     - node.type.page
@@ -27,7 +28,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 9
+    weight: 8
     settings:
       rows: 9
       summary_rows: 3
@@ -41,19 +42,19 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_attached_media:
-    weight: 10
+    weight: 9
     settings: {  }
     third_party_settings: {  }
     type: media_browser_widget
     region: content
   field_meta_tags:
-    weight: 26
+    weight: 12
     settings: {  }
     third_party_settings: {  }
     type: metatag_firehose
     region: content
   field_taxonomy_terms:
-    weight: 11
+    weight: 10
     settings: {  }
     third_party_settings: {  }
     type: reference_taxonomy_terms
@@ -70,7 +71,7 @@ content:
     settings:
       display_label: true
     region: content
-    weight: 12
+    weight: 11
     third_party_settings: {  }
   path:
     type: path
@@ -82,7 +83,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 7
     region: content
     third_party_settings: {  }
   sticky:
@@ -115,4 +116,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_is_hidden_section_nav: true
   promote: true

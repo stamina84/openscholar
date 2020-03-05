@@ -154,7 +154,6 @@ class SectionOutlineForm extends FormBase {
         if ($form['table'][$key]['#item']) {
           $row = $form['table'][$key];
           $values = $form_state->getValue(['table', $key]);
-
           // Update menu item if moved.
           if ($row['parent']['pid']['#default_value'] != $values['pid'] || $row['weight']['#default_value'] != $values['weight']) {
             $link = $this->bookManager->loadBookLink($values['nid'], FALSE);
@@ -173,11 +172,38 @@ class SectionOutlineForm extends FormBase {
             $node->save();
             $this->logger('content')->notice('book: updated %title.', ['%title' => $node->label(), 'link' => $node->toLink($this->t('View'))->toString()]);
           }
+          // Update the status of node's section nav block if changed.
+          if ($row['hide']['#default_value'] != $values['hide']) {
+            $this->updateHiddenSectionChildPages($values['nid'], $values['hide']);
+          }
         }
       }
     }
 
     $this->messenger()->addStatus($this->t('Updated book %title.', ['%title' => $form['#node']->label()]));
+  }
+
+  /**
+   * Method to update parent and child nodes upon checkbox selection.
+   *
+   * @param int $parent_nid
+   *   Parent nid.
+   * @param bool $hidden
+   *   Boolean status.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function updateHiddenSectionChildPages($parent_nid, $hidden) {
+    $node = $this->nodeStorage->load($parent_nid);
+    $tree = $this->bookManager->bookSubtreeData($node->book);
+    $node->set('field_is_hidden_section_nav', $hidden);
+    $node->save();
+    $tree = array_shift($tree);
+    if ($tree['below']) {
+      foreach ($tree['below'] as $data) {
+        $this->updateHiddenSectionChildPages($data['link']['nid'], $hidden);
+      }
+    }
   }
 
   /**
@@ -284,11 +310,12 @@ class SectionOutlineForm extends FormBase {
         '#title_display' => 'invisible',
       ];
 
+      $hidden_section_nav = $this->nodeStorage->load($nid);
       $form[$id]['hide'] = [
         '#type' => 'checkbox',
-        '#name' => "hide-checkbox-{$id}",
         '#title' => $this->t('Hide from navigation'),
-        '#default_value' => $data['link']['hide'] ?? '',
+        '#default_value' => $hidden_section_nav->field_is_hidden_section_nav->value ?? 0,
+        '#return_value' => 1,
         '#title_display' => 'invisible',
       ];
 
