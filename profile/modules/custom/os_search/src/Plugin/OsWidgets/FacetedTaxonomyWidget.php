@@ -117,14 +117,14 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     // Dependent filters.
     $this->searchQueryBuilder->queryBuilder($query);
 
-    $field_id = 'custom_search_bundle';
+    $field_id = 'taxonomy_term';
     $field_label = $block_content->get('field_widget_title')->value;
 
     $buckets = $this->osSearchFacetBuilder->getFacetBuckets($field_id, $query);
     $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);
     $this->osSearchFacetBuilder->prepareFacetLinks($buckets, $field_id);
 
-    $vocab_list = $this->osSearchFacetBuilder->prepareFacetVocaulbaries(count($buckets));
+    $vocab_list = $this->osSearchFacetBuilder->prepareFacetVocaulbaries($buckets);
     $build['title'] = [
       '#markup' => '<h2 class="block-title">' . $this->t('Filter By @field_label', ['@field_label' => $field_label]) . '</h2>',
     ];
@@ -142,6 +142,7 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     ];
 
     $build['#block_content'] = $block_content;
+
   }
 
   /**
