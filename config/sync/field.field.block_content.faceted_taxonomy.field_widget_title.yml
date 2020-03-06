@@ -1,14 +1,14 @@
-uuid: 8d7d5826-dbd7-4428-a093-634ecf3d3392
+uuid: e573e1c9-c41b-4b7f-89d7-7e8262db41ff
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.faceted_taxonomy_widget
+    - block_content.type.faceted_taxonomy
     - field.storage.block_content.field_widget_title
-id: block_content.faceted_taxonomy_widget.field_widget_title
+id: block_content.faceted_taxonomy.field_widget_title
 field_name: field_widget_title
 entity_type: block_content
-bundle: faceted_taxonomy_widget
+bundle: faceted_taxonomy
 label: 'Widget Title'
 description: ''
 required: false

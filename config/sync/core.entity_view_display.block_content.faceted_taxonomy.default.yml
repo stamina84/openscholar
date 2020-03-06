@@ -1,30 +1,37 @@
-uuid: 463599f5-38f1-41af-8117-ef0e5a09a5db
+uuid: bc2d547b-9ebd-45aa-966b-eb5718187be1
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.faceted_taxonomy_widget
-    - field.field.block_content.faceted_taxonomy_widget.field_select_vocabularies
-    - field.field.block_content.faceted_taxonomy_widget.field_show_number_of_posts
-    - field.field.block_content.faceted_taxonomy_widget.field_vocabulary_order_
-    - field.field.block_content.faceted_taxonomy_widget.field_widget_content_type
-    - field.field.block_content.faceted_taxonomy_widget.field_widget_title
+    - block_content.type.faceted_taxonomy
+    - field.field.block_content.faceted_taxonomy.field_content_type
+    - field.field.block_content.faceted_taxonomy.field_select_vocabularies
+    - field.field.block_content.faceted_taxonomy.field_show_number_of_posts
+    - field.field.block_content.faceted_taxonomy.field_vocabulary_order_
+    - field.field.block_content.faceted_taxonomy.field_widget_title
   module:
     - options
-id: block_content.faceted_taxonomy_widget.default
+id: block_content.faceted_taxonomy.default
 targetEntityType: block_content
-bundle: faceted_taxonomy_widget
+bundle: faceted_taxonomy
 mode: default
 content:
+  field_content_type:
+    weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
   field_select_vocabularies:
-    weight: 2
+    weight: 1
     label: above
     settings: {  }
     third_party_settings: {  }
     type: list_default
     region: content
   field_show_number_of_posts:
-    weight: 4
+    weight: 2
     label: above
     settings:
       format: default
@@ -40,15 +47,8 @@ content:
     third_party_settings: {  }
     type: list_default
     region: content
-  field_widget_content_type:
-    weight: 1
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
   field_widget_title:
-    weight: 0
+    weight: 4
     label: above
     settings:
       link_to_entity: false

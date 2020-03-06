@@ -1,18 +1,18 @@
-uuid: 07a3a4ee-8d0b-4728-bed2-8ad9c4b5261a
+uuid: a562d353-0cd6-478b-857b-8fb84b341e5e
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.faceted_taxonomy_widget
+    - block_content.type.faceted_taxonomy
     - field.storage.block_content.field_show_number_of_posts
-id: block_content.faceted_taxonomy_widget.field_show_number_of_posts
+id: block_content.faceted_taxonomy.field_show_number_of_posts
 field_name: field_show_number_of_posts
 entity_type: block_content
-bundle: faceted_taxonomy_widget
+bundle: faceted_taxonomy
 label: 'Show number of posts'
-description: 'Show number of posts tagged to a term next to the term.'
+description: ''
 required: false
-translatable: false
+translatable: true
 default_value:
   -
     value: 0

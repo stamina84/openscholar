@@ -1,14 +1,14 @@
-uuid: bb6e9ac9-4a47-4dea-b92d-247ef2a3f4f1
+uuid: 5da8deea-d19b-4766-abc8-1e9b8fe2fe09
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.faceted_taxonomy_widget
-    - field.field.block_content.faceted_taxonomy_widget.field_select_vocabularies
-    - field.field.block_content.faceted_taxonomy_widget.field_show_number_of_posts
-    - field.field.block_content.faceted_taxonomy_widget.field_vocabulary_order_
-    - field.field.block_content.faceted_taxonomy_widget.field_widget_content_type
-    - field.field.block_content.faceted_taxonomy_widget.field_widget_title
+    - block_content.type.faceted_taxonomy
+    - field.field.block_content.faceted_taxonomy.field_content_type
+    - field.field.block_content.faceted_taxonomy.field_select_vocabularies
+    - field.field.block_content.faceted_taxonomy.field_show_number_of_posts
+    - field.field.block_content.faceted_taxonomy.field_vocabulary_order_
+    - field.field.block_content.faceted_taxonomy.field_widget_title
   module:
     - field_layout
     - layout_discovery
@@ -16,19 +16,25 @@ third_party_settings:
   field_layout:
     id: layout_onecol
     settings: {  }
-id: block_content.faceted_taxonomy_widget.default
+id: block_content.faceted_taxonomy.default
 targetEntityType: block_content
-bundle: faceted_taxonomy_widget
+bundle: faceted_taxonomy
 mode: default
 content:
+  field_content_type:
+    weight: 26
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
   field_select_vocabularies:
-    weight: 28
+    weight: 27
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_show_number_of_posts:
-    weight: 30
+    weight: 28
     settings:
       display_label: true
     third_party_settings: {  }
@@ -40,14 +46,8 @@ content:
     third_party_settings: {  }
     type: options_select
     region: content
-  field_widget_content_type:
-    weight: 27
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
   field_widget_title:
-    weight: 1
+    weight: 30
     settings:
       size: 60
       placeholder: ''
@@ -56,7 +56,7 @@ content:
     region: content
   info:
     type: string_textfield
-    weight: 2
+    weight: -5
     region: content
     settings:
       size: 60

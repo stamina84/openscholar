@@ -1,0 +1,11 @@
+uuid: e71978ee-f248-4d94-9955-53231d0a1389
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy
+id: block_content.faceted_taxonomy
+target_entity_type_id: block_content
+target_bundle: faceted_taxonomy
+default_langcode: site_default
+language_alterable: false
