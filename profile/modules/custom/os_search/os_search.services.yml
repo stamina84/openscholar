@@ -20,3 +20,7 @@ services:
     arguments: ['@vsite.app.manager', '@request_stack']
     tags:
       - { name: access_check, applies_to: _global_app_access }
+
+  os_search.os_search_faceted_taxonomy_query_builder:
+    class: Drupal\os_search\OsSearchFacetedTaxonomyQueryBuilder
+    arguments: ['@entity_type.manager', '@request_stack', '@vsite.context_manager', '@os_app_access.app_loader', '@current_user', '@os_search.os_search_facet_builder', '@current_route_match', '@os_search.os_search_helper', '@vsite.app.manager']
