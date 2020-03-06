@@ -117,7 +117,7 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     // Dependent filters.
     $this->searchQueryBuilder->queryBuilder($query);
 
-    $field_id = 'taxonomy_term';
+    $field_id = 'custom_search_bundle';
     $field_label = $block_content->get('field_widget_title')->value;
 
     $buckets = $this->osSearchFacetBuilder->getFacetBuckets($field_id, $query);
