@@ -31,6 +31,9 @@ function os_pager_preprocess_os_views_pager(&$variables) {
   /** @var \Drupal\Core\Pager\PagerManager $pager_manager */
   $pager_manager = Drupal::service('pager.manager');
   $pager = $pager_manager->getPager($element);
+  if (empty($pager)) {
+    return;
+  }
   $current_page = $pager->getCurrentPage();
   $pager_total = $pager->getTotalPages();
 
