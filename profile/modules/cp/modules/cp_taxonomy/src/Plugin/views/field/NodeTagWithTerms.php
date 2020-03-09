@@ -77,7 +77,7 @@ class NodeTagWithTerms extends FieldPluginBase {
       $build = $node->field_taxonomy_terms->view('teaser');
     }
     $group = $this->vsiteContextManager->getActiveVsite();
-    if (!empty($node->field_taxonomy_terms->referencedEntities()) && !empty($group)) {
+    if ($group && !empty($node->field_taxonomy_terms->referencedEntities())) {
       $build['#cache']['tags'][] = 'entity-with-taxonomy-terms:' . $group->id();
     }
     return $build;
