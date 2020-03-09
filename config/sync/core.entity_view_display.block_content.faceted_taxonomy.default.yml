@@ -5,6 +5,7 @@ dependencies:
   config:
     - block_content.type.faceted_taxonomy
     - field.field.block_content.faceted_taxonomy.field_content_type
+    - field.field.block_content.faceted_taxonomy.field_display_styles
     - field.field.block_content.faceted_taxonomy.field_select_vocabularies
     - field.field.block_content.faceted_taxonomy.field_show_number_of_posts
     - field.field.block_content.faceted_taxonomy.field_term_order
@@ -19,6 +20,13 @@ mode: default
 content:
   field_content_type:
     weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_display_styles:
+    weight: 7
     label: above
     settings: {  }
     third_party_settings: {  }

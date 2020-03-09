@@ -1,0 +1,23 @@
+uuid: df15fc22-6da8-4629-9de4-3b74fee050e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy
+    - field.storage.block_content.field_display_styles
+  module:
+    - options
+id: block_content.faceted_taxonomy.field_display_styles
+field_name: field_display_styles
+entity_type: block_content
+bundle: faceted_taxonomy
+label: 'Display Styles'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: classic
+default_value_callback: ''
+settings: {  }
+field_type: list_string

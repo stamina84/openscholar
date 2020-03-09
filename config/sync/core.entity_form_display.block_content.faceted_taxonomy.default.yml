@@ -5,6 +5,7 @@ dependencies:
   config:
     - block_content.type.faceted_taxonomy
     - field.field.block_content.faceted_taxonomy.field_content_type
+    - field.field.block_content.faceted_taxonomy.field_display_styles
     - field.field.block_content.faceted_taxonomy.field_select_vocabularies
     - field.field.block_content.faceted_taxonomy.field_show_number_of_posts
     - field.field.block_content.faceted_taxonomy.field_term_order
@@ -23,38 +24,44 @@ bundle: faceted_taxonomy
 mode: default
 content:
   field_content_type:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_display_styles:
     weight: 26
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_select_vocabularies:
-    weight: 27
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_show_number_of_posts:
-    weight: 28
+    weight: 7
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_term_order:
-    weight: 32
+    weight: 6
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_vocabulary_order:
-    weight: 31
+    weight: 5
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_widget_title:
-    weight: 30
+    weight: 2
     settings:
       size: 60
       placeholder: ''
@@ -63,17 +70,11 @@ content:
     region: content
   info:
     type: string_textfield
-    weight: -5
+    weight: 1
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  langcode:
-    type: language_select
-    weight: 2
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
-hidden: {  }
+hidden:
+  langcode: true
