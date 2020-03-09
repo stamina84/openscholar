@@ -1,0 +1,21 @@
+uuid: d50a89cd-d4e8-479e-9732-a3963232e4dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy
+    - field.storage.block_content.field_term_order
+  module:
+    - options
+id: block_content.faceted_taxonomy.field_term_order
+field_name: field_term_order
+entity_type: block_content
+bundle: faceted_taxonomy
+label: 'Term Order'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

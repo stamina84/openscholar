@@ -109,37 +109,43 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
    * {@inheritdoc}
    */
   public function buildBlock(&$build, $block_content) {
-    $route_name = $this->routeMatch->getRouteName();
+    // $route_name = $this->routeMatch->getRouteName();
+    $route_name = 'os_search.app_global';
     // Load search page.
-    $query = $this->searchQueryBuilder->getQuery();
+    $query = $this->searchFacetedTaxonoQueryBuilder->getQuery();
     $query->keys('');
 
     // Dependent filters.
     $this->searchQueryBuilder->queryBuilder($query);
 
-    $field_id = 'custom_search_bundle';
+    $field_id = 'custom_taxonomy';
     $field_label = $block_content->get('field_widget_title')->value;
+    $field_app_content = $block_content->get('field_content_type')->value;
+    $vocab_order_by = $block_content->get('field_vocabulary_order')->value;
+    $term_order_by = $block_content->get('field_term_order')->value;
 
     $buckets = $this->osSearchFacetBuilder->getFacetBuckets($field_id, $query);
     $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);
     $this->osSearchFacetBuilder->prepareFacetLinks($buckets, $field_id);
 
-    $vocab_list = $this->osSearchFacetBuilder->prepareFacetVocaulbaries($buckets);
+    $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($vocab_order_by, $term_order_by, $buckets);
     $build['title'] = [
       '#markup' => '<h2 class="block-title">' . $this->t('Filter By @field_label', ['@field_label' => $field_label]) . '</h2>',
     ];
-    $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label);
+    $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label, $field_app_content);
 
-    $build['empty_build'] = [
-      '#theme' => 'item_list__search_widget',
-      '#empty' => '',
-      '#list_type' => 'ul',
-      '#title' => $this->t('Not search context.'),
-      '#items' => [],
-      '#cache' => [
-        'max-age' => 0,
-      ],
-    ];
+    if (empty($build)) {
+      $build['empty_build'] = [
+        '#theme' => 'item_list__search_widget',
+        '#empty' => '',
+        '#list_type' => 'ul',
+        '#title' => $this->t('Not search context.'),
+        '#items' => [],
+        '#cache' => [
+          'max-age' => 0,
+        ],
+      ];
+    }
 
     $build['#block_content'] = $block_content;
 
@@ -156,15 +162,17 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
    *   Facets field name.
    * @param string $field_label
    *   Label of facet field.
+   * @param string $field_app_content
+   *   App type for links.
    *
    * @return array
    *   Widget build
    */
-  private function renderableTaxonomyArray(array $buckets, $route_name, string $field_name, string $field_label): array {
+  private function renderableTaxonomyArray(array $buckets, $route_name, string $field_name, string $field_label, string $field_app_content): array {
 
     foreach ($buckets as $term_list) {
       $vocab_name = $term_list['name'];
-      $build[] = $this->renderableArray($term_list['children'], $route_name, $field_name, $field_label, $vocab_name);
+      $build[] = $this->renderableArray($term_list['children'], $route_name, $field_name, $field_label, $vocab_name, $field_app_content);
     }
 
     if (empty($buckets)) {
@@ -191,16 +199,18 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
    *   Label of facet field.
    * @param string $header
    *   Vocabulary name.
+   * @param string $field_app_content
+   *   App type for links .
    *
    * @return array
    *   Widget build
    */
-  private function renderableArray(array $buckets, $route_name, string $field_name, string $field_label, string $header = NULL): array {
+  private function renderableArray(array $buckets, $route_name, string $field_name, string $field_label, string $header = NULL, string $field_app_content): array {
     $items = [];
     $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
-    $route_parameters = $this->routeMatch->getParameters()->all();
-
+    // $route_parameters = $this->routeMatch->getParameters()->all();
+    $route_parameters['app'] = $field_app_content;
     foreach ($buckets as $bucket) {
       $item_label = isset($bucket['label']) ? $bucket['label'] : ucwords($bucket['key']);
       $item_label = is_array($item_label) ? reset($item_label) : $item_label;

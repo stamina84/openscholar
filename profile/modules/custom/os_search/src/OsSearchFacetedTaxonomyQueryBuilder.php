@@ -9,6 +9,7 @@ use Drupal\os_app_access\AppLoader;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\vsite\Plugin\AppManagerInterface;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Helper class for Faceted Taxonomy Widget.
@@ -116,6 +117,41 @@ class OsSearchFacetedTaxonomyQueryBuilder {
     $search_page_index = $this->entityTypeManager->getStorage('search_api_index')->load('os_search_index');
     $query = $search_page_index->query();
     return $query;
+  }
+
+  /**
+   * Prepare list of terms for Filter Taxonomy.
+   *
+   * @param string $vocab_order_by
+   *   Order by key for Taxonomy Vocabulary.
+   * @param string $term_order_by
+   *   Order by key for Taxonomy Terms.
+   * @param array $buckets
+   *   Facets loaded for a field.
+   * @param string $field_processor
+   *   Field processor name.
+   *
+   * @return array
+   *   List of terms.
+   */
+  public function prepareFacetVocaulbaries(string $vocab_order_by, string $term_order_by, array $buckets, $field_processor = 'taxonomy_term') {
+    $vocab_list = [];
+    $query = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->getQuery();
+    $query->sort($vocab_order_by, 'ASC');
+    $vids = $query->execute();
+
+    $vocabularies = Vocabulary::loadMultiple($vids);
+
+    $entity_storage = $this->entityTypeManager->getStorage($field_processor);
+
+    foreach ($buckets as $bucket) {
+      $term = $entity_storage->load($bucket['key']);
+      if ($term && isset($vocabularies[$term->bundle()])) {
+        $vocab_list[$term->bundle()]['children'][] = $bucket;
+        $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+      }
+    }
+    return $vocab_list;
   }
 
 }
