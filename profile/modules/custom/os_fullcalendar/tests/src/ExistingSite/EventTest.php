@@ -16,8 +16,8 @@ class EventTest extends EventTestBase {
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
   public function testEventAlias() {
-    /** @var \Drupal\Core\Path\AliasManagerInterface $alias_manager */
-    $alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManagerInterface $alias_manager */
+    $alias_manager = $this->container->get('path_alias.manager');
 
     /** @var \Drupal\node\NodeInterface $event */
     $event = $this->createEvent([

@@ -55,7 +55,7 @@ class VsiteContextManagerTest extends UnitTestCase {
     $this->vsiteContextManager = new VsiteContextManager($this->eventDispatcher);
 
     $alias_manager = new MockAliasManager();
-    $this->container->set('path.alias_manager', $alias_manager);
+    $this->container->set('path_alias.manager', $alias_manager);
     $alias_manager->addAlias('/group/1', '/site01');
   }
 

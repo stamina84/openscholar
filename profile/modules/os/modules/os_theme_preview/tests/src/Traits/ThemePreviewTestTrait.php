@@ -53,8 +53,8 @@ trait ThemePreviewTestTrait {
    *   The url to visit inside group.
    */
   protected function visitGroupPage(GroupInterface $group, $url): void {
-    /** @var \Drupal\Core\Path\AliasManagerInterface $alias_manager */
-    $alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManagerInterface $alias_manager */
+    $alias_manager = $this->container->get('path_alias.manager');
     /** @var \Drupal\Core\Theme\ThemeManagerInterface $theme_manager */
     $theme_manager = $this->container->get('theme.manager');
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */

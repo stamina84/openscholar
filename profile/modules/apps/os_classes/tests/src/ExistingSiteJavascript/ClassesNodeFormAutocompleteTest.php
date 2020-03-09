@@ -40,7 +40,7 @@ class ClassesNodeFormAutocompleteTest extends OsExistingSiteJavascriptTestBase {
   /**
    * Alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -51,7 +51,7 @@ class ClassesNodeFormAutocompleteTest extends OsExistingSiteJavascriptTestBase {
     parent::setUp();
 
     $this->config = $this->container->get('config.factory');
-    $this->aliasManager = $this->container->get('path.alias_manager');
+    $this->aliasManager = $this->container->get('path_alias.manager');
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
     $vsiteContextManager = $this->container->get('vsite.context_manager');
     $this->group = $this->createGroup([

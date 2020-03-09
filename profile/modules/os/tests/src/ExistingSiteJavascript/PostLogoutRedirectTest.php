@@ -24,8 +24,8 @@ class PostLogoutRedirectTest extends OsExistingSiteJavascriptTestBase {
     $account = $this->createUser();
     $node = $this->createNode();
     $this->group->addContent($node, "group_node:{$node->bundle()}");
-    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
-    $path_alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManagerInterface $path_alias_manager */
+    $path_alias_manager = $this->container->get('path_alias.manager');
 
     // Tests.
     $this->drupalLogin($account);

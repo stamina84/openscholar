@@ -5,9 +5,9 @@ namespace Drupal\os_theme_preview\Form;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\os_theme_preview\HandlerInterface;
 use Drupal\os_theme_preview\ThemePreviewException;
+use Drupal\path_alias\AliasManagerInterface;
 use Drupal\purl\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -45,7 +45,7 @@ class PreviewAction extends FormBase {
   /**
    * Alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -56,7 +56,7 @@ class PreviewAction extends FormBase {
    *   Theme preview handler.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   Theme handler service.
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
    *   Alias manager.
    */
   public function __construct(HandlerInterface $handler, ThemeHandlerInterface $theme_handler, AliasManagerInterface $alias_manager) {
@@ -71,7 +71,7 @@ class PreviewAction extends FormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('os_theme_preview.handler'), $container->get('theme_handler'), $container->get('path.alias_manager'));
+    return new static($container->get('os_theme_preview.handler'), $container->get('theme_handler'), $container->get('path_alias.manager'));
   }
 
   /**

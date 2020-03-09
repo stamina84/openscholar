@@ -5,12 +5,12 @@ namespace Drupal\cp_appearance\Controller;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\cp_appearance\AppearanceSettingsBuilderInterface;
 use Drupal\cp_appearance\Form\ThemeForm;
 use Drupal\os_theme_preview\HandlerInterface;
 use Drupal\os_theme_preview\PreviewManagerInterface;
 use Drupal\os_theme_preview\ThemePreviewException;
+use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,7 +53,7 @@ class CpAppearanceMainController extends ControllerBase {
   /**
    * Alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -67,7 +67,7 @@ class CpAppearanceMainController extends ControllerBase {
       $container->get('cp_appearance.appearance_settings_builder'),
       $container->get('os_theme_preview.handler'),
       $container->get('os_theme_preview.manager'),
-      $container->get('path.alias_manager')
+      $container->get('path_alias.manager')
     );
   }
 
@@ -84,7 +84,7 @@ class CpAppearanceMainController extends ControllerBase {
    *   Theme preview handler.
    * @param \Drupal\os_theme_preview\PreviewManagerInterface $preview_manager
    *   Theme preview manager.
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
    *   Alias manager.
    */
   public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, AppearanceSettingsBuilderInterface $appearance_settings_builder, HandlerInterface $handler, PreviewManagerInterface $preview_manager, AliasManagerInterface $alias_manager) {

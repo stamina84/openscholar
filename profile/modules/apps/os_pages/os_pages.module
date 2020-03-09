@@ -32,8 +32,8 @@ function os_pages_entity_insert(EntityInterface $entity) {
     return;
   }
 
-  /** @var \Drupal\Core\Path\AliasManagerInterface $alias_manager */
-  $alias_manager = \Drupal::service('path.alias_manager');
+  /** @var \Drupal\path_alias\AliasManagerInterface $alias_manager */
+  $alias_manager = \Drupal::service('path_alias.manager');
 
   $layout_context_storage = \Drupal::entityTypeManager()->getStorage('layout_context');
   $layout_context_storage->create([

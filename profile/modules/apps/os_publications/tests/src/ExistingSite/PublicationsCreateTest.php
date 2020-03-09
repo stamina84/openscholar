@@ -13,7 +13,7 @@ class PublicationsCreateTest extends TestBase {
   /**
    * Alias Manager service.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -43,7 +43,7 @@ class PublicationsCreateTest extends TestBase {
       'html_title' => 'The Velvet Underground',
     ]);
     $this->group->addContent($reference, 'group_entity:bibcite_reference');
-    $this->aliasManager = $this->container->get('path.alias_manager');
+    $this->aliasManager = $this->container->get('path_alias.manager');
 
     // Test path alias is generated.
     $path = '/bibcite/reference/' . $reference->id();

@@ -21,8 +21,8 @@ class PagesTest extends TestBase {
   public function testBookVisibility() {
     /** @var \Drupal\book\BookManagerInterface $book_manager */
     $book_manager = $this->container->get('book.manager');
-    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
-    $path_alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManager $path_alias_manager */
+    $path_alias_manager = $this->container->get('path_alias.manager');
     /** @var \Drupal\Core\Config\ImmutableConfig $theme_config */
     $theme_config = \Drupal::config('system.theme');
 
@@ -139,8 +139,8 @@ class PagesTest extends TestBase {
     $this->drupalLogin($group_member);
     /** @var \Drupal\book\BookManagerInterface $book_manager */
     $book_manager = $this->container->get('book.manager');
-    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
-    $path_alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManager $path_alias_manager */
+    $path_alias_manager = $this->container->get('path_alias.manager');
 
     /** @var \Drupal\node\NodeInterface $book1 */
     $book1 = $this->createBookPage([
@@ -161,8 +161,8 @@ class PagesTest extends TestBase {
   public function testPagePrintLinks() {
     /** @var \Drupal\book\BookManagerInterface $book_manager */
     $book_manager = $this->container->get('book.manager');
-    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
-    $path_alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManager $path_alias_manager */
+    $path_alias_manager = $this->container->get('path_alias.manager');
 
     /** @var \Drupal\node\NodeInterface $book1 */
     $book1 = $this->createBookPage([
@@ -181,8 +181,8 @@ class PagesTest extends TestBase {
    * Tests for Add child page link.
    */
   public function testNoAddChildLink() {
-    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
-    $path_alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManager $path_alias_manager */
+    $path_alias_manager = $this->container->get('path_alias.manager');
     /** @var \Drupal\node\NodeInterface $book1 */
     $book = $this->createBookPage([
       'title' => 'Book page',
@@ -206,8 +206,8 @@ class PagesTest extends TestBase {
    * Checks if Book traversal links present on book pages.
    */
   public function assertNoTraversalLinks() {
-    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
-    $path_alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManager $path_alias_manager */
+    $path_alias_manager = $this->container->get('path_alias.manager');
     $book = $this->createBookPage([
       'title' => 'First book',
     ]);

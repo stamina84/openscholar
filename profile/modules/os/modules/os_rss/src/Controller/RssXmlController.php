@@ -4,6 +4,7 @@ namespace Drupal\os_rss\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\os_app_access\AppLoader;
+use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
@@ -12,7 +13,6 @@ use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Controller\TitleResolver;
 use Drupal\Core\Datetime\DateFormatter;
-use Drupal\Core\Path\AliasManager;
 use Drupal\vsite\Plugin\VsiteContextManager;
 
 /**
@@ -72,7 +72,7 @@ class RssXmlController extends ControllerBase {
   /**
    * Route match object.
    *
-   * @var \Drupal\Core\Path\AliasManager
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -140,7 +140,7 @@ class RssXmlController extends ControllerBase {
       $container->get('current_route_match'),
       $container->get('title_resolver'),
       $container->get('date.formatter'),
-      $container->get('path.alias_manager'),
+      $container->get('path_alias.manager'),
       $container->get('vsite.context_manager')
     );
   }
@@ -148,7 +148,7 @@ class RssXmlController extends ControllerBase {
   /**
    * Constructor to get this object.
    */
-  public function __construct(AppLoader $app_loader, Serializer $serializer, RequestStack $request_stack, CurrentPathStack $current_path, CurrentRouteMatch $route_match, TitleResolver $title_resolver, DateFormatter $date_formatter, AliasManager $alias_manager, VsiteContextManager $vsite_manager) {
+  public function __construct(AppLoader $app_loader, Serializer $serializer, RequestStack $request_stack, CurrentPathStack $current_path, CurrentRouteMatch $route_match, TitleResolver $title_resolver, DateFormatter $date_formatter, AliasManagerInterface $alias_manager, VsiteContextManager $vsite_manager) {
     $this->appLoader = $app_loader;
     $this->serializer = $serializer;
     $this->requestStack = $request_stack;
