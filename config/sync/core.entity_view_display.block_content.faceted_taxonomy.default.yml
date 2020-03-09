@@ -11,58 +11,11 @@ dependencies:
     - field.field.block_content.faceted_taxonomy.field_term_order
     - field.field.block_content.faceted_taxonomy.field_vocabulary_order
     - field.field.block_content.faceted_taxonomy.field_widget_title
-  module:
-    - options
 id: block_content.faceted_taxonomy.default
 targetEntityType: block_content
 bundle: faceted_taxonomy
 mode: default
 content:
-  field_content_type:
-    weight: 0
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
-  field_display_styles:
-    weight: 7
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
-  field_select_vocabularies:
-    weight: 1
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
-  field_show_number_of_posts:
-    weight: 2
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    type: boolean
-    region: content
-  field_term_order:
-    weight: 6
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
-  field_vocabulary_order:
-    weight: 5
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
   field_widget_title:
     weight: 4
     label: above
@@ -72,5 +25,11 @@ content:
     type: string
     region: content
 hidden:
+  field_content_type: true
+  field_display_styles: true
+  field_select_vocabularies: true
+  field_show_number_of_posts: true
+  field_term_order: true
+  field_vocabulary_order: true
   langcode: true
   search_api_excerpt: true
