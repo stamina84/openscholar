@@ -119,20 +119,20 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     $this->searchQueryBuilder->queryBuilder($query);
 
     $field_id = 'custom_taxonomy';
-    $field_label = $block_content->get('field_widget_title')->value;
-    $field_app_content = $block_content->get('field_content_type')->value;
-    $vocab_order_by = $block_content->get('field_vocabulary_order')->value;
-    $term_order_by = $block_content->get('field_term_order')->value;
+    $field_label = $block_content->get('field_widget_title')->value ?? '';
+    $field_app_content = $block_content->get('field_content_type')->value ?? '';
+    $vocab_order_by = $block_content->get('field_vocabulary_order')->value ?? '';
+    $term_order_by = $block_content->get('field_term_order')->value ?? '';
+    $class = $block_content->get('field_display_styles')->value ?? '';
+    $need_count = $block_content->get('field_show_number_of_posts')->value == 1 ? TRUE : FALSE;
 
     $buckets = $this->osSearchFacetBuilder->getFacetBuckets($field_id, $query);
     $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);
     $this->osSearchFacetBuilder->prepareFacetLinks($buckets, $field_id);
 
     $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($vocab_order_by, $term_order_by, $buckets);
-    $build['title'] = [
-      '#markup' => '<h2 class="block-title">' . $this->t('Filter By @field_label', ['@field_label' => $field_label]) . '</h2>',
-    ];
-    $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label, $field_app_content);
+
+    $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label, $field_app_content, $class, $need_count);
 
     if (empty($build)) {
       $build['empty_build'] = [
@@ -146,7 +146,6 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
         ],
       ];
     }
-
     $build['#block_content'] = $block_content;
 
   }
@@ -164,15 +163,19 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
    *   Label of facet field.
    * @param string $field_app_content
    *   App type for links.
+   * @param string $class
+   *   Class for display styles.
+   * @param bool $need_count
+   *   For displaying count with facet link.
    *
    * @return array
    *   Widget build
    */
-  private function renderableTaxonomyArray(array $buckets, $route_name, string $field_name, string $field_label, string $field_app_content): array {
+  private function renderableTaxonomyArray(array $buckets, $route_name, string $field_name, string $field_label, string $field_app_content, string $class, bool $need_count): array {
 
     foreach ($buckets as $term_list) {
       $vocab_name = $term_list['name'];
-      $build[] = $this->renderableArray($term_list['children'], $route_name, $field_name, $field_label, $vocab_name, $field_app_content);
+      $build[] = $this->renderableArray($term_list['children'], $route_name, $field_name, $field_label, $vocab_name, $field_app_content, $class, $need_count);
     }
 
     if (empty($buckets)) {
@@ -201,15 +204,19 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
    *   Vocabulary name.
    * @param string $field_app_content
    *   App type for links .
+   * @param string $class
+   *   Class for display styles.
+   * @param bool $need_count
+   *   For displaying count with facet link.
    *
    * @return array
    *   Widget build
    */
-  private function renderableArray(array $buckets, $route_name, string $field_name, string $field_label, string $header = NULL, string $field_app_content): array {
+  private function renderableArray(array $buckets, $route_name, string $field_name, string $field_label, string $header = NULL, string $field_app_content, string $class, bool $need_count): array {
     $items = [];
     $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
-    // $route_parameters = $this->routeMatch->getParameters()->all();
+
     $route_parameters['app'] = $field_app_content;
     foreach ($buckets as $bucket) {
       $item_label = isset($bucket['label']) ? $bucket['label'] : ucwords($bucket['key']);
@@ -218,26 +225,32 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
       $route_parameters['keys'] = $keys;
       $path = Url::fromRoute($route_name, $route_parameters);
 
-      if (isset($bucket['doc_count'])) {
-        $items[] = Link::fromTextAndUrl($this->t('@label (@count)', ['@label' => $item_label, '@count' => $bucket['doc_count']]), $path)->toString();
+      if ($need_count) {
+        if (isset($bucket['doc_count'])) {
+          $items[] = Link::fromTextAndUrl($this->t('@label (@count)', ['@label' => $item_label, '@count' => $bucket['doc_count']]), $path)->toString();
+        }
+        else {
+          $querys = isset($bucket['query']) ? $bucket['query'] : [];
+          foreach ($querys as $key => $query) {
+            if ($query == $bucket['filter']) {
+              unset($querys[$key]);
+            }
+          }
+
+          $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
+          $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
+          $items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
+        }
       }
       else {
-        $querys = isset($bucket['query']) ? $bucket['query'] : [];
-        foreach ($querys as $key => $query) {
-          if ($query == $bucket['filter']) {
-            unset($querys[$key]);
-          }
-        }
-
-        $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
-        $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
-        $items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
+        $items[] = Link::fromTextAndUrl($this->t('@label', ['@label' => $item_label]), $path)->toString();
       }
+
     }
 
     if ($header) {
       $build[$field_name]['title'] = [
-        '#markup' => $this->t('@header', ['@header' => $header]),
+        '#markup' => '<h2 class=' . $class . '>' . $this->t('@header', ['@header' => $header]) . '</h2>',
       ];
     }
 

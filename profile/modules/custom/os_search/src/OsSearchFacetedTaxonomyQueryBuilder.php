@@ -9,7 +9,6 @@ use Drupal\os_app_access\AppLoader;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\vsite\Plugin\AppManagerInterface;
-use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Helper class for Faceted Taxonomy Widget.
@@ -136,22 +135,73 @@ class OsSearchFacetedTaxonomyQueryBuilder {
    */
   public function prepareFacetVocaulbaries(string $vocab_order_by, string $term_order_by, array $buckets, $field_processor = 'taxonomy_term') {
     $vocab_list = [];
-    $query = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->getQuery();
+
+    $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
+
+    $query = $taxonomy_vocabulary_storage->getQuery();
     $query->sort($vocab_order_by, 'ASC');
     $vids = $query->execute();
 
-    $vocabularies = Vocabulary::loadMultiple($vids);
+    $vocabularies = $taxonomy_vocabulary_storage->loadMultiple($vids);
 
-    $entity_storage = $this->entityTypeManager->getStorage($field_processor);
+    $taxonomy_term_storage = $this->entityTypeManager->getStorage($field_processor);
 
-    foreach ($buckets as $bucket) {
-      $term = $entity_storage->load($bucket['key']);
-      if ($term && isset($vocabularies[$term->bundle()])) {
-        $vocab_list[$term->bundle()]['children'][] = $bucket;
-        $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+    $bucket_key = [];
+
+    foreach ($buckets as $key => $bucket) {
+      $bucket_key[$key] = $bucket['key'];
+    }
+
+    $query = $taxonomy_term_storage->getQuery();
+    $query->condition('tid', $bucket_key, 'IN');
+
+    // When relevance selected removing sort_by.
+    if ($term_order_by != 'rev') {
+      $query->sort($term_order_by, 'DESC');
+    }
+
+    $tids = $query->execute();
+    $terms = $taxonomy_term_storage->loadMultiple($tids);
+    foreach ($vocabularies as $vocabulary) {
+      foreach ($terms as $term) {
+        foreach ($buckets as $bucket) {
+          if ($term->id() == $bucket['key'] && $term->bundle() === $vocabulary->id()) {
+            $vocab_list[$term->bundle()]['children'][] = $bucket;
+            $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+          }
+        }
       }
     }
+
     return $vocab_list;
+  }
+
+  /**
+   * Load Vocabularies based on app.
+   *
+   * @param string $app
+   *   Vocabularies.
+   *
+   * @return array
+   *   List of vocabularies name.
+   */
+  public function prepareVocabulariesList($app) {
+    $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
+    $vocabularies = $taxonomy_vocabulary_storage->loadMultiple();
+    $vocabularies_name['none'] = '--none--';
+    if ($app != NULL) {
+      $vocabularies_name = [];
+      foreach ($vocabularies as $vocabulary) {
+        if (in_array('node:' . $app, $vocabulary->allowed_vocabulary_reference_types)) {
+          $vocabularies_name[$vocabulary->id()] = $vocabulary->label();
+        }
+        else {
+          $vocabularies_name['none'] = '--none--';
+        }
+      }
+    }
+    return $vocabularies_name;
+
   }
 
 }
