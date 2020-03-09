@@ -31,12 +31,18 @@ services:
       - '@entity_type.manager'
     tags:
       - { name: event_subscriber }
-  vsite.alias_storage:
-    class: Drupal\vsite\Path\VsiteAliasStorage
-    decorates: path.alias_storage
+  vsite.path_alias.repository:
+    class: Drupal\vsite\Path\VsiteAliasRepository
+    decorates: path_alias.repository
     decoration_priority: 4
     arguments:
-      - '@vsite.alias_storage.inner'
+      - '@vsite.path_alias.repository.inner'
+      - '@purl.modifier_index'
+      - '@entity_type.manager'
+      - '@vsite.context_manager'
+  vsite.path_alias_helper:
+    class: Drupal\vsite\Helper\VsitePathAliasHelper
+    arguments:
       - '@purl.modifier_index'
       - '@entity_type.manager'
       - '@vsite.context_manager'

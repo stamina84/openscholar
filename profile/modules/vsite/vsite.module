@@ -5,6 +5,7 @@
  * Hook implementations for the vsite module.
  */
 
+use Drupal\path_alias\PathAliasInterface;
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -493,4 +494,13 @@ function vsite_group_insert(GroupInterface $group) {
     // Assign admin role to owner.
     $role_helper->assignGroupAdminRoleToOwner($group);
   }
+}
+
+/**
+ * Implements hook_path_alias_presave().
+ */
+function vsite_path_alias_presave(PathAliasInterface $entity) {
+  /** @var \Drupal\vsite\Helper\VsitePathAliasHelper $vsite_path_alias_helper */
+  $vsite_path_alias_helper = Drupal::service('vsite.path_alias_helper');
+  $vsite_path_alias_helper->save($entity);
 }

@@ -5,7 +5,7 @@ namespace Drupal\cp_import;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\cp_import\AppImport\BaseInterface;
 use Drupal\cp_import\Helper\CpImportHelper;
-use Drupal\vsite\Path\VsiteAliasStorage;
+use Drupal\vsite\Path\VsiteAliasRepository;
 
 /**
  * AppImportFactory class acts as a bridge between events subscriber and apps.
@@ -22,11 +22,11 @@ final class AppImportFactory {
   protected $cpImportHelper;
 
   /**
-   * Vsite Alias Storage service.
+   * Vsite Alias Repository service.
    *
-   * @var \Drupal\vsite\Path\VsiteAliasStorage
+   * @var \Drupal\vsite\Path\VsiteAliasRepository
    */
-  protected $vsiteAliasStorage;
+  protected $vsiteAliasRepository;
 
   /**
    * Language Manager service.
@@ -40,14 +40,14 @@ final class AppImportFactory {
    *
    * @param \Drupal\cp_import\Helper\CpImportHelper $cpImportHelper
    *   CpImportHelper instance.
-   * @param \Drupal\vsite\Path\VsiteAliasStorage $vsiteAliasStorage
-   *   Vsite alias storage instance.
+   * @param \Drupal\vsite\Path\VsiteAliasRepository $vsiteAliasRepository
+   *   Vsite alias repository instance.
    * @param \Drupal\Core\Language\LanguageManager $languageManager
    *   Language manager instance.
    */
-  public function __construct(CpImportHelper $cpImportHelper, VsiteAliasStorage $vsiteAliasStorage, LanguageManager $languageManager) {
+  public function __construct(CpImportHelper $cpImportHelper, VsiteAliasRepository $vsiteAliasRepository, LanguageManager $languageManager) {
     $this->cpImportHelper = $cpImportHelper;
-    $this->vsiteAliasStorage = $vsiteAliasStorage;
+    $this->vsiteAliasRepository = $vsiteAliasRepository;
     $this->languageManager = $languageManager;
   }
 
@@ -62,7 +62,7 @@ final class AppImportFactory {
    */
   public function create($app_import_type) : BaseInterface {
     $app_class = "Drupal\\cp_import\\AppImport\\$app_import_type\\AppImport";
-    return new $app_class($this->cpImportHelper, $this->vsiteAliasStorage, $this->languageManager);
+    return new $app_class($this->cpImportHelper, $this->vsiteAliasRepository, $this->languageManager);
   }
 
 }

@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\cp_import\Helper\CpImportHelper;
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate_plus\Event\MigratePrepareRowEvent;
-use Drupal\vsite\Path\VsiteAliasStorage;
+use Drupal\vsite\Path\VsiteAliasRepository;
 
 /**
  * Acts as a base for AppImport factory implementation for all apps.
@@ -33,9 +33,9 @@ abstract class Base implements BaseInterface {
   /**
    * Vsite Alias Storage service.
    *
-   * @var \Drupal\vsite\Path\VsiteAliasStorage
+   * @var \Drupal\vsite\Path\VsiteAliasRepository
    */
-  protected $vsiteAliasStorage;
+  protected $vsiteAliasRepository;
 
   /**
    * Language Manager service.
@@ -49,14 +49,14 @@ abstract class Base implements BaseInterface {
    *
    * @param \Drupal\cp_import\Helper\CpImportHelper $cpImportHelper
    *   Cp import helper instance.
-   * @param \Drupal\vsite\Path\VsiteAliasStorage $vsiteAliasStorage
+   * @param \Drupal\vsite\Path\VsiteAliasRepository $vsiteAliasRepository
    *   Vsite Alias storage instance.
    * @param \Drupal\Core\Language\LanguageManager $languageManager
    *   Language Manager instance.
    */
-  public function __construct(CpImportHelper $cpImportHelper, VsiteAliasStorage $vsiteAliasStorage, LanguageManager $languageManager) {
+  public function __construct(CpImportHelper $cpImportHelper, VsiteAliasRepository $vsiteAliasRepository, LanguageManager $languageManager) {
     $this->cpImportHelper = $cpImportHelper;
-    $this->vsiteAliasStorage = $vsiteAliasStorage;
+    $this->vsiteAliasRepository = $vsiteAliasRepository;
     $this->languageManager = $languageManager;
   }
 
@@ -68,7 +68,7 @@ abstract class Base implements BaseInterface {
     $type = $event->getMigration()->getProcess()['type'][0]['default_value'];
     $createdDate = $source['Created date'];
     if ($alias = $source['Path']) {
-      if ($this->vsiteAliasStorage->aliasExists("/$type/$alias", $this->languageManager->getDefaultLanguage()->getId())) {
+      if ($this->vsiteAliasRepository->lookupByAlias("/$type/$alias", $this->languageManager->getDefaultLanguage()->getId())) {
         $event->getRow()->setSourceProperty('NeedsAliasUpdate', TRUE);
       }
     }
