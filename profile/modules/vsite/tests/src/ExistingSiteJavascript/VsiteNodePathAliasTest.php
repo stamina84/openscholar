@@ -50,9 +50,12 @@ class VsiteNodePathAliasTest extends OsExistingSiteJavascriptTestBase {
    */
   public function testNodeCreationExistingEmptyAlias() {
     $web_assert = $this->assertSession();
-    /** @var \Drupal\Core\Path\AliasStorage $path_alias_storage */
-    $path_alias_storage = $this->container->get('path.alias_storage');
-    $path_alias_storage->save("/entity/99", '/[vsite:' . $this->group->id() . ']', "en");
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
+    $path_alias_storage = $this->container->get('entity_type.manager')->getStorage('path_alias');
+    $path_alias_storage->create([
+      'path' => "/entity/99",
+      'alias' => '/[vsite:' . $this->group->id() . ']',
+    ])->save();
     $this->visitViaVsite('node/add/blog', $this->group);
     $web_assert->statusCodeEquals(200);
     $page = $this->getSession()->getPage();
@@ -96,9 +99,12 @@ class VsiteNodePathAliasTest extends OsExistingSiteJavascriptTestBase {
    */
   public function testNodeCreationWithManualExistsAlias() {
     $web_assert = $this->assertSession();
-    /** @var \Drupal\Core\Path\AliasStorage $path_alias_storage */
-    $path_alias_storage = $this->container->get('path.alias_storage');
-    $path_alias_storage->save("/node/99", '/[vsite:' . $this->group->id() . ']/blog/existing-alias', "en");
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
+    $path_alias_storage = $this->container->get('entity_type.manager')->getStorage('path_alias');
+    $path_alias_storage->create([
+      'path' => "/node/99",
+      'alias' => '/[vsite:' . $this->group->id() . ']/blog/existing-alias',
+    ])->save();
     $this->visitViaVsite('node/add/blog', $this->group);
     $web_assert->statusCodeEquals(200);
     $page = $this->getSession()->getPage();

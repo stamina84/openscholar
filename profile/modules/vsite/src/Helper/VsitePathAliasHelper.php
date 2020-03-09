@@ -59,7 +59,7 @@ class VsitePathAliasHelper implements VsitePathAliasHelperInterface {
     if ($group && !$is_group_source) {
       $group_prefix = '/[vsite:' . $group->id() . ']';
       if (strpos($alias, $group_prefix) === FALSE) {
-        $pathAlias->set('alias', $group_prefix . $alias);
+        $pathAlias->setAlias($group_prefix . $alias);
       }
     }
   }
