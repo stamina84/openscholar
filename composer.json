@@ -210,6 +210,7 @@
         "drupal/metatag": "^1.7",
         "drupal/migrate_file": "^1.1",
         "drupal/migrate_source_csv": "^3.1",
+        "drupal/migrate_source_ical": "1.x-dev",
         "drupal/migrate_tools": "^4.5",
         "drupal/node_revision_delete": "^1.0@beta",
         "drupal/pagebreak": "^1.0",
@@ -423,6 +424,9 @@
             },
             "drupal/migrate_tools": {
                 "Warning: session_id(): Cannot change session id when headers already sent": "https://www.drupal.org/files/issues/2019-03-09/3038712-2.patch"
+            },
+            "drupal/migrate_source_ical": {
+                "Migrate source Ical count() should be compatible with migrate": "https://www.drupal.org/files/issues/2019-12-14/3101074-0-migrate_source_ical-typos.patch"
             },
             "drupal/search_api_page": {
                 "Conjunction selection with Parse Mode": "https://www.drupal.org/files/issues/2020-01-24/search_api_page-3108496-4.patch"

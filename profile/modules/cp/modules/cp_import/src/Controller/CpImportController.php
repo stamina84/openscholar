@@ -55,4 +55,20 @@ class CpImportController extends ControllerBase {
     return new BinaryFileResponse($uri, 200, $headers, TRUE);
   }
 
+  /**
+   * Download sample ical template.
+   */
+  public function downloadIcalTemplate($app_name = NULL) {
+    $headers = [
+      'Content-Type' => 'text/calendar; charset=utf-8',
+      'Cache-Control' => 'max-age=60, must-revalidate',
+      'Content-Description' => 'File Download',
+      'Content-Disposition' => 'attachment; filename=' . "$app_name.ical",
+    ];
+
+    $uri = drupal_get_path('module', 'cp_import') . '/import_templates/os_' . $app_name . '.ical';
+    // Return and trigger file donwload.
+    return new BinaryFileResponse($uri, 200, $headers, TRUE);
+  }
+
 }

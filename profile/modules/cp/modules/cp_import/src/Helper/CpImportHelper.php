@@ -2,6 +2,7 @@
 
 namespace Drupal\cp_import\Helper;
 
+use DateTime;
 use Drupal\Component\Datetime\Time;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityTypeManager;
@@ -356,6 +357,52 @@ class CpImportHelper extends CpImportHelperBase {
       }
     }
     return 'public://global';
+  }
+
+  /**
+   * Checks is date is of supported date format.
+   *
+   * @param string $source_date
+   *   Source date string.
+   * @param array $supported_formats
+   *   Supported date format.
+   *
+   * @return bool
+   *   Returns if date is valid.
+   */
+  public function validateSourceDate($source_date, array $supported_formats): bool {
+    $source_date = strtoupper($source_date);
+    foreach ($supported_formats as $format) {
+      $date = DateTime::createFromFormat($format, $source_date);
+      if ($date && $date->format($format) == $source_date) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Returns transformed date formated if it is of supported type.
+   *
+   * @param string $source_date
+   *   Source date string.
+   * @param array $supported_formats
+   *   Supported date format.
+   * @param string $transform_format
+   *   Return date format.
+   *
+   * @return string
+   *   Returns if date is valid.
+   */
+  public function transformSourceDate($source_date, array $supported_formats, $transform_format) {
+    $source_date = strtoupper($source_date);
+    foreach ($supported_formats as $format) {
+      $date = DateTime::createFromFormat($format, $source_date);
+      if ($date && $date->format($format) == $source_date) {
+        return $date->format($transform_format);
+      }
+    }
+    return FALSE;
   }
 
 }
