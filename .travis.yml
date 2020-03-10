@@ -43,7 +43,7 @@ jobs:
     - stage: test
       script: robo job:run-kernel-tests "widgets-1,widgets-2,widgets-3,widgets-4,widgets-5"
     - stage: test
-      script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview"
+      script: robo job:run-kernel-tests "publications-1,publications-2,wysiwyg,vsite,os,os-theme-preview,vsite-preset"
     - stage: test
       script: robo job:run-kernel-tests "cp-1,cp-2,other-1,other-2,cp-menu,profiles,redirect,cp-appearance,os-search"
     - stage: test
@@ -77,7 +77,7 @@ jobs:
       script: robo job:run-kernel-tests-code-coverage "widgets-5"
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
-      script: robo job:run-kernel-tests-code-coverage "os-theme-preview,cp-appearance,profiles"
+      script: robo job:run-kernel-tests-code-coverage "os-theme-preview,cp-appearance,profiles,vsite-preset"
       after_success: bash <(curl -s https://codecov.io/bash)
     - stage: codecov
       script: robo job:run-kernel-tests-code-coverage "publications-1,redirect"

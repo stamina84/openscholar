@@ -16,6 +16,7 @@ use Drupal\os_widgets\OsWidgetsInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Class FeaturedPostsWidget.
@@ -221,6 +222,27 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
     if ($showPager && $renderItems) {
       $this->lopHelper->addWidgetMiniPager($build, $pager, $blockData);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createWidget(array $data, $bundle, GroupInterface $group): void {
+    $storage = $this->entityTypeManager->getStorage('block_content');
+    foreach ($data as $row) {
+      $block = $storage->create([
+        'type' => $bundle,
+        'info' => $row['Info'],
+        'field_widget_title' => $row['Title'],
+        'field_display_style' => $row['Display style'],
+        'field_sorted_by' => $row['Sort by'],
+        'field_content_type' => $row['Content type'],
+      ]);
+      $block->save();
+      $group->addContent($block, "group_entity:block_content");
+      $block_uuid = $block->uuid();
+      $this->saveWidgetLayout($row, $block_uuid);
     }
   }
 

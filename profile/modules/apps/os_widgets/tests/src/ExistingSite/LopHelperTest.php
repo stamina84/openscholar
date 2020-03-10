@@ -5,6 +5,7 @@ namespace Drupal\Tests\os_widgets\ExistingSite;
 use DateInterval;
 use DateTime;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\vsite_preset\Entity\GroupPreset;
 
 /**
  * Class LopHelperTest.
@@ -63,7 +64,8 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
   public function setUp() {
     parent::setUp();
     $this->lopHelper = $this->container->get('os_widgets.list_widgets_helper');
-
+    $this->vsitePresetHelper = $this->container->get('vsite_preset.preset_helper');
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
     // Activate vsite and create a vocabulary.
     $this->vsiteContextManager->activateVsite($this->group);
     $this->vocabulary = $this->createVocabulary();
@@ -406,6 +408,49 @@ class LopHelperTest extends OsWidgetsExistingSiteTestBase {
     $results = $this->lopHelper->getLopResults($data, $this->nids, $this->pids, $termIds);
     // Assert both nids are returned confirming OR.
     $this->assertCount(2, $results);
+  }
+
+  /**
+   * Tests CreateWidget().
+   *
+   * @throws \Exception
+   */
+  public function testCreateWidget(): void {
+    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
+    $preset = GroupPreset::load('personal');
+    $uriArr = $this->vsitePresetHelper->getCreateFilePaths($preset, $this->group);
+    $blockStorage = $this->entityTypeManager->getStorage('group_content');
+    $gid = $this->group->id();
+    // Test negative, block content does not exist already.
+    $blockArr = $blockStorage->loadByProperties([
+      'gid' => $gid,
+      'label' => 'Recent FAQs',
+    ]);
+    $this->assertEmpty($blockArr);
+    // Retrieve file creation csv source path.
+    foreach ($uriArr as $uri) {
+      $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
+    }
+    // Test positive page content is created.
+    $blockArr = $blockStorage->loadByProperties([
+      'gid' => $gid,
+      'label' => 'Recent FAQs',
+    ]);
+    $this->assertNotEmpty($blockArr);
+    $blockEntity = array_values($blockArr)[0];
+    $blockEntityId = $blockEntity->entity_id->target_id;
+    // Assert correct field values.
+    $blockContentEntity = $this->entityTypeManager->getStorage('block_content')->load($blockEntityId);
+    $type = $blockContentEntity->get('field_content_type')->value;
+    $displayStyle = $blockContentEntity->get('field_display_style')->value;
+    $sortedBy = $blockContentEntity->get('field_sorted_by')->value;
+    $widgeTitle = $blockContentEntity->get('field_widget_title')->value;
+    $info = $blockContentEntity->get('info')->value;
+    $this->assertEquals('faq', $type);
+    $this->assertEquals('title', $displayStyle);
+    $this->assertEquals('sort_newest', $sortedBy);
+    $this->assertEquals('Recent FAQs', $widgeTitle);
+    $this->assertEquals('Recent FAQs', $info);
   }
 
 }

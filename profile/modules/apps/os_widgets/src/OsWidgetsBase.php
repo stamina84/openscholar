@@ -8,6 +8,8 @@ use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\os_widgets\Entity\LayoutContext;
 
 /**
  * Class OsWidgetsBase.
@@ -41,6 +43,43 @@ class OsWidgetsBase extends PluginBase implements ContainerFactoryPluginInterfac
       $container->get('entity_type.manager'),
       $container->get('database')
     );
+  }
+
+  /**
+   * Creates default Widget/block content for the vsite.
+   *
+   * @param array $data
+   *   Csv rows as data array.
+   * @param string $bundle
+   *   Type of block content to create.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   Group for which data is created.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createWidget(array $data, $bundle, GroupInterface $group): void {}
+
+  /**
+   * Save widget layout.
+   *
+   * @param array $row
+   *   Csv rows array.
+   * @param string $uuid
+   *   Block UUID.
+   */
+  public function saveWidgetLayout(array $row, $uuid) {
+    // @var \Drupal\os_widgets\Entity\LayoutContext $context
+    $context = LayoutContext::load($row['Context']);
+    $data = $context->getBlockPlacements();
+    $data[] = [
+      'id' => "block_content|$uuid",
+      'region' => $row['Region'],
+      'weight' => 0,
+    ];
+    $context->setBlockPlacements($data);
+    $context->save();
   }
 
 }

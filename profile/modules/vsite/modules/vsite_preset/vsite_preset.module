@@ -31,16 +31,7 @@ function vsite_preset_group_insert(GroupInterface $group) {
       $appsToSetPrivate = $preset->getPrivateApps();
 
       $preset_helper->enableApps($group, $appsToEnable, $appsToSetPrivate);
-
-      $fileArr = $preset->getCreationFilePaths();
-      // If for this group type no preset files exists then we need not proceed.
-      if (!$fileArr[$group->getGroupType()->id()]) {
-        return;
-      }
-      if (isset($fileArr[$group->getGroupType()->id()])) {
-        $uriArr = array_keys($fileArr[$group->getGroupType()->id()]);
-      }
-
+      $uriArr = $preset_helper->getCreateFilePaths($preset, $group);
       // Set batch for creating default content if source files exist.
       $batch = [
         'title' => t('Setting up your new OpenScholar site'),

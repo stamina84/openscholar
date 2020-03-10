@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\os_widgets\ExistingSite;
 
+use Drupal\vsite_preset\Entity\GroupPreset;
+
 /**
  * Class CustomTextHtmlBlockRenderTest.
  *
@@ -25,6 +27,8 @@ class CustomTextHtmlBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     parent::setUp();
 
     $this->customTextHtmlWidget = $this->osWidgets->createInstance('custom_text_html_widget');
+    $this->vsitePresetHelper = $this->container->get('vsite_preset.preset_helper');
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
   }
 
   /**
@@ -68,6 +72,43 @@ class CustomTextHtmlBlockRenderTest extends OsWidgetsExistingSiteTestBase {
     $this->assertSame('', $build['#extra_classes'][2]);
     $this->assertSame('third-with-extra-space', $build['#extra_classes'][3]);
     $this->assertSame('_23456', $build['#extra_classes'][4]);
+  }
+
+  /**
+   * Tests CreateWidget().
+   *
+   * @throws \Exception
+   */
+  public function testCreateWidget(): void {
+    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
+    $preset = GroupPreset::load('personal');
+    $uriArr = $this->vsitePresetHelper->getCreateFilePaths($preset, $this->group);
+    $blockStorage = $this->entityTypeManager->getStorage('group_content');
+    $gid = $this->group->id();
+    // Test negative, block content does not exist already.
+    $blockArr = $blockStorage->loadByProperties([
+      'gid' => $gid,
+      'label' => 'Contact Widget',
+    ]);
+    $this->assertEmpty($blockArr);
+    // Retrieve file creation csv source path.
+    foreach ($uriArr as $uri) {
+      $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
+    }
+    // Test positive page content is created.
+    $blockArr = $blockStorage->loadByProperties([
+      'gid' => $gid,
+      'label' => 'Contact Widget',
+    ]);
+    $this->assertNotEmpty($blockArr);
+    $blockEntity = array_values($blockArr)[0];
+    $blockEntityId = $blockEntity->entity_id->target_id;
+    // Assert correct field values.
+    $blockContentEntity = $this->entityTypeManager->getStorage('block_content')->load($blockEntityId);
+    $widgeTitle = $blockContentEntity->get('field_widget_title')->value;
+    $info = $blockContentEntity->get('info')->value;
+    $this->assertEquals('Contact', $widgeTitle);
+    $this->assertEquals('Contact Widget', $info);
   }
 
 }

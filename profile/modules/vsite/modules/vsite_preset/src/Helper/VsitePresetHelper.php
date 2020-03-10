@@ -9,10 +9,11 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\cp_menu\Services\MenuHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\os_app_access\AppAccessLevels;
-use Drupal\os_widgets\Entity\LayoutContext;
 use Drupal\vsite\Plugin\AppManager;
 use Drupal\vsite\Plugin\VsiteContextManager;
 use League\Csv\Reader;
+use Drupal\os_widgets\OsWidgetsManager;
+use Drupal\vsite_preset\Entity\GroupPreset;
 
 /**
  * Class VsitePresetHelper.
@@ -59,6 +60,13 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
   protected $configFactory;
 
   /**
+   * Os widget factory.
+   *
+   * @var Drupal\os_widgets\OsWidgetsManager
+   */
+  protected $osWidgetsManager;
+
+  /**
    * VsitePresetHelper constructor.
    *
    * @param \Drupal\vsite\Plugin\VsiteContextManager $vsiteContextManager
@@ -71,13 +79,16 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
    *   MenuHelper instance.
    * @param \Drupal\Core\Config\ConfigFactory $configFactory
    *   ConfigFactory instance.
+   * @param Drupal\os_widgets\OsWidgetsManager $osWidgetsManager
+   *   OsWidgetsManager instance.
    */
-  public function __construct(VsiteContextManager $vsiteContextManager, AppManager $appManager, EntityTypeManager $entityTypeManager, MenuHelper $menuHelper, ConfigFactory $configFactory) {
+  public function __construct(VsiteContextManager $vsiteContextManager, AppManager $appManager, EntityTypeManager $entityTypeManager, MenuHelper $menuHelper, ConfigFactory $configFactory, OsWidgetsManager $osWidgetsManager) {
     $this->vsiteContextManager = $vsiteContextManager;
     $this->appManager = $appManager;
     $this->entityTypeManager = $entityTypeManager;
     $this->menuHelper = $menuHelper;
     $this->configFactory = $configFactory;
+    $this->osWidgetsManager = $osWidgetsManager;
   }
 
   /**
@@ -129,13 +140,42 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
         break;
 
       case 'block_content':
-        $this->createWidget($data, $bundle, $group);
+        $plugin_id = $bundle . '_widget';
+        $plugin = $this->osWidgetsManager->createInstance($plugin_id);
+        $plugin->createWidget($data, $bundle, $group);
         break;
 
       case 'menu_link_content':
         $this->createMenuLinks($data, $group);
         break;
     }
+  }
+
+  /**
+   * Returns file paths of contents to be created.
+   *
+   * @param \Drupal\vsite_preset\Entity\GroupPreset $preset
+   *   Preset object. Group Preset Config.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   Group for which data is created.
+   *
+   * @see vsite_preset_group_insert()
+   *
+   * @return array
+   *   Returns path to all csv files.
+   */
+  public function getCreateFilePaths(GroupPreset $preset, GroupInterface $group) {
+    $fileArr = $preset->getCreationFilePaths();
+    $group_id = $group->getGroupType()->id();
+    $default_content['default'] = file_scan_directory(drupal_get_path('module', 'vsite_preset') . "/default_content/", '/.csv/');
+    // If for this group type no preset files exists then we need not proceed.
+    if (isset($fileArr[$group_id])) {
+      $fileArrAll = array_merge($default_content['default'], $fileArr[$group_id]);
+    }
+    else {
+      $fileArrAll = $default_content;
+    }
+    return array_keys($fileArrAll);
   }
 
   /**
@@ -164,46 +204,6 @@ class VsitePresetHelper implements VsitePresetHelperInterface {
       if ($row['Link'] == 'TRUE') {
         $this->createContentMenuLink($row['Title'], $group->id(), $node, $row['LinkWeight']);
       }
-    }
-  }
-
-  /**
-   * Creates default Widget/block content for the group.
-   *
-   * @param array $data
-   *   Csv rows as data array.
-   * @param string $bundle
-   *   Type of node to create.
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   Group for which data is created.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  protected function createWidget(array $data, $bundle, GroupInterface $group) {
-    $storage = $this->entityTypeManager->getStorage('block_content');
-    foreach ($data as $row) {
-      $block = $storage->create([
-        'type' => $bundle,
-        'info' => $row['Info'],
-        'field_widget_title' => $row['Title'],
-        'body' => $row['Body'],
-      ]);
-      $block->save();
-      $group->addContent($block, "group_entity:block_content");
-
-      /** @var \Drupal\os_widgets\Entity\LayoutContext $context */
-      $context = LayoutContext::load($row['Context']);
-      $data = $context->getBlockPlacements();
-      $block_uuid = $block->uuid();
-      $data[] = [
-        'id' => "block_content|$block_uuid",
-        'region' => $row['Region'],
-        'weight' => 0,
-      ];
-      $context->setBlockPlacements($data);
-      $context->save();
     }
   }
 

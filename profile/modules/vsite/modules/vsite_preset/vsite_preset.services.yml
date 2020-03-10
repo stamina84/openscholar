@@ -1,4 +1,4 @@
 services:
   vsite_preset.preset_helper:
     class: \Drupal\vsite_preset\Helper\VsitePresetHelper
-    arguments: ['@vsite.context_manager', '@vsite.app.manager', '@entity_type.manager', '@cp_menu.menu_helper', '@config.factory']
+    arguments: ['@vsite.context_manager', '@vsite.app.manager', '@entity_type.manager', '@cp_menu.menu_helper', '@config.factory', '@plugin.manager.os_widgets']

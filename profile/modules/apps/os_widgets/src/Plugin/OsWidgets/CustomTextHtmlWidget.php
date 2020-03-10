@@ -5,6 +5,7 @@ namespace Drupal\os_widgets\Plugin\OsWidgets;
 use Drupal\Component\Utility\Html;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Class CustomTextHtmlWidget.
@@ -50,6 +51,25 @@ class CustomTextHtmlWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $classes[] = Html::cleanCssIdentifier($user_class);
     }
     return $classes;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createWidget(array $data, $bundle, GroupInterface $group): void {
+    $storage = $this->entityTypeManager->getStorage('block_content');
+    foreach ($data as $row) {
+      $block = $storage->create([
+        'type' => $bundle,
+        'info' => $row['Info'],
+        'body' => $row['Body'],
+        'field_widget_title' => $row['Title'],
+      ]);
+      $block->save();
+      $block_uuid = $block->uuid();
+      $group->addContent($block, "group_entity:block_content");
+      $this->saveWidgetLayout($row, $block_uuid);
+    }
   }
 
 }

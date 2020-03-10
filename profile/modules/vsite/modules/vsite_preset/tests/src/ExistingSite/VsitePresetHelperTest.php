@@ -299,4 +299,21 @@ class VsitePresetHelperTest extends VsiteExistingSiteTestBase {
     $this->assertEquals('Home', $link->getTitle());
   }
 
+  /**
+   * Test getCreateFilePaths.
+   */
+  public function testGetCreateFilePaths() {
+    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
+    $preset = GroupPreset::load('personal');
+    $uriArr = $this->vsitePresetHelper->getCreateFilePaths($preset, $this->group);
+    $this->assertNotEmpty($uriArr);
+    $flag = 0;
+    foreach ($uriArr as $value) {
+      if (strpos($value, 'default_content') == TRUE) {
+        $flag = 1;
+      }
+    }
+    $this->assertEquals(1, $flag);
+  }
+
 }
