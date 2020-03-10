@@ -125,6 +125,7 @@ class PublicationsFormTest extends TestBase {
       'publication_day' => '_none',
     ];
     $this->submitForm($edit, 'edit-submit');
+    $this->visitViaVsite('bibcite/reference/' . $reference->id(), $this->group);
     $this->assertSession()->pageTextContains('4/2019');
     $this->visitViaVsite('publications', $this->group);
     $this->assertSession()->pageTextContains('4/2019');
@@ -137,6 +138,7 @@ class PublicationsFormTest extends TestBase {
       'publication_day' => '4',
     ];
     $this->submitForm($edit, 'edit-submit');
+    $this->visitViaVsite('bibcite/reference/' . $reference->id(), $this->group);
     $this->assertSession()->pageTextNotContains('4/1980');
     $this->assertSession()->pageTextContains('1980');
     $this->visitViaVsite('publications', $this->group);
