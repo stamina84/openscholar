@@ -42,16 +42,17 @@ class TabsListCollectionWidgetTest extends OsExistingSiteJavascriptTestBase {
     $vsiteContextManager->activateVsite($this->group);
     $web_assert = $this->assertSession();
 
+    $widget_title = $this->randomMachineName();
     // Creating a test custom_text_html block.
     $block_content = $this->createBlockContent([
       'type' => 'custom_text_html',
       'info' => [
-        'value' => 'Test tab 1',
+        'value' => $widget_title,
       ],
       'body' => [
         'Lorem Ipsum tab content 1',
       ],
-      'field_widget_title' => ['Test tab 1'],
+      'field_widget_title' => [$widget_title],
     ]);
 
     $this->group->addContent($block_content, 'group_entity:block_content');
@@ -62,11 +63,11 @@ class TabsListCollectionWidgetTest extends OsExistingSiteJavascriptTestBase {
     $page = $this->getCurrentPage();
     $this->assertSession()->pageTextContains('Add Widget to Collection');
     $select_field = $page->findField('field_widget_collection[add_new_element][select_input]');
-    $select_field->selectOption('Test tab 1');
+    $select_field->selectOption($widget_title);
     $page->findButton('Add this')->click();
     // On AJAX submit, waiting and finding table column with same block info.
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertTrue('<td>Test tab 1</td>');
+    $this->assertSession()->pageTextContains($widget_title);
   }
 
 }
