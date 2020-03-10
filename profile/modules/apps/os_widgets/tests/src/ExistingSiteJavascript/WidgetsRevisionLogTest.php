@@ -3,6 +3,7 @@
 namespace Drupal\Tests\os_widgets\ExistingSiteJavascript;
 
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;
+use Drupal\os_widgets\Plugin\DisplayVariant\PlaceBlockPageVariant;
 
 /**
  * Tests os_widgets module.
@@ -39,6 +40,8 @@ class WidgetsRevisionLogTest extends OsExistingSiteJavascriptTestBase {
    * Tests if os_widgets revision log exists.
    */
   public function testWidgetsRevisionLogForm() {
+    $ignored_block_list = PlaceBlockPageVariant::IGNORE_BLOCK_TYPE_LIST;
+
     $web_assert = $this->assertSession();
 
     $this->visitViaVsite("?block-place=1", $this->group);
@@ -48,7 +51,7 @@ class WidgetsRevisionLogTest extends OsExistingSiteJavascriptTestBase {
     $page->pressButton('Create New Widget');
     // Iterate through all of widgets to check if revision information.
     foreach ($this->widgetTypes as $key => $label) {
-      if ($key != 'basic') {
+      if (!in_array($key, $ignored_block_list)) {
         $class = str_replace('_', '-', $key);
         $page->find('xpath', '//li[contains(@class, "' . $class . '")]/a')->press();
         $web_assert->waitForText('Add new "' . $label['label'] . '" Widget');

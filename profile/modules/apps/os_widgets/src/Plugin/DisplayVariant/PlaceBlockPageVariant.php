@@ -13,6 +13,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * PageVariant to handle our custom layout management.
  */
 class PlaceBlockPageVariant extends OriginalVariant {
+  /**
+   * The ignore block type list while creating new widget.
+   */
+  const IGNORE_BLOCK_TYPE_LIST = [
+    'current_search_summary',
+    'facet',
+    'filter_date',
+    'filter_post',
+    'filter_taxonomy',
+    'search_sort',
+    'basic',
+  ];
 
   /**
    * Section Storage Manager.
@@ -169,10 +181,11 @@ class PlaceBlockPageVariant extends OriginalVariant {
 
     /** @var \Drupal\block_content\Entity\BlockContentType[] $block_types */
     $block_types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple();
+
     $factory_links = [];
 
     foreach ($block_types as $bt) {
-      if ($bt->id() != 'basic') {
+      if (!in_array($bt->id(), self::IGNORE_BLOCK_TYPE_LIST)) {
         $factory_links[$bt->id()] = [
           'title' => $bt->label(),
           'url' => Url::fromRoute('os_widgets.create_widget', ['block_content_type' => $bt->id()]),
