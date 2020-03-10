@@ -42,13 +42,6 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
   protected $formBuilder;
 
   /**
-   * List of installed themes made from os_base.
-   *
-   * @var \Drupal\Core\Extension\Extension[]|null
-   */
-  protected $osInstalledThemes;
-
-  /**
    * Theme selector builder service.
    *
    * @var \Drupal\cp_appearance\ThemeSelectorBuilderInterface
@@ -90,15 +83,16 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
    * {@inheritdoc}
    */
   public function getFeaturedThemes(): array {
-    $themes = $this->osInstalledThemes();
+    /** @var \Drupal\Core\Extension\Extension[] $drupal_installed_themes */
+    $drupal_installed_themes = $this->themeHandler->listInfo();
     $featured_themes = [];
     $sub_themes = [];
-    foreach ($themes as $index => $theme) {
-      $feature_theme_condition = !isset($theme->info['onepage']) && !isset($theme->info['custom theme']);
+    foreach ($drupal_installed_themes as $index => $theme) {
+      $feature_theme_condition = isset($theme->info['vsite_theme']) && $theme->info['vsite_theme'];
       if ($feature_theme_condition) {
         $featured_themes[$index] = $theme;
         if (isset($theme->sub_themes)) {
-          $sub_themes = $this->getFlavors($themes, $theme->sub_themes);
+          $sub_themes = $this->getFlavors($drupal_installed_themes, $theme->sub_themes);
         }
       }
     }
@@ -112,16 +106,21 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
    * {@inheritdoc}
    */
   public function getOnePageThemes(): array {
-    $themes = $this->osInstalledThemes();
+    /** @var \Drupal\Core\Extension\Extension[] $drupal_installed_themes */
+    $drupal_installed_themes = $this->themeHandler->listInfo();
     $one_page_themes = [];
     $sub_themes = [];
     // Get one page themes.
-    foreach ($themes as $index => $theme) {
-      $one_page_condition = isset($theme->info['onepage']) && $theme->info['onepage'] == TRUE;
+    foreach ($drupal_installed_themes as $index => $theme) {
+      $one_page_condition =
+        (isset($theme->base_themes) &&  $theme->status && $theme->origin != 'core') &&
+        $theme->info['base theme'] != 'bootstrap' &&
+        isset($theme->info['onepage']) && $theme->info['onepage'] == TRUE &&
+        isset($theme->info['vsite_theme']);
       if ($one_page_condition) {
         $one_page_themes[$index] = $theme;
         if (isset($theme->sub_themes)) {
-          $sub_themes = $this->getFlavors($themes, $theme->sub_themes);
+          $sub_themes = $this->getFlavors($drupal_installed_themes, $theme->sub_themes);
         }
       }
     }
@@ -343,22 +342,6 @@ final class AppearanceSettingsBuilder implements AppearanceSettingsBuilderInterf
       $theme->operations = $this->addOperations($theme);
       $theme->notes = $this->addNotes($theme);
     }
-  }
-
-  /**
-   * List of OS installed themes(not core themes) and flavors.
-   *
-   * @return \Drupal\Core\Extension\Extension[]
-   *   The themes.
-   */
-  protected function osInstalledThemes(): array {
-    if (!$this->osInstalledThemes) {
-      $this->osInstalledThemes = array_filter($this->themeHandler->listInfo(), function (Extension $theme) {
-        return (isset($theme->base_themes) &&  $theme->status && $theme->origin != 'core') && $theme->info['base theme'] != 'bootstrap' &&
-          isset($theme->info['vsite_theme']);
-      });
-    }
-    return $this->osInstalledThemes;
   }
 
 }
