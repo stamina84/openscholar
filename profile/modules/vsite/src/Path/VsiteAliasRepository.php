@@ -43,8 +43,8 @@ class VsiteAliasRepository implements AliasRepositoryInterface {
   /**
    * Constructor.
    */
-  public function __construct(AliasRepositoryInterface $storage, ModifierIndex $modifierIndex, EntityTypeManagerInterface $entityTypeManager, VsiteContextManagerInterface $vsiteContextManager) {
-    $this->repository = $storage;
+  public function __construct(AliasRepositoryInterface $repository, ModifierIndex $modifierIndex, EntityTypeManagerInterface $entityTypeManager, VsiteContextManagerInterface $vsiteContextManager) {
+    $this->repository = $repository;
     $this->modifierIndex = $modifierIndex;
     $this->entityTypeManager = $entityTypeManager;
     $this->vsiteContextManager = $vsiteContextManager;
