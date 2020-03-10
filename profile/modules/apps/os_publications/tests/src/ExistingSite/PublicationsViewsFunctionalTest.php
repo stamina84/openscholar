@@ -186,7 +186,7 @@ class PublicationsViewsFunctionalTest extends TestBase {
     $this->group->addContent($reference1, 'group_entity:bibcite_reference');
 
     $reference2 = $this->createReference([
-      'html_title' => 'Harry Potter and the Deathly Hallows',
+      'html_title' => 'Harry Potter And The Deathly Hallows',
       'type' => 'book',
       'author' => [
         'target_id' => $contributor2->id(),
@@ -203,7 +203,7 @@ class PublicationsViewsFunctionalTest extends TestBase {
     $this->group->addContent($reference2, 'group_entity:bibcite_reference');
 
     $reference3 = $this->createReference([
-      'html_title' => 'Harry Potter and the Chamber of Secrets',
+      'html_title' => 'Harry Potter And The Chamber Of Secrets',
       'type' => 'book',
       'author' => [
         'target_id' => $contributor2->id(),
@@ -233,7 +233,7 @@ class PublicationsViewsFunctionalTest extends TestBase {
     $this->group->addContent($reference4, 'group_entity:bibcite_reference');
 
     $reference5 = $this->createReference([
-      'html_title' => 'Wheatfield with Crows',
+      'html_title' => 'Wheatfield With Crows',
       'author' => [
         'target_id' => $contributor3->id(),
         'category' => 'primary',
