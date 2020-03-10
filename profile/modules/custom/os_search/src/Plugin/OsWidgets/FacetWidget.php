@@ -213,7 +213,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
           }
         }
 
-        $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
+        $path = Url::fromRoute($route_name, $route_parameters);
         $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
         $items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
       }

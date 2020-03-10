@@ -121,6 +121,8 @@ class OsSearchFacetedTaxonomyQueryBuilder {
   /**
    * Prepare list of terms for Filter Taxonomy.
    *
+   * @param array $vocab_filter
+   *   Filter for vocabulary.
    * @param string $vocab_order_by
    *   Order by key for Taxonomy Vocabulary.
    * @param string $term_order_by
@@ -133,12 +135,16 @@ class OsSearchFacetedTaxonomyQueryBuilder {
    * @return array
    *   List of terms.
    */
-  public function prepareFacetVocaulbaries(string $vocab_order_by, string $term_order_by, array $buckets, $field_processor = 'taxonomy_term') {
+  public function prepareFacetVocaulbaries(array $vocab_filter, string $vocab_order_by, string $term_order_by, array $buckets, $field_processor = 'taxonomy_term') {
     $vocab_list = [];
 
     $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
 
     $query = $taxonomy_vocabulary_storage->getQuery();
+    if (!in_array('_none', $vocab_filter) || $vocab_filter != NULL) {
+      $query->condition('vid', $vocab_filter, 'IN');
+    }
+    $query->condition('vid', $vocab_filter, 'IN');
     $query->sort($vocab_order_by, 'ASC');
     $vids = $query->execute();
 
@@ -148,26 +154,28 @@ class OsSearchFacetedTaxonomyQueryBuilder {
 
     $bucket_key = [];
 
-    foreach ($buckets as $key => $bucket) {
-      $bucket_key[$key] = $bucket['key'];
-    }
+    if ($buckets) {
+      foreach ($buckets as $key => $bucket) {
+        $bucket_key[$key] = $bucket['key'];
+      }
 
-    $query = $taxonomy_term_storage->getQuery();
-    $query->condition('tid', $bucket_key, 'IN');
+      $query = $taxonomy_term_storage->getQuery();
+      $query->condition('tid', $bucket_key, 'IN');
 
-    // When relevance selected removing sort_by.
-    if ($term_order_by != 'rev') {
-      $query->sort($term_order_by, 'DESC');
-    }
+      // When relevance selected removing sort_by.
+      if ($term_order_by != 'rev') {
+        $query->sort($term_order_by, 'DESC');
+      }
 
-    $tids = $query->execute();
-    $terms = $taxonomy_term_storage->loadMultiple($tids);
-    foreach ($vocabularies as $vocabulary) {
-      foreach ($terms as $term) {
-        foreach ($buckets as $bucket) {
-          if ($term->id() == $bucket['key'] && $term->bundle() === $vocabulary->id()) {
-            $vocab_list[$term->bundle()]['children'][] = $bucket;
-            $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+      $tids = $query->execute();
+      $terms = $taxonomy_term_storage->loadMultiple($tids);
+      foreach ($vocabularies as $vocabulary) {
+        foreach ($terms as $term) {
+          foreach ($buckets as $bucket) {
+            if ($term->id() == $bucket['key'] && $term->bundle() === $vocabulary->id()) {
+              $vocab_list[$term->bundle()]['children'][] = $bucket;
+              $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+            }
           }
         }
       }
@@ -188,7 +196,9 @@ class OsSearchFacetedTaxonomyQueryBuilder {
   public function prepareVocabulariesList($app) {
     $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
     $vocabularies = $taxonomy_vocabulary_storage->loadMultiple();
-    $vocabularies_name['none'] = '--none--';
+    $vocabularies_name = [
+      '_none' => '--None--',
+    ];
     if ($app != NULL) {
       $vocabularies_name = [];
       foreach ($vocabularies as $vocabulary) {
@@ -196,7 +206,9 @@ class OsSearchFacetedTaxonomyQueryBuilder {
           $vocabularies_name[$vocabulary->id()] = $vocabulary->label();
         }
         else {
-          $vocabularies_name['none'] = '--none--';
+          $vocabularies_name = [
+            '_none' => '--None--',
+          ];
         }
       }
     }

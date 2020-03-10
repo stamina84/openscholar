@@ -6,9 +6,9 @@ dependencies:
     - block_content.type.faceted_taxonomy
     - field.field.block_content.faceted_taxonomy.field_content_type
     - field.field.block_content.faceted_taxonomy.field_display_styles
-    - field.field.block_content.faceted_taxonomy.field_select_vocabularies
     - field.field.block_content.faceted_taxonomy.field_show_number_of_posts
     - field.field.block_content.faceted_taxonomy.field_term_order
+    - field.field.block_content.faceted_taxonomy.field_vocabularies
     - field.field.block_content.faceted_taxonomy.field_vocabulary_order
     - field.field.block_content.faceted_taxonomy.field_widget_title
   module:
@@ -33,13 +33,7 @@ content:
     weight: 26
     settings: {  }
     third_party_settings: {  }
-    type: options_select
-    region: content
-  field_select_vocabularies:
-    weight: 4
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
+    type: options_buttons
     region: content
   field_show_number_of_posts:
     weight: 7
@@ -50,6 +44,12 @@ content:
     region: content
   field_term_order:
     weight: 6
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_vocabularies:
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: options_select

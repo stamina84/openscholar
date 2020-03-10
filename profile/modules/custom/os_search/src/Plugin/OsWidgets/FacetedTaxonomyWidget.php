@@ -125,12 +125,13 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     $term_order_by = $block_content->get('field_term_order')->value ?? '';
     $class = $block_content->get('field_display_styles')->value ?? '';
     $need_count = $block_content->get('field_show_number_of_posts')->value == 1 ? TRUE : FALSE;
+    $vocab_filter = $block_content->get('field_vocabularies')->value ?? [];
 
     $buckets = $this->osSearchFacetBuilder->getFacetBuckets($field_id, $query);
     $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);
     $this->osSearchFacetBuilder->prepareFacetLinks($buckets, $field_id);
 
-    $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($vocab_order_by, $term_order_by, $buckets);
+    $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($vocab_filter, $vocab_order_by, $term_order_by, $buckets);
 
     $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label, $field_app_content, $class, $need_count);
 
@@ -223,6 +224,7 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
       $item_label = is_array($item_label) ? reset($item_label) : $item_label;
       $route_parameters['f'] = array_merge($filters, $bucket['query']);
       $route_parameters['keys'] = $keys;
+
       $path = Url::fromRoute($route_name, $route_parameters);
 
       if ($need_count) {
@@ -237,7 +239,7 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
             }
           }
 
-          $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
+          $path = Url::fromRoute($route_name, $route_parameters);
           $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
           $items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
         }

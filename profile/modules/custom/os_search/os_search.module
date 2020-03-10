@@ -50,14 +50,13 @@ function os_search_form_alter(&$form, FormStateInterface $form_state, $form_id) 
       'wrapper' => 'view-vocab-list',
 
     ];
-    $form['field_select_vocabularies'] = [
-      '#type' => 'select',
-      '#title' => 'Vocab',
-      '#prefix' => '<div id="view-vocab-list">',
-      '#suffix' => '</div>',
-      '#options' => _get_vocab_list($vocab_default_list),
+    $form['field_vocabularies']['widget']['#options'] = _get_vocab_list($vocab_default_list);
+    $form['field_vocabularies']['widget']['#prefix'] = '<div id="view-vocab-list">';
+    $form['field_vocabularies']['widget']['#suffix'] = '</div>';
+    unset($form['field_vocabulary_order']['widget']['#options']['_none']);
+    unset($form['field_term_order']['widget']['#options']['_none']);
+    unset($form['field_display_styles']['widget']['#options']['_none']);
 
-    ];
   }
 
 }
@@ -66,7 +65,7 @@ function os_search_form_alter(&$form, FormStateInterface $form_state, $form_id) 
  * Updating Vocab list with ajax on app change.s.
  */
 function _os_search_ajax_replace_dropdown_default_value_callback(array $form, FormStateInterface $form_state) {
-  return $form['field_select_vocabularies'];
+  return $form['field_vocabularies'];
 }
 
 /**
