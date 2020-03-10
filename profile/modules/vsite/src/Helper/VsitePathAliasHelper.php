@@ -51,16 +51,18 @@ class VsitePathAliasHelper implements VsitePathAliasHelperInterface {
     $source = $pathAlias->getPath();
     $alias = $pathAlias->getAlias();
     $is_group_source = preg_match('|^\/group\/[\d]*$|', $source);
+    $new_alias = $alias;
     if (!$is_group_source) {
-      $alias = $this->pathToToken($alias);
+      $new_alias = $this->pathToToken($alias);
     }
     /** @var \Drupal\group\Entity\GroupInterface $group */
     $group = $this->vsiteContextManager->getActiveVsite();
     if ($group && !$is_group_source) {
       $group_prefix = '/[vsite:' . $group->id() . ']';
-      if (strpos($alias, $group_prefix) === FALSE) {
-        $pathAlias->setAlias($group_prefix . $alias);
+      if ($new_alias == $alias) {
+        $new_alias = $group_prefix . $alias;
       }
+      $pathAlias->setAlias($new_alias);
     }
   }
 

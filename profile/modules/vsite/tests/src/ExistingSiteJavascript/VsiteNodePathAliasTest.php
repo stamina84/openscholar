@@ -99,12 +99,15 @@ class VsiteNodePathAliasTest extends OsExistingSiteJavascriptTestBase {
    */
   public function testNodeCreationWithManualExistsAlias() {
     $web_assert = $this->assertSession();
-    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $path_alias_storage */
     $path_alias_storage = $this->container->get('entity_type.manager')->getStorage('path_alias');
-    $path_alias_storage->create([
+    $path_alias = $path_alias_storage->create([
       'path' => "/node/99",
       'alias' => '/[vsite:' . $this->group->id() . ']/blog/existing-alias',
-    ])->save();
+      'langcode' => 'en',
+    ]);
+    $path_alias->save();
+    $this->markEntityForCleanup($path_alias);
     $this->visitViaVsite('node/add/blog', $this->group);
     $web_assert->statusCodeEquals(200);
     $page = $this->getSession()->getPage();
@@ -115,7 +118,7 @@ class VsiteNodePathAliasTest extends OsExistingSiteJavascriptTestBase {
     $page->findButton('Save')->press();
 
     $web_assert->pageTextContains('error has been found');
-    $web_assert->pageTextContains('The alias is already in use.');
+    $web_assert->pageTextContains('The alias /blog/existing-alias is already in use in this language.');
     $html = $this->getCurrentPageContent();
     // Check path field is printed without site url.
     $this->assertContains('name="path[0][alias]" value="/blog/existing-alias"', $html);
@@ -133,13 +136,10 @@ class VsiteNodePathAliasTest extends OsExistingSiteJavascriptTestBase {
     $page->findButton('URL alias')->press();
     $page->findField('path[0][pathauto]')->press();
     $page->fillField('path[0][alias]', 'alias-without-slash');
-    // $page->findButton('Save')->press();
-    // TODO: fix that case, path is saved with correct
-    // /[vsite:X]/alias-without-slash, but PathFieldItemList::computeValue
-    // will save again, with /group-path-alias/alias-without-slash.
-    // $url = $this->getUrl();
+    $page->findButton('Save')->press();
+    $url = $this->getUrl();
     // Check node is created with slashed alias.
-    // $this->assertContains('/alias-without-slash', $url);.
+    $this->assertContains('/alias-without-slash', $url);
   }
 
   /**
