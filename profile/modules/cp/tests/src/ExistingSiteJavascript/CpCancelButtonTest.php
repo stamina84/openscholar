@@ -21,13 +21,16 @@ class CpCancelButtonTest extends OsExistingSiteJavascriptTestBase {
    */
   public function setUp() {
     parent::setUp();
-    /** @var \Drupal\Core\Path\AliasStorageInterface $path_alias_storage */
-    $path_alias_storage = $this->container->get('path.alias_storage');
-    $this->vsiteAlias = $this->group->get('path')->first()->getValue()['alias'];
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $path_alias_manager */
+    $path_alias_manager = $this->container->get('entity_type.manager')->getStorage('path_alias');
     $this->node = $this->createNode();
     $this->group->addContent($this->node, "group_node:{$this->node->bundle()}");
-    $exist_alias = $path_alias_storage->load(['source' => '/node/' . $this->node->id()]);
-    $this->nodePath = $this->vsiteAlias . $exist_alias['alias'];
+    $exist_aliases = $path_alias_manager->loadByProperties(['path' => '/node/' . $this->node->id()]);
+    $exist_alias = array_pop($exist_aliases);
+    $this->nodePath = $this->groupAlias . $exist_alias->getAlias();
+    // Fix group alias of the node.
+    $exist_alias->setAlias('/[vsite:' . $this->group->id() . ']' . $exist_alias->getAlias());
+    $exist_alias->save();
 
     $group_admin = $this->createUser();
     $this->addGroupAdmin($group_admin, $this->group);
