@@ -1,5 +1,5 @@
 Title,Body,Start date,End date,Location,Registration,Files,Created date,Path
-Event with registration (including hour),This is event with registration,2020-11-30 3:20 PM,2020-11-30 3:50 PM,Boston,On,http://college.harvard.edu/sites/default/files/harvard-fy.pdf,2020-12-31,
-Event without registration (including hour),This is event without registration,2020-9-20 3:20 PM,2020-9-20 3:50 PM,Toronto,,http://college.harvard.edu/sites/default/files/harvard-fy.pdf,2020-12-31,
-Event with registration,This is event with registration,2020-5-15,2020-5-15,Boston,On,http://college.harvard.edu/sites/default/files/harvard-fy.pdf,2020-12-31,
-Event without registration,This is event without registration,2020-6-20,2020-6-20,Toronto,,http://college.harvard.edu/sites/default/files/harvard-fy.pdf,2020-12-31,
+Event with registration (including hour),This is event with registration,2020-11-30 03:20 PM,2020-11-30 03:50 PM,Boston,On,https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf,12/31/2020,
+Event without registration (including hour),This is event without registration,2020-9-20 03:20 PM,2020-9-20 03:50 PM,Toronto,,https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf,12/31/2020,
+Event with registration,This is event with registration,2020-05-15,2020-05-15,Boston,On,https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf,12/31/2020,
+Event without registration,This is event without registration,2020-06-20,2020-06-20,Toronto,,https://www.harvard.edu/sites/default/files/content/Review_Committee_Report_20181113.pdf,12/31/2020,

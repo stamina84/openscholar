@@ -1,0 +1,56 @@
+id: os_events_ical_import
+migration_tags:
+  - iCal
+label: 'Events iCal Import'
+migration_group: ical
+source:
+  plugin: ical
+  path: public://importcsv/os_event.ical
+  keys:
+    - uid
+  identifier: upc
+  identifierDepth: 1
+  fields:
+    - uid
+    - summary
+    - description
+    - dtstart
+    - dtend
+    - location
+  constants:
+    view: '/calendar/upcoming/'
+process:
+  type:
+    plugin: default_value
+    default_value: events
+  title: summary
+  body: description
+  field_location: location
+  field_recurring_date/value:
+    plugin: format_date
+    from_format: 'Ymd\THis'
+    to_format: 'Y-m-d\TH:i:s'
+    source: dtstart
+  field_recurring_date/end_value:
+    plugin: format_date
+    from_format: 'Ymd\THis'
+    to_format: 'Y-m-d\TH:i:s'
+    source: dtend
+  field_recurring_date/timezone:
+    plugin: default_value
+    default_value: 'America/New_York'
+  field_attached_media/target_id: files
+  field_signup: registration
+  path/pathauto:
+    plugin: default_value
+    default_value: 0 # Disable pathauto
+  path/alias:
+    plugin: concat
+    source:
+      - constants/view
+      - Path
+destination:
+  plugin: 'entity:node'
+migration_dependencies:
+  required: {  }
+  optional: {  }

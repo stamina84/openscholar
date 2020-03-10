@@ -30,6 +30,15 @@ class AppImport extends Base {
    */
   protected $groupPluginId = 'group_node:events';
 
+  public const SUPPORTED_FORMAT = [
+    'Y-m-d',
+    'Y-m-d h:i A',
+    'Y-m-d g:i A',
+    'Y-n-j',
+    'Y-n-j h:i A',
+    'Y-n-j g:i A',
+  ];
+
   /**
    * {@inheritdoc}
    */
@@ -43,7 +52,7 @@ class AppImport extends Base {
       return;
     }
     // Get the media.
-    $media_entity = $this->cpImportHelper->getMedia($media_val, $this->type);
+    $media_entity = $this->cpImportHelper->getMedia($media_val, $this->type, 'field_attached_media');
     if ($media_entity) {
       $row->setDestinationProperty('field_attached_media/target_id', $media_entity->id());
     }
@@ -66,30 +75,11 @@ class AppImport extends Base {
    */
   public function prepareRowActions(MigratePrepareRowEvent $event) {
     $source = $event->getRow()->getSource();
-    $createdDate = $source['Created date'];
-    if ($createdDate) {
-      $date = DateTime::createFromFormat('Y-m-d', $createdDate);
-      if ($date->format('Y-n-j') == $createdDate) {
-        $event->getRow()->setSourceProperty('Created date', $date->format('Y-m-d'));
-      }
-    }
-    else {
-      $date = new DateTime();
-      $event->getRow()->setSourceProperty('Created date', $date->format('Y-m-d'));
-    }
 
-    $start_date = strtoupper($source['Start date']);
-    $date = DateTime::createFromFormat('Y-m-d', $start_date);
-    if ($date && $date->format('Y-m-d') == $start_date) {
-      $start_date = $date->format('Y-m-d H:i A');
-    }
+    $start_date = $this->cpImportHelper->transformSourceDate($source['Start date'], self::SUPPORTED_FORMAT, 'Y-m-d h:i A');
     $event->getRow()->setSourceProperty('Start date', $start_date);
 
-    $end_date = strtoupper($source['End date']);
-    $date = DateTime::createFromFormat('Y-m-d', $end_date);
-    if ($date && $date->format('Y-m-d') == $end_date) {
-      $end_date = $date->format('Y-m-d H:i A');
-    }
+    $end_date = $this->cpImportHelper->transformSourceDate($source['End date'], self::SUPPORTED_FORMAT, 'Y-m-d h:i A');
     $event->getRow()->setSourceProperty('End date', $end_date);
 
     $signup_status = $source['Registration'];
@@ -161,10 +151,14 @@ class AppImport extends Base {
     $titleRows = '';
     $fileRows = '';
     $dateRows = '';
+    $endDateRows = '';
+    $startDateRows = '';
     $message = [
       '@title' => '',
       '@file' => '',
       '@date' => '',
+      '@start_date' => '',
+      '@end_date' => '',
     ];
 
     foreach ($data as $delta => $row) {
@@ -182,10 +176,18 @@ class AppImport extends Base {
       }
       // Validate Date.
       if ($createdDate = $row['Created date']) {
-        $date = DateTime::createFromFormat('Y-m-d', $createdDate);
-        if (!$date || !($date->format('Y-m-d') == $createdDate || $date->format('Y-n-j') == $createdDate)) {
+        $date = DateTime::createFromFormat(Base::CUSTOM_DATE_FORMAT, $createdDate);
+        if (!$date || !($date->format(Base::CUSTOM_DATE_FORMAT) == $createdDate || $date->format('n-j-Y') == $createdDate)) {
           $dateRows .= $row_number . ',';
         }
+      }
+
+      if (!$this->cpImportHelper->validateSourceDate($row['Start date'], self::SUPPORTED_FORMAT)) {
+        $startDateRows .= $row_number . ',';
+      }
+
+      if (!$this->cpImportHelper->validateSourceDate($row['End date'], self::SUPPORTED_FORMAT)) {
+        $endDateRows .= $row_number . ',';
       }
     }
     $titleRows = rtrim($titleRows, ',');
@@ -201,6 +203,18 @@ class AppImport extends Base {
     $dateRows = rtrim($dateRows, ',');
     if ($dateRows) {
       $message['@date'] = $this->t('Date/Date Format is invalid for row/rows @dateRows</br>', ['@dateRows' => $dateRows]);
+      $hasError = TRUE;
+    }
+
+    $startDateRows = rtrim($startDateRows, ',');
+    if ($startDateRows) {
+      $message['@start_date'] = $this->t('Start Date Format is invalid for row/rows @dateRows</br>', ['@dateRows' => $startDateRows]);
+      $hasError = TRUE;
+    }
+
+    $endDateRows = rtrim($endDateRows, ',');
+    if ($endDateRows) {
+      $message['@end_date'] = $this->t('End Date Format is invalid for row/rows @dateRows</br>', ['@dateRows' => $endDateRows]);
       $hasError = TRUE;
     }
     return $hasError ? $message : [];

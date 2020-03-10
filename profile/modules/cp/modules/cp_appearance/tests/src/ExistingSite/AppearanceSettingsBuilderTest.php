@@ -41,7 +41,6 @@ class AppearanceSettingsBuilderTest extends TestBase {
 
   /**
    * @covers ::getFeaturedThemes
-   * @covers ::osInstalledThemes
    * @covers ::prepareThemes
    * @covers ::addScreenshotInfo
    * @covers ::addOperations
@@ -63,6 +62,8 @@ class AppearanceSettingsBuilderTest extends TestBase {
     $this->assertTrue(isset($themes['blue_sky']));
     $this->assertFalse(isset($themes['kirkland']));
     $this->assertFalse(isset($themes['onepage']));
+    $this->assertFalse(isset($themes['os_admin']));
+    $this->assertFalse(isset($themes['os_base']));
 
     // Test presence of custom properties.
     $active_theme = $themes['hwpi_classic'];
@@ -72,6 +73,9 @@ class AppearanceSettingsBuilderTest extends TestBase {
     $this->assertTrue(property_exists($active_theme, 'screenshot'));
     $this->assertTrue(property_exists($active_theme, 'operations'));
     $this->assertTrue(property_exists($active_theme, 'notes'));
+
+    // Test if vsite_theme info is provided.
+    $this->assertTrue(isset($active_theme->info['vsite_theme']));
 
     // Test screenshot info.
     $screenshot_info = $active_theme->screenshot;
@@ -104,7 +108,6 @@ class AppearanceSettingsBuilderTest extends TestBase {
 
   /**
    * @covers ::getOnePageThemes
-   * @covers ::osInstalledThemes
    * @covers ::prepareThemes
    * @covers ::addScreenshotInfo
    * @covers ::addNotes
@@ -118,7 +121,6 @@ class AppearanceSettingsBuilderTest extends TestBase {
     $themes = $this->appearanceSettingsBuilder->getOnePageThemes();
 
     $this->assertFalse(isset($themes['adams']));
-    $this->assertFalse(isset($themes['bootstrap']));
     $this->assertTrue(isset($themes['kirkland']));
     $this->assertTrue(isset($themes['onepage']));
     $this->assertFalse(isset($themes['stark']));
@@ -135,6 +137,9 @@ class AppearanceSettingsBuilderTest extends TestBase {
     $this->assertTrue(property_exists($active_theme, 'screenshot'));
     $this->assertTrue(property_exists($active_theme, 'operations'));
     $this->assertTrue(property_exists($active_theme, 'notes'));
+
+    // Test if vsite_theme info is provided.
+    $this->assertTrue(isset($active_theme->info['vsite_theme']));
 
     // Test screenshot info.
     $screenshot_info = $active_theme->screenshot;
