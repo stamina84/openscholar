@@ -7,7 +7,9 @@ _core:
 id: classical
 label: Classical
 description: 'Classical works can refer to sacred texts, ancient Greek and Roman texts, works of the Medieval, Renaissance, and post-Renaissance periods, and even landmark texts of more recent publication.'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true

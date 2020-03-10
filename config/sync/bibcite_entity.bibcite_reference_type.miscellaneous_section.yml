@@ -7,7 +7,9 @@ _core:
 id: miscellaneous_section
 label: 'Miscellaneous Section'
 description: 'For use section of smth when nothing else fits.'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true

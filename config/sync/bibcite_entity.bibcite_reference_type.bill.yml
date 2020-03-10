@@ -7,7 +7,9 @@ _core:
 id: bill
 label: Bill
 description: 'A bill is proposed legislation under consideration by a legislature.'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true

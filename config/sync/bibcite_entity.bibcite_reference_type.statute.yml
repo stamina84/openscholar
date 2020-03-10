@@ -7,7 +7,9 @@ _core:
 id: statute
 label: Statute
 description: 'Statutes are parts or elements of larger legislative acts and are collected into “codes”.'
+new_revision: false
 override: true
+preview_mode: 1
 fields:
   title:
     visible: true
