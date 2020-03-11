@@ -33,7 +33,7 @@ class OsSearchFacetedTaxonomyTest extends SearchJavascriptTestBase {
 
     $page = $this->getCurrentPage();
     $page->pressButton('Create New Widget');
-    $web_assert->pageTextNotContains('Faceted Taxonomy');
+    $web_assert->pageTextContains('Faceted Taxonomy');
 
   }
 
