@@ -42,9 +42,10 @@ class CpUsersTest extends CpUsersExistingSiteJavascriptTestBase {
     $this->visitViaVsite("cp/users/roles/add/{$this->group->getGroupType()->id()}", $this->group);
     $this->getSession()->getPage()->fillField('Name', 'Stooges');
     $this->assertSession()->waitForElementVisible('css', '.machine-name-value');
-    $this->assertSession()->pageTextContains("personal-{$this->group->id()}_stooges");
 
-    $this->getSession()->getPage()->pressButton('Save group role');
+    $this->assertSession()->pageTextContains('The human-readable name of this role. This text will be displayed on the permissions page.');
+
+    $this->getSession()->getPage()->pressButton('Save role');
 
     $this->assertContains("{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles", $this->getSession()->getCurrentUrl());
     $this->assertSession()->statusCodeEquals(200);
@@ -74,7 +75,7 @@ class CpUsersTest extends CpUsersExistingSiteJavascriptTestBase {
     $group_role_edit_link->click();
 
     $this->getSession()->getPage()->fillField('Name', 'The Stooges Funhouse');
-    $this->getSession()->getPage()->pressButton('Save group role');
+    $this->getSession()->getPage()->pressButton('Save role');
 
     $this->assertSession()->pageTextContains('The Stooges Funhouse');
   }

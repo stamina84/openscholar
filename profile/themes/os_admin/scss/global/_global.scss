@@ -27,3 +27,8 @@ td.manage-media {
     }
   }
 }
+.group-role-add-form, .group-role-edit-form {
+  .machine-name-label, .machine-name-value, .admin-link {
+    display: none;
+  }
+}

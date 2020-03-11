@@ -280,3 +280,17 @@ function cp_users_cron() {
   }
 
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function cp_users_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'group_role_add_form' || $form_id == 'group_role_edit_form') {
+    $form['label']['#description'] = t(
+      'The human-readable name of this role. This text will be displayed on the permissions page.'
+    );
+
+    $form['actions']['submit']['#value'] = t('Save role');
+  }
+
+}
