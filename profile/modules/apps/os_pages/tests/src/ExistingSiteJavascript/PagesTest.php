@@ -223,6 +223,35 @@ class PagesTest extends TestBase {
   }
 
   /**
+   * Checks Outline access on book/non-book pages.
+   */
+  public function checkOutlineOnPages() {
+    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
+    $path_alias_manager = $this->container->get('path.alias_manager');
+    $book = $this->createBookPage([
+      'title' => 'Book with outline',
+    ]);
+    $this->addGroupContent($book, $this->group);
+    $web_assert = $this->assertSession();
+    $this->visit($path_alias_manager->getAliasByPath("/node/{$book->id()}"));
+    $web_assert->statusCodeEquals(200);
+    $web_assert->linkExists('Outline');
+    $web_assert->linkByHrefExists("node/{$book->id()}/book-outline");
+
+    $page = $this->createNode([
+      'title' => 'Standalone page',
+      'type' => 'page',
+    ]);
+    $this->addGroupContent($page, $this->group);
+    $this->visit($path_alias_manager->getAliasByPath("/node/{$page->id()}"));
+    $web_assert->statusCodeEquals(200);
+    $web_assert->linkNotExists('Outline');
+    $web_assert->linkByHrefNotExists("node/{$page->id()}/book-outline");
+    $this->visitViaVsite("node/{$page->id()}/book-outline");
+    $web_assert->statusCodeEquals(403);
+  }
+
+  /**
    * Tests - hide section navigation widget on layouts widgets section.
    */
   public function assertNoSectionNavWidget() {

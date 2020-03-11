@@ -429,7 +429,7 @@ function os_pages_menu_local_tasks_alter(&$data, $route_name, RefinableCacheable
   }
 
   // Hide Outline tab if the node is just a page and if it's not a book.
-  if ($node instanceof NodeInterface && $node->bundle() == 'page' && empty($node->book)) {
+  if ($node instanceof NodeInterface && $node->bundle() == 'page' && ($node->book['bid'] == 0)) {
     unset($data['tabs'][0]['entity.node.book_outline_form']);
   }
 }

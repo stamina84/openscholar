@@ -5,6 +5,7 @@ os_pages.book_outline:
     _title: 'Outline'
   requirements:
     _group_permission: 'administer book outlines'
+    _outline_access_check: 'TRUE'
     _entity_access: 'node.view'
     node: \d+
   options:

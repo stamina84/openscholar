@@ -11,3 +11,8 @@ services:
   os_pages.books_helper:
     class: Drupal\os_pages\BooksHelper
     arguments: ['@entity_type.manager', '@os_pages.visibility_helper', '@book.manager']
+  os_pages.access_checker:
+    class: Drupal\os_pages\Access\OutlineAccessCheck
+    arguments: ['@vsite.context_manager', '@request_stack']
+    tags:
+      - { name: access_check, applies_to: _outline_access_check }
