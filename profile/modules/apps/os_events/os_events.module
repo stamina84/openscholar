@@ -547,10 +547,12 @@ function os_events_node_view_alter(array &$build, EntityInterface $entity, Entit
     return;
   }
 
-  if ($display->getMode() !== 'teaser') {
+  $startObj = DrupalDateTime::createFromTimestamp(strtotime($entity->get('field_recurring_date')->value));
+  if ($display->getMode() !== 'teaser' && ($startObj->getTimestamp() > \Drupal::time()->getCurrentTime())) {
     // Using `#iconize` instead of `#icon` because then I would had to use
     // \Drupal\bootstrap\Bootstrap::glyphicon. This would couple the module with
     // theme.
+    //
     $build['os_events'] = [
       '#theme' => 'item_list__os_dropdown',
       '#title' => [
@@ -578,6 +580,12 @@ function os_events_node_view_alter(array &$build, EntityInterface $entity, Entit
           '#url' => Url::fromRoute('view.event_exportables.feed_2', [
             'arg_0' => $entity->id(),
           ]),
+          '#iconize' => 'calendar',
+        ],
+        [
+          '#type' => 'link',
+          '#title' => t('Google'),
+          '#url' => \Drupal::service('os_events.gcal_helper')->addToCalendarLink($entity),
           '#iconize' => 'calendar',
         ],
       ],
