@@ -39,7 +39,7 @@ class OsSearchLayoutJsTest extends SearchJavascriptTestBase {
     $block_types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple($ignored_block_list);
 
     foreach ($block_types as $block_type) {
-      $web_assert->pageTextNotContains($block_type->label());
+      $web_assert->pageTextNotMatches('/' . $block_type->label() . '\b/');
     }
 
   }
