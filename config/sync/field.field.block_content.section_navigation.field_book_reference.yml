@@ -1,0 +1,19 @@
+uuid: 48d8a030-b5d1-4ade-97eb-6a56a28232c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.section_navigation
+    - field.storage.block_content.field_book_reference
+id: block_content.section_navigation.field_book_reference
+field_name: field_book_reference
+entity_type: block_content
+bundle: section_navigation
+label: 'Book reference'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

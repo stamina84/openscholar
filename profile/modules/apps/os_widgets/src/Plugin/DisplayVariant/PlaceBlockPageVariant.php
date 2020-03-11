@@ -24,6 +24,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
     'filter_taxonomy',
     'search_sort',
     'basic',
+    'section_navigation',
   ];
 
   /**

@@ -222,4 +222,21 @@ class PagesTest extends TestBase {
     $web_assert->linkNotExists('First book');
   }
 
+  /**
+   * Tests - hide section navigation widget on layouts widgets section.
+   */
+  public function assertNoSectionNavWidget() {
+    $book = $this->createBookPage([
+      'title' => 'First book',
+    ]);
+    // Assertions.
+    $web_assert = $this->assertSession();
+    $this->visitViaVsite("node/{$book->id()}?block-place=1", $this->group);
+    $web_assert->statusCodeEquals(200);
+
+    $page = $this->getCurrentPage();
+    $page->pressButton('Create New Widget');
+    $web_assert->pageTextNotContains('Section navigation');
+  }
+
 }

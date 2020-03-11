@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - block_content.type.section_navigation
+    - field.field.block_content.section_navigation.field_book_reference
     - field.field.block_content.section_navigation.field_widget_title
 id: block_content.section_navigation.default
 targetEntityType: block_content
@@ -19,5 +20,6 @@ content:
     type: string
     region: content
 hidden:
+  field_book_reference: true
   langcode: true
   search_api_excerpt: true

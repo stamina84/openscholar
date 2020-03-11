@@ -73,10 +73,12 @@ class SectionNavigationWidget extends OsWidgetsBase implements OsWidgetsInterfac
   public function buildBlock(&$build, $block_content) {
     $tree = [];
     $node = $this->requestStack->getCurrentRequest()->attributes->get('node');
-    if ($node->book['bid'] && $node->field_is_hidden_section_nav->value == 0 && $node->book['bid'] != $node->id()) {
-      $book_node = $this->nodeStorage->load($node->book['bid']);
-      $tree = $this->bookTreeOutput($book_node->book, $node->book);
-      $build['section_navigation'] = $tree;
+    if (!empty($node->book) && isset($node->book['bid'])) {
+      if ($node->field_is_hidden_section_nav->value == 0 && $node->book['bid'] != $node->id()) {
+        $book_node = $this->nodeStorage->load($node->book['bid']);
+        $tree = $this->bookTreeOutput($book_node->book, $node->book);
+        $build['section_navigation'] = $tree;
+      }
     }
   }
 

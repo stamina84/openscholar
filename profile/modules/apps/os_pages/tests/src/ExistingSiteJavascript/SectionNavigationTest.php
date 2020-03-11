@@ -50,6 +50,12 @@ class SectionNavigationTest extends TestBase {
     // Check for current page active link.
     $web_assert->elementExists('css', '.active-nav-link');
     $web_assert->elementExists('css', '.block--type-section-navigation');
+    // Asserting same block on sub-pages for a book.
+    $block_id = $this->getSession()->getPage()->find('css', '.block--type-section-navigation')->getAttribute('id');
+    $this->visit($path_alias_manager->getAliasByPath("/node/{$page2->id()}"));
+    $web_assert->statusCodeEquals(200);
+    $block_id2 = $this->getSession()->getPage()->find('css', '.block--type-section-navigation')->getAttribute('id');
+    $this->assertEquals($block_id, $block_id2);
     $this->markEntityForCleanup($book);
     $this->markEntityForCleanup($page1);
     $this->markEntityForCleanup($page2);
@@ -82,12 +88,21 @@ class SectionNavigationTest extends TestBase {
     $book = $this->getNodeByTitle($book_title);
     $this->visitViaVsite("node/{$book->id()}", $this->group);
     $web_assert->statusCodeEquals(200);
+    // Assert no section navigation widget if book main page is created.
+    $web_assert->elementNotExists('css', '.block--type-section-navigation');
 
     // Adding sub-page for Book.
     $page1 = $this->createSubBookPages($book->id(), 'Sub page for book');
     $grand_child = $this->createSubBookPages($page1->id(), 'Grand child');
 
+    // Created another sub-pages.
+    $page2 = $this->createSubBookPages($book->id(), 'Sub page 2');
+    $grand_child2 = $this->createSubBookPages($page2->id(), 'Grand child 2');
+
     $this->visitViaVsite("node/{$book->id()}/section-outline", $this->group);
+    // Also setting sub page 2 (parent) to hidden in section-nav.
+    // If sub-page is hidden, its children will be hidden from section-nav.
+    $this->getSession()->getPage()->checkField("table[book-admin-{$page2->id()}][hide]");
     $this->getSession()->getPage()->checkField("table[book-admin-{$grand_child->id()}][hide]");
     $this->getSession()->getPage()->pressButton('Save book pages');
     $web_assert->statusCodeEquals(200);
@@ -97,9 +112,23 @@ class SectionNavigationTest extends TestBase {
     $web_assert->statusCodeEquals(200);
     $web_assert->linkExists('Sub page for book');
     $web_assert->linkNotExists('Grand child');
+    // Asserting no sub-page 2 and grand child 2 links visible.
+    $web_assert->linkNotExists('Sub page 2');
+    $web_assert->linkNotExists('Grand child 2');
+    // Test custom contextual links.
+    $web_assert->waitForElement('css', '.block--type-section-navigation .contextual-links');
+    $web_assert->buttonExists('Open configuration options')->click();
+    /** @var \Behat\Mink\Element\NodeElement|null $section_outline_link */
+    $section_outline_link = $this->getSession()->getPage()->find('css', '.contextual-links .section-outline a');
+    $this->assertNotNull($section_outline_link);
+    $web_assert->linkByHrefExists("{$this->groupAlias}/node/{$book->id()}/section-outline");
+
+    // Entities clean up.
     $this->markEntityForCleanup($book);
     $this->markEntityForCleanup($page1);
     $this->markEntityForCleanup($grand_child);
+    $this->markEntityForCleanup($page2);
+    $this->markEntityForCleanup($grand_child2);
   }
 
   /**
@@ -117,6 +146,20 @@ class SectionNavigationTest extends TestBase {
     // Fetching page details.
     $page = $this->getNodeByTitle($title);
     return $page;
+  }
+
+  /**
+   * Check section nav widget not present in standalone pages.
+   */
+  public function testNoWidgetOnPages() {
+    $standalone_page = $this->createNode([
+      'title' => 'Standalone page',
+      'type' => 'page',
+    ]);
+    $this->addGroupContent($standalone_page, $this->group);
+    $this->visitViaVsite("node/{$standalone_page->id()}", $this->group);
+    // Assert widget is not created on standalone pages.
+    $this->assertSession()->elementNotExists('css', '.block--type-section-navigation');
   }
 
 }

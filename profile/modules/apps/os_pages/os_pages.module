@@ -95,6 +95,9 @@ function os_pages_entity_insert(EntityInterface $entity) {
       $block = BlockContent::create([
         'info' => "Section nav for {$book->label()} - {$book->id()}",
         'type' => 'section_navigation',
+        'field_book_reference' => [
+          'value' => $book->id(),
+        ],
       ]);
       $block->save();
       if ($active_vsite) {
@@ -472,6 +475,22 @@ function os_pages_contextual_links_view_alter(&$element, $items) {
           'url' => Url::fromRoute('node.add', [
             'node_type' => 'page',
             'parent' => $entity->id(),
+          ]),
+        ];
+      }
+    }
+  }
+  // Section navigation block links alter.
+  if (isset($element['#contextual_links']['block_content']['route_parameters']['block_content'])) {
+    $block_id = (int) $element['#contextual_links']['block_content']['route_parameters']['block_content'];
+    $block = BlockContent::load($block_id);
+    if ($block->bundle() == 'section_navigation') {
+      $bid = $block->field_book_reference->value ?? '';
+      if ($bid) {
+        $element['#links']['section_outline'] = [
+          'title' => t('Section outline'),
+          'url' => Url::fromRoute('os_pages.section_outline', [
+            'node' => $bid,
           ]),
         ];
       }
