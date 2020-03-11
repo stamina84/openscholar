@@ -1,0 +1,78 @@
+uuid: 945ee516-9db8-41f8-b234-4b3ba98ae24f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.views
+    - field.storage.block_content.field_view
+  module:
+    - viewfield
+id: block_content.views.field_view
+field_name: field_view
+entity_type: block_content
+bundle: views
+label: View
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  force_default: false
+  allowed_views:
+    advancedqueue_jobs: '0'
+    blog: '0'
+    calendar: '0'
+    comment: '0'
+    content: '0'
+    bibcite_contributor_admin: '0'
+    block_content: '0'
+    ermv: '0'
+    event_exportables: '0'
+    os_faq: '0'
+    files: '0'
+    frontpage: '0'
+    group_content: '0'
+    group_members: '0'
+    group_nodes: '0'
+    bibcite_keyword_admin: '0'
+    media: '0'
+    moderated_content: '0'
+    news: '0'
+    os_classes: '0'
+    os_feeds: '0'
+    os_media: '0'
+    os_reference_feed: '0'
+    os_software_projects: '0'
+    os_software_releases: '0'
+    os_subsites: '0'
+    os_websites: '0'
+    past_events_calendar: '0'
+    user_admin_people: '0'
+    people: '0'
+    presentations: '0'
+    publication_contributors: '0'
+    publications: '0'
+    publication_years: '0'
+    comments_recent: '0'
+    content_recent: '0'
+    bibcite_reference_admin: '0'
+    reference_software_project: '0'
+    reference_taxonomy_term: '0'
+    rng_registrations_node: '0'
+    site_content: '0'
+    taxonomy_term: '0'
+    upcoming_calendar: '0'
+    watchdog: '0'
+    who_s_new: '0'
+    who_s_online: '0'
+  allowed_display_types:
+    block: block
+    entity_reference: '0'
+    feed: '0'
+    default: '0'
+    page: '0'
+    rest_export: '0'
+  handler: 'default:view'
+  handler_settings: {  }
+field_type: viewfield

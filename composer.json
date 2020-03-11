@@ -238,6 +238,7 @@
         "drupal/twig_extensions": "^2.0",
         "drupal/twig_tweak": "^2.4",
         "drupal/video_embed_field": "^2.0",
+        "drupal/viewfield": "^3.0",
         "drupal/views_accordion": "^1.1",
         "drupal/views_ical": "^2.2",
         "drupal/views_infinite_scroll": "^1.5",

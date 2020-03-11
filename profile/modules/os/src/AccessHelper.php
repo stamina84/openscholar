@@ -17,6 +17,11 @@ use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 final class AccessHelper implements AccessHelperInterface {
 
   /**
+   * List of block content types to restrict edit/delete access.
+   */
+  const RESTRICTED_BLOCKS = ['views'];
+
+  /**
    * Vsite context manager.
    *
    * @var \Drupal\vsite\Plugin\VsiteContextManagerInterface
@@ -130,6 +135,43 @@ final class AccessHelper implements AccessHelperInterface {
     }
 
     return AccessResult::neutral();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkRestrictedBlocksAccess($bundle, AccountInterface $account) : AccessResultInterface {
+    if (in_array($bundle, self::RESTRICTED_BLOCKS) && !$this->isAdmin($account)) {
+      return AccessResult::forbidden();
+    }
+    return AccessResult::neutral();
+  }
+
+  /**
+   * Checks if the user has administrative role.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user account.
+   *
+   * @return bool
+   *   If user is admin or not.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function isAdmin(AccountInterface $account) {
+    if ($account->id() == 1) {
+      return TRUE;
+    }
+    $roles = $account->getRoles(TRUE);
+    foreach ($roles as $role) {
+      /** @var \Drupal\user\Entity\Role $roleEntity */
+      $roleEntity = $this->entityTypeManager->getStorage('user_role')->load($role);
+      if ($roleEntity->isAdmin()) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }

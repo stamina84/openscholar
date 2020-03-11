@@ -3,6 +3,7 @@
 namespace Drupal\Tests\os\ExistingSite;
 
 use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -131,6 +132,39 @@ class AccessHelperTest extends OsExistingSiteTestBase {
     $account = $this->createUser();
 
     $this->assertCheckNonEntityOwnerTypeAccess($reference, 'delete', $account);
+  }
+
+  /**
+   * Tests restricted blocks access for admin/non admin users.
+   *
+   * @covers ::checkRestrictedBlocksAccess
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testCheckRestrictedBlocksAccess(): void {
+    // Setup.
+    /** @var \Drupal\os\AccessHelperInterface $access_helper */
+    $access_helper = $this->container->get('os.access_helper');
+    $adminUser = $this->createAdminUser();
+    $vsiteAdmin = $this->createUser();
+    $this->addGroupAdmin($vsiteAdmin, $this->group);
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $entity_type_manager = $this->container->get('entity_type.manager');
+
+    // Check works for Super admin/ user one.
+    /** @var \Drupal\Core\Session\AccountInterface $userOne */
+    $userOne = $entity_type_manager->getStorage('user')->load('1');
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkRestrictedBlocksAccess('views', $userOne));
+    // Test works for admin users outside of vsite context.
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkRestrictedBlocksAccess('views', $adminUser));
+    // To check in vsite context.
+    $vsite_context_manager->activateVsite($this->group);
+    // Test works for admin users in vsite context.
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkRestrictedBlocksAccess('views', $adminUser));
+    // Test it works for vsite admins.
+    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkRestrictedBlocksAccess('views', $vsiteAdmin));
+
   }
 
   /**
