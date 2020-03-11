@@ -141,13 +141,11 @@ class OsSearchFacetedTaxonomyQueryBuilder {
     $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
 
     $query = $taxonomy_vocabulary_storage->getQuery();
-    if (!in_array('_none', $vocab_filter) || $vocab_filter != NULL) {
+    if (!in_array('_none', $vocab_filter) && count($vocab_list) != 0) {
       $query->condition('vid', $vocab_filter, 'IN');
     }
-    $query->condition('vid', $vocab_filter, 'IN');
     $query->sort($vocab_order_by, 'ASC');
     $vids = $query->execute();
-
     $vocabularies = $taxonomy_vocabulary_storage->loadMultiple($vids);
 
     $taxonomy_term_storage = $this->entityTypeManager->getStorage($field_processor);
@@ -180,7 +178,6 @@ class OsSearchFacetedTaxonomyQueryBuilder {
         }
       }
     }
-
     return $vocab_list;
   }
 
@@ -193,25 +190,19 @@ class OsSearchFacetedTaxonomyQueryBuilder {
    * @return array
    *   List of vocabularies name.
    */
-  public function prepareVocabulariesList($app) {
+  public function prepareVocabulariesList($app = '') {
     $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
     $vocabularies = $taxonomy_vocabulary_storage->loadMultiple();
+    // List if app is not there in vocabularies reference entity list.
     $vocabularies_name = [
       '_none' => '--None--',
     ];
-    if ($app != NULL) {
-      $vocabularies_name = [];
-      foreach ($vocabularies as $vocabulary) {
-        if (in_array('node:' . $app, $vocabulary->allowed_vocabulary_reference_types)) {
-          $vocabularies_name[$vocabulary->id()] = $vocabulary->label();
-        }
-        else {
-          $vocabularies_name = [
-            '_none' => '--None--',
-          ];
-        }
+    foreach ($vocabularies as $vocabulary) {
+      if (($app != '' && in_array('node:' . $app, $vocabulary->allowed_vocabulary_reference_types)) || $app == '') {
+        $vocabularies_name[$vocabulary->id()] = $vocabulary->label();
       }
     }
+
     return $vocabularies_name;
 
   }

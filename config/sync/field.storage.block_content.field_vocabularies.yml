@@ -11,7 +11,7 @@ entity_type: block_content
 type: list_string
 settings:
   allowed_values: {  }
-  allowed_values_function: ''
+  allowed_values_function: 'os_search_get_vocab_list'
 module: options
 locked: false
 cardinality: -1
