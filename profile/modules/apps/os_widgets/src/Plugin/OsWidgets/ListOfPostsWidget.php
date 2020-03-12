@@ -239,9 +239,15 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
         'field_sorted_by' => $row['Sort by'],
         'field_content_type' => $row['Content type'],
       ]);
+      
+      if ($row['Content type'] == 'events') {
+        $block->set('field_show', $row['Show']);
+      }
+      
       if ($row['Content type'] == 'publications') {
         $block->set('field_publication_types', $row['Publication type']);
       }
+      
       $block->save();
       $group->addContent($block, "group_entity:block_content");
       $block_uuid = $block->uuid();
