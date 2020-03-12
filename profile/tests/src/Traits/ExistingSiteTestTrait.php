@@ -20,6 +20,7 @@ use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\path_alias\PathAliasInterface;
 use Drupal\Tests\cp_users\Traits\CpUsersTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\UserInterface;
@@ -694,6 +695,34 @@ trait ExistingSiteTestTrait {
       ->loadByProperties(['redirect_redirect__uri' => $uri]);
     $redirect = array_shift($redirects);
     $this->markEntityForCleanup($redirect);
+  }
+
+  /**
+   * Creates a path alias entity.
+   *
+   * @param array $values
+   *   (optional) The values used to create the entity.
+   *
+   * @return \Drupal\path_alias\Entity\PathAlias
+   *   The new path alias entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function createPathAlias(array $values = []): PathAliasInterface {
+    /** @var \Drupal\path_alias\PathAliasStorage $storage */
+    $storage = $this->container->get('entity_type.manager')->getStorage('path_alias');
+    $path_alias = $storage->create($values + [
+      'langcode' => 'en',
+      'path' => '/' . $this->randomMachineName(),
+      'alias' => '/' . $this->randomMachineName(),
+      'status' => 1,
+    ]);
+    $path_alias->enforceIsNew();
+    $path_alias->save();
+
+    $this->markEntityForCleanup($path_alias);
+
+    return $path_alias;
   }
 
 }

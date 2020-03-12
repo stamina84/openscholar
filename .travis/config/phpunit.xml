@@ -9,7 +9,6 @@
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
-         checkForUnintentionallyCoveredCode="false"
          convertDeprecationsToExceptions="false">
   <!-- TODO set printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter" once
    https://youtrack.jetbrains.com/issue/WI-24808 is resolved. Drupal provides a

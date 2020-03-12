@@ -2,13 +2,13 @@
 
 namespace Drupal\os_rest\Plugin\rest\resource;
 
+use Drupal\path_alias\AliasManagerInterface;
 use Drupal\purl\Plugin\ModifierIndex;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Path\AliasManager;
 
 /**
  * Class OsGroupExtrasResource.
@@ -42,7 +42,7 @@ class OsGroupExtrasResource extends ResourceBase {
   /**
    * Alias manager.
    *
-   * @var Drupal\Core\Path\AliasManager
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -58,14 +58,14 @@ class OsGroupExtrasResource extends ResourceBase {
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('rest'),
       $container->get('database'),
-      $container->get('path.alias_manager')
+      $container->get('path_alias.manager')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, string $plugin_id, array $plugin_definition, ModifierIndex $modifierIndex, array $serializer_formats, LoggerInterface $logger, Connection $database, AliasManager $alias_manager) {
+  public function __construct(array $configuration, string $plugin_id, array $plugin_definition, ModifierIndex $modifierIndex, array $serializer_formats, LoggerInterface $logger, Connection $database, AliasManagerInterface $alias_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->modifierIndex = $modifierIndex;
     $this->dbConnection = $database;

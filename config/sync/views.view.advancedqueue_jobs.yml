@@ -14,7 +14,6 @@ description: ''
 tag: ''
 base_table: advancedqueue
 base_field: job_id
-core: 8.x
 display:
   default:
     display_plugin: default

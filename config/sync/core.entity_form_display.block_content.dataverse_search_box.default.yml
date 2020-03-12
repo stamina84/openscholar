@@ -14,7 +14,8 @@ dependencies:
 third_party_settings:
   field_layout:
     id: layout_onecol
-    settings: {  }
+    settings:
+      label: ''
 id: block_content.dataverse_search_box.default
 targetEntityType: block_content
 bundle: dataverse_search_box

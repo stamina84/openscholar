@@ -17,7 +17,8 @@ dependencies:
 third_party_settings:
   field_layout:
     id: layout_onecol
-    settings: {  }
+    settings:
+      label: ''
 _core:
   default_config_hash: M026J1jZdqJVCVLKc5Hc_QlwzhdTX3eRmAcR0d6j3jM
 id: node.faq.default
@@ -101,6 +102,7 @@ content:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
+      match_limit: 10
     region: content
     third_party_settings: {  }
   url_redirects:

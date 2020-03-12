@@ -23,8 +23,8 @@ class PagesTest extends TestBase {
    * Tests alias.
    */
   public function testAlias() {
-    /** @var \Drupal\Core\Path\AliasManagerInterface $alias_manager */
-    $alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManager $alias_manager */
+    $alias_manager = $this->container->get('path_alias.manager');
 
     /** @var \Drupal\node\NodeInterface $book */
     $book = $this->createBookPage([

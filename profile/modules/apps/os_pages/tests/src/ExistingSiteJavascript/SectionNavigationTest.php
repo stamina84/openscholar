@@ -20,8 +20,8 @@ class SectionNavigationTest extends TestBase {
 
     $web_assert = $this->assertSession();
 
-    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
-    $path_alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManager $path_alias_manager */
+    $path_alias_manager = $this->container->get('path_alias.manager');
 
     // Creating book.
     $book_title = 'First book';
@@ -72,8 +72,8 @@ class SectionNavigationTest extends TestBase {
 
     $web_assert = $this->assertSession();
 
-    /** @var \Drupal\Core\Path\AliasManagerInterface $path_alias_manager */
-    $path_alias_manager = $this->container->get('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManager $path_alias_manager */
+    $path_alias_manager = $this->container->get('path_alias.manager');
 
     // Creating book.
     $book_title = 'First book';

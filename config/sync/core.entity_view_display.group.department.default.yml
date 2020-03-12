@@ -18,7 +18,8 @@ third_party_settings:
     sections:
       -
         layout_id: layout_onecol
-        layout_settings: {  }
+        layout_settings:
+          label: ''
         components:
           0eb70103-bed7-420c-afac-f7cde958a9bc:
             uuid: 0eb70103-bed7-420c-afac-f7cde958a9bc

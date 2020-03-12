@@ -22,7 +22,8 @@ dependencies:
 third_party_settings:
   field_layout:
     id: layout_onecol
-    settings: {  }
+    settings:
+      label: ''
 id: block_content.taxonomy.default
 targetEntityType: block_content
 bundle: taxonomy

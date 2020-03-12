@@ -13,7 +13,8 @@ dependencies:
 third_party_settings:
   field_layout:
     id: layout_onecol
-    settings: {  }
+    settings:
+      label: ''
 id: paragraph.follow_me_links.default
 targetEntityType: paragraph
 bundle: follow_me_links

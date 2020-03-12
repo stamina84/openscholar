@@ -5,6 +5,7 @@
  * Hook implementations for the vsite module.
  */
 
+use Drupal\path_alias\PathAliasInterface;
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -258,6 +259,21 @@ function vsite_path_widget_check_slash_validate(&$element, FormStateInterface $f
 }
 
 /**
+ * Implements hook_entity_type_alter().
+ */
+function vsite_entity_type_alter(array &$entity_types) {
+  if (empty($entity_types['path_alias'])) {
+    return;
+  }
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $path_alias_type */
+  $path_alias_type = $entity_types['path_alias'];
+  $constraints = $path_alias_type->getConstraints();
+  unset($constraints['UniquePathAlias']);
+  $constraints['UniqueVsitePathAliasConstraint'] = [];
+  $path_alias_type->setConstraints($constraints);
+}
+
+/**
  * Implements hook_views_pre_build().
  */
 function vsite_views_pre_build(ViewExecutable $view) {
@@ -493,4 +509,13 @@ function vsite_group_insert(GroupInterface $group) {
     // Assign admin role to owner.
     $role_helper->assignGroupAdminRoleToOwner($group);
   }
+}
+
+/**
+ * Implements hook_path_alias_presave().
+ */
+function vsite_path_alias_presave(PathAliasInterface $entity) {
+  /** @var \Drupal\vsite\Helper\VsitePathAliasHelper $vsite_path_alias_helper */
+  $vsite_path_alias_helper = Drupal::service('vsite.path_alias_helper');
+  $vsite_path_alias_helper->save($entity);
 }

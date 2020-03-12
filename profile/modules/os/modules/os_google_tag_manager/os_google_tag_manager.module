@@ -167,8 +167,8 @@ function os_google_tag_manager_insert_snippet() {
 
   /** @var \Drupal\Core\Path\CurrentPathStack $current_path */
   $current_path = \Drupal::service('path.current');
-  /** @var \Drupal\Core\Path\AliasManager $alias_manager */
-  $alias_manager = \Drupal::service('path.alias_manager');
+  /** @var \Drupal\path_alias\AliasManager $alias_manager */
+  $alias_manager = \Drupal::service('path_alias.manager');
   /** @var \Drupal\Core\Path\PathMatcher $path_matcher */
   $path_matcher = \Drupal::service('path.matcher');
 
