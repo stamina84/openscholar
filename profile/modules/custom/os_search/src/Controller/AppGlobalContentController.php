@@ -105,30 +105,16 @@ class AppGlobalContentController extends ControllerBase {
    * Load index based on requested app.
    */
   private function loadApp($app_requested) {
-    /** @var \Drupal\vsite\AppInterface[] $apps */
-    $enabled_apps = $this->appManager->getDefinitions();
-
     $searchApiIndexStorage = $this->entityTypeManager()->getStorage('search_api_index');
     $index = $searchApiIndexStorage->load('os_search_index');
     $query = $index->query();
     $query->keys('');
-    $enabled_apps_list = [];
 
-    if (isset($enabled_apps[$app_requested]['bundle'])) {
-      $enabled_apps_list = array_merge($enabled_apps_list, $enabled_apps[$app_requested]['bundle']);
-    }
-    else {
-      $enabled_apps_list[] = $enabled_apps[$app_requested]['entityType'];
-    }
+    // Tag for search by faceted widget for apps.
+    $query->addTag('group_by_faceted_taxonomy');
 
-    if ($enabled_apps_list) {
-      $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
-
-      // This tag will be used to operate taxonomy filter.
-      $query->addTag('group_terms_by_taxonomy');
-      // Dependent filters.
-      $this->searchQueryBuilder->queryBuilder($query);
-    }
+    // Dependent filters.
+    $this->searchQueryBuilder->queryBuilder($query);
 
     return $query->execute();
   }

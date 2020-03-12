@@ -6,6 +6,7 @@
  */
 
 use Drupal\search_api\Query\QueryInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_theme().
@@ -16,6 +17,7 @@ function os_search_theme($existing, $type, $theme, $path) {
       'variables' => [
         'header' => '',
         'items' => [],
+        'class' => '',
       ],
     ],
   ];
@@ -27,4 +29,67 @@ function os_search_theme($existing, $type, $theme, $path) {
 function os_search_search_api_query_alter(QueryInterface &$query) {
   $search_query_builder = \Drupal::service('os_search.os_search_query_builder');
   $search_query_builder->queryBuilder($query);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function os_search_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'block_content_faceted_taxonomy_form') {
+
+    /** @var \Drupal\os_search\ListAppsHelper $list_app_helper */
+    $list_app_helper = Drupal::service('os_search.list_app_helper');
+    $enabled_apps = $list_app_helper->getAppLists();
+    $vocab_default_list = isset($form_state->getUserInput()['field_content_type']) ? $form_state->getUserInput()['field_content_type'] : key($enabled_apps);
+
+    $form['field_content_type']['widget']['#options'] = $enabled_apps;
+
+    $form['field_content_type']['widget']['#ajax'] = [
+      'callback' => '_os_search_ajax_replace_dropdown_default_value_callback',
+      'event' => 'change',
+      'effect' => 'fade',
+      'wrapper' => 'view-vocab-list',
+
+    ];
+
+    $form['field_vocabularies']['widget']['#options'] = _get_vocab_list($vocab_default_list);
+    $form['field_vocabularies']['widget']['#prefix'] = '<div id="view-vocab-list">';
+    $form['field_vocabularies']['widget']['#suffix'] = '</div>';
+
+    unset($form['field_vocabulary_order']['widget']['#options']['_none']);
+    unset($form['field_term_order']['widget']['#options']['_none']);
+    unset($form['field_display_styles']['widget']['#options']['_none']);
+
+  }
+
+}
+
+/**
+ * Updating Vocab list with ajax on app change.s.
+ */
+function _os_search_ajax_replace_dropdown_default_value_callback(array $form, FormStateInterface $form_state) {
+  return $form['field_vocabularies'];
+}
+
+/**
+ * Update vocab list based on app selected APP.
+ */
+function _get_vocab_list($app = '') {
+  /** @var \Drupal\os_search\OsSearchFacetedTaxonomyQueryBuilder $os_search_facted_taxonomy */
+  $os_search_facted_taxonomy = Drupal::service('os_search.os_search_faceted_taxonomy_query_builder');
+  $vocab_list = $os_search_facted_taxonomy->prepareVocabulariesList($app);
+  if (count($vocab_list) > 1) {
+    unset($vocab_list['_none']);
+  }
+  return $vocab_list;
+}
+
+/**
+ * Default values for the Vocabularies.
+ */
+function os_search_get_vocab_list() {
+  /** @var \Drupal\os_search\OsSearchFacetedTaxonomyQueryBuilder $os_search_facted_taxonomy */
+  $os_search_facted_taxonomy = Drupal::service('os_search.os_search_faceted_taxonomy_query_builder');
+  $vocab_list = $os_search_facted_taxonomy->prepareVocabulariesList();
+  return $vocab_list;
 }

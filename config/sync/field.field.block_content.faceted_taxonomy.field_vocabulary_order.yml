@@ -1,0 +1,23 @@
+uuid: 75d360a6-30b6-4ccf-8429-afaa7065648e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy
+    - field.storage.block_content.field_vocabulary_order
+  module:
+    - options
+id: block_content.faceted_taxonomy.field_vocabulary_order
+field_name: field_vocabulary_order
+entity_type: block_content
+bundle: faceted_taxonomy
+label: 'Vocabulary Order'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: name
+default_value_callback: ''
+settings: {  }
+field_type: list_string

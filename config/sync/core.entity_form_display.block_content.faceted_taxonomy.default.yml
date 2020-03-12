@@ -1,0 +1,80 @@
+uuid: 5da8deea-d19b-4766-abc8-1e9b8fe2fe09
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy
+    - field.field.block_content.faceted_taxonomy.field_content_type
+    - field.field.block_content.faceted_taxonomy.field_display_styles
+    - field.field.block_content.faceted_taxonomy.field_show_number_of_posts
+    - field.field.block_content.faceted_taxonomy.field_term_order
+    - field.field.block_content.faceted_taxonomy.field_vocabularies
+    - field.field.block_content.faceted_taxonomy.field_vocabulary_order
+    - field.field.block_content.faceted_taxonomy.field_widget_title
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.faceted_taxonomy.default
+targetEntityType: block_content
+bundle: faceted_taxonomy
+mode: default
+content:
+  field_content_type:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_display_styles:
+    weight: 26
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_show_number_of_posts:
+    weight: 7
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_term_order:
+    weight: 6
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_vocabularies:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_vocabulary_order:
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_widget_title:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  langcode: true

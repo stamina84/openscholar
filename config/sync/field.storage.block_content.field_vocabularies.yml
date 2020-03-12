@@ -1,0 +1,21 @@
+uuid: 0c0c3a96-f03a-4b6b-bdd7-377768fade10
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - options
+id: block_content.field_vocabularies
+field_name: field_vocabularies
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values: {  }
+  allowed_values_function: os_search_get_vocab_list
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -2,15 +2,13 @@
 
 namespace Drupal\Tests\os_search\ExistingSiteJavascript;
 
-use Drupal\os_widgets\Plugin\DisplayVariant\PlaceBlockPageVariant;
-
 /**
- * OsSearchJsTest.
+ * OsSearchFacetedTaxonomyTest.
  *
  * @group functional-javascript
  * @group os-search
  */
-class OsSearchLayoutJsTest extends SearchJavascriptTestBase {
+class OsSearchFacetedTaxonomyTest extends SearchJavascriptTestBase {
 
   /**
    * {@inheritdoc}
@@ -27,7 +25,6 @@ class OsSearchLayoutJsTest extends SearchJavascriptTestBase {
    * Test to check facet widget search should not be listed.
    */
   public function testIgnoreBlockList(): void {
-    $ignored_block_list = PlaceBlockPageVariant::IGNORE_BLOCK_TYPE_LIST;
 
     $web_assert = $this->assertSession();
 
@@ -36,11 +33,7 @@ class OsSearchLayoutJsTest extends SearchJavascriptTestBase {
 
     $page = $this->getCurrentPage();
     $page->pressButton('Create New Widget');
-    $block_types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple($ignored_block_list);
-
-    foreach ($block_types as $block_type) {
-      $web_assert->pageTextNotMatches('/' . $block_type->label() . '\b/');
-    }
+    $web_assert->pageTextContains('Faceted Taxonomy');
 
   }
 

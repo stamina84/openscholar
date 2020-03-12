@@ -1,0 +1,35 @@
+uuid: bc2d547b-9ebd-45aa-966b-eb5718187be1
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy
+    - field.field.block_content.faceted_taxonomy.field_content_type
+    - field.field.block_content.faceted_taxonomy.field_display_styles
+    - field.field.block_content.faceted_taxonomy.field_show_number_of_posts
+    - field.field.block_content.faceted_taxonomy.field_term_order
+    - field.field.block_content.faceted_taxonomy.field_vocabularies
+    - field.field.block_content.faceted_taxonomy.field_vocabulary_order
+    - field.field.block_content.faceted_taxonomy.field_widget_title
+id: block_content.faceted_taxonomy.default
+targetEntityType: block_content
+bundle: faceted_taxonomy
+mode: default
+content:
+  field_widget_title:
+    weight: 4
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_content_type: true
+  field_display_styles: true
+  field_show_number_of_posts: true
+  field_term_order: true
+  field_vocabularies: true
+  field_vocabulary_order: true
+  langcode: true
+  search_api_excerpt: true
