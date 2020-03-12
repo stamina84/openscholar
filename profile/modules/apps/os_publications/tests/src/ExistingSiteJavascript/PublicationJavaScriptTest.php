@@ -126,4 +126,40 @@ class PublicationJavaScriptTest extends OsExistingSiteJavascriptTestBase {
 
   }
 
+  /**
+   * Test for reference to match title style with input.
+   */
+  public function testHtmlTitle(): void {
+    // Setup.
+    $group_admin = $this->createUser();
+    $this->addGroupAdmin($group_admin, $this->group);
+    $group_member = $this->createUser();
+    $this->group->addMember($group_member);
+    $artwork_title = $this->randomMachineName();
+    $artwork_alias = $this->randomMachineName();
+    $reference = $this->createReference([
+      'html_title' => $artwork_title,
+    ]);
+    $this->group->addContent($reference, 'group_entity:bibcite_reference');
+
+    // Do changes.
+    $this->drupalLogin($group_admin);
+
+    $this->visitViaVsite("bibcite/reference/{$reference->id()}/edit", $this->group);
+
+    $url_alias_edit_option = $this->getSession()->getPage()->find('css', '[href="#edit-path-0"]');
+    $this->assertNotNull($url_alias_edit_option);
+    $url_alias_edit_option->click();
+
+    $this->submitForm([
+      'path[0][pathauto]' => 0,
+      'path[0][alias]' => "/$artwork_alias",
+    ], 'Save');
+
+    $this->visitViaVsite($artwork_alias, $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextMatches('/' . $artwork_title . '/');
+
+  }
+
 }
