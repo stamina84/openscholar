@@ -62,7 +62,7 @@ class CustomTextHtmlWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $block = $storage->create([
         'type' => $bundle,
         'info' => $row['Info'],
-        'body' => $row['Body'],
+        'body' => ['value' => $row['Body'], 'format' => 'filtered_html'],
         'field_widget_title' => $row['Title'],
       ]);
       $block->save();

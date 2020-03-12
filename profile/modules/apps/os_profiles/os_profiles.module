@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -189,5 +190,30 @@ function os_profiles_views_pre_build(ViewExecutable $view) {
   // Mark people views and invalidate if display type changed.
   if ($group = $vsite_context_manager->getActiveVsite()) {
     $view->storage->addCacheTags(['view:people:page:' . $group->id()]);
+  }
+}
+
+/**
+ * Implements hook_views_query_alter() for preventing the sql syntax error exception.
+ */
+function os_profiles_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() !== 'people' && $view->current_display !== 'people_glossary') {
+    return;
+  }
+  // Specifically to correct the sql syntax for people glossary.
+  foreach ($query->where as &$condition_group) {
+    foreach ($condition_group['conditions'] as &$condition) {
+      if (strpos($condition['field'], 'field_last_name') !== FALSE) {
+        $placeHolder = array_keys($condition['value'])[0];
+        // If array is passed in arguments such as {a,b,c,d,e} we need to
+        // make sure correct sql syntax is followed otherwise site breaks with
+        // an exception.
+        if (is_array($value = $condition['value'][$placeHolder])) {
+          unset($condition['value'][$placeHolder]);
+          $condition['field'] = "SUBSTRING(node__field_last_name.field_last_name_value, 1, 1) IN(" . $placeHolder . "[])";
+          $condition['value'][$placeHolder . "[]"] = $value;
+        }
+      }
+    }
   }
 }
