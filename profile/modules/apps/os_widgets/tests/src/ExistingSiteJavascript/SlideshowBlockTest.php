@@ -86,7 +86,7 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
     $this->waitForAjaxToFinish();
     $web_assert->waitForText('Add new slideshow');
     // Check image field is appeared.
-    $web_assert->fieldExists('files[field_slide_file_image_0]');
+    $web_assert->fieldExists('files[field_slide_image_0_inline_entity_form_field_media_image_0]');
   }
 
 }

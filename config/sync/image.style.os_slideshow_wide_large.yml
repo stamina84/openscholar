@@ -12,14 +12,22 @@ effects:
   9ad9bd05-3bc2-4ba8-a69e-73d7977a9ffb:
     uuid: 9ad9bd05-3bc2-4ba8-a69e-73d7977a9ffb
     id: crop_crop
-    weight: 1
+    weight: -10
     data:
       crop_type: crop_3_1
   0d098c77-cb11-4a50-a700-5907ada5f346:
     uuid: 0d098c77-cb11-4a50-a700-5907ada5f346
     id: image_scale
-    weight: 2
+    weight: -9
     data:
       width: 1170
       height: null
       upscale: true
+  f390e069-9713-43c9-be6b-a3771f463023:
+    uuid: f390e069-9713-43c9-be6b-a3771f463023
+    id: image_scale_and_crop
+    weight: -8
+    data:
+      width: 1170
+      height: 390
+      anchor: center-center

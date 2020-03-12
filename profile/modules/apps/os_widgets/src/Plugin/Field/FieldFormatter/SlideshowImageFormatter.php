@@ -12,6 +12,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\media\Entity\Media;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,10 +21,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FieldFormatter(
  *   id = "os_widgets_slideshow_image",
  *   label = @Translation("Slideshow image"),
- *   description = @Translation("Render image with proper alt/title and link if
- *                 exists."),
+ *   description = @Translation("Render image with proper alt/title and link if exists."),
  *   field_types = {
- *     "image"
+ *     "entity_reference"
  *   }
  * )
  */
@@ -136,12 +136,20 @@ class SlideshowImageFormatter extends FormatterBase implements ContainerFactoryP
     $title_value = $paragraph->get('field_slide_title_text')->getString();
     $slide_link_value = $paragraph->get('field_slide_link')->getString();
 
-    /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $item */
     foreach ($items as $item) {
-      $image = $item->entity;
-      if (!$image) {
-        // Referenced file might be deleted.
+      $image_media = $item->entity;
+      if (!$image_media) {
+        // Referenced media might be deleted.
         continue;
+      }
+      $image = $this->getImageFromMedia($image_media);
+      // Case of user not set alt value in slideshow paragraph.
+      if (empty($alt_value) && !empty($image_media->field_media_image->alt)) {
+        $alt_value = $image_media->field_media_image->alt;
+      }
+      // Case of user not set title value in slideshow paragraph.
+      if (empty($title_value) && !empty($image_media->field_media_image->title)) {
+        $title_value = $image_media->field_media_image->title;
       }
       $data_breakpoint_uri = $this->getImageBreakpointUri($image);
       $element['image'] = [
@@ -179,6 +187,27 @@ class SlideshowImageFormatter extends FormatterBase implements ContainerFactoryP
       ],
     ];
     return $elements;
+  }
+
+  /**
+   * Get Image file from given Media entity.
+   *
+   * @param \Drupal\media\Entity\Media $image_media
+   *   Media entity.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   Found slide image File entity.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function getImageFromMedia(Media $image_media) {
+    $file_storage = $this->entityTypeManager->getStorage('file');
+    /** @var \Drupal\media\MediaSourceInterface $source */
+    $source = $image_media->getSource();
+    $fid = $source->getSourceFieldValue($image_media);
+    $image = $file_storage->load($fid);
+    return $image;
   }
 
   /**

@@ -23,3 +23,11 @@ effects:
       width: 1170
       height: null
       upscale: true
+  0267f41b-806f-404e-8cdb-95aaa382d639:
+    uuid: 0267f41b-806f-404e-8cdb-95aaa382d639
+    id: image_scale_and_crop
+    weight: 3
+    data:
+      width: 1170
+      height: 658
+      anchor: center-center

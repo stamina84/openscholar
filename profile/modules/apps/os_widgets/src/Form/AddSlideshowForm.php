@@ -91,16 +91,9 @@ class AddSlideshowForm extends ContentEntityForm {
       'callback' => '::ajaxSubmit',
       'event' => 'click',
     ];
-    $crop_remove_map = [
-      '3_1_overlay' => 'crop_16_9',
-      '16_9_overlay' => 'crop_3_1',
-      '16_9_below' => 'crop_3_1',
-      '16_9_side' => 'crop_3_1',
-    ];
-    $layout_value = $block_content->get('field_slideshow_layout')->getString();
-    $remove_crops = [$crop_remove_map[$layout_value]];
-    $form["field_slide_file_image"]["widget"][0]["#crop_list"] = array_diff($form["field_slide_file_image"]["widget"][0]["#crop_list"], $remove_crops);
-
+    if (!empty($form["field_slide_image"]["widget"][0]["#after_build"])) {
+      $form["field_slide_image"]["widget"][0]["#after_build"][] = '_os_widgets_media_fields_after_build';
+    }
     return $form;
   }
 

@@ -32,10 +32,10 @@ class SlideshowImageFormatterTest extends OsWidgetsExistingSiteTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $image = $this->createFile('image');
+    $image = $this->createMediaImage();
     $this->slideshowParagraph = $this->createParagraph([
       'type' => 'slideshow',
-      'field_slide_file_image' => $image,
+      'field_slide_image' => $image,
     ]);
     $this->formatterSettings = [
       'layout_type' => 'wide',
@@ -46,7 +46,7 @@ class SlideshowImageFormatterTest extends OsWidgetsExistingSiteTestBase {
    * Shortcut to get slideshow formatter.
    */
   protected function getSlideshowFormatter() {
-    return $this->getFormatterInstance('paragraph', 'slideshow', 'field_slide_file_image', 'os_widgets_slideshow_image', $this->formatterSettings);
+    return $this->getFormatterInstance('paragraph', 'slideshow', 'field_slide_image', 'os_widgets_slideshow_image', $this->formatterSettings);
   }
 
   /**
@@ -55,7 +55,7 @@ class SlideshowImageFormatterTest extends OsWidgetsExistingSiteTestBase {
   public function testRenderSlideshowSlickDataWide() {
     $formatter_instance = $this->getSlideshowFormatter();
 
-    $elements = $formatter_instance->view($this->slideshowParagraph->get('field_slide_file_image'));
+    $elements = $formatter_instance->view($this->slideshowParagraph->get('field_slide_image'));
 
     $data_breakpoint_uri = Json::decode($elements[0]['image']['#image']['#attributes']['data-breakpoint_uri']);
     $this->assertSame([576, 768, 'large'], array_keys($data_breakpoint_uri));
@@ -73,7 +73,7 @@ class SlideshowImageFormatterTest extends OsWidgetsExistingSiteTestBase {
     ];
     $formatter_instance = $this->getSlideshowFormatter();
 
-    $elements = $formatter_instance->view($this->slideshowParagraph->get('field_slide_file_image'));
+    $elements = $formatter_instance->view($this->slideshowParagraph->get('field_slide_image'));
 
     $data_breakpoint_uri = Json::decode($elements[0]['image']['#image']['#attributes']['data-breakpoint_uri']);
     $this->assertSame([576, 768, 'large'], array_keys($data_breakpoint_uri));
@@ -83,18 +83,41 @@ class SlideshowImageFormatterTest extends OsWidgetsExistingSiteTestBase {
   }
 
   /**
+   * Test render slideshow with media alt and title (fallback).
+   */
+  public function testRenderSlideshowMediaAltTitle() {
+    $formatter_instance = $this->getSlideshowFormatter();
+    $image = $this->createMediaImage();
+    $image->field_media_image->alt = $this->randomMachineName();
+    $image->field_media_image->title = $this->randomMachineName();
+    $image->save();
+    $slideshow_paragraph = $this->createParagraph([
+      'type' => 'slideshow',
+      'field_slide_image' => $image,
+    ]);
+    $elements = $formatter_instance->view($slideshow_paragraph->get('field_slide_image'));
+
+    $this->assertSame($image->field_media_image->alt, $elements[0]['image']['#image']['#attributes']['alt']);
+    $this->assertSame($image->field_media_image->title, $elements[0]['image']['#image']['#attributes']['title']);
+  }
+
+  /**
    * Test render slideshow with media alt and title (override).
    */
   public function testRenderSlideshowParagraphAltTitle() {
     $formatter_instance = $this->getSlideshowFormatter();
-    $image = $this->createFile('image');
+    $image = $this->createMediaImage();
+    // Set to make sure it will be overridden.
+    $image->field_media_image->alt = $this->randomMachineName();
+    $image->field_media_image->title = $this->randomMachineName();
+    $image->save();
     $slideshow_paragraph = $this->createParagraph([
       'type' => 'slideshow',
-      'field_slide_file_image' => $image,
+      'field_slide_image' => $image,
       'field_slide_alt_text' => $this->randomMachineName(),
       'field_slide_title_text' => $this->randomMachineName(),
     ]);
-    $elements = $formatter_instance->view($slideshow_paragraph->get('field_slide_file_image'));
+    $elements = $formatter_instance->view($slideshow_paragraph->get('field_slide_image'));
 
     $this->assertSame($slideshow_paragraph->get('field_slide_alt_text')->getString(), $elements[0]['image']['#image']['#attributes']['alt']);
     $this->assertSame($slideshow_paragraph->get('field_slide_title_text')->getString(), $elements[0]['image']['#image']['#attributes']['title']);
@@ -105,13 +128,13 @@ class SlideshowImageFormatterTest extends OsWidgetsExistingSiteTestBase {
    */
   public function testRenderSlideshowWithLink() {
     $formatter_instance = $this->getSlideshowFormatter();
-    $image = $this->createFile('image');
+    $image = $this->createMediaImage();
     $slideshow_paragraph = $this->createParagraph([
       'type' => 'slideshow',
-      'field_slide_file_image' => $image,
+      'field_slide_image' => $image,
       'field_slide_link' => 'http://' . $this->randomMachineName() . '.com',
     ]);
-    $elements = $formatter_instance->view($slideshow_paragraph->get('field_slide_file_image'));
+    $elements = $formatter_instance->view($slideshow_paragraph->get('field_slide_image'));
 
     $this->assertSame($slideshow_paragraph->get('field_slide_link')->getString(), $elements[0]['image']['#url']);
   }

@@ -3,17 +3,17 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.media.slideshow
     - field.field.paragraph.slideshow.field_slide_alt_text
     - field.field.paragraph.slideshow.field_slide_description
-    - field.field.paragraph.slideshow.field_slide_file_image
     - field.field.paragraph.slideshow.field_slide_headline
+    - field.field.paragraph.slideshow.field_slide_image
     - field.field.paragraph.slideshow.field_slide_link
     - field.field.paragraph.slideshow.field_slide_title_text
-    - image.style.thumbnail
     - paragraphs.paragraphs_type.slideshow
   module:
     - field_layout
-    - image_widget_crop
+    - inline_entity_form
     - layout_discovery
     - link
 third_party_settings:
@@ -27,7 +27,7 @@ bundle: slideshow
 mode: default
 content:
   field_slide_alt_text:
-    weight: 4
+    weight: 6
     settings:
       size: 60
       placeholder: ''
@@ -35,6 +35,14 @@ content:
     type: string_textfield
     region: content
   field_slide_description:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_slide_headline:
     weight: 3
     settings:
       size: 60
@@ -42,32 +50,21 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_slide_file_image:
-    weight: 0
+  field_slide_image:
+    weight: 2
     settings:
-      show_default_crop: true
-      warn_multiple_usages: true
-      preview_image_style: thumbnail
-      crop_preview_image_style: crop_thumbnail
-      progress_indicator: throbber
-      crop_list:
-        - crop_16_9
-        - crop_3_1
-      crop_types_required: {  }
-      show_crop_area: false
+      form_mode: slideshow
+      label_singular: ''
+      label_plural: ''
+      revision: false
+      override_labels: false
+      collapsible: false
+      collapsed: false
     third_party_settings: {  }
-    type: image_widget_crop
-    region: content
-  field_slide_headline:
-    weight: 1
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
+    type: inline_entity_form_simple
     region: content
   field_slide_link:
-    weight: 2
+    weight: 4
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -75,7 +72,7 @@ content:
     type: link_default
     region: content
   field_slide_title_text:
-    weight: 5
+    weight: 7
     settings:
       size: 60
       placeholder: ''

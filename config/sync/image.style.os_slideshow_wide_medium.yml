@@ -23,3 +23,11 @@ effects:
       width: 768
       height: null
       upscale: true
+  65cf820d-f309-42ce-975e-bb321403a204:
+    uuid: 65cf820d-f309-42ce-975e-bb321403a204
+    id: image_scale_and_crop
+    weight: 3
+    data:
+      width: 768
+      height: 256
+      anchor: center-center
