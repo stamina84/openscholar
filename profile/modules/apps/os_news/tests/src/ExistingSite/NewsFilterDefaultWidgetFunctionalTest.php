@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\vsite_preset\ExistingSite;
+namespace Drupal\Tests\os_news\ExistingSite;
 
 use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 use Drupal\vsite_preset\Entity\GroupPreset;
@@ -28,6 +28,13 @@ class NewsFilterDefaultWidgetFunctionalTest extends OsExistingSiteTestBase {
   protected $entityTypeManager;
 
   /**
+   * Array of paths.
+   *
+   * @var array
+   */
+  protected $paths;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -35,6 +42,9 @@ class NewsFilterDefaultWidgetFunctionalTest extends OsExistingSiteTestBase {
     $this->vsitePresetHelper = $this->container->get('vsite_preset.preset_helper');
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->vsiteContextManager->activateVsite($this->group);
+    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
+    $preset = GroupPreset::load('minimal');
+    $this->paths = $this->vsitePresetHelper->getCreateFilePaths($preset, $this->group);
   }
 
   /**
@@ -47,11 +57,8 @@ class NewsFilterDefaultWidgetFunctionalTest extends OsExistingSiteTestBase {
    */
   public function testFilterNewsByYearDefaultWidgetCreation() {
 
-    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
-    $preset = GroupPreset::load('minimal');
-    $paths = $this->vsitePresetHelper->getCreateFilePaths($preset, $this->group);
     // Retrieve file creation csv source path and call creation method.
-    foreach ($paths as $uri) {
+    foreach ($this->paths as $uri) {
       $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
     }
 
@@ -62,7 +69,6 @@ class NewsFilterDefaultWidgetFunctionalTest extends OsExistingSiteTestBase {
     // Test positive.
     $this->visitViaVsite('news', $this->group);
     $this->assertSession()->pageTextContains('FILTER NEWS BY YEAR');
-
   }
 
   /**
@@ -75,11 +81,8 @@ class NewsFilterDefaultWidgetFunctionalTest extends OsExistingSiteTestBase {
    */
   public function testFilterNewsByYearDefaultWidgetPermissions() {
 
-    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
-    $preset = GroupPreset::load('minimal');
-    $paths = $this->vsitePresetHelper->getCreateFilePaths($preset, $this->group);
     // Retrieve file creation csv source path and call creation method.
-    foreach ($paths as $uri) {
+    foreach ($this->paths as $uri) {
       $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
     }
 
@@ -111,6 +114,30 @@ class NewsFilterDefaultWidgetFunctionalTest extends OsExistingSiteTestBase {
 
     $this->visitViaVsite("block/$blockEntityId/delete", $this->group);
     $this->assertSession()->statusCodeEquals(200);
+  }
+
+  /**
+   * Test Default Widget is created and placed in proper context.
+   *
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testFilterNewsByMonthDefaultWidgetCreation() {
+
+    // Retrieve file creation csv source path and call creation method.
+    foreach ($this->paths as $uri) {
+      $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
+    }
+
+    // Test Negative.
+    $this->visitViaVsite('', $this->group);
+    $this->assertSession()->pageTextNotContains('FILTER NEWS BY MONTH');
+
+    // Test positive.
+    $this->visitViaVsite('news', $this->group);
+    $this->assertSession()->pageTextContains('FILTER NEWS BY MONTH');
   }
 
 }

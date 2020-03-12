@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\vsite_preset\ExistingSite;
+namespace Drupal\Tests\os_news\ExistingSite;
 
 use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 use Drupal\vsite_preset\Entity\GroupPreset;
@@ -28,6 +28,13 @@ class NewsFilterDefaultWidgetTest extends OsExistingSiteTestBase {
   protected $entityTypeManager;
 
   /**
+   * Array of paths.
+   *
+   * @var array
+   */
+  protected $paths;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -36,6 +43,9 @@ class NewsFilterDefaultWidgetTest extends OsExistingSiteTestBase {
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->group = $this->createGroup();
     $this->vsiteContextManager->activateVsite($this->group);
+    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
+    $preset = GroupPreset::load('minimal');
+    $this->paths = $this->vsitePresetHelper->getCreateFilePaths($preset, $this->group);
   }
 
   /**
@@ -47,10 +57,6 @@ class NewsFilterDefaultWidgetTest extends OsExistingSiteTestBase {
    */
   public function testFilterNewsByYearDefaultWidgetCreation() {
 
-    /** @var \Drupal\vsite_preset\Entity\GroupPreset $preset */
-    $preset = GroupPreset::load('minimal');
-    $paths = $this->vsitePresetHelper->getCreateFilePaths($preset, $this->group);
-
     // Test negative, block content does not exist already.
     $gid = $this->group->id();
     $groupStorage = $this->entityTypeManager->getStorage('group_content');
@@ -61,7 +67,7 @@ class NewsFilterDefaultWidgetTest extends OsExistingSiteTestBase {
     $this->assertEmpty($blockArr);
 
     // Retrieve file creation csv source path and call creation method.
-    foreach ($paths as $uri) {
+    foreach ($this->paths as $uri) {
       $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
     }
 
@@ -80,6 +86,46 @@ class NewsFilterDefaultWidgetTest extends OsExistingSiteTestBase {
     $field_view_display = $blockContentEntity->field_view->display_id;
     $this->assertEquals('news', $field_view_view);
     $this->assertEquals('news_by_year_block', $field_view_display);
+  }
+
+  /**
+   * Test News by Month Default Widget is created.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testFilterNewsByMonthDefaultWidgetCreation() {
+
+    // Test negative, block content does not exist already.
+    $gid = $this->group->id();
+    $groupStorage = $this->entityTypeManager->getStorage('group_content');
+    $blockArr = $groupStorage->loadByProperties([
+      'gid' => $gid,
+      'label' => 'Filter News by Month',
+    ]);
+    $this->assertEmpty($blockArr);
+
+    // Retrieve file creation csv source path and call creation method.
+    foreach ($this->paths as $uri) {
+      $this->vsitePresetHelper->createDefaultContent($this->group, $uri);
+    }
+
+    // Test positive block content is created.
+    $blockArr = $groupStorage->loadByProperties([
+      'gid' => $gid,
+      'label' => 'Filter News by Month',
+    ]);
+    $this->assertNotEmpty($blockArr);
+    $blockEntity = array_values($blockArr)[0];
+    $blockEntityId = $blockEntity->entity_id->target_id;
+
+    // Assert correct view and display is selected.
+    $blockContentEntity = $this->entityTypeManager->getStorage('block_content')->load($blockEntityId);
+    $field_view_view = $blockContentEntity->field_view->target_id;
+    $field_view_display = $blockContentEntity->field_view->display_id;
+    $this->assertEquals('news', $field_view_view);
+    $this->assertEquals('news_by_month_block', $field_view_display);
   }
 
 }
