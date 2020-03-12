@@ -141,7 +141,8 @@ class OsSearchFacetedTaxonomyQueryBuilder {
     $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
 
     $query = $taxonomy_vocabulary_storage->getQuery();
-    if (!in_array('_none', $vocab_filter) && count($vocab_list) != 0) {
+    $vocab_filter = $vocab_filter[0];
+    if (!in_array('_none', $vocab_filter) && count($vocab_filter) > 0) {
       $query->condition('vid', $vocab_filter, 'IN');
     }
     $query->sort($vocab_order_by, 'ASC');

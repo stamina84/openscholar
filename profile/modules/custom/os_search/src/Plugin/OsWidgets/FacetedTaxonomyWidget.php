@@ -125,7 +125,7 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     $term_order_by = $block_content->get('field_term_order')->value ?? '';
     $class = $block_content->get('field_display_styles')->value ?? '';
     $need_count = $block_content->get('field_show_number_of_posts')->value == 1 ? TRUE : FALSE;
-    $vocab_filter = $block_content->get('field_vocabularies')->value ?? [];
+    $vocab_filter = $block_content->get('field_vocabularies')->getValue() ?? [];
 
     $buckets = $this->osSearchFacetBuilder->getFacetBuckets($field_id, $query);
     $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);

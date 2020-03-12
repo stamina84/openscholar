@@ -52,7 +52,6 @@ function os_search_form_alter(&$form, FormStateInterface $form_state, $form_id) 
 
     ];
 
-    $form['field_vocabularies']['widget']['#validate'] = TRUE;
     $form['field_vocabularies']['widget']['#options'] = _get_vocab_list($vocab_default_list);
     $form['field_vocabularies']['widget']['#prefix'] = '<div id="view-vocab-list">';
     $form['field_vocabularies']['widget']['#suffix'] = '</div>';
