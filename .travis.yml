@@ -49,7 +49,7 @@ jobs:
     - stage: test
       script: robo job:run-functional-tests "classes,events,pages,cp,media-browser,os-theme-preview,breadcrumbs,cp-menu,vsite_favicon"
     - stage: test
-      script: robo job:run-functional-tests "os-search,analytics,publications,cp-appearance,redirect,twitter,os,vsite,cp-import"
+      script: robo job:run-functional-tests "os-search,analytics,publications,cp-appearance,redirect,twitter,os,vsite,cp-import,vsite-preset"
     - stage: test
       script: robo job:run-functional-javascript-tests "publications,mailchimp,metatag,redirect,cp-appearance,vsite-preset,news"
     - stage: test

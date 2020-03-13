@@ -146,7 +146,7 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     ]);
     $this->addGroupContent($blog, $this->group);
 
-    $this->visitViaVsite('blog/archives', $this->group);
+    $this->visitViaVsite('blog/archive', $this->group);
     $web_assert->statusCodeEquals(200);
     // Assert non-filtered page.
     $web_assert->pageTextContains($blog_2010->getTitle());
@@ -154,7 +154,7 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->pageTextContains($blog_2011_03->getTitle());
     $web_assert->pageTextContains($blog->getTitle());
 
-    $this->visitViaVsite('blog/archives/2010', $this->group);
+    $this->visitViaVsite('blog/archive/2010', $this->group);
     $web_assert->statusCodeEquals(200);
     // Assert year filtered page.
     $web_assert->pageTextContains($blog_2010->getTitle());
@@ -162,7 +162,7 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->pageTextNotContains($blog_2011_03->getTitle());
     $web_assert->pageTextNotContains($blog->getTitle());
 
-    $this->visitViaVsite('blog/archives/2011/02', $this->group);
+    $this->visitViaVsite('blog/archive/2011/02', $this->group);
     $web_assert->statusCodeEquals(200);
     // Assert month filtered page.
     $web_assert->pageTextContains($blog_2011_02->getTitle());

@@ -241,6 +241,7 @@
         "drupal/video_embed_field": "^2.0",
         "drupal/viewfield": "^3.0",
         "drupal/views_accordion": "^1.1",
+        "drupal/views_date_format_sql": "^3.0",
         "drupal/views_ical": "^2.2",
         "drupal/views_infinite_scroll": "^1.5",
         "drush/drush": "^9.0.0",

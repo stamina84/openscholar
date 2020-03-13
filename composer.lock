@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2b45051e74b185aea273ae3f902ab12",
+    "content-hash": "c592a1a1ba5ff81efe83c8e7012cbd6d",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -4749,6 +4749,7 @@
                     "Add paging info to rest request": "https://www.drupal.org/files/issues/2018-06-30/2982729-viewsRestInfo.patch",
                     "Getlabel() on null layout builder.": "https://www.drupal.org/files/issues/2018-07-16/2985882-entityfield-2.patch",
                     "Image styles fails with absolute path": "https://www.drupal.org/files/issues/image_styles-2754273-7.patch",
+                    "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2020-03-05/2950883-19.patch",
                     "User context missing when using toUrl in some circumstances": "https://www.drupal.org/files/issues/2019-05-22/3056234-test-fix-4.patch",
                     "null route object in big_pipe requests after 8.7.8 upgrade": "https://www.drupal.org/files/issues/2019-10-24/3089913-2.patch",
                     "Contextual links double trigger": "https://www.drupal.org/files/issues/2019-11-15/drupal-contextual_links_double_trigger-2834346-19.patch"
@@ -6886,6 +6887,9 @@
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
                     }
+                },
+                "patches_applied": {
+                    "Migrate source Ical count() should be compatible with migrate": "https://www.drupal.org/files/issues/2019-12-14/3101074-0-migrate_source_ical-typos.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -8880,6 +8884,53 @@
             "homepage": "https://www.drupal.org/project/views_advanced_routing",
             "support": {
                 "source": "https://git.drupalcode.org/project/views_advanced_routing"
+            }
+        },
+        {
+            "name": "drupal/views_date_format_sql",
+            "version": "3.0.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/views_date_format_sql.git",
+                "reference": "8.x-3.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/views_date_format_sql-8.x-3.0-alpha1.zip",
+                "reference": "8.x-3.0-alpha1",
+                "shasum": "8d7658181f9ec1778a240ebdcd7b73b4a06257f3"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-3.x": "3.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-3.0-alpha1",
+                    "datestamp": "1554050585",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "zany",
+                    "homepage": "https://www.drupal.org/user/284183"
+                }
+            ],
+            "description": "Allows to format date fields using SQL. This enables group aggregation.",
+            "homepage": "https://www.drupal.org/project/views_date_format_sql",
+            "support": {
+                "source": "https://git.drupalcode.org/project/views_date_format_sql"
             }
         },
         {
