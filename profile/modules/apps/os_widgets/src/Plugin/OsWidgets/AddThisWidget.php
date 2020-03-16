@@ -2,6 +2,7 @@
 
 namespace Drupal\os_widgets\Plugin\OsWidgets;
 
+use Drupal\group\Entity\GroupInterface;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
 
@@ -47,6 +48,24 @@ class AddThisWidget extends OsWidgetsBase implements OsWidgetsInterface {
    */
   public function getModulePath() {
     return drupal_get_path('module', 'os_widgets');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createWidget(array $data, $bundle, GroupInterface $group): void {
+    $storage = $this->entityTypeManager->getStorage('block_content');
+    foreach ($data as $row) {
+      $block = $storage->create([
+        'type' => $bundle,
+        'info' => $row['Info'],
+        'field_addthis_display_style' => $row['Display style'],
+      ]);
+      $block->save();
+      $block_uuid = $block->uuid();
+      $group->addContent($block, "group_entity:block_content");
+      $this->saveWidgetLayout($row, $block_uuid);
+    }
   }
 
 }

@@ -68,18 +68,23 @@ class OsWidgetsBase extends PluginBase implements ContainerFactoryPluginInterfac
    *   Csv rows array.
    * @param string $uuid
    *   Block UUID.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function saveWidgetLayout(array $row, $uuid) {
-    // @var \Drupal\os_widgets\Entity\LayoutContext $context
-    $context = LayoutContext::load($row['Context']);
-    $data = $context->getBlockPlacements();
-    $data[] = [
-      'id' => "block_content|$uuid",
-      'region' => $row['Region'],
-      'weight' => 0,
-    ];
-    $context->setBlockPlacements($data);
-    $context->save();
+    $contextIds = explode(',', $row['Context']);
+    foreach ($contextIds as $contextId) {
+      /** @var \Drupal\os_widgets\Entity\LayoutContext $context */
+      $context = LayoutContext::load($contextId);
+      $data = $context->getBlockPlacements();
+      $data[] = [
+        'id' => "block_content|$uuid",
+        'region' => $row['Region'],
+        'weight' => 0,
+      ];
+      $context->setBlockPlacements($data);
+      $context->save();
+    }
   }
 
 }
