@@ -157,7 +157,6 @@ display:
             placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
-            operator: ''
             operator_limit_selection: false
             operator_list: {  }
           is_grouped: false
