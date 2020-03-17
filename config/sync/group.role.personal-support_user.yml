@@ -23,6 +23,7 @@ permissions:
   - 'administer group'
   - 'administer members'
   - 'administer nodes'
+  - 'change vsite domain'
   - 'create group_entity:bibcite_reference entity'
   - 'create group_entity:block_content entity'
   - 'create group_entity:media entity'
@@ -79,6 +80,7 @@ permissions:
   - 'manage layout'
   - 'manage taxonomy'
   - 'manage vsite content'
+  - 'manage vsite solr search'
   - manage_menu
   - 'promote nodes'
   - 'publish nodes'

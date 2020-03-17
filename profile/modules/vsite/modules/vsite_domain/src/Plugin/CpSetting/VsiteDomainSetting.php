@@ -8,6 +8,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\cp_settings\CpSettingBase;
+use Drupal\vsite\Plugin\VsiteContextManagerInterface;
+use Drupal\group\Access\ChainGroupPermissionCalculatorInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Vsite domain setting.
@@ -23,6 +26,45 @@ use Drupal\cp_settings\CpSettingBase;
  * )
  */
 class VsiteDomainSetting extends CpSettingBase {
+
+  /**
+   * The group permissions hash generator service.
+   *
+   * @var \Drupal\group\Access\ChainGroupPermissionCalculatorInterface
+   */
+  protected $permissionCalculator;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('vsite.context_manager'),
+      $container->get('group_permission.chain_calculator')
+    );
+  }
+
+  /**
+   * Creates a new CpSettingBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager
+   *   Vsite context manager.
+   * @param \Drupal\group\Access\ChainGroupPermissionCalculatorInterface $permission_calculator
+   *   Group Permission Calculator.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, VsiteContextManagerInterface $vsite_context_manager, ChainGroupPermissionCalculatorInterface $permission_calculator) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $vsite_context_manager);
+    $this->permissionCalculator = $permission_calculator;
+  }
 
   /**
    * {@inheritdoc}
@@ -57,11 +99,15 @@ class VsiteDomainSetting extends CpSettingBase {
       return $access_result;
     }
 
-    if (!$this->activeVsite->hasPermission('change vsite domain', $account)) {
-      return AccessResult::forbidden();
+    $calculated_permissions = $this->permissionCalculator->calculatePermissions($account);
+
+    foreach ($calculated_permissions->getItems() as $item) {
+      if (in_array('change vsite domain', $item->getPermissions(), TRUE)) {
+        return AccessResult::allowed();
+      }
     }
 
-    return AccessResult::allowed();
+    return AccessResult::forbidden();
   }
 
 }
