@@ -100,7 +100,7 @@
 
         scope.$on('EntityService.media.update', function (e, file) {
           for (var i = 0; i<scope.selectedFiles.length; i++) {
-            if (file.id == scope.selectedFiles[i].id) {
+            if (file.mid == scope.selectedFiles[i].mid) {
               scope.selectedFiles[i] = angular.copy(file);
             }
           }
