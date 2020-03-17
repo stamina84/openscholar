@@ -242,6 +242,7 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
       if ($row['Content type'] == 'events') {
         $block->set('field_show', $row['Show']);
+        $block->set('field_events_should_expire', $row['Expire']);
       }
 
       if ($row['Content type'] == 'publications') {

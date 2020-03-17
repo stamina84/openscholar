@@ -1,2 +1,2 @@
-Info,Title,Display style,Content type,Region,Sort by,Context,Show
-Upcoming Events,Upcoming Events,teaser,events,sidebar_second,sort_newest,events,upcoming_events
+Info,Title,Display style,Content type,Region,Sort by,Context,Show,Expire
+Upcoming Events,Upcoming Events,sidebar_teaser,events,sidebar_second,sort_event_asc,events,upcoming_events,after_event_start

@@ -6,7 +6,7 @@ use Drupal\Tests\vsite\ExistingSite\VsiteExistingSiteTestBase;
 use Drupal\vsite_preset\Entity\GroupPreset;
 
 /**
- * EventsDefaultWidgetFunctionalTest.
+ * EventsDefaultWidgeTest.
  *
  * @group vsite
  * @group kernel
@@ -88,12 +88,14 @@ class EventsDefaultWidgetTest extends VsiteExistingSiteTestBase {
     $widgeTitle = $blockContentEntity->get('field_widget_title')->value;
     $info = $blockContentEntity->get('info')->value;
     $show = $blockContentEntity->get('field_show')->value;
+    $expire = $blockContentEntity->get('field_events_should_expire')->value;
     $this->assertEquals('events', $type);
-    $this->assertEquals('teaser', $displayStyle);
-    $this->assertEquals('sort_newest', $sortedBy);
+    $this->assertEquals('sidebar_teaser', $displayStyle);
+    $this->assertEquals('sort_event_asc', $sortedBy);
     $this->assertEquals('Upcoming Events', $widgeTitle);
     $this->assertEquals('Upcoming Events', $info);
     $this->assertEquals('upcoming_events', $show);
+    $this->assertEquals('after_event_start', $expire);
   }
 
 }
