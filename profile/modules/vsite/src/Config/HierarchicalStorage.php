@@ -230,7 +230,19 @@ class HierarchicalStorage implements HierarchicalStorageInterface {
     /** @var \Drupal\Core\Config\StorageInterface $st */
     foreach ($this->storages as $st) {
       if ($st['weight'] == $level) {
-        $st->write($name, $value);
+        $st['storage']->write($name, $value);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function readFromlevel($name, $level) {
+    /** @var \Drupal\Core\Config\StorageInterface $st */
+    foreach ($this->storages as $st) {
+      if ($st['weight'] == $level && $st['storage']->exists($name)) {
+        return $st['storage']->read($name);
       }
     }
   }

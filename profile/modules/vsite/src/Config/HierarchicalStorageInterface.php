@@ -61,4 +61,18 @@ interface HierarchicalStorageInterface extends StorageInterface {
    */
   public function clearWriteOverride();
 
+  /**
+   * Reads a value from a specific level.
+   *
+   * @param string $name
+   *   Name of config item.
+   * @param int $level
+   *   The level being being saved to.
+   *
+   * @return array|bool
+   *   The configuration data stored for the configuration object name.
+   *   If no configuration data exists for the given name, FALSE is returned.
+   */
+  public function readFromlevel($name, $level);
+
 }
