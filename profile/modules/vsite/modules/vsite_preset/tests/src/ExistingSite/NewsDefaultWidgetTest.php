@@ -89,7 +89,7 @@ class NewsDefaultWidgetTest extends VsiteExistingSiteTestBase {
     $info = $blockContentEntity->get('info')->value;
     $this->assertEquals('news', $type);
     $this->assertEquals('title', $displayStyle);
-    $this->assertEquals('sort_newest', $sortedBy);
+    $this->assertEquals('news_date', $sortedBy);
     $this->assertEquals('Latest News', $widgeTitle);
     $this->assertEquals('Latest News', $info);
   }
