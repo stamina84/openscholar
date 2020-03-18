@@ -152,9 +152,11 @@ trait ExistingSiteTestTrait {
    *   The user.
    */
   protected function addGroupAdmin(UserInterface $admin, GroupInterface $group): void {
+    $group_type = $group->getGroupType()->id();
+
     $group->addMember($admin, [
       'group_roles' => [
-        'personal-administrator',
+        "{$group_type}-administrator",
       ],
     ]);
   }

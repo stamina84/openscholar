@@ -937,6 +937,18 @@ function os_widgets_contextual_links_view_alter(&$element, $items) {
       'data-dialog-options' => Json::encode(['width' => 1000, 'dialogClass' => 'widget-popup']),
     ];
   }
+
+  if (isset($element['#links']['block-contentblock-delete'])) {
+    $element['#links']['block-contentblock-delete']['attributes'] = [
+      'class' => ['use-ajax'],
+      'data-dialog-type' => 'modal',
+      'data-dialog-options' => Json::encode(['width' => 1000, 'dialogClass' => 'widget-popup']),
+    ];
+  }
+
+  if (isset($_GET['block-place']) && isset($element['#links']['block-configure'])) {
+    unset($element['#links']['block-configure']);
+  }
 }
 
 /**

@@ -152,3 +152,15 @@ nav.ui-sortable-helper ul.menu {
 .contextual .trigger {
   display: none;
 }
+
+/**
+ * Show contextual links for unplaced blocks.
+ * Added .region-footer-bottom to avoid dragged blocks' display.
+ */
+.region-footer-bottom .display-contextual .contextual .trigger {
+  display: block;
+}
+
+.region-footer-bottom .display-contextual .contextual li.block-configure {
+  display: none;
+}

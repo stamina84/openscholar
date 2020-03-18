@@ -45,12 +45,21 @@ class PlaceBlockPageVariant extends OriginalVariant {
   protected $entityTypeManager;
 
   /**
+   * Block Manager.
+   *
+   * @var \Drupal\Core\Block\BlockManager
+   */
+  protected $blockManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->sectionStorageManager = $container->get('plugin.manager.layout_builder.section_storage');
     $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->blockManager = $container->get('plugin.manager.block');
+
     return $instance;
   }
 
@@ -266,32 +275,36 @@ class PlaceBlockPageVariant extends OriginalVariant {
       $uuid = str_replace('block_content:', '', $plugin_id);
       $block_content_list = $block_storage->loadByProperties(['uuid' => $uuid]);
       $block_type = 'basic';
+      $block_contextual_links = [];
 
       if ($block_content_list) {
         $block_content = reset($block_content_list);
         $block_type = $block_content->bundle();
         $output['filter_by_type']['#options'][$block_content->bundle()] = $block_content->type->entity->label();
+
+        $block_u = $this->blockManager->createInstance('block_content:' . $uuid);
+        $block_contextual_links = $block_u->build()['#contextual_links'];
       }
 
       $block_build = [
         '#type' => 'inline_template',
-        '#template' => '<div class="block block-active" data-block-type="{{ type }}" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
+        '#template' => '<div class="block block-active display-contextual" data-block-type="{{ type }}" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
         '#context' => [
           'id' => $b->id(),
           'type' => $block_type,
-          'title' => '',
+          'title' => $b->label(),
           'content' => '',
         ],
       ];
 
-      $block_build['#context']['title'] = $b->label();
       if (isset($block_content) && $block_content->type->entity->id() == 'facet' || $block_content->type->entity->id() == 'search_sort') {
         $block_label = explode('|', $b->label());
-
         $block_build['#context']['title'] = isset($block_label[1]) ? trim($block_label[1]) : $b->label();
       }
 
       $block_build['#context']['content'] = $this->entityTypeManager->getViewBuilder('block')->view($b);
+      $block_build['#contextual_links'] = $block_contextual_links;
+
       $output['existing-blocks'][$b->id()] = $block_build;
     }
 

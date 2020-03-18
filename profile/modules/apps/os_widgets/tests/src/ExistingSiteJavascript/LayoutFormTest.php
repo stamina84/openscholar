@@ -236,4 +236,31 @@ JS;
     $this->assertEquals("{$this->groupAlias}/blog", $this->getDestinationParameterValue($delete_link));
   }
 
+  /**
+   * Tests contextual on layout page sidebar.
+   */
+  public function testLayoutSidebarContextualLinks() {
+    $block_title = $this->randomMachineName();
+    $group_admin = $this->createUser();
+    $this->addGroupAdmin($group_admin, $this->group);
+    $this->drupalLogin($group_admin);
+
+    $block = $this->createBlockContent([
+      'type' => 'custom_text_html',
+      'info' => "Test Block {$block_title}",
+      'body' => "Text Block body content {$block_title}",
+      'field_widget_title' => "Test Block {$block_title}",
+    ]);
+
+    $this->group->addContent($block, "group_entity:block_content");
+
+    // Wait takes care of random failures.
+    sleep(5);
+
+    $this->visitViaVsite('', $this->group);
+    $this->getSession()->getPage()->clickLink('Layout');
+
+    $this->assertSession()->pageTextContains("Open Test Block {$block_title} configuration options");
+  }
+
 }
