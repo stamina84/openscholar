@@ -457,4 +457,38 @@ class CustomThemeFunctionalTest extends CpAppearanceExistingSiteJavascriptTestBa
     $theme_handler->refreshInfo();
   }
 
+  /**
+   * Tests theme preview on top of default custom theme.
+   */
+  public function testThemePreviewOnCustom() {
+    // Setup.
+    $group_admin = $this->createUser();
+    $this->addGroupAdmin($group_admin, $this->group);
+    $this->drupalLogin($group_admin);
+
+    $this->visitViaVsite('cp/appearance/themes/custom-themes/add', $this->group);
+    $this->getSession()->getPage()->fillField('Custom Theme Name', 'Interstellar 2052');
+    $this->assertSession()->waitForElementVisible('css', '.machine-name-value');
+    $this->getSession()->getPage()->selectFieldOption('Parent Theme', 'blue_sky');
+    $this->getSession()->getPage()->findField('styles')->setValue('body { color: black; }');
+    $this->getSession()->getPage()->pressButton('Save and set as default theme');
+    $this->getSession()->getPage()->pressButton('Confirm');
+
+    $performance_config = \Drupal::configFactory()->getEditable('system.performance');
+    // Disable CSS aggregation to read css files.
+    $performance_config->set('css.preprocess', FALSE)->save();
+
+    $this->visitViaVsite('cp/appearance/themes', $this->group);
+    $this->clickLink('Preview Lemon Sand');
+
+    // Not something very optimal, while actual page visit outputs 'lemon_sand'
+    // as active theme. Theme manager service is not able to find
+    // correct route match when called directly and thus returns
+    // default theme as active theme eventually failing test.
+    $this->assertContains('<link rel="stylesheet" media="all" href="/profiles/contrib/openscholar/themes/lemon_sand/css/style.css', $this->getSession()->getPage()->getHtml());
+
+    // Enable back CSS aggregation for other tests.
+    $performance_config->set('css.preprocess', TRUE)->save();
+  }
+
 }

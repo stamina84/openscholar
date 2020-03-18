@@ -67,7 +67,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
     // Only alter the query string for any custom theme style.
     array_walk($elements, function (&$item, $index) use ($assets, $active_vsite) {
       if (strpos($item['#attributes']['href'], CustomTheme::CUSTOM_THEME_ID_PREFIX) !== FALSE) {
-        $query_string_separator = (strpos($assets[$index]['data'], '?') !== FALSE) ? '&' : '?';
+        $query_string_separator = isset($assets[$index]) && (strpos($assets[$index]['data'], '?') !== FALSE) ? '&' : '?';
         list($path) = explode($query_string_separator, $item['#attributes']['href']);
 
         $new_query_string = $this->state->get(VsiteContextManager::VSITE_CSS_JS_QUERY_STRING_STATE_KEY_PREFIX . $active_vsite->id(), 0);

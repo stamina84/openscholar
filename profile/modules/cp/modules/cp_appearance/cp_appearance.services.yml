@@ -15,7 +15,7 @@ services:
       - { name: event_subscriber }
   cp_appearance.init_custom_theme_subscriber:
     class: \Drupal\cp_appearance\EventSubscriber\InitCustomThemeSubscriber
-    arguments: ['@config.factory', '@theme.manager', '@theme.initialization']
+    arguments: ['@config.factory', '@theme.manager', '@theme.initialization', '@request_stack']
     tags:
       - {name: event_subscriber}
   cp_appearance.css_collection_renderer:
