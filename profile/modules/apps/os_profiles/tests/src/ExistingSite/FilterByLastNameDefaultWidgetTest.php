@@ -76,12 +76,12 @@ class FilterByLastNameDefaultWidgetTest extends OsExistingSiteTestBase {
 
     // Assert correct view and display is selected.
     $blockContentEntity = $this->entityTypeManager->getStorage('block_content')->load($blockEntityId);
-    $field_info = $blockContentEntity->info->value;
-    $field_title = $blockContentEntity->field_widget_title->value;
-    $field_body = $blockContentEntity->body->value;
-    $this->assertEquals('Filter by alphabetical grouping of Last Name', $field_info);
-    $this->assertEquals('Filter by alphabetical grouping of Last Name', $field_title);
-    $this->assertContains("<li><a data-url='/people/glossary/a,b,c,d,e' href='/people/glossary/a,b,c,d,e'>A-E</a></li>", $field_body);
+    $field_view_view = $blockContentEntity->field_view->target_id;
+    $field_view_display = $blockContentEntity->field_view->display_id;
+    $info = $blockContentEntity->get('info')->value;
+    $this->assertEquals('Filter by alphabetical grouping of Last Name', $info);
+    $this->assertEquals('people', $field_view_view);
+    $this->assertEquals('block_2', $field_view_display);
   }
 
 }

@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
@@ -215,5 +216,39 @@ function os_profiles_views_query_alter(ViewExecutable $view, QueryPluginBase $qu
         }
       }
     }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function os_profiles_preprocess_views_view_summary(&$variables) {
+  // Targets only view name 'people' for alphabetical profile
+  // glossary link display.
+  if ($variables['view']->id() == 'people' && $variables['view']->current_display == 'block_2') {
+
+    $options = $variables['view']->style_plugin->options;
+    $summary_base_path = Url::fromUri('internal:/' . $options['base_path'])->toString();
+    $glossary_links = [
+      'A-E' => range('a', 'e'),
+      'F-J' => range('f', 'j'),
+      'K-O' => range('k', 'o'),
+      'P-T' => range('p', 't'),
+      'U-Z' => range('u', 'z'),
+    ];
+    // Building the glossary links as A-E, F-J etc.
+    foreach ($variables['view']->result as $letter) {
+      $rendered[] = strtolower($letter->field_last_name_value_truncated);
+    }
+    $rows = [];
+    foreach ($glossary_links as $key => $alphabet_set) {
+      if (array_intersect($rendered, $alphabet_set)) {
+        $overridden_result = new stdClass();
+        $overridden_result->link = $key;
+        $overridden_result->url = $summary_base_path . '/' . implode(',', $glossary_links[$key]);
+        $rows[] = $overridden_result;
+      }
+    }
+    $variables['rows'] = $rows;
   }
 }

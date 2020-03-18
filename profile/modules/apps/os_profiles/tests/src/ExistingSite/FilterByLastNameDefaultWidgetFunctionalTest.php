@@ -61,13 +61,16 @@ class FilterByLastNameDefaultWidgetFunctionalTest extends OsExistingSiteTestBase
     $this->assertSession()->pageTextNotContains('FILTER BY ALPHABETICAL GROUPING OF LAST NAME');
 
     // Test positive.
+    $personNode = $this->createNode([
+      'type' => 'person',
+      'field_first_name' => $this->randomMachineName(),
+      'field_last_name' => 'Last',
+    ]);
+    $this->group->addContent($personNode, 'group_node:person');
     $this->visitViaVsite('people', $this->group);
+
     $this->assertSession()->pageTextContains('FILTER BY ALPHABETICAL GROUPING OF LAST NAME');
-    $this->assertSession()->linkExists('A-E');
-    $this->assertSession()->linkExists('F-J');
     $this->assertSession()->linkExists('K-O');
-    $this->assertSession()->linkExists('P-T');
-    $this->assertSession()->linkExists('U-Z');
 
     // Test that no exception is thrown when url has multiple arguments
     // separated by commas.
