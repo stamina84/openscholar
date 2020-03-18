@@ -37,22 +37,29 @@ class SectionNavigationTest extends TestBase {
     $this->visitViaVsite("node/{$book->id()}", $this->group);
     $web_assert->statusCodeEquals(200);
     // Adding sub-page for Book.
-    $page1 = $this->createSubBookPages($book->id(), 'Sub page for book');
-    $page2 = $this->createSubBookPages($book->id(), 'Sub page 2');
-    $grand_child = $this->createSubBookPages($page1->id(), 'Grand child');
+    $page1 = $this->createSubBookPages($book->id(), 'First sub page');
+    $page2 = $this->createSubBookPages($book->id(), 'Another sub page');
+    $grand_child = $this->createSubBookPages($page1->id(), 'Grand child 1');
+
+    // Check section nav widget on book main page.
+    $this->visit($path_alias_manager->getAliasByPath("/node/{$book->id()}"));
+    $web_assert->statusCodeEquals(200);
+    $web_assert->elementExists('css', '.block--type-section-navigation');
+    $web_assert->linkExists('First book');
 
     $this->visit($path_alias_manager->getAliasByPath("/node/{$page1->id()}"));
     $web_assert->statusCodeEquals(200);
-    $web_assert->pageTextContains('Sub page for book');
-    $web_assert->linkExists('Sub page for book');
-    $web_assert->linkExists('Grand child');
-    $web_assert->linkExists('Sub page 2');
+    $web_assert->pageTextContains('First sub page');
+    $web_assert->linkExists('First sub page');
+    $web_assert->linkExists('Grand child 1');
+    $web_assert->linkExists('Another sub page');
     // Check for current page active link.
     $web_assert->elementExists('css', '.active-nav-link');
     $web_assert->elementExists('css', '.block--type-section-navigation');
     // Asserting same block on sub-pages for a book.
     $block_id = $this->getSession()->getPage()->find('css', '.block--type-section-navigation')->getAttribute('id');
     $this->visit($path_alias_manager->getAliasByPath("/node/{$page2->id()}"));
+
     $web_assert->statusCodeEquals(200);
     $block_id2 = $this->getSession()->getPage()->find('css', '.block--type-section-navigation')->getAttribute('id');
     $this->assertEquals($block_id, $block_id2);
@@ -76,7 +83,7 @@ class SectionNavigationTest extends TestBase {
     $path_alias_manager = $this->container->get('path_alias.manager');
 
     // Creating book.
-    $book_title = 'First book';
+    $book_title = 'Another book';
     $this->visitViaVsite("node/add/page", $this->group);
     $this->getSession()->getPage()->fillField('title[0][value]', $book_title);
     $this->getSession()->getPage()->checkField('book[checkbox]');
@@ -93,14 +100,14 @@ class SectionNavigationTest extends TestBase {
 
     // Adding sub-page for Book.
     $page1 = $this->createSubBookPages($book->id(), 'Sub page for book');
-    $grand_child = $this->createSubBookPages($page1->id(), 'Grand child');
-
     // Created another sub-pages.
-    $page2 = $this->createSubBookPages($book->id(), 'Sub page 2');
+    $page2 = $this->createSubBookPages($book->id(), 'Another sub page');
+    $grand_child = $this->createSubBookPages($page1->id(), 'Grand child');
     $grand_child2 = $this->createSubBookPages($page2->id(), 'Grand child 2');
 
     $this->visitViaVsite("node/{$book->id()}/section-outline", $this->group);
-    // Also setting sub page 2 (parent) to hidden in section-nav.
+    $web_assert->statusCodeEquals(200);
+    // Also setting Another sub page (parent) to hidden in section-nav.
     // If sub-page is hidden, its children will be hidden from section-nav.
     $this->getSession()->getPage()->checkField("table[book-admin-{$page2->id()}][hide]");
     $this->getSession()->getPage()->checkField("table[book-admin-{$grand_child->id()}][hide]");
@@ -108,20 +115,22 @@ class SectionNavigationTest extends TestBase {
     $web_assert->statusCodeEquals(200);
 
     // Visiting the sub-page 1.
-    $this->visit($path_alias_manager->getAliasByPath("/node/{$page1->id()}"));
+    $sub_page_path = $path_alias_manager->getAliasByPath("/node/{$page1->id()}");
+    $this->visit($sub_page_path);
     $web_assert->statusCodeEquals(200);
     $web_assert->linkExists('Sub page for book');
     $web_assert->linkNotExists('Grand child');
     // Asserting no sub-page 2 and grand child 2 links visible.
-    $web_assert->linkNotExists('Sub page 2');
+    $web_assert->linkNotExists('Another sub page');
     $web_assert->linkNotExists('Grand child 2');
     // Test custom contextual links.
     $web_assert->waitForElement('css', '.block--type-section-navigation .contextual-links');
     $web_assert->buttonExists('Open configuration options')->click();
+    $web_assert->waitForElementVisible('css', '.contextual-links');
     /** @var \Behat\Mink\Element\NodeElement|null $section_outline_link */
     $section_outline_link = $this->getSession()->getPage()->find('css', '.contextual-links .section-outline a');
     $this->assertNotNull($section_outline_link);
-    $web_assert->linkByHrefExists("{$this->groupAlias}/node/{$book->id()}/section-outline");
+    $web_assert->linkByHrefExists("{$this->groupAlias}/node/{$book->id()}/section-outline?destination={$sub_page_path}");
 
     // Entities clean up.
     $this->markEntityForCleanup($book);

@@ -74,7 +74,7 @@ class SectionNavigationWidget extends OsWidgetsBase implements OsWidgetsInterfac
     $tree = [];
     $node = $this->requestStack->getCurrentRequest()->attributes->get('node');
     if (!empty($node->book) && isset($node->book['bid'])) {
-      if ($node->field_is_hidden_section_nav->value == 0 && $node->book['bid'] != $node->id()) {
+      if ($node->field_is_hidden_section_nav->value == 0) {
         $book_node = $this->nodeStorage->load($node->book['bid']);
         $tree = $this->bookTreeOutput($book_node->book, $node->book);
         $build['section_navigation'] = $tree;
