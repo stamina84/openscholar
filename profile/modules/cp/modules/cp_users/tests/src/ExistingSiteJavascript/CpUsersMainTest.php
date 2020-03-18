@@ -254,7 +254,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $page->clickLink('Add a member');
     $this->assertSession()->waitForElement('css', '#drupal-modal--content');
     $page->pressButton('Create a new member');
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $page->fillField('First Name', 'test');
     $page->fillField('Last Name', 'user');
     $page->fillField('Username', 'test-site-user');
@@ -299,7 +299,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $page->clickLink('Add a member');
     $this->assertSession()->waitForElement('css', '#drupal-modal--content');
     $page->pressButton('Create a new member');
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $page->fillField('First Name', 'test1');
     $page->fillField('Last Name', 'user');
     $page->fillField('Username', 'test1-site-user');
@@ -348,7 +348,7 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $page->clickLink('Add a member');
     $this->assertSession()->waitForElement('css', '#drupal-modal--content');
     $page->pressButton('Create a new member');
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->elementContains('css', '.ui-dialog-title', 'Add new member');
 
     // Negative tests.
@@ -356,14 +356,14 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $page->fillField('E-mail Address', $this->randomMachineName() . '@mail.com');
     $page->selectFieldOption('role', 'personal-member');
     $page->pressButton('Save');
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertNotNull($this->getSession()->getPage()->find('css', '.form-item-username.form-item--error'));
 
     $page->fillField('Username', $this->randomMachineName());
     $page->fillField('E-mail Address', $existing_mail);
     $page->selectFieldOption('role', 'personal-member');
     $page->pressButton('Save');
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertNotNull($this->getSession()->getPage()->find('css', '.form-item-email.form-item--error'));
 
     // Positive tests.
@@ -457,12 +457,12 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $change_owner_link = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/owner?user={$vsite_owner->id()}\"]");
     $this->assertNotNull($change_owner_link);
     $change_owner_link->click();
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->statusCodeEquals(200);
     $this->submitForm([
       'new_owner' => $member_1->id(),
     ], 'Save');
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertVsiteOwnershipChange($this->group, $member_1);
 
@@ -489,12 +489,12 @@ class CpUsersMainTest extends OsExistingSiteJavascriptTestBase {
     $change_owner_link = $this->getSession()->getPage()->find('css', "a[href=\"/{$this->modifier}/cp/users/owner?user={$member_1->id()}\"]");
     $this->assertNotNull($change_owner_link);
     $change_owner_link->click();
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->statusCodeEquals(200);
     $this->submitForm([
       'new_owner' => $member_2->id(),
     ], 'Save');
-    $this->waitForAjaxToFinish();
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertVsiteOwnershipChange($this->group, $member_2);
   }

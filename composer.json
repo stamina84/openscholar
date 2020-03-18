@@ -384,7 +384,8 @@
                 "Allow Redirectresponse to override ?destination": "https://www.drupal.org/files/issues/2020-03-05/2950883-19.patch",
                 "User context missing when using toUrl in some circumstances": "https://www.drupal.org/files/issues/2019-05-22/3056234-test-fix-4.patch",
                 "null route object in big_pipe requests after 8.7.8 upgrade": "https://www.drupal.org/files/issues/2019-10-24/3089913-2.patch",
-                "Contextual links double trigger": "https://www.drupal.org/files/issues/2019-11-15/drupal-contextual_links_double_trigger-2834346-19.patch"
+                "Contextual links double trigger": "https://www.drupal.org/files/issues/2019-11-15/drupal-contextual_links_double_trigger-2834346-19.patch",
+                "Drupal.ajax does not guarantee that \"add new JS file to page\" commands have finished before calling said JS": "https://www.drupal.org/files/issues/2019-12-30/1988968-162.patch"
             },
             "drupal/group_purl": {
                 "Don't attempt to redirect to subdomains by default": "https://www.drupal.org/files/issues/2019-03-05/group_purl.3036879-4.subdomain_disable.patch",
