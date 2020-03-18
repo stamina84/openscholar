@@ -239,16 +239,17 @@ class ListOfPostsWidget extends OsWidgetsBase implements OsWidgetsInterface {
         'field_sorted_by' => $row['Sort by'],
         'field_content_type' => $row['Content type'],
       ]);
-
       if ($row['Content type'] == 'events') {
         $block->set('field_show', $row['Show']);
         $block->set('field_events_should_expire', $row['Expire']);
       }
 
       if ($row['Content type'] == 'publications') {
-        $block->set('field_publication_types', $row['Publication type']);
+        $publication_types = $this->entityTypeManager->getStorage('bibcite_reference_type')->loadMultiple();
+        $options = array_keys($publication_types);
+        array_unshift($options, 'all');
+        $block->set('field_publication_types', $options);
       }
-
       $block->save();
       $group->addContent($block, "group_entity:block_content");
       $block_uuid = $block->uuid();

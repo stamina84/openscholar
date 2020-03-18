@@ -86,14 +86,19 @@ class PublicationsDefaultWidgetTest extends VsiteExistingSiteTestBase {
     $displayStyle = $blockContentEntity->get('field_display_style')->value;
     $sortedBy = $blockContentEntity->get('field_sorted_by')->value;
     $widgeTitle = $blockContentEntity->get('field_widget_title')->value;
-    $publicationWidget = $blockContentEntity->get('field_publication_types')->value;
+    $publicationWidget = $blockContentEntity->get('field_publication_types')->getValue();
     $info = $blockContentEntity->get('info')->value;
     $this->assertEquals('publications', $type);
     $this->assertEquals('title', $displayStyle);
-    $this->assertEquals('sort_newest', $sortedBy);
+    $this->assertEquals('year_of_publication', $sortedBy);
     $this->assertEquals('Recent Publications', $widgeTitle);
     $this->assertEquals('Recent Publications', $info);
-    $this->assertEquals('all', $publicationWidget);
+    // Random value check for publication_type.
+    $this->assertEquals('all', $publicationWidget[0]['value']);
+    $this->assertEquals('artwork', $publicationWidget[1]['value']);
+    $this->assertEquals('classical', $publicationWidget[9]['value']);
+    $this->assertEquals('data', $publicationWidget[12]['value']);
+    $this->assertEquals('working_paper', $publicationWidget[38]['value']);
   }
 
 }
