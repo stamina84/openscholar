@@ -105,14 +105,17 @@ class CpRolesFunctionalTest extends CpUsersExistingSiteTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     $this->assertSession()->fieldExists("{$group_role->id()}[access control panel]");
-    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[view group_node:blog entity]"));
-    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[view group_node:blog content]"));
-    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[create group_node:blog content]"));
-    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[update own group_node:blog content]"));
-    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[update any group_node:blog content]"));
-    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[delete own group_node:blog content]"));
-    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[delete any group_node:blog content]"));
-    $this->assertNotNull($this->getSession()->getPage()->findField("{$group_role->id()}[create group_node:blog entity]"));
+    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[view group_node:class entity]"));
+    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[view group_node:class content]"));
+    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[create group_node:class content]"));
+    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[update own group_node:class content]"));
+    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[update any group_node:class content]"));
+    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[delete own group_node:class content]"));
+    $this->assertNull($this->getSession()->getPage()->findField("{$group_role->id()}[delete any group_node:class content]"));
+    $this->assertNotNull($this->getSession()->getPage()->findField("{$group_role->id()}[create group_node:class entity]"));
+
+    // Make sure permissions rellated to disabled apps are not shown.
+    $this->assertNull($this->getSession()->getPage()->findField('personal-member[create group_node:blog entity]'));
 
     $this->visitViaVsite("cp/users/roles/{$group_role->id()}/edit", $this->group);
     $this->assertSession()->statusCodeEquals(200);

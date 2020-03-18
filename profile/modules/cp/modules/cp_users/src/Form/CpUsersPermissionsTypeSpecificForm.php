@@ -11,7 +11,8 @@ use Drupal\cp_users\CpRolesHelperInterface;
 use Drupal\group\Access\GroupPermissionHandlerInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\vsite\Plugin\AppManager;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Provides the cp_users permission administration form.
@@ -22,6 +23,13 @@ use Drupal\Core\Session\AccountProxyInterface;
  * @see \Drupal\group\Form\GroupPermissionsTypeSpecificForm
  */
 final class CpUsersPermissionsTypeSpecificForm extends CpUsersPermissionsForm {
+
+  /**
+   * Config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
 
   /**
    * The specific group role for this form.
@@ -52,15 +60,17 @@ final class CpUsersPermissionsTypeSpecificForm extends CpUsersPermissionsForm {
   protected $activeVsite;
 
   /**
-   * Current user.
+   * Vsite app manager.
    *
-   * @var \Drupal\Core\Session\AccountProxyInterface
+   * @var \Drupal\vsite\Plugin\AppManager
    */
-  protected $currentUser;
+  protected $vsiteAppManager;
 
   /**
    * Creates a new CpUsersPermissionsTypeSpecificForm object.
    *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   Config factory service.
    * @param \Drupal\group\Access\GroupPermissionHandlerInterface $permission_handler
    *   The group permission handler.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -71,15 +81,15 @@ final class CpUsersPermissionsTypeSpecificForm extends CpUsersPermissionsForm {
    *   The entity type manager.
    * @param \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager
    *   Vsite context manager.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   Current user.
+   * @param \Drupal\vsite\Plugin\AppManager $vsiteAppManager
+   *   Vsite app manager.
    */
-  public function __construct(GroupPermissionHandlerInterface $permission_handler, ModuleHandlerInterface $module_handler, CpRolesHelperInterface $cp_roles_helper, EntityTypeManagerInterface $entity_type_manager, VsiteContextManagerInterface $vsite_context_manager, AccountProxyInterface $current_user) {
-    parent::__construct($permission_handler, $module_handler, $cp_roles_helper);
+  public function __construct(ConfigFactoryInterface $config_factory, GroupPermissionHandlerInterface $permission_handler, ModuleHandlerInterface $module_handler, CpRolesHelperInterface $cp_roles_helper, EntityTypeManagerInterface $entity_type_manager, VsiteContextManagerInterface $vsite_context_manager, AppManager $vsiteAppManager) {
+    parent::__construct($config_factory, $permission_handler, $module_handler, $cp_roles_helper, $vsiteAppManager, $vsite_context_manager);
     $this->entityTypeManager = $entity_type_manager;
     $this->vsiteContextManager = $vsite_context_manager;
     $this->activeVsite = $vsite_context_manager->getActiveVsite();
-    $this->currentUser = $current_user;
+    $this->vsiteAppManager = $vsiteAppManager;
   }
 
   /**
@@ -87,12 +97,13 @@ final class CpUsersPermissionsTypeSpecificForm extends CpUsersPermissionsForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('config.factory'),
       $container->get('group.permissions'),
       $container->get('module_handler'),
       $container->get('cp_users.cp_roles_helper'),
       $container->get('entity_type.manager'),
       $container->get('vsite.context_manager'),
-      $container->get('current_user')
+      $container->get('vsite.app.manager')
     );
   }
 
@@ -148,7 +159,7 @@ final class CpUsersPermissionsTypeSpecificForm extends CpUsersPermissionsForm {
       /** @var \Drupal\group\Entity\GroupTypeInterface $group_type */
       $group_type = $this->activeVsite->getGroupType();
       $cpRolesHelper = $this->cpRolesHelper;
-      $current_user = $this->currentUser;
+      $current_user = $this->currentUser();
       $output = array_filter($results, static function ($role) use ($cpRolesHelper, $current_user, $group_type) {
         return $cpRolesHelper->accountHasAccessToRestrictedRole($current_user, $group_type, $role);
       });
@@ -188,7 +199,9 @@ final class CpUsersPermissionsTypeSpecificForm extends CpUsersPermissionsForm {
       foreach ($sections as $permissions) {
         foreach (array_diff(array_keys($permissions), $restricted_permissions) as $permission) {
           foreach ($default_roles as $default_role) {
-            $form["provider_$provider"]['permissions'][$permission][$default_role]['#disabled'] = TRUE;
+            if (isset($form["provider_$provider"]['permissions'][$permission])) {
+              $form["provider_$provider"]['permissions'][$permission][$default_role]['#disabled'] = TRUE;
+            }
           }
         }
       }
