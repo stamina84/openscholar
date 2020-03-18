@@ -5,6 +5,7 @@ namespace Drupal\os_widgets\Plugin\OsWidgets;
 use Drupal\Core\Url;
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Class RssFeedWidget.
@@ -43,6 +44,23 @@ class RssFeedWidget extends OsWidgetsBase implements OsWidgetsInterface {
       ],
     ];
     $build['rss_feed']['#attached']['library'][] = 'os_widgets/rss_feed_copy';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createWidget(array $data, $bundle, GroupInterface $group): void {
+    $storage = $this->entityTypeManager->getStorage('block_content');
+    foreach ($data as $row) {
+      $block = $storage->create([
+        'type' => $bundle,
+        'info' => $row['Info'],
+      ]);
+      $block->save();
+      $group->addContent($block, "group_entity:block_content");
+      $block_uuid = $block->uuid();
+      $this->saveWidgetLayout($row, $block_uuid);
+    }
   }
 
 }

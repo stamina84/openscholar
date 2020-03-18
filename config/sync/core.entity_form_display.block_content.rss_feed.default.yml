@@ -21,26 +21,26 @@ bundle: rss_feed
 mode: default
 content:
   field_content_to_display:
-    weight: 5
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_is_show_all_content:
-    weight: 4
+    weight: 2
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_widget_title:
-    weight: 1
+    type: string_textfield
+    weight: 3
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   info:
     type: string_textfield
     weight: 0
@@ -51,7 +51,7 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 2
+    weight: 1
     region: content
     settings:
       include_locked: true
