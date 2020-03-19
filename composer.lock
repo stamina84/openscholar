@@ -4539,16 +4539,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.8.3",
+            "version": "8.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "77971de6d6ade7366cdd3fadfc16c5d02e531446"
+                "reference": "34e59fcf702c1b3c497bbd6e92e68e546c5d15b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/77971de6d6ade7366cdd3fadfc16c5d02e531446",
-                "reference": "77971de6d6ade7366cdd3fadfc16c5d02e531446",
+                "url": "https://api.github.com/repos/drupal/core/zipball/34e59fcf702c1b3c497bbd6e92e68e546c5d15b8",
+                "reference": "34e59fcf702c1b3c497bbd6e92e68e546c5d15b8",
                 "shasum": ""
             },
             "require": {
@@ -4777,7 +4777,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
-            "time": "2020-03-04T18:01:37+00:00"
+            "time": "2020-03-18T16:26:33+00:00"
         },
         {
             "name": "drupal/core-composer-scaffold",
@@ -4873,16 +4873,16 @@
         },
         {
             "name": "drupal/core-recommended",
-            "version": "8.8.3",
+            "version": "8.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "c43bf9881a299de9189440e0772579775b1f93f1"
+                "reference": "4155bff03954bae498029899f44e8adf697b20e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/c43bf9881a299de9189440e0772579775b1f93f1",
-                "reference": "c43bf9881a299de9189440e0772579775b1f93f1",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/4155bff03954bae498029899f44e8adf697b20e6",
+                "reference": "4155bff03954bae498029899f44e8adf697b20e6",
                 "shasum": ""
             },
             "require": {
@@ -4895,7 +4895,7 @@
                 "doctrine/common": "v2.7.3",
                 "doctrine/inflector": "v1.2.0",
                 "doctrine/lexer": "1.0.2",
-                "drupal/core": "8.8.3",
+                "drupal/core": "8.8.4",
                 "easyrdf/easyrdf": "0.9.1",
                 "egulias/email-validator": "2.1.11",
                 "guzzlehttp/guzzle": "6.3.3",
@@ -4949,7 +4949,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Locked core dependencies; require this project INSTEAD OF drupal/core.",
-            "time": "2020-03-04T18:01:37+00:00"
+            "time": "2020-03-18T16:26:33+00:00"
         },
         {
             "name": "drupal/courier",
@@ -5909,8 +5909,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-alpha2+72-dev",
-                    "datestamp": "1526651284",
+                    "version": "8.x-1.0-alpha2+94-dev",
+                    "datestamp": "1528091885",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -5940,6 +5940,10 @@
                 {
                     "name": "tim.plunkett",
                     "homepage": "https://www.drupal.org/user/241634"
+                },
+                {
+                    "name": "tstoeckler",
+                    "homepage": "https://www.drupal.org/user/107158"
                 }
             ],
             "description": "Integrates the Fullcalender Library from https://fullcalendar.io",
@@ -8031,7 +8035,7 @@
                 },
                 "drupal": {
                     "version": "8.x-2.0",
-                    "datestamp": "1581756259",
+                    "datestamp": "1577874483",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -10734,8 +10738,8 @@
             "authors": [
                 {
                     "name": "Frank Kleine",
-                    "homepage": "http://frankkleine.de/",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "homepage": "http://frankkleine.de/"
                 }
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
@@ -16877,6 +16881,10 @@
                 {
                     "name": "cs_shadow",
                     "homepage": "https://www.drupal.org/user/2828287"
+                },
+                {
+                    "name": "oknate",
+                    "homepage": "https://www.drupal.org/user/471638"
                 },
                 {
                     "name": "phenaproxima",
