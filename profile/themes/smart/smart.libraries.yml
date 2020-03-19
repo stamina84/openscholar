@@ -1,7 +1,7 @@
 global-styling:
   version: VERSION
   css:
-    base:
+    layout:
       '//fonts.googleapis.com/css?family=Roboto+Slab': { external: true }
       '//fonts.googleapis.com/css?family=Roboto': { external: true }
     theme:

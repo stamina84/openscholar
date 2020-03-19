@@ -1,6 +1,6 @@
 global-styling:
   version: VERSION
   css:
-    theme:
+    layout:
       css/style.css: {}
       '//fonts.googleapis.com/css?family=Lora': { external: true }

@@ -1,6 +1,6 @@
 global-styling:
   version: VERSION
   css:
-    theme:
+    layout:
       '//fonts.googleapis.com/css?family=Roboto': { external: true }
       css/style.css: {}

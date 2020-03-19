@@ -1,6 +1,6 @@
 framework:
   css:
-    theme:
+    base:
       css/style.css: {}
       /libraries/os-toolbar/os-toolbar.css: {}
   js:

@@ -1,6 +1,6 @@
 global-styling:
   version: VERSION
   css:
-    theme:
+    layout:
       '//fonts.googleapis.com/css?family=Montserrat': { external: true }
       css/style.css: {}
