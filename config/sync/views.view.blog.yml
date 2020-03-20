@@ -822,15 +822,20 @@ display:
     display_title: 'RSS Feed'
     position: 2
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender: {  }
       row:
         type: node_rss
         options: {  }
       path: blog/feed
       displays:
-        page_1: page_1
         default: '0'
+        block_1: '0'
+        block_posts_by_month: '0'
+        page_1: '0'
+        page_2: '0'
       display_description: ''
+      enabled: true
     cache_metadata:
       max-age: -1
       contexts:
