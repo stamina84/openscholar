@@ -126,12 +126,13 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     $class = $block_content->get('field_display_styles')->value ?? '';
     $need_count = $block_content->get('field_show_number_of_posts')->value == 1 ? TRUE : FALSE;
     $vocab_filter = $block_content->get('field_vocabularies')->getValue() ?? [];
+    $selected_app = $block_content->get('field_content_type')->value ?? '';
 
     $buckets = $this->osSearchFacetBuilder->getFacetBuckets($field_id, $query);
     $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);
     $this->osSearchFacetBuilder->prepareFacetLinks($buckets, $field_id);
 
-    $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($vocab_filter, $vocab_order_by, $term_order_by, $buckets);
+    $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($selected_app, $vocab_filter, $vocab_order_by, $term_order_by, $buckets);
 
     $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label, $field_app_content, $class, $need_count);
 

@@ -121,6 +121,8 @@ class OsSearchFacetedTaxonomyQueryBuilder {
   /**
    * Prepare list of terms for Filter Taxonomy.
    *
+   * @param string $selected_app
+   *   Selected app for which vocab will be listed.
    * @param array $vocab_filter
    *   Filter for vocabulary.
    * @param string $vocab_order_by
@@ -135,18 +137,30 @@ class OsSearchFacetedTaxonomyQueryBuilder {
    * @return array
    *   List of terms.
    */
-  public function prepareFacetVocaulbaries(array $vocab_filter, string $vocab_order_by, string $term_order_by, array $buckets, $field_processor = 'taxonomy_term') {
+  public function prepareFacetVocaulbaries(string $selected_app, array $vocab_filter, string $vocab_order_by, string $term_order_by, array $buckets, $field_processor = 'taxonomy_term') {
     $vocab_list = [];
 
     $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
 
     $query = $taxonomy_vocabulary_storage->getQuery();
-    $vocab_filter = $vocab_filter[0];
+
+    $vocab_filter = count($vocab_filter) == 1 ? $vocab_filter[0] : $vocab_filter;
+    if (count($vocab_filter) > 1) {
+      foreach ($vocab_filter as $key => $value) {
+        $vocab_filter[$key] = $value['value'];
+      }
+    }
+    if (in_array('all', $vocab_filter)) {
+      $vocab_filter = $this->prepareVocabulariesList($selected_app);
+      $vocab_filter = array_keys($vocab_filter);
+    }
+
     if (!in_array('_none', $vocab_filter) && count($vocab_filter) > 0) {
       $query->condition('vid', $vocab_filter, 'IN');
     }
     $query->sort($vocab_order_by, 'ASC');
     $vids = $query->execute();
+
     $vocabularies = $taxonomy_vocabulary_storage->loadMultiple($vids);
 
     $taxonomy_term_storage = $this->entityTypeManager->getStorage($field_processor);
@@ -194,10 +208,7 @@ class OsSearchFacetedTaxonomyQueryBuilder {
   public function prepareVocabulariesList($app = '') {
     $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
     $vocabularies = $taxonomy_vocabulary_storage->loadMultiple();
-    // List if app is not there in vocabularies reference entity list.
-    $vocabularies_name = [
-      '_none' => '--None--',
-    ];
+    $vocabularies_name = [];
     foreach ($vocabularies as $vocabulary) {
       if (($app != '' && in_array('node:' . $app, $vocabulary->allowed_vocabulary_reference_types)) || $app == '') {
         $vocabularies_name[$vocabulary->id()] = $vocabulary->label();
