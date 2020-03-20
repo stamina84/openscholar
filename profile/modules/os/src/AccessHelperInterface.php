@@ -40,16 +40,18 @@ interface AccessHelperInterface {
   public function checkAccess(EntityInterface $entity, string $operation, AccountInterface $account): AccessResultInterface;
 
   /**
-   * Controls access for restricted block types.
+   * Controls access for blocks (vsite widgets).
    *
    * @param string $bundle
    *   The block content type.
+   * @param string $operation
+   *   Entity operation to manipulate permissions.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account to check for.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function checkRestrictedBlocksAccess($bundle, AccountInterface $account) : AccessResultInterface;
+  public function checkBlocksAccess($bundle, $operation, AccountInterface $account) : AccessResultInterface;
 
 }

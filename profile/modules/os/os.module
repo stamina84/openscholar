@@ -324,7 +324,7 @@ function os_page_attachments(array &$attachments) {
 function os_block_content_access(BlockContentInterface $entity, $operation, AccountInterface $account) {
   /** @var \Drupal\os\AccessHelperInterface $access_helper */
   $access_helper = \Drupal::service('os.access_helper');
-  if ($access_helper->checkRestrictedBlocksAccess($entity->bundle(), $account)->isForbidden()) {
+  if ($access_helper->checkBlocksAccess($entity->bundle(), $operation, $account)->isForbidden()) {
     return AccessResult::forbidden();
   }
   return $access_helper->checkAccess($entity, $operation, $account);

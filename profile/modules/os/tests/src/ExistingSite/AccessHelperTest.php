@@ -137,11 +137,11 @@ class AccessHelperTest extends OsExistingSiteTestBase {
   /**
    * Tests restricted blocks access for admin/non admin users.
    *
-   * @covers ::checkRestrictedBlocksAccess
+   * @covers ::checkBlocksAccess
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testCheckRestrictedBlocksAccess(): void {
+  public function testcheckBlocksAccess(): void {
     // Setup.
     /** @var \Drupal\os\AccessHelperInterface $access_helper */
     $access_helper = $this->container->get('os.access_helper');
@@ -155,15 +155,15 @@ class AccessHelperTest extends OsExistingSiteTestBase {
     // Check works for Super admin/ user one.
     /** @var \Drupal\Core\Session\AccountInterface $userOne */
     $userOne = $entity_type_manager->getStorage('user')->load('1');
-    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkRestrictedBlocksAccess('views', $userOne));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess('views', 'update', $userOne));
     // Test works for admin users outside of vsite context.
-    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkRestrictedBlocksAccess('views', $adminUser));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess('views', 'delete', $adminUser));
     // To check in vsite context.
     $vsite_context_manager->activateVsite($this->group);
     // Test works for admin users in vsite context.
-    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkRestrictedBlocksAccess('views', $adminUser));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess('views', 'update', $adminUser));
     // Test it works for vsite admins.
-    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkRestrictedBlocksAccess('views', $vsiteAdmin));
+    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess('views', 'delete', $vsiteAdmin));
 
   }
 

@@ -25,21 +25,22 @@ class OsBlockContentViewBuilder extends BlockContentViewBuilder {
    *   The view mode that should be used to prepare the entity.
    */
   protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-
     $plugin_id = $entity->bundle() . '_widget';
 
     $type = \Drupal::service('plugin.manager.os_widgets');
-    if (!$type->getDefinition($plugin_id, FALSE)) {
-      return;
+    $plugin_definition = $type->getDefinition($plugin_id, FALSE);
+
+    if (!$plugin_definition || !$entity->access('view')) {
+      $build['#access'] = FALSE;
     }
+    elseif ($plugin_definition) {
+      $plugin = $type->createInstance($plugin_id);
 
-    $plugin = $type->createInstance($plugin_id);
-    if (!($plugin instanceof OsWidgetsInterface)) {
-      return;
+      // Attach buildBlock only if OS Widget.
+      if ($plugin instanceof OsWidgetsInterface) {
+        $plugin->buildBlock($build, $build['#block_content']);
+      }
     }
-
-    $plugin->buildBlock($build, $build['#block_content']);
-
   }
 
   /**

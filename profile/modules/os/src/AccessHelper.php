@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupContentType;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
+use Drupal\vsite_privacy\Plugin\VsitePrivacyLevelManager;
 
 /**
  * Provides access check helpers for entity CRUD global paths.
@@ -36,16 +37,26 @@ final class AccessHelper implements AccessHelperInterface {
   protected $entityTypeManager;
 
   /**
+   * Vsite privacy manager.
+   *
+   * @var \Drupal\vsite_privacy\Plugin\VsitePrivacyLevelManager
+   */
+  protected $vsitePrivacyManager;
+
+  /**
    * Creates a new AccessHelper object.
    *
    * @param \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager
    *   Vsite context manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager.
+   * @param \Drupal\vsite_privacy\Plugin\VsitePrivacyLevelManager $vsite_privacy_manager
+   *   Vsite privacy manager.
    */
-  public function __construct(VsiteContextManagerInterface $vsite_context_manager, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(VsiteContextManagerInterface $vsite_context_manager, EntityTypeManagerInterface $entity_type_manager, VsitePrivacyLevelManager $vsite_privacy_manager) {
     $this->vsiteContextManager = $vsite_context_manager;
     $this->entityTypeManager = $entity_type_manager;
+    $this->vsitePrivacyManager = $vsite_privacy_manager;
   }
 
   /**
@@ -140,10 +151,26 @@ final class AccessHelper implements AccessHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkRestrictedBlocksAccess($bundle, AccountInterface $account) : AccessResultInterface {
-    if (in_array($bundle, self::RESTRICTED_BLOCKS) && !$this->isAdmin($account)) {
+  public function checkBlocksAccess($bundle, $operation, AccountInterface $account) : AccessResultInterface {
+    /** @var \Drupal\group\Entity\GroupInterface|null $vsite */
+    $active_vsite = $this->vsiteContextManager->getActiveVsite();
+
+    // Restrict widgets based on privacy level.
+    if ($active_vsite) {
+      $privacy_level = $active_vsite->get('field_privacy_level')->value;
+
+      // Check for plugin access (same is used for vsite access).
+      if (!$this->vsitePrivacyManager->checkAccessForPlugin($account, $privacy_level)) {
+        return AccessResult::forbidden();
+      }
+    }
+
+    // View permissions is already being checked by checkAccessForPlugin.
+    // Restrict listed blocks edit/delete.
+    if (in_array($bundle, self::RESTRICTED_BLOCKS) && !$this->isAdmin($account) && $operation != 'view') {
       return AccessResult::forbidden();
     }
+
     return AccessResult::neutral();
   }
 

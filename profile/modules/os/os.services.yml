@@ -3,7 +3,7 @@ services:
     class: Drupal\os\OsAngularModuleManager
   os.access_helper:
     class: \Drupal\os\AccessHelper
-    arguments: ['@vsite.context_manager', '@entity_type.manager']
+    arguments: ['@vsite.context_manager', '@entity_type.manager', '@vsite.privacy.manager']
   os.os_route_subscriber:
     class: \Drupal\os\Routing\OsRouteSubscriber
     tags:
