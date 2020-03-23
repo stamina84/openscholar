@@ -107,9 +107,7 @@ class OsSlickMediaFormatter extends SlickMediaFormatter {
 
         if (isset($fields['thumbnail'])) {
           $item = $fields['thumbnail']->get(0);
-
           $settings['item'] = $item;
-          $settings['uri'] = $item->entity->getFileUri();
         }
       }
       $build = ['settings' => $settings];
