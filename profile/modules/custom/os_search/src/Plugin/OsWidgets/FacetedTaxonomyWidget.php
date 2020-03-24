@@ -109,7 +109,6 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
    * {@inheritdoc}
    */
   public function buildBlock(&$build, $block_content) {
-    // $route_name = $this->routeMatch->getRouteName();
     $route_name = 'os_search.app_global';
     // Load search page.
     $query = $this->searchFacetedTaxonoQueryBuilder->getQuery();

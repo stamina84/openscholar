@@ -90,21 +90,18 @@ function _get_vocab_list($app = '') {
   $vocab_list = $os_search_facted_taxonomy->prepareVocabulariesList($app);
 
   if (empty($vocab_list)) {
-    $vocab_list = [
-      '_none' => t('--None--'),
-    ];
+    $vocab_list['_none'] = t('--None--');
   }
   else {
-    $vocab_list_all['all'] = t('Select all vocabularies');
-    array_unshift($vocab_list, $vocab_list_all['all']);
+    $vocab_list = array_merge(['all' => t('Select all vocabularies')], $vocab_list);
   }
   return $vocab_list;
 }
 
 /**
- * Default values for the Vocabularies.
+ * Allowed values for the Vocabularies.
  */
-function os_search_get_vocab_list() {
+function os_search_allowed_values_function() {
   /** @var \Drupal\os_search\OsSearchFacetedTaxonomyQueryBuilder $os_search_facted_taxonomy */
   $os_search_facted_taxonomy = \Drupal::service('os_search.os_search_faceted_taxonomy_query_builder');
   $vocab_list = $os_search_facted_taxonomy->prepareVocabulariesList();
