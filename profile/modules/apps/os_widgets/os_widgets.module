@@ -894,22 +894,27 @@ function os_widgets_form_block_content_form_alter(&$form, FormStateInterface &$f
         'callback' => '\Drupal\os_widgets\Controller\WidgetLibraryController::ajaxSubmitEdit',
       ];
     }
-    $delete_button_classes = array_merge($form['actions']['delete']['#attributes']['class'], [
-      'btn',
-      'btn-danger',
-      'use-ajax',
-    ]);
-    $form['actions']['delete']['#attributes']['class'] = $delete_button_classes;
-    $form['actions']['delete']['#attributes']['data-dialog-type'] = 'modal';
-    $form['actions']['delete']['#icon'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'span',
-      '#value' => '',
-      '#attributes' => [
-        'class' => ['icon', 'glyphicon', 'glyphicon-trash'],
-        'aria-hidden' => 'true',
-      ],
-    ];
+
+    // Delete button is only for edit form for all the widgets.
+    if (isset($form['actions']['delete'])) {
+      $delete_button_classes = array_merge($form['actions']['delete']['#attributes']['class'], [
+        'btn',
+        'btn-danger',
+        'use-ajax',
+      ]);
+
+      $form['actions']['delete']['#attributes']['class'] = $delete_button_classes;
+      $form['actions']['delete']['#attributes']['data-dialog-type'] = 'modal';
+      $form['actions']['delete']['#icon'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'span',
+        '#value' => '',
+        '#attributes' => [
+          'class' => ['icon', 'glyphicon', 'glyphicon-trash'],
+          'aria-hidden' => 'true',
+        ],
+      ];
+    }
   }
   // Disable revision information for widgets.
   $form['revision_information']['#access'] = FALSE;
