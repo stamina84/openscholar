@@ -1,4 +1,4 @@
-uuid: e40c9d5e-be7c-40b7-8aa8-569d71f425ea
+uuid: 04366d27-9cfc-4a89-a33e-fa0b1529c0ef
 langcode: en
 status: true
 dependencies:
@@ -30,16 +30,14 @@ dependencies:
     - block_content.type.taxonomy
     - block_content.type.twitter_feed
     - block_content.type.views
-    - field.storage.block_content.field_widget_collection
-  module:
-    - os_widgets
-id: block_content.tabs.field_widget_collection
-field_name: field_widget_collection
+    - field.storage.block_content.field_widgets
+id: block_content.column.field_widgets
+field_name: field_widgets
 entity_type: block_content
-bundle: tabs
-label: 'Add Widget to Collection'
-description: 'Note that any widgets added must have content or they WILL NOT display in this widget. If you add a widget to a page normally and it doesn''t appear, it won''t appear in this widget either.'
-required: true
+bundle: column
+label: Widgets
+description: ''
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -75,8 +73,7 @@ settings:
       twitter_feed: twitter_feed
       views: views
     sort:
-      field: id
-      direction: ASC
-    auto_create: 0
-    auto_create_bundle: addthis
-field_type: entity_reference_with_value
+      field: _none
+    auto_create: false
+    auto_create_bundle: accordion
+field_type: entity_reference

@@ -29,15 +29,6 @@ class PlaceBlockPageVariant extends OriginalVariant {
   ];
 
   /**
-   * Section Storage Manager.
-   *
-   * Might not be needed.
-   *
-   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
-   */
-  protected $sectionStorageManager;
-
-  /**
    * Entity Type Manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -56,7 +47,6 @@ class PlaceBlockPageVariant extends OriginalVariant {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $instance->sectionStorageManager = $container->get('plugin.manager.layout_builder.section_storage');
     $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->blockManager = $container->get('plugin.manager.block');
 

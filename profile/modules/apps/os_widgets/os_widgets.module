@@ -6,6 +6,9 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Layout\LayoutDefault;
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\layout_builder\Section;
 use Drupal\views\Plugin\views\filter\Bundle;
 use Drupal\block_content\BlockContentForm;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -1574,4 +1577,103 @@ function os_widgets_page_attachments(array &$page) {
     return;
   }
   $page['#attached']['library'][] = 'os_widgets/contextualChanges';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for handling layout changes for column widget.
+ */
+function os_widgets_form_block_content_column_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
+  $form['actions']['submit']['#submit'][] = 'os_widgets_block_content_column_form_submit';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for handling layout changes for column widget.
+ */
+function os_widgets_form_block_content_column_edit_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
+  array_unshift($form['actions']['submit']['#submit'], 'os_widgets_block_content_column_edit_form_submit');
+}
+
+/**
+ * Submit handler for column widget.
+ *
+ * This makes sure that child widgets are rendered inside layout.
+ *
+ * @ingroup forms
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ * @throws \Drupal\Component\Plugin\Exception\PluginException
+ */
+function os_widgets_block_content_column_form_submit(array &$form, FormStateInterface $form_state): void {
+  $submitted_data = $form_state->getValues();
+  /** @var \Drupal\block_content\BlockContentForm $form_object */
+  $form_object = $form_state->getFormObject();
+  /** @var \Drupal\block_content\BlockContentInterface $widget */
+  $widget = $form_object->getEntity();
+  /** @var \Drupal\os_widgets\Entity\OsBlockContent[] $attached_widgets */
+  $attached_widgets = $widget->get('field_widgets')->referencedEntities();
+  /** @var \Drupal\os_widgets\Helper\ColumnWidgetLayoutBuilder $os_widgets_column_widget_layout_builder */
+  $os_widgets_column_widget_layout_builder = \Drupal::service('os_widgets.column_widget_layout_builder');
+
+  $section_components = $os_widgets_column_widget_layout_builder->widgetsToSectionComponents($attached_widgets);
+
+  /** @var \Drupal\Core\Layout\LayoutPluginManagerInterface $layout_plugin_manager */
+  $layout_plugin_manager = \Drupal::service('plugin.manager.core.layout');
+  $layout_instance = $layout_plugin_manager->createInstance($submitted_data['field_widgets']['layouts']);
+  if ($layout_instance instanceof LayoutDefault) {
+    $widget->set(OverridesSectionStorage::FIELD_NAME, new Section($layout_instance->getPluginId(), [], $section_components))->save();
+  }
+}
+
+/**
+ * Submit handler for column widget.
+ *
+ * This makes sure that layout setting of the column is correctly updated.
+ *
+ * @ingroup forms
+ *
+ * @throws \Drupal\Component\Plugin\Exception\PluginException
+ */
+function os_widgets_block_content_column_edit_form_submit(array &$form, FormStateInterface $form_state): void {
+  $submitted_data = $form_state->getValues();
+  /** @var \Drupal\block_content\BlockContentForm $form_object */
+  $form_object = $form_state->getFormObject();
+  /** @var \Drupal\block_content\BlockContentInterface $widget */
+  $widget = $form_object->getEntity();
+  /** @var \Drupal\os_widgets\Entity\OsBlockContent[] $attached_widgets */
+  $attached_widgets = $widget->get('field_widgets')->referencedEntities();
+  $original_layout_id = NULL;
+  $original_attached_widgets = [];
+
+  // Get original values.
+  $layout = $widget->get(OverridesSectionStorage::FIELD_NAME)->getValue();
+  if ($layout) {
+    /** @var \Drupal\layout_builder\Section $section */
+    $section = $layout[0]['section'];
+    $original_layout_id = $section->getLayoutId();
+  }
+
+  foreach ($attached_widgets as $attached_widget) {
+    $widget_id = $attached_widget->id();
+    $original_attached_widgets[$widget_id] = $widget_id;
+  }
+
+  if ($original_layout_id !== $submitted_data['field_widgets']['layouts'] ||
+    $original_attached_widgets != $submitted_data['field_widgets']['widgets']) {
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $block_content_storage */
+    $block_content_storage = \Drupal::entityTypeManager()->getStorage('block_content');
+    /** @var \Drupal\os_widgets\Entity\OsBlockContent[] $updated_widgets */
+    $updated_widgets = $block_content_storage->loadMultiple($submitted_data['field_widgets']['widgets']);
+    /** @var \Drupal\os_widgets\Helper\ColumnWidgetLayoutBuilder $os_widgets_column_widget_layout_builder */
+    $os_widgets_column_widget_layout_builder = \Drupal::service('os_widgets.column_widget_layout_builder');
+
+    $section_components = $os_widgets_column_widget_layout_builder->widgetsToSectionComponents($updated_widgets);
+
+    /** @var \Drupal\Core\Layout\LayoutPluginManagerInterface $layout_plugin_manager */
+    $layout_plugin_manager = \Drupal::service('plugin.manager.core.layout');
+    $layout_instance = $layout_plugin_manager->createInstance($submitted_data['field_widgets']['layouts']);
+    if ($layout_instance instanceof LayoutDefault) {
+      $widget->set(OverridesSectionStorage::FIELD_NAME, new Section($layout_instance->getPluginId(), [], $section_components));
+      $form_object->setEntity($widget);
+    }
+  }
 }

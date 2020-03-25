@@ -16,3 +16,4 @@ dependencies:
   - "drupal:os_app_access"
   - "drupal:field"
   - "drupal:os_media"
+  - "drupal:layout_builder"

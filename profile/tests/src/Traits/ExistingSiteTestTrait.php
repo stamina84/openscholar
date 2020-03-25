@@ -605,6 +605,33 @@ trait ExistingSiteTestTrait {
   }
 
   /**
+   * Creates a block for a block content.
+   *
+   * @param \Drupal\block_content\BlockContentInterface $block_content
+   *   The block content.
+   * @param array $values
+   *   (optional) The values used to create the block.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The newly created block.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function createBlockForBlockContent(BlockContentInterface $block_content, array $values = []): EntityInterface {
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $block_storage */
+    $block_storage = $this->container->get('entity_type.manager')->getStorage('block');
+
+    $block = $block_storage->create($values + [
+      'id' => $this->randomMachineName(),
+      'plugin' => "block_content:{$block_content->uuid()}",
+    ]);
+    $block->save();
+    $this->markEntityForCleanup($block);
+
+    return $block;
+  }
+
+  /**
    * Creates a contributor.
    *
    * @param array $values

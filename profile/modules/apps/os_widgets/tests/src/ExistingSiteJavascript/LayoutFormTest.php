@@ -254,13 +254,20 @@ JS;
 
     $this->group->addContent($block, "group_entity:block_content");
 
-    // Wait takes care of random failures.
-    sleep(5);
-
     $this->visitViaVsite('', $this->group);
     $this->getSession()->getPage()->clickLink('Layout');
 
-    $this->assertSession()->pageTextContains("Open Test Block {$block_title} configuration options");
+    $this->assertSession()->waitForElement('css', '.block-place-region .contextual button');
+
+    $widget_edit_link = $this->getSession()->getPage()->find('css', '.block-place-region .contextual .block-contentblock-edit a');
+    $this->assertNotNull($widget_edit_link);
+    $edit_link_path = $widget_edit_link->getAttribute('href');
+    $this->assertEquals("{$this->groupAlias}/block/{$block->id()}?destination={$this->groupAlias}/", $edit_link_path);
+
+    $widget_delete_link = $this->getSession()->getPage()->find('css', '.block-place-region .contextual .block-contentblock-delete a');
+    $this->assertNotNull($widget_delete_link);
+    $delete_link_path = $widget_delete_link->getAttribute('href');
+    $this->assertContains("block/{$block->id()}/delete", $delete_link_path);
   }
 
 }

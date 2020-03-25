@@ -6,10 +6,16 @@ dependencies:
     - block_content.type.accordion
     - block_content.type.addthis
     - block_content.type.basic
+    - block_content.type.column
     - block_content.type.custom_text_html
+    - block_content.type.dataverse_dataset
+    - block_content.type.dataverse_dataset_citation
+    - block_content.type.dataverse_list
+    - block_content.type.dataverse_search_box
     - block_content.type.embed_media
     - block_content.type.featured_posts
     - block_content.type.follow_me
+    - block_content.type.list_of_files
     - block_content.type.list_of_posts
     - block_content.type.mailchimp_subscription
     - block_content.type.media_gallery
@@ -17,10 +23,13 @@ dependencies:
     - block_content.type.publication_types
     - block_content.type.publication_years
     - block_content.type.rss_feed
+    - block_content.type.section_navigation
+    - block_content.type.slider
     - block_content.type.slideshow
     - block_content.type.tabs
     - block_content.type.taxonomy
     - block_content.type.twitter_feed
+    - block_content.type.views
     - field.storage.block_content.field_widget_collection
   module:
     - os_widgets
@@ -41,10 +50,16 @@ settings:
       accordion: accordion
       addthis: addthis
       basic: basic
+      column: column
       custom_text_html: custom_text_html
+      dataverse_dataset: dataverse_dataset
+      dataverse_dataset_citation: dataverse_dataset_citation
+      dataverse_list: dataverse_list
+      dataverse_search_box: dataverse_search_box
       embed_media: embed_media
       featured_posts: featured_posts
       follow_me: follow_me
+      list_of_files: list_of_files
       list_of_posts: list_of_posts
       mailchimp_subscription: mailchimp_subscription
       media_gallery: media_gallery
@@ -52,10 +67,13 @@ settings:
       publication_types: publication_types
       publication_years: publication_years
       rss_feed: rss_feed
+      section_navigation: section_navigation
+      slider: slider
       slideshow: slideshow
       tabs: tabs
       taxonomy: taxonomy
       twitter_feed: twitter_feed
+      views: views
     sort:
       field: id
       direction: ASC

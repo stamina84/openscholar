@@ -1,0 +1,8 @@
+uuid: 6e3d9ae9-ff24-4595-bb63-9156052872c3
+langcode: en
+status: true
+dependencies: {  }
+id: column
+label: Column
+revision: 1
+description: 'Column widget'

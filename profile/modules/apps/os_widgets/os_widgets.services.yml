@@ -21,3 +21,5 @@ services:
   os_widgets.list_widgets_helper:
     class: Drupal\os_widgets\Helper\ListWidgetsHelper
     arguments: ['@database', '@entity_type.manager', '@vsite.context_manager']
+  os_widgets.column_widget_layout_builder:
+    class: \Drupal\os_widgets\Helper\ColumnWidgetLayoutBuilder

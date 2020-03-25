@@ -30,10 +30,11 @@ class OsBlockContentViewBuilder extends BlockContentViewBuilder {
     $type = \Drupal::service('plugin.manager.os_widgets');
     $plugin_definition = $type->getDefinition($plugin_id, FALSE);
 
-    if (!$plugin_definition || !$entity->access('view')) {
+    if (!$entity->access('view')) {
       $build['#access'] = FALSE;
     }
-    elseif ($plugin_definition) {
+
+    if ($plugin_definition) {
       $plugin = $type->createInstance($plugin_id);
 
       // Attach buildBlock only if OS Widget.

@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\os\AccessHelper;
 use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 use Drupal\user\EntityOwnerInterface;
 
@@ -135,36 +136,158 @@ class AccessHelperTest extends OsExistingSiteTestBase {
   }
 
   /**
-   * Tests restricted blocks access for admin/non admin users.
-   *
    * @covers ::checkBlocksAccess
    *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testcheckBlocksAccess(): void {
-    // Setup.
+  public function testCheckRestrictedBlockAccessOutsideVsite(): void {
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
     /** @var \Drupal\os\AccessHelperInterface $access_helper */
     $access_helper = $this->container->get('os.access_helper');
+    /** @var \Drupal\Core\Session\AccountInterface $userOne */
+    $userOne = $entity_type_manager->getStorage('user')->load('1');
     $adminUser = $this->createAdminUser();
     $vsiteAdmin = $this->createUser();
     $this->addGroupAdmin($vsiteAdmin, $this->group);
-    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
-    $vsite_context_manager = $this->container->get('vsite.context_manager');
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $vsiteMember = $this->createUser();
+    $this->group->addMember($vsiteMember);
 
-    // Check works for Super admin/ user one.
+    foreach (AccessHelper::RESTRICTED_BLOCKS as $restricted_block_id) {
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $userOne));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $adminUser));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $vsiteAdmin));
+
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $userOne));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $adminUser));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $vsiteAdmin));
+
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $userOne));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $adminUser));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $vsiteAdmin));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $vsiteMember));
+    }
+  }
+
+  /**
+   * @covers ::checkBlocksAccess
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testCheckAllowedBlockAccessOutsideVsite(): void {
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    /** @var \Drupal\os\AccessHelperInterface $access_helper */
+    $access_helper = $this->container->get('os.access_helper');
     /** @var \Drupal\Core\Session\AccountInterface $userOne */
     $userOne = $entity_type_manager->getStorage('user')->load('1');
-    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess('views', 'update', $userOne));
-    // Test works for admin users outside of vsite context.
-    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess('views', 'delete', $adminUser));
-    // To check in vsite context.
-    $vsite_context_manager->activateVsite($this->group);
-    // Test works for admin users in vsite context.
-    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess('views', 'update', $adminUser));
-    // Test it works for vsite admins.
-    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess('views', 'delete', $vsiteAdmin));
+    $allowed_block_id = 'addthis';
+    $adminUser = $this->createAdminUser();
+    $vsiteAdmin = $this->createUser();
+    $this->addGroupAdmin($vsiteAdmin, $this->group);
+    $vsiteMember = $this->createUser();
+    $this->group->addMember($vsiteMember);
 
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $userOne));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $adminUser));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $vsiteMember));
+
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $userOne));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $adminUser));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $vsiteMember));
+  }
+
+  /**
+   * @covers ::checkBlocksAccess
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testCheckRestrictedBlockAccessInsidePrivateVsite(): void {
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    /** @var \Drupal\os\AccessHelperInterface $access_helper */
+    $access_helper = $this->container->get('os.access_helper');
+    /** @var \Drupal\Core\Session\AccountInterface $userOne */
+    $userOne = $entity_type_manager->getStorage('user')->load('1');
+    $adminUser = $this->createAdminUser();
+    $vsiteAdmin = $this->createUser();
+    $this->addGroupAdmin($vsiteAdmin, $this->group);
+    $vsiteMember = $this->createUser();
+    $this->group->addMember($vsiteMember);
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $privateVsite = $this->createPrivateGroup();
+    $privateVsiteMember = $this->createUser();
+    $privateVsite->addMember($privateVsiteMember);
+    $privateVsiteAdmin = $this->createUser();
+    $this->addGroupAdmin($privateVsiteAdmin, $privateVsite);
+
+    $vsite_context_manager->activateVsite($privateVsite);
+
+    foreach (AccessHelper::RESTRICTED_BLOCKS as $restricted_block_id) {
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $userOne));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $adminUser));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $vsiteAdmin));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $privateVsiteAdmin));
+
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $userOne));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $adminUser));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $vsiteAdmin));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $privateVsiteAdmin));
+
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $userOne));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $adminUser));
+      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $vsiteAdmin));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $privateVsiteAdmin));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $privateVsiteMember));
+    }
+  }
+
+  /**
+   * @covers ::checkBlocksAccess
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testCheckAllowedBlockAccessInsidePrivateVsite(): void {
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    /** @var \Drupal\os\AccessHelperInterface $access_helper */
+    $access_helper = $this->container->get('os.access_helper');
+    /** @var \Drupal\Core\Session\AccountInterface $userOne */
+    $userOne = $entity_type_manager->getStorage('user')->load('1');
+    $allowed_block_id = 'addthis';
+    $adminUser = $this->createAdminUser();
+    $vsiteAdmin = $this->createUser();
+    $this->addGroupAdmin($vsiteAdmin, $this->group);
+    $vsiteMember = $this->createUser();
+    $this->group->addMember($vsiteMember);
+    /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsite_context_manager */
+    $vsite_context_manager = $this->container->get('vsite.context_manager');
+    $privateVsite = $this->createPrivateGroup();
+    $privateVsiteMember = $this->createUser();
+    $privateVsite->addMember($privateVsiteMember);
+    $privateVsiteAdmin = $this->createUser();
+    $this->addGroupAdmin($privateVsiteAdmin, $privateVsite);
+
+    $vsite_context_manager->activateVsite($privateVsite);
+
+    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $userOne));
+    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $adminUser));
+    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $vsiteAdmin));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $privateVsiteMember));
+
+    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $userOne));
+    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $adminUser));
+    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $vsiteAdmin));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $privateVsiteMember));
   }
 
   /**
