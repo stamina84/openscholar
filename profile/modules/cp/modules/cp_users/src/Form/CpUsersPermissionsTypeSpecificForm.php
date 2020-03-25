@@ -196,11 +196,14 @@ final class CpUsersPermissionsTypeSpecificForm extends CpUsersPermissionsForm {
     $restricted_permissions = $this->cpRolesHelper->getRestrictedPermissions($this->getGroupType());
 
     foreach ($this->getPermissions() as $provider => $sections) {
+      $provider_attributes = $this->getProviderKeyTitle($provider);
+      $provider_key = $provider_attributes['provider_key'];
+
       foreach ($sections as $permissions) {
         foreach (array_diff(array_keys($permissions), $restricted_permissions) as $permission) {
           foreach ($default_roles as $default_role) {
-            if (isset($form["provider_$provider"]['permissions'][$permission])) {
-              $form["provider_$provider"]['permissions'][$permission][$default_role]['#disabled'] = TRUE;
+            if (isset($form[$provider_key]['permissions'][$permission])) {
+              $form[$provider_key]['permissions'][$permission][$default_role]['#disabled'] = TRUE;
             }
           }
         }

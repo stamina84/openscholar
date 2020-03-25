@@ -18,6 +18,56 @@ use Drupal\os_app_access\AppAccessLevels;
 abstract class CpUsersPermissionsForm extends GroupPermissionsForm {
 
   /**
+   * The Permission grouping array specifying title and permission group.
+   */
+  const PERMISSION_GROUPS = [
+    'os_app_access' => [
+      'title' => 'Apps',
+    ],
+    'group' => [
+      'title' => 'Site',
+    ],
+    'group_entity' => [
+      'title' => 'Site Content',
+    ],
+    'groupmenu' => [
+      'title' => 'Menus',
+    ],
+    'gnode' => [
+      'title' => 'Site Content',
+      'provider' => 'group_entity',
+    ],
+    'os_pages' => [
+      'title' => 'Site Content',
+      'provider' => 'group_entity',
+    ],
+    'os_publications' => [
+      'title' => 'Site Content',
+      'provider' => 'group_entity',
+    ],
+    'os_redirect' => [
+      'title' => 'Openscholar',
+      'provider' => 'os',
+    ],
+    'os_media' => [
+      'title' => 'Openscholar',
+      'provider' => 'os',
+    ],
+    'os' => [
+      'title' => 'Openscholar',
+    ],
+    'os_search_solr' => [
+      'title' => 'Search',
+    ],
+    'vsite_domain' => [
+      'title' => 'Domain',
+    ],
+    'os_widgets' => [
+      'title' => 'Widgets',
+    ],
+  ];
+
+  /**
    * Config factory service.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -118,23 +168,46 @@ abstract class CpUsersPermissionsForm extends GroupPermissionsForm {
     // This overrides the default permissions form, and improves the UX.
     // Instead, of building the form elements from scratch, it re-uses the form
     // elements from parent.
+    $group_sections = [];
     foreach ($this->getPermissions() as $provider => $sections) {
-      $form["provider_$provider"] = [
-        '#type' => 'details',
-        '#title' => $this->moduleHandler->getName($provider),
-        '#open' => FALSE,
-      ];
+      $provider_attributes = $this->getProviderKeyTitle($provider);
+      $provider_key = $provider_attributes['provider_key'];
 
-      $form["provider_$provider"]['permissions'] = [
-        '#type' => 'table',
-        '#header' => [$this->t('Permission')],
-        '#id' => 'permissions',
-        '#attributes' => ['class' => ['permissions', 'js-permissions']],
-      ];
+      if (!isset($form[$provider_key])) {
+        $form[$provider_key] = [
+          '#type' => 'details',
+          '#title' => $this->t('@title', ['@title' => $provider_attributes['title']]),
+          '#open' => FALSE,
+        ];
 
-      $form["provider_$provider"]['permissions']['#header'] = $form['permissions']['#header'];
+        $form[$provider_key]['permissions'] = [
+          '#type' => 'table',
+          '#header' => [$this->t('Permission')],
+          '#id' => 'permissions',
+          '#attributes' => ['class' => ['permissions', 'js-permissions']],
+        ];
+
+        $form[$provider_key]['permissions']['#header'] = $form['permissions']['#header'];
+      }
+
+      if ($provider_key == "provider_group_entity") {
+        $group_sections = array_merge_recursive($group_sections, $sections);
+        unset($form[$provider_key]['permissions']);
+
+        $form[$provider_key]['permissions'] = [
+          '#type' => 'table',
+          '#header' => [$this->t('Permission')],
+          '#id' => 'permissions',
+          '#attributes' => ['class' => ['permissions', 'js-permissions']],
+        ];
+
+        $form[$provider_key]['permissions']['#header'] = $form['permissions']['#header'];
+        $sections = $group_sections;
+      }
 
       foreach ($sections as $section => $permissions) {
+        $get_provider = reset($permissions);
+        $provider = $get_provider['provider'];
         // Create a clean section ID.
         $section_id = $provider . '-' . preg_replace('/[^a-z0-9_]+/', '_', strtolower($section));
         $disabled_section_id = NULL;
@@ -142,25 +215,32 @@ abstract class CpUsersPermissionsForm extends GroupPermissionsForm {
         foreach ($disabled_nodes_and_entities as $disabled_item) {
           if (strpos($section_id, $disabled_item) !== FALSE) {
             $disabled_section_id = $section_id;
-            unset($form["provider_$provider"]['permissions'][$section_id]);
+            unset($form[$provider_key]['permissions'][$section_id]);
             foreach ($permissions as $perm => $perm_item) {
-              unset($form["provider_$provider"]['permissions'][$perm]);
+              unset($form[$provider_key]['permissions'][$perm]);
             }
             break;
           }
         }
 
-        if ($disabled_section_id == NULL) {
+        if ($disabled_section_id == NULL && count($permissions)) {
           // Start each section with a full width row containing the section
           // name.
-          $form["provider_$provider"]['permissions'][$section_id] = $form['permissions'][$section_id];
+          if ($provider_key == "provider_group_entity") {
+            $replace_words = ['group', 'node', '_', '(', ')'];
+            $label = $form['permissions'][$section_id][0]['#markup'];
+            $form['permissions'][$section_id][0]['#markup'] = ucwords(str_ireplace($replace_words, ' ', $label));
+          }
+
+          $form[$provider_key]['permissions'][$section_id] = $form['permissions'][$section_id];
+
           // Then list all of the permissions for that provider and section.
           foreach ($permissions as $perm => $perm_item) {
             $disabled_permission = NULL;
             foreach ($disabled_nodes_and_entities as $disabled_item) {
               if (strpos($perm, $disabled_item) !== FALSE) {
                 $disabled_permission = $perm;
-                unset($form["provider_$provider"]['permissions'][$perm]);
+                unset($form[$provider_key]['permissions'][$perm]);
                 unset($form['permissions'][$perm]);
                 break;
               }
@@ -169,13 +249,13 @@ abstract class CpUsersPermissionsForm extends GroupPermissionsForm {
             if ($disabled_permission == NULL) {
               // Create a row for the permission, starting with the description
               // cell.
-              $form["provider_$provider"]['permissions'][$perm]['description'] = $form['permissions'][$perm]['description'];
+              $form[$provider_key]['permissions'][$perm]['description'] = $form['permissions'][$perm]['description'];
               $form['permissions'][$perm]['description']['#context']['description'] = $perm_item['description'];
               $form['permissions'][$perm]['description']['#context']['warning'] = $perm_item['warning'];
 
               // Finally build a checkbox cell for every group role.
               foreach ($role_info as $role_name => $info) {
-                $form["provider_$provider"]['permissions'][$perm][$role_name] = $form['permissions'][$perm][$role_name];
+                $form[$provider_key]['permissions'][$perm][$role_name] = $form['permissions'][$perm][$role_name];
               }
             }
           }
@@ -184,13 +264,41 @@ abstract class CpUsersPermissionsForm extends GroupPermissionsForm {
 
       // Do not show relationship permissions in the UI.
       foreach ($this->cpRolesHelper->getRestrictedPermissions($this->getGroupType()) as $permission) {
-        unset($form["provider_$provider"]['permissions'][$permission]);
+        unset($form[$provider_key]['permissions'][$permission]);
       }
     }
 
     // The default permissions form element is no longer required.
     unset($form['permissions']);
     return $form;
+  }
+
+  /**
+   * Creates the permissions wrapper key and label .
+   *
+   * It return permissions wrapper key and label based
+   * on module name providing the permissions and in
+   * which group permissions should appear.
+   *
+   * @param string $provider
+   *   The module name providing the permissions.
+   *
+   * @return array
+   *   An array having wrapper key and label.
+   */
+  protected function getProviderKeyTitle($provider) {
+    $provider_key = "provider_$provider";
+    $title = $this->moduleHandler->getName($provider);
+
+    if (array_key_exists($provider, self::PERMISSION_GROUPS)) {
+      $provider_key = array_key_exists('provider', self::PERMISSION_GROUPS[$provider]) ? self::PERMISSION_GROUPS[$provider]['provider'] : $provider;
+      $provider_key = "provider_" . $provider_key;
+      $title = self::PERMISSION_GROUPS[$provider]['title'];
+    }
+    return [
+      'provider_key' => $provider_key,
+      'title' => $title,
+    ];
   }
 
 }
