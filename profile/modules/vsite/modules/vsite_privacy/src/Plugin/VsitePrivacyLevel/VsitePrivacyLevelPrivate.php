@@ -29,7 +29,9 @@ class VsitePrivacyLevelPrivate extends VsitePrivacyLevelPluginBase {
     if (!$active_vsite || $account->isAnonymous()) {
       return FALSE;
     }
-
+    if ($account->hasPermission('administer group')) {
+      return TRUE;
+    }
     $vsite_membership = $active_vsite->getMember($account);
 
     return ($access && $vsite_membership);
