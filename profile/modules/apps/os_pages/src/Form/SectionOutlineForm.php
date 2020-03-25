@@ -17,8 +17,8 @@ use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\core\Url;
 use Drupal\Core\Ajax\RedirectCommand;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a form for section Outline form.
@@ -68,6 +68,13 @@ class SectionOutlineForm extends FormBase {
   protected $formBuilder;
 
   /**
+   * Request stack to fetch current node.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructor for SectionOutlineForm.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
@@ -82,14 +89,17 @@ class SectionOutlineForm extends FormBase {
    *   The renderer.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   Form builder.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
-  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager, VsiteContextManagerInterface $vsiteContextManager, BooksHelper $books_helper, RendererInterface $renderer, FormBuilderInterface $form_builder) {
+  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager, VsiteContextManagerInterface $vsiteContextManager, BooksHelper $books_helper, RendererInterface $renderer, FormBuilderInterface $form_builder, RequestStack $request_stack) {
     $this->nodeStorage = $node_storage;
     $this->bookManager = $book_manager;
     $this->booksHelper = $books_helper;
     $this->vsiteManager = $vsiteContextManager;
     $this->renderer = $renderer;
     $this->formBuilder = $form_builder;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -103,7 +113,8 @@ class SectionOutlineForm extends FormBase {
       $container->get('vsite.context_manager'),
       $container->get('os_pages.books_helper'),
       $container->get('renderer'),
-      $container->get('form_builder')
+      $container->get('form_builder'),
+      $container->get('request_stack')
     );
   }
 
@@ -146,35 +157,36 @@ class SectionOutlineForm extends FormBase {
     // Save elements in the same order as defined in post rather than the form.
     // This ensures parent is updated before its children, preventing orphans.
     $user_input = $form_state->getValues();
-    if (isset($user_input['table'])) {
+    if ($user_input['table']) {
       $order = array_flip(array_keys($user_input['table']));
       $form['table'] = array_merge($order, $form['table']);
+      if ($form['table']) {
+        foreach (Element::children($form['table']) as $key) {
+          if ($form['table'][$key]['#item']) {
+            $row = $form['table'][$key];
+            $values = $form_state->getValue(['table', $key]);
+            // Update menu item if moved.
+            if ($row['parent']['pid']['#default_value'] != $values['pid'] || $row['weight']['#default_value'] != $values['weight']) {
+              $link = $this->bookManager->loadBookLink($values['nid'], FALSE);
+              $link['weight'] = $values['weight'];
+              $link['pid'] = $values['pid'];
+              $this->bookManager->saveBookLink($link, FALSE);
+            }
 
-      foreach (Element::children($form['table']) as $key) {
-        if ($form['table'][$key]['#item']) {
-          $row = $form['table'][$key];
-          $values = $form_state->getValue(['table', $key]);
-          // Update menu item if moved.
-          if ($row['parent']['pid']['#default_value'] != $values['pid'] || $row['weight']['#default_value'] != $values['weight']) {
-            $link = $this->bookManager->loadBookLink($values['nid'], FALSE);
-            $link['weight'] = $values['weight'];
-            $link['pid'] = $values['pid'];
-            $this->bookManager->saveBookLink($link, FALSE);
-          }
-
-          // Update the title if changed.
-          if ($row['title']['#default_value'] != $values['title']) {
-            $node = $this->nodeStorage->load($values['nid']);
-            $node->revision_log = $this->t('Title changed from %original to %current.', ['%original' => $node->label(), '%current' => $values['title']]);
-            $node->title = $values['title'];
-            $node->book['link_title'] = $values['title'];
-            $node->setNewRevision();
-            $node->save();
-            $this->logger('content')->notice('book: updated %title.', ['%title' => $node->label(), 'link' => $node->toLink($this->t('View'))->toString()]);
-          }
-          // Update the status of node's section nav block if changed.
-          if ($row['hide']['#default_value'] != $values['hide']) {
-            $this->updateHiddenSectionChildPages($values['nid'], $values['hide']);
+            // Update the title if changed.
+            if ($row['title']['#default_value'] != $values['title']) {
+              $node = $this->nodeStorage->load($values['nid']);
+              $node->revision_log = $this->t('Title changed from %original to %current.', ['%original' => $node->label(), '%current' => $values['title']]);
+              $node->title = $values['title'];
+              $node->book['link_title'] = $values['title'];
+              $node->setNewRevision();
+              $node->save();
+              $this->logger('content')->notice('book: updated %title.', ['%title' => $node->label(), 'link' => $node->toLink($this->t('View'))->toString()]);
+            }
+            // Update the status of node's section nav block if changed.
+            if ($row['hide']['#default_value'] != $values['hide']) {
+              $this->updateHiddenSectionChildPages($values['nid'], $values['hide']);
+            }
           }
         }
       }
@@ -396,8 +408,9 @@ class SectionOutlineForm extends FormBase {
       $book_entity = $this->nodeStorage->load($selected_book_entity);
       $this->booksHelper->saveOtherBookPages($current_page, $book_entity);
       $response = new AjaxResponse();
-      $currentURL = Url::fromRoute('<current>');
-      $response->addCommand(new RedirectCommand($currentURL->toString()));
+      $path = $this->requestStack->getMasterRequest()->getRequestUri();
+      $path = str_replace('&ajax_form=1&_wrapper_format=drupal_ajax', '', $path);
+      $response->addCommand(new RedirectCommand($path));
       return $response;
     }
     $form_state->setRebuild();

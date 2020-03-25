@@ -78,6 +78,7 @@ class SectionNavigationWidget extends OsWidgetsBase implements OsWidgetsInterfac
         $book_node = $this->nodeStorage->load($node->book['bid']);
         $tree = $this->bookTreeOutput($book_node->book, $node->book);
         $build['section_navigation'] = $tree;
+        $build['#cache'] = ['max-age' => 0];
       }
     }
   }

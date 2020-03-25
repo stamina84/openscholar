@@ -59,4 +59,22 @@ interface BooksHelperInterface {
    */
   public function saveOtherBookPages(NodeInterface $selected_book, NodeInterface $book_entity);
 
+  /**
+   * Create/update a child's layout.
+   *
+   * @param \Drupal\node\NodeInterface $sub_page
+   *   Existing sub-page of a book entity.
+   * @param \Drupal\node\NodeInterface $book
+   *   Parent book entity.
+   */
+  public function setChildLayoutContext(NodeInterface $sub_page, NodeInterface $book);
+
+  /**
+   * Unset entity from book's layout context.
+   *
+   * @param \Drupal\node\NodeInterface $entity
+   *   Book node entity.
+   */
+  public function unsetLayoutContext(NodeInterface $entity);
+
 }

@@ -94,6 +94,25 @@ class OsWidgetsBlockRepository implements BlockRepositoryInterface {
 
     $limit_found = !$limit;
     $flat = [];
+    // Get Default layout context blocks.
+    /** @var \Drupal\os_widgets\LayoutContextInterface $a */
+    foreach ($applicable as $a) {
+      if ($a->id() == $limit) {
+        $limit_found = TRUE;
+      }
+      if ($limit_found) {
+        $layout_context = $this->hierarchialStorage->readFromLevel('os_widgets.layout_context.' . $a->id(), HierarchicalStorage::GLOBAL_STORAGE);
+        if ($layout_context['data']) {
+          foreach ($layout_context['data'] as $block) {
+            $flat[$block['id']] = [
+              'id' => $block['id'],
+              'region' => 0,
+              'weight' => 0,
+            ];
+          }
+        }
+      }
+    }
     // TODO: Replace with mechanism to detect when we're on a block_place page.
     $editing = TRUE;
 
@@ -135,16 +154,6 @@ class OsWidgetsBlockRepository implements BlockRepositoryInterface {
         $limit_found = TRUE;
       }
       if ($limit_found) {
-        // Get Default layout context blocks.
-        $layout_context = $this->hierarchialStorage->readFromLevel('os_widgets.layout_context.' . $a->id(), HierarchicalStorage::GLOBAL_STORAGE);
-        foreach ($layout_context['data'] as $block) {
-          $flat[$block['id']] = [
-            'id' => $block['id'],
-            'region' => 0,
-            'weight' => 0,
-          ];
-        }
-
         $context_blocks = $a->getBlockPlacements();
         foreach ($context_blocks as $b) {
           if (in_array($b['id'], $placed_blocks)) {

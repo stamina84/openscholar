@@ -459,6 +459,28 @@ trait ExistingSiteTestTrait {
   }
 
   /**
+   * Remove block content from region.
+   *
+   * @param \Drupal\block_content\BlockContentInterface $block_content
+   *   Block content.
+   * @param string $region
+   *   Region id.
+   * @param string $context
+   *   Layout context.
+   */
+  protected function removeBlockFromRegion(BlockContentInterface $block_content, string $region, string $context = 'all_pages'): void {
+    $layout_config = $this->container->get('config.factory')->getEditable('os_widgets.layout_context.' . $context);
+    $data = $layout_config->get('data');
+    foreach ($data as $key => $item) {
+      if ($item['id'] === "block_content|{$block_content->uuid()}") {
+        unset($data[$key]);
+      }
+    }
+    $layout_config->set('data', $data);
+    $layout_config->save();
+  }
+
+  /**
    * Mark an config for deletion.
    *
    * Any configurations you create when running against an installed site should

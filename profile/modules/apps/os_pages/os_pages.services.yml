@@ -10,7 +10,7 @@ services:
       - { name: event_subscriber }
   os_pages.books_helper:
     class: Drupal\os_pages\BooksHelper
-    arguments: ['@entity_type.manager', '@os_pages.visibility_helper', '@book.manager']
+    arguments: ['@entity_type.manager', '@os_pages.visibility_helper', '@book.manager', '@path_alias.manager', '@vsite.context_manager', '@os_pages.visibility_storage']
   os_pages.access_checker:
     class: Drupal\os_pages\Access\OutlineAccessCheck
     arguments: ['@vsite.context_manager', '@request_stack']
