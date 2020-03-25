@@ -3,8 +3,10 @@ langcode: en
 status: true
 dependencies:
   module:
+    - group
     - node
     - user
+    - vsite
 id: os_feeds
 label: 'Os Feeds'
 module: views
@@ -138,6 +140,45 @@ display:
             operator_limit_selection: false
             operator_list: {  }
           group: 1
+        current_vsite_filter:
+          id: current_vsite_filter
+          table: group_content
+          field: current_vsite_filter
+          relationship: group_content
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: false
+          expose:
+            operator_id: current_vsite_filter_op
+            label: 'Current Vsite Filter'
+            description: null
+            use_operator: false
+            operator: current_vsite_filter_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: current_vsite_filter
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: group_content
+          plugin_id: vsite_current_filter
       sorts:
         created:
           id: created
@@ -157,7 +198,28 @@ display:
       header: {  }
       footer: {  }
       empty: {  }
-      relationships: {  }
+      relationships:
+        group_content:
+          id: group_content
+          table: node_field_data
+          field: group_content
+          relationship: none
+          group_type: group
+          admin_label: 'Content group content'
+          required: false
+          group_content_plugins:
+            'group_node:blog': 'group_node:blog'
+            'group_node:class': '0'
+            'group_node:events': '0'
+            'group_node:faq': '0'
+            'group_node:news': '0'
+            'group_node:page': '0'
+            'group_node:person': '0'
+            'group_node:presentation': '0'
+            'group_node:software_project': '0'
+            'group_node:software_release': '0'
+          entity_type: node
+          plugin_id: group_content_to_entity_reverse
       arguments:
         type:
           id: type

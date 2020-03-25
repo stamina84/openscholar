@@ -83,7 +83,9 @@ class FeedsDefaultWidgetTest extends VsiteExistingSiteTestBase {
     // Assert correct field values.
     $blockContentEntity = $this->entityTypeManager->getStorage('block_content')->load($blockEntityId);
     $info = $blockContentEntity->get('info')->value;
+    $showAll = $blockContentEntity->get('field_is_show_all_content')->value;
     $this->assertEquals('Subscribe', $info);
+    $this->assertEquals(1, $showAll);
   }
 
 }

@@ -55,6 +55,7 @@ class RssFeedWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $block = $storage->create([
         'type' => $bundle,
         'info' => $row['Info'],
+        'field_is_show_all_content' => $row['Show all content'],
       ]);
       $block->save();
       $group->addContent($block, "group_entity:block_content");
