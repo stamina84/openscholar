@@ -194,6 +194,28 @@ trait ExistingSiteTestTrait {
   }
 
   /**
+   * Login via User Id.
+   *
+   * @param int $id
+   *   User ID.
+   *
+   * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+   * @throws \Behat\Mink\Exception\DriverException
+   */
+  protected function drupalLoginWithId($id): void {
+    $account = $this->container->get('entity_type.manager')->getStorage('user')->load($id);
+
+    if ($account) {
+      $password = user_password();
+      $account->setPassword($password);
+      $account->pass_raw = $password;
+      $account->passRaw = $account->pass_raw;
+      $account->save();
+      $this->drupalLogin($account);
+    }
+  }
+
+  /**
    * Creates a media entity.
    *
    * @param array $values

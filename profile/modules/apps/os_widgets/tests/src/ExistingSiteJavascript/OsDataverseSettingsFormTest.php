@@ -64,7 +64,7 @@ class OsDataverseSettingsFormTest extends OsExistingSiteJavascriptTestBase {
     $this->drupalLogout();
 
     $this->drupalLoginWithID(1);
-    $this->visitViaVsite('admin/config/development/configuration', $this->group);
+    $this->visitViaVsite('cp/settings/global-settings/dataverse_urls', $this->group);
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalLogout();
 
