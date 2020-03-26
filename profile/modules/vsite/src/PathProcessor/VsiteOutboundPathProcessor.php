@@ -51,7 +51,7 @@ class VsiteOutboundPathProcessor implements OutboundPathProcessorInterface {
     }
 
     $individual_path_pattern = array_map(static function ($path) {
-      return "\\$path";
+      return "\\$path\\/";
     }, self::NON_VSITE_PATHS);
 
     $this->nonVsitePathsRegexPattern = '/^(' . implode('|', $individual_path_pattern) . ')/';

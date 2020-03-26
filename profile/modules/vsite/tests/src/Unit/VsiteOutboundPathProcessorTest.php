@@ -66,9 +66,9 @@ class VsiteOutboundPathProcessorTest extends UnitTestCase {
    */
   public function nonPurlPathsProvider(): array {
     return [
-      ['/admin'],
+      ['/admin/'],
       ['/admin/foo'],
-      ['/user'],
+      ['/user/'],
       ['/user/bar'],
     ];
   }
