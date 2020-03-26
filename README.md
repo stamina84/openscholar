@@ -26,34 +26,8 @@ With `composer require ...` you can download new dependencies to your installati
 cd some-dir
 composer require drupal/devel:~1.0
 ```
+## Development Info
+[Developer Wiki](https://github.com/openscholar/openscholar/wiki/Drupal-8-Development)
 
 ## Development setup
-
-### Prerequisites
-
-1. [Docker](https://docs.docker.com/install)
-2. Add `127.0.0.1 home.d8.theopenscholar.com` to your hosts file.
-3. Create a GitHub token for Composer - refer https://www.previousnext.com.au/blog/managing-composer-github-access-personal-access-tokens for creating the token, and save it somewhere.
-
-After that:
-
-```bash
-
-git clone https://github.com/subhojit777/traefik-helper.git traefik-helper
-cd traefik-helper
-./traefik-helper.sh up -d
-cd ..
-git clone --branch 8.x-1.x-dev https://github.com/openscholar/openscholar.git some-dir
-cd some-dir
-cp defaults/.env .
-vi .env # Use the GitHub token created before in GITHUB_TOKEN variable.
-docker-compose up -d
-docker-compose exec php composer install
-cp defaults/settings.local.php web/sites/default
-cp defaults/settings.php web/sites/default
-./drush.sh site-install openscholar -vvv -y --db-url=mysql://osd8dev:drupal@mariadb/osd8dev --existing-config --account-pass=ADMIN_PASSWORD
-make
-./drush.sh cr
-```
-
-Access your development setup from http://home.d8.theopenscholar.com
+[Development Setup for Drupal 8](https://github.com/openscholar/openscholar/wiki/Drupal-8-Development-Setup)
