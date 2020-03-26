@@ -231,18 +231,18 @@ class AccessHelperTest extends OsExistingSiteTestBase {
     $vsite_context_manager->activateVsite($privateVsite);
 
     foreach (AccessHelper::RESTRICTED_BLOCKS as $restricted_block_id) {
-      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $userOne));
-      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $adminUser));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $userOne));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $adminUser));
       $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $vsiteAdmin));
       $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'update', $privateVsiteAdmin));
 
-      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $userOne));
-      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $adminUser));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $userOne));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $adminUser));
       $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $vsiteAdmin));
       $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'delete', $privateVsiteAdmin));
 
-      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $userOne));
-      $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $adminUser));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $userOne));
+      $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $adminUser));
       $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $vsiteAdmin));
       $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $privateVsiteAdmin));
       $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($restricted_block_id, 'view', $privateVsiteMember));
@@ -279,13 +279,13 @@ class AccessHelperTest extends OsExistingSiteTestBase {
 
     $vsite_context_manager->activateVsite($privateVsite);
 
-    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $userOne));
-    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $adminUser));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $userOne));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $adminUser));
     $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $vsiteAdmin));
     $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'update', $privateVsiteMember));
 
-    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $userOne));
-    $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $adminUser));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $userOne));
+    $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $adminUser));
     $this->assertInstanceOf(AccessResultForbidden::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $vsiteAdmin));
     $this->assertInstanceOf(AccessResultNeutral::class, $access_helper->checkBlocksAccess($allowed_block_id, 'delete', $privateVsiteMember));
   }
