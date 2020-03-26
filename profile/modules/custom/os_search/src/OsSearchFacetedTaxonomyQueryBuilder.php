@@ -219,4 +219,62 @@ class OsSearchFacetedTaxonomyQueryBuilder {
 
   }
 
+  /**
+   * Generate remove (-) links for already applied filters using query string.
+   *
+   * @param string $field_id
+   *   Field for which summary is needed.
+   *
+   * @return array
+   *   Array of current search summary.
+   */
+  public function getCurrentSearchSummary($field_id) {
+    $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
+    $available_facets = $this->searchHelper->getAllowedFacetIds() ?? [];
+
+    $summary = [
+      'reduced_filter' => [],
+      'needed' => FALSE,
+    ];
+
+    if (!isset($available_facets[$field_id])) {
+      return $summary;
+    }
+
+    $i = 0;
+    $field_processor = 'taxonomy_term';
+    foreach ($filters as $filter) {
+      if (strpos($filter, $field_id) !== FALSE) {
+        $value = str_replace("{$field_id}:", '', $filter);
+        $summary['needed'] = TRUE;
+        $summary['reduced_filter'][$i]['filter'] = $filter;
+        $summary['reduced_filter'][$i]['label'] = $this->prepareSingleLabel($field_processor, $field_id, $value);
+        $summary['reduced_filter'][$i]['query'] = $filters;
+        $summary['reduced_filter'][$i]['key'] = $value;
+        $i++;
+      }
+    }
+    return $summary;
+  }
+
+  /**
+   * Convert value to label.
+   *
+   * @param string $field_label_processor
+   *   Processor to be used.
+   * @param string $field_id
+   *   Field ID.
+   * @param string $value
+   *   Value of the filter.
+   *
+   * @return string
+   *   Label string.
+   */
+  protected function prepareSingleLabel($field_label_processor, $field_id, $value) {
+    $entity_storage = $this->entityTypeManager->getStorage($field_label_processor);
+    $label = $entity_storage->load($value)->label();
+
+    return $label;
+  }
+
 }

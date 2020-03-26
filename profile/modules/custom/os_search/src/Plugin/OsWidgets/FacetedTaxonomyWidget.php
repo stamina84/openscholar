@@ -131,8 +131,19 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);
     $this->osSearchFacetBuilder->prepareFacetLinks($buckets, $field_id);
 
-    $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($selected_app, $vocab_filter, $vocab_order_by, $term_order_by, $buckets);
+    // Get current search summary with (-) link.
+    $reduced_filters = $this->searchFacetedTaxonoQueryBuilder->getCurrentSearchSummary($field_id);
+    $build = [];
 
+    // Embed reduce filter inside buckets for terms.
+    if ($reduced_filters['needed']) {
+      $total_buckets = array_merge($reduced_filters['reduced_filter'], $buckets);
+    }
+    else {
+      $total_buckets = $buckets;
+    }
+
+    $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($selected_app, $vocab_filter, $vocab_order_by, $term_order_by, $total_buckets);
     $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label, $field_app_content, $class, $need_count);
 
     if (empty($build)) {
@@ -173,7 +184,6 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
    *   Widget build
    */
   private function renderableTaxonomyArray(array $buckets, $route_name, string $field_name, string $field_label, string $field_app_content, string $class, bool $need_count): array {
-
     foreach ($buckets as $term_list) {
       $vocab_name = $term_list['name'];
       $build[] = $this->renderableArray($term_list['children'], $route_name, $field_name, $field_label, $vocab_name, $field_app_content, $class, $need_count);
@@ -239,6 +249,7 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
             }
           }
 
+          $route_parameters['f'] = $querys;
           $path = Url::fromRoute($route_name, $route_parameters);
           $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
           $items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
