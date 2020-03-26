@@ -29,6 +29,13 @@ class NodeRevisionAccessTest extends OsExistingSiteJavascriptTestBase {
   protected $user;
 
   /**
+   * Node object.
+   *
+   * @var \Drupal\node\Entity\Node|false
+   */
+  protected $nodeObj;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -46,6 +53,8 @@ class NodeRevisionAccessTest extends OsExistingSiteJavascriptTestBase {
     $node->title->value = 'Test Class Node Rev';
     $node->setNewRevision(TRUE);
     $node->save();
+    $this->nodeObj = $node;
+
   }
 
   /**
@@ -65,6 +74,15 @@ class NodeRevisionAccessTest extends OsExistingSiteJavascriptTestBase {
     // Test Positive with GroupAdmin login.
     $this->drupalLogin($this->user);
     $this->makeCommonAssertions();
+
+    // Test Revision view page.
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $node_revisions = $entity_type_manager->getStorage('node')->revisionIds($this->nodeObj);
+    foreach ($node_revisions as $revision) {
+      $this->visitViaVsite("node/{$this->nid}/revisions/{$revision}/view", $this->group);
+      $this->assertSession()->statusCodeEquals(200);
+    }
   }
 
   /**
@@ -76,6 +94,15 @@ class NodeRevisionAccessTest extends OsExistingSiteJavascriptTestBase {
     // Test with Content Editor login.
     $this->drupalLogin($this->user);
     $this->makeCommonAssertions();
+
+    // Test Revision view page.
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $node_revisions = $entity_type_manager->getStorage('node')->revisionIds($this->nodeObj);
+    foreach ($node_revisions as $revision) {
+      $this->visitViaVsite("node/{$this->nid}/revisions/{$revision}/view", $this->group);
+      $this->assertSession()->statusCodeEquals(200);
+    }
 
   }
 
@@ -103,6 +130,15 @@ class NodeRevisionAccessTest extends OsExistingSiteJavascriptTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Revisions');
     $this->assertSession()->linkByHrefExists("/node/$this->nid/revisions");
+
+    // Test Revision view page.
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $node_revisions = $entity_type_manager->getStorage('node')->revisionIds($node2);
+    foreach ($node_revisions as $revision) {
+      $this->visitViaVsite("node/{$nid2}/revisions/{$revision}/view", $this->group);
+      $this->assertSession()->statusCodeEquals(200);
+    }
 
     // Test Revision overview/list page.
     $this->visitViaVsite("node/$this->nid/revisions", $this->group);

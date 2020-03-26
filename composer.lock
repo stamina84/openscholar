@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "def4e21100412f86485ef09047c10a1d",
+    "content-hash": "0997d87e516ac0be0301d82953323ea9",
     "packages": [
         {
             "name": "academicpuma/citeproc-php",
@@ -297,9 +297,9 @@
             "authors": [
                 {
                     "name": "Nils Werner",
+                    "role": "Developer",
                     "email": "nils.werner@audiolabs-erlangen.de",
-                    "homepage": "http://www.audiolabs-erlangen.de",
-                    "role": "Developer"
+                    "homepage": "http://www.audiolabs-erlangen.de"
                 }
             ],
             "description": "Bibtex parser for PHP 5.3",
@@ -5909,8 +5909,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-alpha2+94-dev",
-                    "datestamp": "1528091885",
+                    "version": "8.x-1.0-alpha2+72-dev",
+                    "datestamp": "1526651284",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -5940,10 +5940,6 @@
                 {
                     "name": "tim.plunkett",
                     "homepage": "https://www.drupal.org/user/241634"
-                },
-                {
-                    "name": "tstoeckler",
-                    "homepage": "https://www.drupal.org/user/107158"
                 }
             ],
             "description": "Integrates the Fullcalender Library from https://fullcalendar.io",
@@ -7330,16 +7326,16 @@
         },
         {
             "name": "drupal/purl",
-            "version": "v1.0.2",
+            "version": "v1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openscholar/purl-d8.git",
-                "reference": "3dcb8f8f23220a440c071784b527d1867f50609a"
+                "reference": "7cc8ea2c2972ec74106c2026bad39d91c4a40b16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openscholar/purl-d8/zipball/3dcb8f8f23220a440c071784b527d1867f50609a",
-                "reference": "3dcb8f8f23220a440c071784b527d1867f50609a",
+                "url": "https://api.github.com/repos/openscholar/purl-d8/zipball/7cc8ea2c2972ec74106c2026bad39d91c4a40b16",
+                "reference": "7cc8ea2c2972ec74106c2026bad39d91c4a40b16",
                 "shasum": ""
             },
             "type": "drupal-module",
@@ -7351,9 +7347,9 @@
             ],
             "description": "Purl module for D8, with patches needed to support group_content",
             "support": {
-                "source": "https://github.com/openscholar/purl-d8/tree/v1.0.2"
+                "source": "https://github.com/openscholar/purl-d8/tree/v1.0.9"
             },
-            "time": "2019-04-19T18:47:44+00:00"
+            "time": "2020-03-25T16:31:23+00:00"
         },
         {
             "name": "drupal/redirect",
@@ -8035,7 +8031,7 @@
                 },
                 "drupal": {
                     "version": "8.x-2.0",
-                    "datestamp": "1577874483",
+                    "datestamp": "1581756259",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -10738,8 +10734,8 @@
             "authors": [
                 {
                     "name": "Frank Kleine",
-                    "role": "Developer",
-                    "homepage": "http://frankkleine.de/"
+                    "homepage": "http://frankkleine.de/",
+                    "role": "Developer"
                 }
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
@@ -16881,10 +16877,6 @@
                 {
                     "name": "cs_shadow",
                     "homepage": "https://www.drupal.org/user/2828287"
-                },
-                {
-                    "name": "oknate",
-                    "homepage": "https://www.drupal.org/user/471638"
                 },
                 {
                     "name": "phenaproxima",
