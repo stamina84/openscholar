@@ -22,7 +22,7 @@
   .toolbar-horizontal.toolbar-tray-open & {
     top: 64px;
     #block-place-widget-selector-wrapper {
-      height: calc(100vh - 280px);
+      height: calc(100vh - 260px);
     }
   }
   .select-wrapper {
@@ -50,7 +50,7 @@
 #block-list {
   background-color: $color-white;
   border: 1px solid $color-light-gray10;
-  height: calc(100% - 115px);
+  height: calc(100% - 170px);
   border-radius: 5px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -81,6 +81,7 @@
   }
 }
 #block-place-actions-wrapper {
+  position: relative;
   button {
     margin-right: 10px;
   }
