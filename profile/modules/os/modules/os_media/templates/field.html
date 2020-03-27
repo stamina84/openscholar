@@ -1,6 +1,6 @@
 <label ng-if="title" class="{{required_class}}">{{title}}</label>
 <div class="description" ng-bind-html="description"></div>
-<div id="edit-{{field_name}}-und-drop" class="form-managed-file">
+<div id="edit-{{fieldName}}-und-drop" class="form-managed-file">
     <div class="media-browser-drop-box" ngf-drop ngf-change="sendToBrowser($files, $event)" class="droppable"
          ngf-drag-over-class="media-browser-drag-over" ngf-multiple="true" allow-dir="true"
          ngf-hide-on-drop-not-available="true" ngf-accept="validate($file)" ng-hide="fieldIsFull()">
@@ -13,7 +13,7 @@
     </div>
     <div ui-sortable="sortableOptions" ng-model="selectedFiles">
         <div class="file-list-single form-wrapper" ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd, highlight: file.highlight}">
-            <input type="hidden" name="{{field_name}}[{{$index}}][target_id]" value="{{file.mid}}">
+            <input type="hidden" name="{{fieldName}}[{{$index}}][target_id]" value="{{file.mid}}">
             <a href="#" class="tabledrag-handle" title="Drag to re-order" ng-show="selectedFiles.length > 1"><div class="handle">&nbsp;</div></a>
             <span  title="{{file.name}}">
                 <img class="file-icon" alt="" ng-src="{{file.icon}}">

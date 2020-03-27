@@ -10,6 +10,7 @@ dependencies:
   module:
     - field_layout
     - layout_discovery
+    - os_media
     - text
 third_party_settings:
   field_layout:
@@ -23,13 +24,9 @@ mode: default
 content:
   field_attached_files:
     weight: 2
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: media_browser_widget
     region: content
   field_body:
     weight: 1

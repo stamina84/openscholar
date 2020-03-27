@@ -14,22 +14,6 @@
       function link(scope, elem, attr, ngModelController) {
         // everything to define
         var service = new EntityService('media', 'mid');
-        var field_root_id = "";
-        if (scope.$parent.element) {
-          field_root_id = scope.$parent.element.id;
-          scope.title = scope.$parent.element.title;
-          scope.description = scope.$parent.description;
-        }
-        else {
-          var field_root = elem.parent();
-          while (!field_root.attr('id')) {
-            field_root = field_root.parent();
-          }
-          field_root_id = field_root.attr('id');
-        }
-
-        scope.field_name = field_root_id.match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
-        scope.field_id = field_root_id;
         scope.showHelp = false;
         if (scope.$parent.element && scope.$parent.element.custom_directive_parameters.hide_helpicon) {
           scope.hideHelpicon = scope.$parent.element.custom_directive_parameters.hide_helpicon;
@@ -70,11 +54,12 @@
         };
 
         if (!store.isNew()) {
-          scope.selectedFiles = store.fetchData(scope.field_name);
+          scope.selectedFiles = store.fetchData(scope.fieldName);
         }
         else if (!Array.isArray(scope.selectedFiles)) {
           scope.selectedFiles = [];
         }
+
 
         if (Array.isArray(scope.$parent.value)) {
           for (i = 0; i < scope.$parent.value.length; i++) {
@@ -85,14 +70,13 @@
           service.fetchOne(scope.$parent.value).then(generateFunc(0));
         }
 
-        if (scope.selectedFiles.length == 0 && settings.hasSetting('mediaBrowserField')) {
-          let fids = settings.fetchSetting('mediaBrowserField.' + scope.field_id + '.selectedFiles');
-
+        if (scope.selectedFiles.length === 0 && scope.files !== "") {
+          let fids = scope.files.split(',');
           for (let i = 0; i < fids.length; i++) {
             let fid = fids[i];
             service.fetchOne(fid).then(generateFunc(i));
           }
-          store.setData(scope.field_name, scope.selectedFiles);
+          store.setData(scope.fieldName, scope.selectedFiles);
         }
 
         // prefetch the files now so user can open Media Browser later
@@ -104,7 +88,7 @@
               scope.selectedFiles[i] = angular.copy(file);
             }
           }
-          store.setData(scope.field_name, scope.selectedFiles);
+          store.setData(scope.fieldName, scope.selectedFiles);
         });
 
         scope.sendToBrowser = function($files) {
@@ -142,7 +126,7 @@
               }
             }
           }
-          store.setData(scope.field_name, scope.selectedFiles);
+          store.setData(scope.fieldName, scope.selectedFiles);
           if (ngModelController) {
             ngModelController.$setDirty();
             ngModelController.$setTouched();
@@ -157,7 +141,7 @@
           else {
             scope.$parent.value.splice($index, 1);
           }
-          store.setData(scope.field_name, scope.selectedFiles);
+          store.setData(scope.fieldName, scope.selectedFiles);
           if (ngModelController) {
             ngModelController.$setDirty();
             ngModelController.$setTouched();
@@ -172,7 +156,7 @@
           else {
             scope.$parent.value.splice($index, 1, $inserted[0]);
           }
-          store.setData(scope.field_name, scope.selectedFiles);
+          store.setData(scope.fieldName, scope.selectedFiles);
           if (ngModelController) {
             ngModelController.$setDirty();
             ngModelController.$setTouched();
@@ -204,7 +188,9 @@
             return url.generate(settings.fetchSetting('paths.mediaBrowser') + 'field.html?vers=' + settings.fetchSetting('version.mediaBrowser', false));
           },
           scope: {
-            selectedFiles: '=files',
+            fieldId: '@',
+            fieldName: '@',
+            files: '@',
             maxFilesize: '@maxFilesize',
             types: '@',
             extensions: '@',
@@ -264,13 +250,13 @@
           new_form = false;
         }
       },
-      fetchData: function (field_name) {
+      fetchData: function (fieldName) {
         this.init();
-        return data[field_name];
+        return data[fieldName];
       },
-      setData: function (field_name, newData) {
+      setData: function (fieldName, newData) {
         this.init();
-        data[field_name] = newData;
+        data[fieldName] = newData;
         sessionStorage[form_id] = JSON.stringify(data);
       },
       isNew: function () {
@@ -280,3 +266,25 @@
     };
   })();
 })();
+
+// Written for new paragraph content inserted into the dom via Drupal Ajax so that Angular modules can be invoked on it.
+(function ($, Drupal) {
+  "use strict";
+
+  Drupal.behaviors.osMediaAjaxContent = {
+    attach: function (context, settings) {
+
+      var parentSelector = $('.ajax-new-content').parents('.js-form-wrapper');
+      $('.ajax-new-content', context).each(function () {
+        var content = $(parentSelector);
+        angular.element(context).injector().invoke(function($compile) {
+          var scope = angular.element(content).scope();
+          $compile(content)(scope);
+        });
+      });
+
+
+    }
+  };
+
+})(jQuery, Drupal);

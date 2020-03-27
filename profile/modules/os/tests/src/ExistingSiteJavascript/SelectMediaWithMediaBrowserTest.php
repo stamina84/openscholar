@@ -31,17 +31,8 @@ class SelectMediaWithMediaBrowserTest extends OsExistingSiteJavascriptTestBase {
 
     // Open media browser dialog.
     $this->getSession()->getPage()->clickLink('Upload');
-    $web_assert->waitForElementVisible('css', '.media-browser-buttons');
-    $web_assert->pageTextContains('Previously uploaded files');
-
-    // Select "Previously uploaded files" tab.
-    $this->getSession()->getPage()->find('css', '.media-browser-button--library')->click();
-    // Select first media.
-    $this->getSession()->getPage()->find('css', '.media-row')->click();
-    // Insert to field.
-    $this->getSession()->getPage()->pressButton('Insert');
-    $this->waitForDialogClose();
-
+    // Attach Media.
+    $this->attachMediaViaMediaBrowser();
     // Assert media title is showed.
     $web_assert->pageTextContains($media->label());
   }

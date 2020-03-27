@@ -86,6 +86,26 @@ abstract class OsExistingSiteJavascriptTestBase extends ExistingSiteWebDriverTes
   }
 
   /**
+   * Attach Media via tha browser after it is opened.
+   *
+   * @throws \Behat\Mink\Exception\DriverException
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+   */
+  protected function attachMediaViaMediaBrowser():void {
+    $this->assertSession()->waitForElementVisible('css', '.media-browser-buttons');
+    $this->assertSession()->pageTextContains('Previously uploaded files');
+    // Select "Previously uploaded files" tab.
+    $this->getSession()->getPage()->find('css', '.media-browser-button--library')->click();
+    // Select first media.
+    $this->getSession()->getPage()->find('css', '.media-row')->click();
+    // Insert to field.
+    $this->getSession()->getPage()->pressButton('Insert');
+    $this->waitForDialogClose();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function tearDown() {
