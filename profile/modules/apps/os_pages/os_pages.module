@@ -28,7 +28,7 @@ function os_pages_entity_insert(EntityInterface $entity) {
     return;
   }
 
-  if (isset($entity->book['bid'])) {
+  if (isset($entity->book['bid']) && $entity->book['bid'] != 0) {
     /** @var \Drupal\node\NodeInterface $book */
     $book = Node::load($entity->book['bid']);
     $books_helper = \Drupal::service('os_pages.books_helper');
