@@ -133,7 +133,6 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
 
     // Get current search summary with (-) link.
     $reduced_filters = $this->searchFacetedTaxonoQueryBuilder->getCurrentSearchSummary($field_id);
-    $build = [];
 
     // Embed reduce filter inside buckets for terms.
     if ($reduced_filters['needed']) {
