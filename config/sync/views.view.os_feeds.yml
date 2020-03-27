@@ -209,15 +209,15 @@ display:
           required: false
           group_content_plugins:
             'group_node:blog': 'group_node:blog'
-            'group_node:class': '0'
-            'group_node:events': '0'
-            'group_node:faq': '0'
-            'group_node:news': '0'
-            'group_node:page': '0'
-            'group_node:person': '0'
-            'group_node:presentation': '0'
-            'group_node:software_project': '0'
-            'group_node:software_release': '0'
+            'group_node:class': 'group_node:class'
+            'group_node:events': 'group_node:events'
+            'group_node:faq': 'group_node:faq'
+            'group_node:news': 'group_node:news'
+            'group_node:page': 'group_node:page'
+            'group_node:person': 'group_node:person'
+            'group_node:presentation': 'group_node:presentation'
+            'group_node:software_project': 'group_node:software_project'
+            'group_node:software_release': 'group_node:software_release'
           entity_type: node
           plugin_id: group_content_to_entity_reverse
       arguments:
