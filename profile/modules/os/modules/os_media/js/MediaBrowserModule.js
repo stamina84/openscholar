@@ -804,7 +804,7 @@
         }
 
         params.onSelect = function (inserted) {
-          if (elem.attributes['on-select'].value) {
+          if (elem.attributes['on-select'] !== undefined && elem.attributes['on-select'].value) {
             $parse(elem.attributes['on-select'].value)(scope, {
               $inserted: inserted
             });
@@ -813,7 +813,6 @@
             window.location.reload();
           }
         }
-
         mbModal.open(params);
       });
     }
@@ -900,10 +899,6 @@
         }).then(function (modal) {
           modal.element.dialog(nparams.dialog);
           modal.close.then(function (result) {
-
-            if (settings.isBrowseMedia !== undefined && settings.fetchSetting('isBrowseMedia')) {
-              window.location.reload();
-            }
             $('#upmedia').focus();
             // run the function passed to us
             if (Array.isArray(result)) {
