@@ -620,12 +620,6 @@ function os_events_node_view_alter(array &$build, EntityInterface $entity, Entit
           ]),
           '#iconize' => 'calendar',
         ],
-        [
-          '#type' => 'link',
-          '#title' => t('Google'),
-          '#url' => \Drupal::service('os_events.gcal_helper')->addToCalendarLink($entity),
-          '#iconize' => 'calendar',
-        ],
       ],
       '#list_type' => 'ul',
       '#attributes' => [
