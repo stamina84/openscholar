@@ -1,5 +1,5 @@
 mediaBrowser:
-  version: 1.12
+  version: 1.13
   js:
     js/MediaBrowserFilters.js: { }
     js/MediaBrowserModule.js: { app: mediaBrowser }

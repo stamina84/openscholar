@@ -180,6 +180,7 @@ div.file-filters {
 .media-browser-pane textarea#media-browser-web {
   width: 95%;
   min-height: 300px;
+  display: block;
 }
 
 .media-browser-pane textarea#fe-file-description {
@@ -355,7 +356,6 @@ button[ng-disabled="!pager.canPage(-1)"] {
 
 .media-browser-drop-box a[mb-open-modal],
 #media-browser-file-select {
-  height: 20px;
   width: 132px;
   position: absolute;
   top: 50%;
@@ -451,7 +451,8 @@ div[file-edit] .control button,
   height: 150px;
 }
 
-.node-form .media-browser-drop-box {
+.node-form .media-browser-drop-box,
+.paragraph-form .media-browser-drop-box {
   height: 180px;
   background-color: #fff;
   margin-top: 0;
@@ -574,7 +575,8 @@ div[file-edit] .control button,
 /* PROGRESS BAR CSS  END */
 
 .node-form .help,
-.media-browser-pane .help {
+.media-browser-pane .help,
+.paragraph-form .help {
   position: absolute;
   background-color: white;
   padding: 10px;
@@ -588,7 +590,8 @@ div[file-edit] .control button,
 }
 
 .node-form .help:after,
-.media-browser-pane .help:after {
+.media-browser-pane .help:after,
+.paragraph-form .help:after {
   content: "";
   position: absolute;
   right: 32%;
@@ -613,7 +616,8 @@ div[file-edit] .control button,
   overflow: visible;
 }
 
-.node-form .help {
+.node-form .help,
+.paragraph-form .help {
   top: 70%;
   left: 50%;
   width: 95%;
@@ -651,6 +655,7 @@ div[file-edit] .control button,
 
 .field--widget-media-browser-widget img.file-icon {
   width: 16px;
+  display: inline-block;
 }
 
 @keyframes highlight {

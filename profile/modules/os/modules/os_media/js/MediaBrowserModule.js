@@ -751,12 +751,14 @@
       else {
         results.push($scope.selected_file);
       }
-      $('.modal-backdrop').slice(1).remove();
+      $('.modal-backdrop:last').remove();
+      $('body').removeClass('modal-open');
       close(results);
     }
 
     $scope.cancel = function () {
-      $('.modal-backdrop').slice(1).remove();
+      $('.modal-backdrop:last').remove();
+      $('body').removeClass('modal-open');
       close([]);
     }
 
@@ -830,13 +832,9 @@
             buttons: {},
             dialogClass: 'media-wrapper',
             modal: true,
-            draggable: false,
-            resizable: false,
-            minWidth: 600,
             width: 800,
             height: 650,
             position: { my: "center", at: "center", of: window },
-            title: undefined,
             overlay: {
               backgroundColor: '#000000',
               opacity: 0.4

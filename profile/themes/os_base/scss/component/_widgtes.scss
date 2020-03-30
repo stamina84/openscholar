@@ -257,6 +257,9 @@
 }
 /**** code added for widgets type ****/
 .modal {
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
   .modal-body {
     form.block-content-form {
       fieldset {
@@ -282,11 +285,6 @@
         }
       }
     }
-  }
-  ~ .modal {
-    left: 0 !important;
-    right: 0 !important;
-    top: 0 !important;
   }
   .ui-dialog.media-wrapper {
     position: relative;
