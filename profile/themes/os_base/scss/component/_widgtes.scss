@@ -283,6 +283,18 @@
       }
     }
   }
+  ~ .modal {
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+  }
+  .ui-dialog.media-wrapper {
+    position: relative;
+    max-width: 100%;
+    .mb-preview img {
+      max-width: 100%;
+    }
+  }
 }
 .modal-content {
   margin: auto;
