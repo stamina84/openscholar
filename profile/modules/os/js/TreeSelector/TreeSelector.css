@@ -1,6 +1,7 @@
 [tree-selector-widget] ul {
   margin-left: 0.25em;
-  margin-bottom: 0px;
+  margin-bottom: 0;
+  padding-left: 0;
 }
 
 [tree-selector-widget] li {
@@ -10,8 +11,8 @@
 [tree-selector-widget] .expander {
   display: inline-block;
   width: 13px;
-  background-image: url('../../../../themes/cp_theme/images/cp-sprite.png');
-  background-position-x: 0px;
+  background-image: url('/profiles/contrib/openscholar/modules/os/css/cp-sprite.png');
+  background-position-x: 0;
   background-position-y: -452px;
 }
 

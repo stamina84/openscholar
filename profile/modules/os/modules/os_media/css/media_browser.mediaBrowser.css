@@ -336,14 +336,6 @@ button[ng-disabled="!pager.canPage(-1)"] {
   display: block;
 }
 
-.tw-widget h4 {
-  font-size: .97em;
-}
-
-.tw-widget {
-  margin-bottom: 15px;
-}
-
 /** Uploading styles */
 
 [media-browser-field] {

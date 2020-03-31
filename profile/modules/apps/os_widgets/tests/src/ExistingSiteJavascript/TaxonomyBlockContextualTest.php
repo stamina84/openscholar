@@ -25,9 +25,9 @@ class TaxonomyBlockContextualTest extends OsExistingSiteJavascriptTestBase {
   protected $configFactory;
 
   /**
-   * Config factory.
+   * Vsite context manager.
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\vsite\Plugin\VsiteContextManagerInterface
    */
   protected $vsiteContextManager;
 

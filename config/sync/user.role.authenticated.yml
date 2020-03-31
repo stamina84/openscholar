@@ -55,6 +55,8 @@ permissions:
   - 'opt-in or out of google analytics tracking'
   - 'restful get group:extras'
   - 'restful get os_filename_resource'
+  - 'restful get os_taxonomy'
+  - 'restful get os_vocabulary'
   - 'revert bibcite_reference audiovisual revisions'
   - 'revert bibcite_reference bill revisions'
   - 'revert bibcite_reference book revisions'

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\os_rest\ExistingSiteJavascript;
+namespace Drupal\Tests\os_rest\ExistingSiteJavascript;
 
 use Drupal\file\Entity\File;
 use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTestBase;

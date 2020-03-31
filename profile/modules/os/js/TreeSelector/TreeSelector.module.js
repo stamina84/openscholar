@@ -121,7 +121,7 @@
         node.depth = depth;
       }
       output.push(node);
-      if (Array.isArray(node.children)) {
+      if (Array.isArray(node.children) && node.children.length) {
         node.hasChildren = true;
         node.isLeaf = false;
         for (var i = 0; i < node.children.length; i++) {
@@ -149,7 +149,7 @@
       template: '<ul><li ng-repeat="node in flatTree | filter:{label:filterString}" ng-show="node.depth == 0 || !parentCollapsed(node.parent)">' +
         '<span class="spacer" ng-repeat="i in range(node.depth)"></span>' +
         '<span class="expander" ng-class="{collapsed: node.collapsed, empty: !node.hasChildren}" ng-click="node.collapsed = !node.collapsed">&nbsp;</span>' +
-        '<input type="checkbox" value="node.value" ng-click="toggleNode(node)" ng-checked="isChecked(node.value)"> {{node.label}}' +
+        '<input type="checkbox" value="node.value" ng-click="toggleNode(node)" ng-checked="isChecked(node.value)" aria-label="{{node.label}}"> {{node.label}}' +
       '</li></ul>'
     };
 

@@ -1,21 +1,18 @@
-uuid: effb11bc-2190-4fbf-b138-fbf16a484a22
+uuid: a86cd227-0e62-4ad8-9282-a945c2f66833
 langcode: en
-status: false
+status: true
 dependencies:
   module:
     - basic_auth
+    - os_rest
     - serialization
-    - taxonomy
     - user
-id: entity.taxonomy_term
-plugin_id: 'entity:taxonomy_term'
+id: os_vocabulary
+plugin_id: os_vocabulary
 granularity: resource
 configuration:
   methods:
     - GET
-    - POST
-    - DELETE
-    - PATCH
   formats:
     - json
   authentication:

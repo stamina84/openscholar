@@ -1,37 +1,51 @@
 <div class="tw-widget" class="clearfix">
-  <div ng-repeat="vocab in vocabs" ng-switch="vocab.form" ng-show="allTerms[vocab.id].length" class="clearfix">
-    <h4>{{vocab.label}}</h4>
+  <div ng-repeat="vocab in vocabs" ng-switch="vocab.form" ng-show="allTerms[vocab.id].length" class="clearfix tw-widget--vocabs-wrapper">
 
-    <div ng-switch-when="options_select">
-        <ui-select multiple ng-model="$parent.selectedTerms[vocab.id]"
-                   theme="select2" ng-disabled="disabled">
-          <ui-select-match placeholder="Select a term from {{vocab.label}}">{{$item.label}}</ui-select-match>
-            <ui-select-choices repeat="term in $parent.allTerms[vocab.id] track by term.id">
-              <div ng-bind-html="term.label | highlight: $select.search"></div>
-            </ui-select-choices>
-        </ui-select>
+    <div ng-switch-when="cp_options_select" class="tw-widget--options-select">
+      <label for="tw-widget--vocab-label-select-{{vocab.id}}">{{vocab.label}}</label>
+      <select
+        class="os-select2-widget"
+        ng-options="term as term.label for term in allTerms[vocab.id] track by term.id"
+        ng-model="$parent.selectedTerms[vocab.id]"
+        multiple="multiple"
+        id="tw-widget--vocab-label-select-{{vocab.id}}"></select>
+      <script>
+        // TODO: Replace this code with proper solution.
+        jQuery(document).ready(function() {
+          jQuery('.os-select2-widget').once('os-select2-init').each(function () {
+            jQuery(this).select2({
+              placeholder: 'Select a term',
+              width: '100%',
+            });
+          });
+        });
+      </script>
     </div>
-    <div ng-switch-when="entityreference_autocomplete">
+    <div ng-switch-when="cp_entity_reference_autocomplete" class="tw-widget--autocomplete">
+        <label for="tw-widget--vocab-label-autocomplete-{{vocab.id}}">{{vocab.label}}</label>
         <input type="text"
                ng-model="autocompleteTerm"
                typeahead="term.label for term in allTerms[vocab.id] | filter:$viewValue | filter:alreadySelected | limitTo:8"
                typeahead-on-select="onSelect($item, $model, $label)"
-               class="form-text clearfix">
-        <div ng-repeat="selectedTerm in selectedTerms[vocab.id]">
+               class="form-text clearfix"
+               id="tw-widget--vocab-label-autocomplete-{{vocab.id}}">
+        <div ng-repeat="selectedTerm in selectedTerms[vocab.id]" class="tw-widget--selected-terms">
             <span class="tw-term-name">{{selectedTerm.label}}</span>
             <span class="tw-term-remove" ng-click="removeTerm(vocab.id, $index)">X</span>
         </div>
         <!--<button ng-click="addMore(vocab.id)">Add more</button>-->
     </div>
-    <div ng-switch-when="options_buttons">
+    <div ng-switch-when="cp_options_buttons" class="tw-widget--options-buttons">
+      <h4>{{vocab.label}}</h4>
       <div ng-repeat="term in allTerms[vocab.id]">
-        <input type="checkbox" ng-click="termsSelected(term, this)" class="form-checkbox" ng-checked="termSet(term)">
-        <label class="option">{{term.label}}</label>
+        <input type="checkbox" ng-click="termsSelected(term, this)" class="form-checkbox" ng-checked="termSet(term)" id="tw-taxonomy-term-{{term.id}}">
+        <label class="option" for="tw-taxonomy-term-{{term.id}}">{{term.label}}</label>
       </div>
     </div>
-    <div ng-switch-when="term_reference_tree">
+    <div ng-switch-when="cp_term_reference_tree" class="tw-widget--tree">
 
-      <input type="text" ng-model="termSearch" class="form-text clearfix" placeholder="Enter text to filter term tree"/>
+      <h4>{{vocab.label}}</h4>
+      <input type="text" ng-model="termSearch" class="form-text clearfix" placeholder="Enter text to filter term tree" aria-label="Filter term"/>
 
       <div
         tree-selector-widget

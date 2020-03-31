@@ -25,7 +25,11 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "angular": "^1.6.10",
+    "angular-cookies": "^1.6.10",
+    "angular-messages": "^1.6.10",
     "angular-modal-service": "^0.15.1",
+    "angular-sanitize": "^1.6.10",
     "angular-slideables": "^1.0.0",
     "angular-ui-sortable": "^0.19.0",
     "angularindexeddb": "^1.1.4",
@@ -39,6 +43,6 @@
     "gulp-sass-glob": "^1.0.9",
     "gulp-sourcemaps": "^2.6.4",
     "ng-file-upload": "^12.2.13",
-    "ui-select": "^0.19.8"
+    "ngstorage": "^0.3.10"
   }
 }

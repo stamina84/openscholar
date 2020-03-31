@@ -120,6 +120,18 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
     }
     $output['embed'] = $temp['field_media_html'][0]['value'] ?? '';
     $output['thumbnail'] = $temp['thumbnail'][0]['url'];
+    $output['terms'] = [];
+    if (!empty($temp['field_taxonomy_terms'])) {
+      $taxonomy_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+      foreach ($temp['field_taxonomy_terms'] as $term_data) {
+        $term = $taxonomy_storage->load($term_data['target_id']);
+        $output['terms'][] = [
+          'id' => $term_data['target_id'],
+          'label' => $term->label(),
+          'vid' => $term->get('vid')->getValue()[0]['target_id'],
+        ];
+      }
+    }
 
     return $output;
   }
@@ -155,6 +167,10 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       $entity->_restSubmittedFields = array_diff($entity->_restSubmittedFields, ['embed']);
       $field = $this->mediaHelper->getField($entity->bundle());
       $entity->_restSubmittedFields[] = $field;
+    }
+    if (in_array('terms', $entity->_restSubmittedFields)) {
+      $entity->_restSubmittedFields = array_diff($entity->_restSubmittedFields, ['terms']);
+      $entity->_restSubmittedFields[] = 'field_taxonomy_terms';
     }
     $entity->_restSubmittedFields = array_diff($entity->_restSubmittedFields, ['fid']);
 
@@ -245,6 +261,20 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
         $field => isset($value[0]) ? $value[0]->getValue() : [],
       ];
       $input[$field]['value'] = $data['embed'];
+      $fieldList = $entity->get($field);
+      $class = get_class($fieldList);
+      $context['target_instance'] = $fieldList;
+      $this->serializer->deserialize(json_encode($input), $class, $format, $context);
+    }
+
+    if (isset($data['terms'])) {
+      $field = 'field_taxonomy_terms';
+      $input = [];
+      foreach ($data['terms'] as $term_data) {
+        $input[] = [
+          'target_id' => $term_data['id'],
+        ];
+      }
       $fieldList = $entity->get($field);
       $class = get_class($fieldList);
       $context['target_instance'] = $fieldList;

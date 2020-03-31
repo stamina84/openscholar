@@ -20,14 +20,13 @@
 <input id="fe-file-timestamp" type="text" ng-model="date" class="form-text" ng-class="{error: invalidDate}">
 
 <div class="fe-replace-wrapper" ng-show="!file.new && !file.replaced && (file.schema == 'public' || file.schema == 'private')">
-    <label for="fe-file-replace"></label>
     <button id="fe-file-display-warning" ng-show="!showWarning && !showSuccess" ngf-select ngf-multiple="false" ngf-accept="validate($file)" ngf-change="prepForReplace($files, $event)" accept="{{extension}}">Replace File</button>
     <div class="description"><em>Warning:</em> replacing the existing file cannot be undone.</div>
     <div class="fe-replace-message error" ng-show="replaceReject">Selected file does not match extensions!</div>
 <div class="fe-replace-message success" ng-show="replaceSuccess">Successfully replaced file.</div>
 </div>
 
-<taxonomy-widget entity-type="file" terms="file.terms" bundle="{{file.type}}"></taxonomy-widget>
+<taxonomy-widget entity-type="media" terms="file.terms" bundle="{{file.type}}"></taxonomy-widget>
 </div>
 </fieldset>
 

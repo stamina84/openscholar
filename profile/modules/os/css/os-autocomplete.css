@@ -1,0 +1,36 @@
+div.tw-widget--vocabs-wrapper {
+  width: 60%;
+}
+div.tw-widget--vocabs-wrapper ul.dropdown-menu {
+  list-style: none;
+  margin: 0;
+  background-color: #efefef;
+  width: 95%;
+  padding-left: 0;
+}
+div.tw-widget--vocabs-wrapper ul.dropdown-menu li {
+  padding: 4px 8px;
+}
+div.tw-widget--vocabs-wrapper ul.dropdown-menu li:hover {
+  background-color: #e1e1e1;
+  cursor: pointer;
+}
+div.tw-widget--vocabs-wrapper .tw-term-remove {
+  color: #ff0000;
+  font-weight: bold;
+  text-transform: lowercase;
+  font-size: 1.1em;
+  background-color: #efefef;
+  padding: 0 4px;
+  border: 1px solid #ccc;
+  float: right;
+}
+div.tw-widget--vocabs-wrapper div.tw-widget--selected-terms {
+  padding: 4px 8px;
+  width: 91%;
+  background-color: #efefef;
+}
+div.tw-widget--vocabs-wrapper div.tw-widget--selected-terms:hover {
+  background-color: #e1e1e1;
+  cursor: pointer;
+}

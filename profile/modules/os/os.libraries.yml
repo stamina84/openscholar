@@ -1,16 +1,16 @@
 angular.angularjs:
   remote: https://github.com/angular
-  version: 1.7.6
+  version: 1.6.10
   license:
     name: MIT
     url: https://github.com/angular/angular.js/blob/master/LICENSE
     gpl-compatible: true
   js:
-    //ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.js: { type: external, minified: false }
-    //code.angularjs.org/1.7.6/angular-messages.js: { type: external, minified: false }
-    //code.angularjs.org/1.7.6/angular-sanitize.js: { type: external, minified: false }
-    //code.angularjs.org/1.7.6/angular-cookies.js: { type: external, minified: false }
-    //cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js: { type: external, minified: true }
+    /profiles/contrib/openscholar/libraries/angular/angular.min.js: { minified: true }
+    /profiles/contrib/openscholar/libraries/angular-messages/angular-messages.min.js: { minified: true }
+    /profiles/contrib/openscholar/libraries/angular-sanitize/angular-sanitize.min.js: { minified: true }
+    /profiles/contrib/openscholar/libraries/angular-cookies/angular-cookies.min.js: { minified: true }
+    /profiles/contrib/openscholar/libraries/ngstorage/ngStorage.min.js: { minified: true }
   dependencies:
     - core/jquery
 
@@ -34,20 +34,21 @@ locationFix:
 angular.ui.bootstrap:
   version: 0.12.1
   js:
-    js/uiBootstrap/ui-bootstrap-custom-0.12.1.min.js: { minified: true }
-    js/uiBootstrap/ui-bootstrap-custom-tpls-0.12.1.min.js: { minified: true }
+    js/uiBootstrap/ui-bootstrap-0.14.3.min.js: { minified: true }
+    js/uiBootstrap/ui-bootstrap-tpls-0.14.3.min.js: { minified: true }
   dependencies:
     - os/angular.angularjs
 
 angular.select2:
   version: 1.0
   js:
-    /profiles/contrib/openscholar/libraries/ui-select/dist/select.js: { }
+    js/os-select2.js: { }
   css:
     component:
-      /profiles/contrib/openscholar/libraries/ui-select/dist/select.min.css: { minified: true }
+      css/os-select2.css: { minified: false }
   dependencies:
     - os/angular.angularjs
+    - select2/select2
 
 angular.ngFileUpload:
   version: 3.1.0
@@ -132,7 +133,7 @@ jsPager:
     - os/angular.angularjs
 
 fileHandler:
-  version: 1.0
+  version: 1.1
   js:
     js/FileHandler/FileHandler.module.js: { }
   css:
@@ -140,7 +141,7 @@ fileHandler:
       js/FileHandler/fileUploadHandler.css: { }
   paths: js/FileHandler
   drupalSettings:
-    version: { fileHandler: "1.0" }
+    version: { fileHandler: "1.1" }
   dependencies:
     - os/angular.angularjs
     - os/angular.ngFileUpload
@@ -171,12 +172,12 @@ treeSelector:
     - os/angular.angularjs
 
 taxonomyWidget:
-  version: 1.0
+  version: 1.1
   js:
     js/TaxonomyWidget/TaxonomyWidget.module.js: { }
   paths: js/TaxonomyWidget
   drupalSettings:
-    version: { taxonomyWidget: "1.0" }
+    version: { taxonomyWidget: "1.1" }
   dependencies:
     - core/drupalSettings
     - os/angular.angularjs
@@ -184,6 +185,12 @@ taxonomyWidget:
     - os/angular.ui.bootstrap
     - os/entityService
     - os/treeSelector
+
+autocompleteWidget:
+  version: 1.0
+  css:
+    component:
+      css/os-autocomplete.css: { minified: false }
 
 fileEditor:
   js:
@@ -193,13 +200,14 @@ fileEditor:
       js/FileEditor/FileEditor.style.css: { }
   paths: js/FileEditor
   drupalSettings:
-    version: { fileEditor: 1.0.5 }
+    version: { fileEditor: 1.0.6 }
   dependencies:
     - core/drupalSettings
     - os/auth
     - os/angular.ngFileUpload
     - os/entityService
     - os/taxonomyWidget
+    - os/autocompleteWidget
 
 fileEditorModal:
   version: 1.1

@@ -2,7 +2,7 @@
 /**
  * Provides mechanisms for choosing a taxonomy term for a given entity.
  */
-var taxonomy = angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui.select', 'ngSanitize', 'ui.bootstrap', 'ui.bootstrap.typeahead', 'TreeSelector', 'DrupalSettings', 'UrlGenerator']);
+var taxonomy = angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ngSanitize', 'ui.bootstrap', 'ui.bootstrap.typeahead', 'TreeSelector', 'DrupalSettings', 'UrlGenerator']);
 
 taxonomy.directive('taxonomyWidget', ['EntityService', 'drupalSettings', 'urlGenerator', function (EntityService, settings, url) {
   return {
