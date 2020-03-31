@@ -14,7 +14,7 @@
       }
 
       function makeTodaybtnActive() {
-        let $fcTodayButton = $('.fullcalendar button.fc-today-button');
+        let $fcTodayButton = $('.full-calendar-view .fullcalendar button.fc-today-button');
         $fcTodayButton.removeAttr('disabled');
         $fcTodayButton.removeClass('ui-state-disabled');
       }
@@ -26,13 +26,13 @@
         eventAfterAllRender: function (view) {
           makeTodaybtnActive();
           if(view.name == 'today') {
-            $('.fullcalendar').fullCalendar('today');
+            $('.full-calendar-view .fullcalendar').fullCalendar('today');
             makeTodaybtnActive();
-            $('.fc-prev-button').hide();
-            $('.fc-next-button').hide();
+            $('.full-calendar-view .fc-prev-button').hide();
+            $('.full-calendar-view .fc-next-button').hide();
           } else {
-            $('.fc-prev-button').show();
-            $('.fc-next-button').show();
+            $('.full-calendar-view .fc-prev-button').show();
+            $('.full-calendar-view .fc-next-button').show();
           }
         },
         views: {
