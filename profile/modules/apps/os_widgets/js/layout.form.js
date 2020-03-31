@@ -64,7 +64,7 @@
       // filter by type
       $('#filter-widgets-by-type', context).once().change(function (e) {
         let str = e.target.value.toLowerCase();
-        $('#block-list .block', context).each(function (i) {
+        $('#block-list > .block', context).each(function (i) {
           $this = $(this);
           if ($this.attr('data-block-type') == str || str == 'all') {
             $this.show();

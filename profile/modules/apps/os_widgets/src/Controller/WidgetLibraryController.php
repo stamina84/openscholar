@@ -47,26 +47,35 @@ class WidgetLibraryController extends ControllerBase {
       $instances = $block_content->getInstances();
       $block_type = $block_content->bundle();
       $block_type_label = $block_content->type->entity->label();
+      $block_contextual_links = [];
 
       if (!$instances) {
-        $plugin_id = 'block_content:' . $block_content->uuid();
-        $block_id = 'block_content|' . $block_content->uuid();
+        $uuid = $block_content->uuid();
+        $plugin_id = 'block_content:' . $uuid;
+        $block_id = 'block_content|' . $uuid;
         $block = \Drupal::entityTypeManager()->getStorage('block')->create(['plugin' => $plugin_id, 'id' => $block_id]);
         $block->save();
+
+        // Create block instance and fetch contextual links.
+        $block_manager = \Drupal::service('plugin.manager.block');
+        $block_u = $block_manager->createInstance('block_content:' . $uuid);
+        $block_contextual_links = $block_u->build()['#contextual_links'];
       }
       else {
         $block = reset($instances);
       }
       $block_markup = \Drupal::entityTypeManager()->getViewBuilder('block')->view($block);
+
       $markup = [
         '#type' => 'inline_template',
-        '#template' => '<div class="block" data-block-type="{{ type }}" data-block-id="{{ id }}"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
+        '#template' => '<div class="block block-active display-contextual" data-block-type="{{ type }}" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
         '#context' => [
           'id' => $block->id(),
           'type' => $block_type,
           'title' => $block->label(),
           'content' => $block_markup,
         ],
+        '#contextual_links' => $block_contextual_links,
       ];
 
       $response->addCommand(new PrependCommand('#block-list', $markup));
