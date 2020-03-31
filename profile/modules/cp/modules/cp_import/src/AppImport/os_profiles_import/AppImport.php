@@ -148,11 +148,17 @@ class AppImport extends Base {
     $photoRows = '';
     $dateRows = '';
     $emailRows = '';
+    $website1Rows = '';
+    $website2Rows = '';
+    $website3Rows = '';
     $message = [
       '@firstNameRows' => '',
       '@lastNameRows' => '',
       '@photo' => '',
       '@date' => '',
+      '@website1' => '',
+      '@website2' => '',
+      '@website3' => '',
       '@email' => '',
     ];
 
@@ -187,6 +193,25 @@ class AppImport extends Base {
 
         }
       }
+      // Validate website 1 url.
+      if ($row['Websites url 1']) {
+        if (!UrlHelper::isValid($row['Websites url 1'], TRUE)) {
+          $website1Rows .= $row_number . ',';
+        }
+      }
+      // Validate website 2 url.
+      if ($row['Websites url 2']) {
+        if (!UrlHelper::isValid($row['Websites url 2'], TRUE)) {
+          $website2Rows .= $row_number . ',';
+        }
+      }
+      // Validate website 3 url.
+      if ($row['Websites url 3']) {
+        if (!UrlHelper::isValid($row['Websites url 3'], TRUE)) {
+          $website3Rows .= $row_number . ',';
+        }
+      }
+
     }
     $firstNameRows = rtrim($firstNameRows, ',');
     if ($firstNameRows) {
@@ -212,6 +237,21 @@ class AppImport extends Base {
     $emailRows = rtrim($emailRows, ',');
     if ($emailRows) {
       $message['@email'] = $this->t('Email/Email Format is invalid for row/rows @emailRows</br>', ['@emailRows' => $emailRows]);
+      $hasError = TRUE;
+    }
+    $website1Rows = rtrim($website1Rows, ',');
+    if ($website1Rows) {
+      $message['@website1'] = $this->t('Websites url 1 is invalid for row/rows @website1Rows</br>', ['@website1Rows' => $website1Rows]);
+      $hasError = TRUE;
+    }
+    $website2Rows = rtrim($website2Rows, ',');
+    if ($website2Rows) {
+      $message['@website2'] = $this->t('Websites url 2 is invalid for row/rows @website2Rows</br>', ['@website2Rows' => $website2Rows]);
+      $hasError = TRUE;
+    }
+    $website3Rows = rtrim($website3Rows, ',');
+    if ($website3Rows) {
+      $message['@website3'] = $this->t('Websites url 3 is invalid for row/rows @website3Rows</br>', ['@website3Rows' => $website3Rows]);
       $hasError = TRUE;
     }
     return $hasError ? $message : [];

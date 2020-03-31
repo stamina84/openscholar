@@ -592,9 +592,13 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Created date' => '01/01/2015',
       'Path' => 'test1',
       'Email' => 'test@test.com',
+      'Websites url 1' => 'ht://www.homersimpson1.com',
+      'Websites url 2' => 'http://www.homersimpson2.com',
+      'Websites url 3' => 'http://www.homersimpson3.com',
     ];
     $message = $instance->validateRows($data);
     $this->assertEmpty($message['@date']);
+    $this->assertNotEmpty($message['@website1']);
     $this->assertInstanceOf(TranslatableMarkup::class, $message['@firstNameRows']);
 
     // Test no errors in row.
@@ -605,6 +609,9 @@ class CpImportTest extends OsExistingSiteTestBase {
       'Created date' => '01/01/2015',
       'Path' => 'test1',
       'Email' => 'test@test.com',
+      'Websites url 1' => 'http://www.homersimpson1.com',
+      'Websites url 2' => 'http://www.homersimpson2.com',
+      'Websites url 3' => 'http://www.homersimpson3.com',
     ];
     $message = $instance->validateRows($data);
     $this->assertEmpty($message);
