@@ -18,8 +18,8 @@ content:
     label: visually_hidden
     settings:
       view_title: hidden
-      always_build_output: false
-      empty_view_title: hidden
+      always_build_output: true
+      empty_view_title: visually_hidden
     third_party_settings: {  }
     type: viewfield_default
     region: content
