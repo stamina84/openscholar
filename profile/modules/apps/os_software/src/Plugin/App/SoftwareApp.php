@@ -132,7 +132,7 @@ class SoftwareApp extends AppPluginBase {
         'parent' => 'cp.content.add',
         'title' => $this->t('@title', ['@title' => self::TITLE_RELEASE]),
       ],
-      'software-project-import' => [
+      'software-project' => [
         'menu_name' => 'control-panel',
         'route_name' => 'cp.content.import',
         'route_parameters' => ['app_name' => $this->getPluginId()],

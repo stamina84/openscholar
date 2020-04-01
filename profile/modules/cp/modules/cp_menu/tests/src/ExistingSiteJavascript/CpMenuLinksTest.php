@@ -88,19 +88,4 @@ class CpMenuLinksTest extends OsExistingSiteJavascriptTestBase {
     $session->elementNotExists('css', '#cp-build-menu-table .News');
   }
 
-  /**
-   * Tests Software link.
-   */
-  public function testSoftwareMenuLink(): void {
-    $this->drupalLogin($this->groupAdmin);
-
-    // Visit add site content page.
-    $this->visitViaVsite('cp/content/add', $this->group);
-    $this->assertSession()->statusCodeEquals(200);
-
-    // Assert the links for software.
-    $this->getSession()->getPage()->findLink('Software Project');
-    $this->getSession()->getPage()->findLink('Software Release');
-  }
-
 }
