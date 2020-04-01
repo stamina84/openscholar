@@ -1293,6 +1293,8 @@ function os_publications_bibcite_reference_form_alter_metadata_access(array &$fo
  */
 function os_publications_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
   $params = $route_match->getParameters();
+  $bibcite = \Drupal::request()->attributes->get('bibcite_reference');
+
   if ($params->has('view_id') && $params->get('view_id') == "publications") {
     $links = $breadcrumb->getLinks();
 
@@ -1303,5 +1305,26 @@ function os_publications_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteM
     // Creating new breadcrumb.
     $breadcrumb = new Breadcrumb();
     $breadcrumb->setLinks(array_values($links));
+  }
+
+  if ($bibcite) {
+    $links = $breadcrumb->getLinks();
+    $index = array_key_last($links);
+    $linkText = $bibcite->get('html_title')->getValue()[0]['value'];
+    $linkMarkup = Markup::create($linkText);
+    $links[$index]->setText($linkMarkup);
+    $breadcrumb = new Breadcrumb();
+    $breadcrumb->setLinks(array_values($links));
+  }
+}
+
+/**
+ * Implements hook_preprocess_page_title().
+ */
+function os_publications_preprocess_page_title(&$variables) {
+  $bibcite = \Drupal::request()->attributes->get('bibcite_reference');
+
+  if ($bibcite) {
+    $variables['title'] = ['#markup' => $bibcite->get('html_title')->getValue()[0]['value']];
   }
 }
