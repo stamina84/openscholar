@@ -59,8 +59,10 @@
         function recursiveFetch(data, status, headers, config) {
           let key = config.pKey;
           // convert the key into a params array
-          for (let i=0; i<data.rows.length; i++) {
-            cache[key].data.push(data.rows[i]);
+          if (data.rows !== undefined) {
+            for (let i = 0; i < data.rows.length; i++) {
+              cache[key].data.push(data.rows[i]);
+            }
           }
           let pager = data.pager;
 

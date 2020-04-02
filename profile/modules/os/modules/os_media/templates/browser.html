@@ -5,16 +5,19 @@
         <div role="tab" tabindex="0" aria-selected="{{pane == 'library'? true: false}}" class="media-browser-button media-browser-button--library" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePanes('library')" ng-keydown="$event.keyCode === 13 && changePanes('library')">Previously uploaded files</div>
     </div>
     <div class="media-browser-panes">
-        <div class="media-browser-pane" role="tabpanel" ng-switch-when="upload" ng-click="$parent.extensionFailure = false">
+        <div class="media-browser-pane" role="tabpanel" ng-switch-when="upload" ng-click="removeMsg()">
             <div ngf-drop ngf-change="$parent.checkForDupes($files, $event)" class="media-browser-drop-box"
                  ngf-drag-over-class="media-browser-drag-over" ngf-multiple="true" allow-dir="true"
-                 ngf-hide-on-drop-not-available="true" ngf-accept="$parent.validate($file)">
+                 ngf-hide-on-drop-not-available="true" ngf-validate-fn="$parent.validate($file)">
                 <span id="drag-text">Drag and drop files here. <span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
                 <button type="button" id="media-browser-file-select" ngf-select ngf-change="$parent.checkForDupes($files, $event)"
-                   ngf-accept="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}" ngf-multiple="true" ng-click="removeMsg()">{{button_text}}</button>
-                     <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensions.join(' ')}}<br /><br />
-                   <strong>Max file size:</strong> {{maxFilesize}}.</div>
-                <span id="filename-check" ng-show="$parent.checkingFilenames">Checking for duplicate files...</span>
+                   ngf-validate-fn="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}" ngf-multiple="true" ng-click="removeMsg()">{{button_text}}
+                </button>
+              <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensions.join(' ')}}<br /><br />
+                <strong>Max file size:</strong> {{maxFilesize}}.<br/>
+                <strong>Max file size for Images:</strong> {{maxFileSizeImages}}.
+              </div>
+              <span id="filename-check" ng-show="$parent.checkingFilenames">Checking for duplicate files...</span>
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">
                 <div class="media-browser-dupe" ng-repeat="dupe in $parent.dupes" ng-show="!dupe.processed" style="z-index: {{1000-$index}}">
@@ -44,6 +47,10 @@
                     <div ng-repeat="m in messages" class="message" ng-bind-html="m.text">
                     </div>
                 </div>
+              <div class="embed-failure" ng-show="validateFailure" ng-click="$parent.validateFailure = false">
+                <span class="error-icon"></span>
+                {{validateErrorMsg}}
+              </div>
                 <div class="embed-failure" ng-show="extensionFailure" ng-click="$parent.extensionFailure = false">
                     <span class="error-icon"></span>
                     The Specified file could not be uploaded as the files with this extension are not allowed.

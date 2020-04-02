@@ -15,6 +15,7 @@
         // everything to define
         var service = new EntityService('media', 'mid');
         scope.showHelp = false;
+        scope.maxFileSizeImages = settings.fetchSetting('maxFileSizeImages');
         if (scope.$parent.element && scope.$parent.element.custom_directive_parameters.hide_helpicon) {
           scope.hideHelpicon = scope.$parent.element.custom_directive_parameters.hide_helpicon;
         } else {

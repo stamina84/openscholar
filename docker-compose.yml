@@ -31,6 +31,8 @@ services:
       PHP_IDE_CONFIG: $PHP_IDE_CONFIG # See https://www.jetbrains.com/help/phpstorm/debugging-a-php-cli-script.html
       COMPOSER_AUTH: '{"github-oauth": {"github.com": "${GITHUB_TOKEN}"}}'
       PHP_DATE_TIMEZONE: "America/New_York"
+      PHP_POST_MAX_SIZE: $PHP_POST_MAX_SIZE
+      PHP_UPLOAD_MAX_FILESIZE: $PHP_UPLOAD_MAX_FILESIZE
     volumes:
       - ./:/var/www/html:cached
 

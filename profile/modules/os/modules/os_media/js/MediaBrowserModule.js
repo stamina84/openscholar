@@ -153,6 +153,7 @@
     $scope.extensions.sort();
     $scope.whitelist = settings.fetchSetting('embedWhitelist');
     $scope.maxFilesize = params.max_filesize || settings.fetchSetting('maximumFileSize');
+    $scope.maxFileSizeImages = settings.fetchSetting('maxFileSizeImages');
 
     $scope.filteredTypes = [];
     $scope.isFiltered = function () {
@@ -276,6 +277,7 @@
     };
 
     $scope.validate = function($file) {
+
       // Deleting previous error messages
       $scope.removeMsg();
       var file = $file;
@@ -289,17 +291,25 @@
           id;
 
         if (!size) {
-          addMessage(file.name + ' is larger than the maximum filesize of ' + (maxFilesize));
+          $scope.validateErrorMsg = file.name + ' is larger than the maximum filesize of ' + (maxFilesize);
+          $scope.validateFailure = true;
+          return false;
         }
         if (!extension) {
-          addMessage(file.name + ' is not an accepted file type.');
+          $scope.validateErrorMsg = file.name + ' is not an accepted file type.';
+          $scope.validateFailure = true;
+          return false;
         }
-        // if file is image and params specify max dimensions
-        if (file.type.indexOf('image/') !== -1) {
+        // If file is image then allow only a certain size as per the setting.
+        let maxImageSize = settings.fetchSetting('maxFileSizeImagesRaw');
+        if (file.type.indexOf('image/') !== -1 && file.size > maxImageSize) {
+          $scope.validateErrorMsg = file.name + ' is larger than the maximum filesize of ' + ($scope.maxFileSizeImages);
+          $scope.validateFailure = true;
+          return false;
         }
-
-        return size && extension;
+        return true;
       }
+      return false;
     };
 
     $scope.removeMsg = function() {
@@ -308,6 +318,8 @@
           delete $scope.messages[id];
         }
       });
+      $scope.extensionFailure = false;
+      $scope.validateFailure = false;
     };
 
     function addMessage(message) {
@@ -349,7 +361,7 @@
     // looks for any files with a similar basename and extension to this file
     // if it finds any, it adds it to a list of dupes, then scans every file to find what the new name should be
     $scope.checkForDupes = function($files, $event, $rejected) {
-      if ($files.length == 1) {
+      if ($files.length === 1) {
         toEditForm = true;
       }
       var toBeUploaded = [];
@@ -359,7 +371,7 @@
       $scope.checkingFilenames = true;
       for (var i = 0; i < $files.length; i++) {
         if (params.replace) {
-          if (params.replace.filename == $files[i].name) {
+          if (params.replace.filename === $files[i].name) {
             // the fact that replace is set means we're trying to Replace a certain file
             // If the file in question has the same name as the new one, just skip all the duplicate
             // processing and upload it immediately.

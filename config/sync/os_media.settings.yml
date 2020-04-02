@@ -1,1 +1,3 @@
 embedly_url: 'https://api.embedly.com/1/oembed'
+maxFileSizeImages: '15 MB'
+maxFileSizeImagesRaw: '15728640'

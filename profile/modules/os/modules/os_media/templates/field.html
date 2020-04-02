@@ -8,7 +8,8 @@
 
         <a href="#" id="upmedia" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="addFile($inserted)">{{upload_text}}</a>
         <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensionsFull.join(' ')}}<br /><br />
-               <strong>Max file size:</strong> {{maxFilesize}}.
+          <strong>Max file size:</strong> {{maxFilesize}}.<br/>
+          <strong>Max file size for Images:</strong> {{maxFileSizeImages}}.
         </div>
     </div>
     <div ui-sortable="sortableOptions" ng-model="selectedFiles">

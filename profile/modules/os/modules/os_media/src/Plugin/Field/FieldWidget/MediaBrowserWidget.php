@@ -2,6 +2,7 @@
 
 namespace Drupal\os_media\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -140,7 +141,7 @@ class MediaBrowserWidget extends WidgetBase implements ContainerFactoryPluginInt
         'field-name' => $formFieldName ?? $fieldName,
         'files' => implode(',', $media),
         'types' => implode(',', $types),
-        'max-filesize' => '512 MB',
+        'max-filesize' => format_size(Environment::getUploadMaxSize()),
         'upload_text' => 'Upload',
         'droppable_text' => 'Drop here.',
         'cardinality' => $this->fieldDefinition->getFieldStorageDefinition()->getCardinality(),
