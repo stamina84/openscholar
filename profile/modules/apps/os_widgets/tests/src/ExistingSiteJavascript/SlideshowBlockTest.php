@@ -9,6 +9,7 @@ use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTest
  *
  * @group functional-javascript
  * @group widgets
+ * @group wip
  */
 class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
 
