@@ -491,7 +491,7 @@
         });
     }])
   .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', '$rootScope', 'EntityConfig', 'drupalSettings', 'urlGenerator', function ($http, $q, $idb, $rs, EntityConfig, settings, url) {
-      var urlBase = url.generate(settings.fetchSetting('paths.api') + '/:type/updates/:time' + format, true);
+      var urlBase = url.generate(settings.fetchSetting('paths.api') + '/:type-updates/:time' + format, true);
 
       function update(updateType) {
         var keys = {},
@@ -529,6 +529,15 @@
           url = nextUrl;
         }
 
+        if (settings.fetchSetting('spaces.id')) {
+          if (url.indexOf('?') == -1) {
+            url += '?vsite=' + settings.fetchSetting('spaces.id');
+          }
+          else {
+            url += '&vsite=' + settings.fetchSetting('spaces.id');
+          }
+        }
+
         if (EntityConfig[type]) {
           if (type == 'files' && EntityConfig[type].fields.private == 'only') {
             if (url.indexOf('?') == -1) {
@@ -556,23 +565,23 @@
             }
           }
 
-          for (var i = 0; i < resp.data.data.length; i++) {
+          for (var i = 0; i < resp.data.rows.length; i++) {
             // get all caches this entity exists in
-            var cacheKeys = getCacheKeysForEntity(type, cache[keys[0]].idProperty, resp.data.data[i])
+            var cacheKeys = getCacheKeysForEntity(type, cache[keys[0]].idProperty, resp.data.rows[i])
             // handle this entity for all caches it exists in
             for (var k in cacheKeys) {
-              if (resp.data.data[i].status == 'deleted') {
+              if (resp.data.rows[i].status == 'deleted') {
                 cache[k].data.splice(cacheKeys[k], 1);
               }
               else {
-                cache[k].data.splice(cacheKeys[k], 1, resp.data.data[i]);
+                cache[k].data.splice(cacheKeys[k], 1, resp.data.rows[i]);
               }
             }
-            if (resp.data.data[i].status != 'deleted') {
+            if (resp.data.rows[i].status != 'deleted') {
               // add new entities to the caches
               for (var k in cache) {
-                if (cacheKeys[k] == undefined && cache[k].matches(resp.data.data[i], type)) {
-                  cache[k].data.push(resp.data.data[i]);
+                if (cacheKeys[k] == undefined && cache[k].matches(resp.data.rows[i], type)) {
+                  cache[k].data.push(resp.data.rows[i]);
                 }
               }
             }
@@ -580,7 +589,7 @@
 
           if (resp.data.next) {
             var next = resp.data.next.href,
-              max = Math.ceil(resp.count/resp.data.data.length),
+              max = Math.ceil(resp.count/resp.data.rows.length),
               curr = next.match(/page=([\d]+)/)[1];
             for (var i = 0; i < keys.length; i++) {
               var k = keys[i];
@@ -665,7 +674,7 @@
         if (entity.bundles[params.entity_type]) {
           var found = false;
           for (var l in entity.bundles[params.entity_type]) {
-            if ( entity.bundles[params.entity_type][l] == params.bundle) {
+            if ( entity.bundles[params.entity_type][l] == params.bundle || entity.bundles[params.entity_type][l] == '*') {
               found = true;
               break;
             }

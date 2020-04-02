@@ -17,14 +17,14 @@ use Symfony\Component\HttpFoundation\Request;
  * @package Drupal\os_rest\Plugin\rest\resource
  *
  * @RestResource(
- *   id = "os_vocabulary",
- *   label = @Translation("OpenScholar vocabularies"),
+ *   id = "os_vocabulary_updates",
+ *   label = @Translation("OpenScholar vocabulary updates"),
  *   uri_paths = {
- *     "canonical" = "/api/vocabulary"
+ *     "canonical" = "/api/vocabulary-updates/{timestamp}"
  *   }
  * )
  */
-class OsVocabularyResource extends OsResourceBase {
+class OsVocabularyUpdatesResource extends OsResourceBase {
 
   /**
    * Taxonomy helper.
@@ -101,7 +101,7 @@ class OsVocabularyResource extends OsResourceBase {
    * @return \Drupal\rest\ResourceResponse
    *   The response.
    */
-  public function get($a, Request $request): ResourceResponse {
+  public function get($timestamp, $a, Request $request): ResourceResponse {
 
     $vsite_id = $request->get('vsite');
     $group = $this->vsiteContextManager->getActiveVsite();
@@ -111,19 +111,11 @@ class OsVocabularyResource extends OsResourceBase {
       return $resource;
     }
 
-    $entity_type = $request->get('entity_type');
-    $bundle = $request->get('bundle');
-    if ($entity_type != 'node') {
-      $bundle = '*';
-    }
-    $bundle_key = $entity_type . ':' . $bundle;
-
-    $vids = $this->cpTaxonomyHelper->searchAllowedVocabulariesByType($bundle_key);
-    $vocabularies = $this->vocabularyStorage->loadMultiple($vids);
+    $vocabularies = $this->vocabularyStorage->loadMultiple();
     $data = $this->getVocabulariesData($vocabularies, $group->id());
     $resource = new ResourceResponse($data);
 
-    $resource->addCacheableDependency('vsite:' . $group->id() . ':' . $bundle_key);
+    $resource->addCacheableDependency('vsite:' . $group->id());
     return $resource;
   }
 
