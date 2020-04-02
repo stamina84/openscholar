@@ -1,5 +1,7 @@
 # OpenScholar
 
+![Tests Status](https://github.com/openscholar/openscholar/workflows/OpenScholar%20CI/badge.svg?branch=8.x-1.x-dev)
+
 [![Build Status](https://travis-ci.org/openscholar/openscholar.svg?branch=8.x-1.x-dev)](https://travis-ci.org/openscholar/openscholar)
 
 [![codecov](https://codecov.io/gh/openscholar/openscholar/branch/8.x-1.x-dev/graph/badge.svg)](https://codecov.io/gh/openscholar/openscholar)
