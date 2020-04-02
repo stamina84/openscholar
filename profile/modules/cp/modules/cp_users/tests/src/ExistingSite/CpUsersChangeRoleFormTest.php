@@ -215,7 +215,7 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
     $web->statusCodeEquals(200);
     $web->pageTextContains('Change role');
 
-    $web->pageTextContains('Manage Users');
+    $web->pageTextContains('Users');
     $web->pageTextNotContains('Support User');
     $this->drupalLogout();
 

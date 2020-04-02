@@ -146,4 +146,44 @@ class NewsTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->pageTextNotContains($news->getTitle());
   }
 
+  /**
+   * Test altered breadcrumb monthly archives page.
+   */
+  public function testMonthArchiveBreadcrumbs() {
+    $web_assert = $this->assertSession();
+    $news1 = $this->createNode([
+      'type' => 'news',
+      'field_date' => [
+        'value' => '2020-01-01',
+      ],
+    ]);
+    $this->addGroupContent($news1, $this->group);
+    $news2 = $this->createNode([
+      'type' => 'news',
+      'field_date' => [
+        'value' => '2020-03-01',
+      ],
+    ]);
+    $this->addGroupContent($news2, $this->group);
+    $this->visitViaVsite('news/archive/2020/01', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains($news1->getTitle());
+    $web_assert->pageTextNotContains($news2->getTitle());
+    $web_assert->elementExists('css', '.breadcrumb li');
+    $links = $this->getSession()->getPage()->findAll('css', '.breadcrumb li');
+    $this->assertTrue($links[0]->hasLink('Home'));
+    $this->assertTrue($links[1]->hasLink('News'));
+    $this->assertTrue($links[2]->hasLink('Archive'));
+    $this->assertFalse($links[3]->hasLink('January 2020'));
+    $this->assertEquals($links[3]->getText(), 'January 2020');
+    $web_assert->linkNotExists('2020');
+    // Assert on march month archives page.
+    $this->visitViaVsite('news/archive/2020/03', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains($news2->getTitle());
+    $web_assert->elementExists('css', '.breadcrumb li');
+    $web_assert->pageTextContains('March 2020');
+    $web_assert->linkNotExists('2020');
+  }
+
 }

@@ -58,6 +58,11 @@ function os_breadcrumb_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMat
   if ($node && $node->bundle() === 'page') {
     os_breadcrumb_edit_pages_breadcrumbs($node, $breadcrumb);
   }
+
+  $args = $route_match->getRawParameters()->all();
+  if (($route_match->getRouteName() == "view.news.page_2" || $route_match->getRouteName() == "view.blog.page_2") && $args['arg_0'] && $args['arg_1']) {
+    os_breadcrumb_alter_monthly_archives($breadcrumb, $args);
+  }
 }
 
 /**
@@ -164,6 +169,29 @@ function os_breadcrumb_edit_pages_breadcrumbs(NodeInterface $node, Breadcrumb &$
   $temp = $links[$count - 1];
   $links[$count - 1] = $temp->setUrl(Url::fromRoute('<none>'));
 
+  // New breadcrumb object.
+  $breadcrumb = new Breadcrumb();
+  $breadcrumb->setLinks($links);
+
+  // Adding Cache Data from original object.
+  $breadcrumb->addCacheableDependency($original);
+}
+
+/**
+ * Altering breadcrumb for archive month pages.
+ *
+ * @param \Drupal\Core\Breadcrumb\Breadcrumb $breadcrumb
+ *   Views breadcrumb to alter.
+ * @param array $args
+ *   Month & year arguments.
+ */
+function os_breadcrumb_alter_monthly_archives(Breadcrumb &$breadcrumb, array $args) {
+  $original = $breadcrumb;
+  $links = $breadcrumb->getLinks();
+  unset($links[4]);
+  $format = date("F Y", mktime(0, 0, 0, $args['arg_1'], 10, $args['arg_0']));
+  $url = Url::fromRoute('<none>');
+  $links[3] = Link::fromTextAndUrl($format, $url);
   // New breadcrumb object.
   $breadcrumb = new Breadcrumb();
   $breadcrumb->setLinks($links);

@@ -146,7 +146,7 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     ]);
     $this->addGroupContent($blog, $this->group);
 
-    $this->visitViaVsite('blog/archive', $this->group);
+    $this->visitViaVsite('blog/archives', $this->group);
     $web_assert->statusCodeEquals(200);
     // Assert non-filtered page.
     $web_assert->pageTextContains($blog_2010->getTitle());
@@ -154,7 +154,7 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->pageTextContains($blog_2011_03->getTitle());
     $web_assert->pageTextContains($blog->getTitle());
 
-    $this->visitViaVsite('blog/archive/2010', $this->group);
+    $this->visitViaVsite('blog/archives/2010', $this->group);
     $web_assert->statusCodeEquals(200);
     // Assert year filtered page.
     $web_assert->pageTextContains($blog_2010->getTitle());
@@ -162,7 +162,7 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->pageTextNotContains($blog_2011_03->getTitle());
     $web_assert->pageTextNotContains($blog->getTitle());
 
-    $this->visitViaVsite('blog/archive/2011/02', $this->group);
+    $this->visitViaVsite('blog/archives/2011/02', $this->group);
     $web_assert->statusCodeEquals(200);
     // Assert month filtered page.
     $web_assert->pageTextContains($blog_2011_02->getTitle());
@@ -204,6 +204,44 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Asserting no disqus comments are added tp blog page.
     $this->assertSession()->assertNoElementAfterWait('css', '.field--name-field-disqus-comments');
+  }
+
+  /**
+   * Test altered breadcrumb monthly archives page.
+   */
+  public function testMonthArchiveBreadcrumbs() {
+    $web_assert = $this->assertSession();
+
+    $blog1 = $this->createNode([
+      'type' => 'blog',
+      'created' => strtotime('2020-01-01 20:00:00'),
+    ]);
+    $this->addGroupContent($blog1, $this->group);
+    $blog2 = $this->createNode([
+      'type' => 'blog',
+      'created' => strtotime('2020-03-01 20:00:00'),
+    ]);
+    $this->addGroupContent($blog2, $this->group);
+
+    $this->visitViaVsite('blog/archives/2020/01', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains($blog1->getTitle());
+    $web_assert->pageTextNotContains($blog2->getTitle());
+    $web_assert->elementExists('css', '.breadcrumb li');
+    $links = $this->getSession()->getPage()->findAll('css', '.breadcrumb li');
+    $this->assertTrue($links[0]->hasLink('Home'));
+    $this->assertTrue($links[1]->hasLink('Blog'));
+    $this->assertTrue($links[2]->hasLink('Archives'));
+    $this->assertFalse($links[3]->hasLink('January 2020'));
+    $this->assertEquals($links[3]->getText(), 'January 2020');
+    $web_assert->linkNotExists('2020');
+    // Assert on march month archives page.
+    $this->visitViaVsite('blog/archives/2020/03', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains($blog2->getTitle());
+    $web_assert->elementExists('css', '.breadcrumb li');
+    $web_assert->pageTextContains('March 2020');
+    $web_assert->linkNotExists('2020');
   }
 
 }
