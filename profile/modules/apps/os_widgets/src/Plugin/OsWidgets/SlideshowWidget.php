@@ -2,6 +2,7 @@
 
 namespace Drupal\os_widgets\Plugin\OsWidgets;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -89,6 +90,7 @@ class SlideshowWidget extends OsWidgetsBase implements OsWidgetsInterface {
           'btn-success',
         ],
         'data-dialog-type' => 'modal',
+        'data-dialog-options' => Json::encode(['width' => 1000, 'dialogClass' => 'widget-popup']),
       ],
       '#access' => FALSE,
     ];
