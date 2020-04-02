@@ -8,6 +8,8 @@ dependencies:
     - field.field.block_content.faceted_taxonomy.field_display_styles
     - field.field.block_content.faceted_taxonomy.field_show_number_of_posts
     - field.field.block_content.faceted_taxonomy.field_term_order
+    - field.field.block_content.faceted_taxonomy.field_term_order_direction
+    - field.field.block_content.faceted_taxonomy.field_vocab_order_direction
     - field.field.block_content.faceted_taxonomy.field_vocabularies
     - field.field.block_content.faceted_taxonomy.field_vocabulary_order
     - field.field.block_content.faceted_taxonomy.field_widget_title
@@ -29,6 +31,8 @@ hidden:
   field_display_styles: true
   field_show_number_of_posts: true
   field_term_order: true
+  field_term_order_direction: true
+  field_vocab_order_direction: true
   field_vocabularies: true
   field_vocabulary_order: true
   langcode: true

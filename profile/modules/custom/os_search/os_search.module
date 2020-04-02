@@ -63,7 +63,14 @@ function os_search_form_alter(&$form, FormStateInterface $form_state, $form_id) 
     unset($form['field_vocabulary_order']['widget']['#options']['_none']);
     unset($form['field_term_order']['widget']['#options']['_none']);
     unset($form['field_display_styles']['widget']['#options']['_none']);
-
+    unset($form['field_term_order_direction']['widget']['#options']['_none']);
+    unset($form['field_vocab_order_direction']['widget']['#options']['_none']);
+    $form['field_term_order_direction']['#states'] = [
+      'visible' => [
+        ['select[name="field_term_order"]' => ['value' => 'name']],
+        ['select[name="field_term_order"]' => ['value' => 'weight']],
+      ],
+    ];
   }
 
 }
@@ -77,6 +84,7 @@ function _os_search_ajax_replace_dropdown_default_value_callback(array $form, Fo
     $vocab_list = _get_vocab_list($selectedApp);
     $form['field_vocabularies']['widget']['#options'] = $vocab_list;
   }
+
   return $form['field_vocabularies'];
 }
 
@@ -88,24 +96,19 @@ function _get_vocab_list($app = '') {
   $os_search_facted_taxonomy = \Drupal::service('os_search.os_search_faceted_taxonomy_query_builder');
 
   $vocab_list = $os_search_facted_taxonomy->prepareVocabulariesList($app);
+  $vocab_list = array_merge(['all' => t('All vocabularies')], $vocab_list);
 
-  if (empty($vocab_list)) {
-    $vocab_list['_none'] = t('--None--');
-  }
-  else {
-    $vocab_list = array_merge(['all' => t('Select all vocabularies')], $vocab_list);
-  }
   return $vocab_list;
 }
 
 /**
  * Allowed values for the Vocabularies.
  */
-function os_search_allowed_values_function() {
+function vocab_allowed_values_function() {
   /** @var \Drupal\os_search\OsSearchFacetedTaxonomyQueryBuilder $os_search_facted_taxonomy */
   $os_search_facted_taxonomy = \Drupal::service('os_search.os_search_faceted_taxonomy_query_builder');
   $vocab_list = $os_search_facted_taxonomy->prepareVocabulariesList();
-  $vocab_list['_none'] = t('--None--');
-  $vocab_list['all'] = t('Select all vocabularies');
+  $vocab_list['all'] = t('All vocabularies');
+
   return $vocab_list;
 }

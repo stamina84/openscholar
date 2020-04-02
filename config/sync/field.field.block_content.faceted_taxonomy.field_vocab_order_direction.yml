@@ -1,0 +1,23 @@
+uuid: b0d7e003-27ee-4b6d-b86b-e123be8fb668
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.faceted_taxonomy
+    - field.storage.block_content.field_vocab_order_direction
+  module:
+    - options
+id: block_content.faceted_taxonomy.field_vocab_order_direction
+field_name: field_vocab_order_direction
+entity_type: block_content
+bundle: faceted_taxonomy
+label: 'Vocab Order Direction'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: ASC
+default_value_callback: ''
+settings: {  }
+field_type: list_string
