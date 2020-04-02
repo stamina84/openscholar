@@ -9,6 +9,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\vsite\Plugin\VsiteContextManager;
 use Drupal\cp_users\Access\CpUsersSupportAccessCheck;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Decorator for the user Toolbar Builder.
@@ -85,6 +86,17 @@ class ToolbarLinkBuilder extends Original {
       'attributes' => [
         'title' => $this->t('Create site'),
         'site-creation-form' => '',
+      ],
+    ];
+
+    $build['#links']['my-sites'] = [
+      'title' => $this->t('My Sites'),
+      'url' => Url::fromRoute('vsite.mysites.form'),
+      'attributes' => [
+        'title' => $this->t('My Sites'),
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'modal',
+        'data-dialog-options' => Json::encode(['width' => 800, 'dialogClass' => 'sites-popup']),
       ],
     ];
 

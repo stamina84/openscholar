@@ -140,6 +140,9 @@ $mobile: "screen and (max-width: #{$screen-sm})";
         .support-site a:before {
           background-position: -10px -200px;
         }
+        .my-sites a:before {
+          background-position: -10px -242px;
+        }
       }
     }
   //accessibility fixes

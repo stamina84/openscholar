@@ -1,0 +1,22 @@
+.view.view-user-vsites {
+  .view-header,
+  .views-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    border: 1px solid #dadada;
+  }
+  .view-header {
+    background: #eaeaea;
+    span {
+      font-weight: bold;
+    }
+  }
+  .views-row {
+    border-top: 0 none;
+    &:nth-child(even) {
+      background: #f7f7f7;
+    }
+  }
+}

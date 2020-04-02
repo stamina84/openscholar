@@ -12,6 +12,13 @@ vsite.settings.configure_subsite:
     _title: 'Configure subsite'
   requirements:
     _permission: 'access vsite settings'
+vsite.mysites.form:
+  path: '/mysites'
+  defaults:
+    _form: '\Drupal\vsite\Form\MySitesForm'
+    _title: 'My Sites'
+  requirements:
+    _role: 'authenticated'
 #vsite.example:
 #  path: '/vsite'
 #  defaults:
