@@ -9,6 +9,7 @@ use Drupal\os_app_access\AppLoader;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\vsite\Plugin\AppManagerInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Helper class for Faceted Taxonomy Widget.
@@ -121,6 +122,10 @@ class OsSearchFacetedTaxonomyQueryBuilder {
   /**
    * Prepare list of terms for Filter Taxonomy.
    *
+   * @param string $vocab_order_by_dir
+   *   Vocab order by direction settings.
+   * @param string $term_order_by_dir
+   *   Term order by direction settings.
    * @param string $selected_app
    *   Selected app for which vocab will be listed.
    * @param array $vocab_filter
@@ -137,7 +142,7 @@ class OsSearchFacetedTaxonomyQueryBuilder {
    * @return array
    *   List of terms.
    */
-  public function prepareFacetVocaulbaries(string $selected_app, array $vocab_filter, string $vocab_order_by, string $term_order_by, array $buckets, $field_processor = 'taxonomy_term') {
+  public function prepareFacetVocaulbaries(string $vocab_order_by_dir, string $term_order_by_dir, string $selected_app, array $vocab_filter, string $vocab_order_by, string $term_order_by, array $buckets, $field_processor = 'taxonomy_term') {
     $vocab_list = [];
 
     $taxonomy_vocabulary_storage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
@@ -158,7 +163,7 @@ class OsSearchFacetedTaxonomyQueryBuilder {
     if (!in_array('_none', $vocab_filter) && count($vocab_filter) > 0) {
       $query->condition('vid', $vocab_filter, 'IN');
     }
-    $query->sort($vocab_order_by, 'ASC');
+    $query->sort($vocab_order_by, $vocab_order_by_dir);
     $vids = $query->execute();
 
     $vocabularies = $taxonomy_vocabulary_storage->loadMultiple($vids);
@@ -177,17 +182,27 @@ class OsSearchFacetedTaxonomyQueryBuilder {
 
       // When relevance selected removing sort_by.
       if ($term_order_by != 'rev') {
-        $query->sort($term_order_by, 'DESC');
+        $query->sort($term_order_by, $term_order_by_dir);
       }
 
       $tids = $query->execute();
       $terms = $taxonomy_term_storage->loadMultiple($tids);
+
       foreach ($vocabularies as $vocabulary) {
-        foreach ($terms as $term) {
-          foreach ($buckets as $bucket) {
-            if ($term->id() == $bucket['key'] && $term->bundle() === $vocabulary->id()) {
-              $vocab_list[$term->bundle()]['children'][] = $bucket;
-              $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+        $vocab_types = isset($vocabulary->allowed_vocabulary_reference_types) ? $vocabulary->allowed_vocabulary_reference_types : [];
+        if (in_array('node:' . $selected_app, $vocab_types)) {
+          if ($term_order_by == 'rev') {
+            foreach ($buckets as $bucket) {
+              foreach ($terms as $term) {
+                $this->vocabListSettings($term, $bucket, $vocabularies, $vocabulary, $vocab_list);
+              }
+            }
+          }
+          else {
+            foreach ($terms as $term) {
+              foreach ($buckets as $bucket) {
+                $this->vocabListSettings($term, $bucket, $vocabularies, $vocabulary, $vocab_list);
+              }
             }
           }
         }
@@ -210,7 +225,8 @@ class OsSearchFacetedTaxonomyQueryBuilder {
     $vocabularies = $taxonomy_vocabulary_storage->loadMultiple();
     $vocabularies_name = [];
     foreach ($vocabularies as $vocabulary) {
-      if (($app != '' && in_array('node:' . $app, $vocabulary->allowed_vocabulary_reference_types)) || $app == '') {
+      $vocab_types = isset($vocabulary->allowed_vocabulary_reference_types) ? $vocabulary->allowed_vocabulary_reference_types : [];
+      if (($app != '' && in_array('node:' . $app, $vocab_types)) || $app == '') {
         $vocabularies_name[$vocabulary->id()] = $vocabulary->label();
       }
     }
@@ -275,6 +291,27 @@ class OsSearchFacetedTaxonomyQueryBuilder {
     $label = $entity_storage->load($value)->label();
 
     return $label;
+  }
+
+  /**
+   * Preparing the vocab list.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $term
+   *   Vocabulary term.
+   * @param array $bucket
+   *   Bucket from search api.
+   * @param array $vocabularies
+   *   List of vocabularies.
+   * @param \Drupal\Core\Entity\EntityInterface $vocabulary
+   *   Vocab from vocabularies.
+   * @param array $vocab_list
+   *   Filters in widget.
+   */
+  protected function vocabListSettings(EntityInterface $term, array $bucket, array $vocabularies, EntityInterface $vocabulary, array &$vocab_list) {
+    if ($term->id() == $bucket['key'] && $term->bundle() === $vocabulary->id()) {
+      $vocab_list[$term->bundle()]['children'][] = $bucket;
+      $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+    }
   }
 
 }

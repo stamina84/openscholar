@@ -267,3 +267,23 @@ function os_media_media_admin_ui_filter_submit_handler(array &$form, FormStateIn
 
   $private_temp_store->set('os_media_usage_filter', $form_state->getValue('os_media_media_usage_filter'));
 }
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
+function os_media_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
+  if ($entity_form['#entity_type'] != 'media') {
+    return;
+  }
+  if (!empty($entity_form['#access']) || $entity_form['#op'] != 'edit') {
+    return;
+  }
+  /** @var \Drupal\vsite\Plugin\VsiteContextManager $vsite_context_manager */
+  $vsite_context_manager = Drupal::service('vsite.context_manager');
+  $group = $vsite_context_manager->getActiveVsite();
+  if (!$group) {
+    return;
+  }
+  $account = Drupal::currentUser();
+  $entity_form['#access'] = $group->hasPermission('update any group_entity:media entity', $account);
+}

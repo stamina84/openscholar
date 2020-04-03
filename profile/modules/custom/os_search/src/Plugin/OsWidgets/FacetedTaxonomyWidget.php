@@ -126,6 +126,8 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     $need_count = $block_content->get('field_show_number_of_posts')->value == 1 ? TRUE : FALSE;
     $vocab_filter = $block_content->get('field_vocabularies')->getValue() ?? [];
     $selected_app = $block_content->get('field_content_type')->value ?? '';
+    $vocab_order_by_dir = $block_content->get('field_vocab_order_direction')->value ?? '';
+    $term_order_by_dir = $block_content->get('field_term_order_direction')->value ?? '';
 
     $buckets = $this->osSearchFacetBuilder->getFacetBuckets($field_id, $query);
     $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);
@@ -142,7 +144,7 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
       $total_buckets = $buckets;
     }
 
-    $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($selected_app, $vocab_filter, $vocab_order_by, $term_order_by, $total_buckets);
+    $vocab_list = $this->searchFacetedTaxonoQueryBuilder->prepareFacetVocaulbaries($vocab_order_by_dir, $term_order_by_dir, $selected_app, $vocab_filter, $vocab_order_by, $term_order_by, $total_buckets);
     $build[] = $this->renderableTaxonomyArray($vocab_list, $route_name, $field_id, $field_label, $field_app_content, $class, $need_count);
 
     if (empty($build)) {

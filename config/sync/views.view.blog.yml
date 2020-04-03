@@ -706,7 +706,7 @@ display:
             alter_text: true
             text: '{{ created }}'
             make_link: true
-            path: '/blog/archive/{{ created_2 }}/{{ created_3 }}'
+            path: '/blog/archives/{{ created_2 }}/{{ created_3 }}'
             absolute: false
             external: false
             replace_spaces: false

@@ -9,6 +9,7 @@ use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTest
  *
  * @group functional-javascript
  * @group widgets
+ * @group wip
  */
 class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
 
@@ -87,6 +88,48 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->waitForText('Add new slideshow');
     // Check image field is appeared.
     $web_assert->fieldExists('files[field_slide_image_0_inline_entity_form_field_media_image_0]');
+  }
+
+  /**
+   * Test crop widget is rendered with exists image.
+   *
+   * @throws \Behat\Mink\Exception\DriverException
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testCropWithExistsImage() {
+    $web_assert = $this->assertSession();
+
+    $image = $this->createMediaImage();
+    $slideshow_paragraph = $this->createParagraph([
+      'type' => 'slideshow',
+      'field_slide_image' => $image,
+    ]);
+    $block_content = $this->createBlockContent([
+      'type' => 'slideshow',
+      'field_slideshow' => [
+        $slideshow_paragraph,
+      ],
+    ]);
+    $this->group->addContent($block_content, 'group_entity:block_content');
+    $this->placeBlockContentToRegion($block_content, 'content');
+    $this->visitViaVsite("", $this->group);
+    $web_assert->pageTextContains('Add slide');
+    $page = $this->getCurrentPage();
+    $page->find('css', '.block--type-slideshow button')->press();
+    $page->find('css', '.block--type-slideshow .block-contentblock-edit')->press();
+    $edit_locator = '.field--name-field-slideshow .glyphicon-pencil';
+    $web_assert->waitForElement('css', $edit_locator);
+    $page->find('css', $edit_locator)->press();
+    $this->waitForAjaxToFinish();
+    $web_assert->waitForText('Select corresponding cropping action, when adding slides');
+    $web_assert->pageTextContains("Select corresponding cropping action, when adding slides");
+    $web_assert->pageTextContains("image-test.png");
+    $page->findLink('Crop image')->press();
+    $web_assert->pageTextContains('Standard layout');
+    $web_assert->pageTextContains('Widescreen');
+    $web_assert->pageTextContains('Reset crop');
   }
 
 }
