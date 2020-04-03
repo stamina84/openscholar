@@ -9,6 +9,7 @@ use Drupal\os_app_access\AppLoader;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\vsite\Plugin\AppManagerInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Helper class for Faceted Taxonomy Widget.
@@ -186,14 +187,21 @@ class OsSearchFacetedTaxonomyQueryBuilder {
 
       $tids = $query->execute();
       $terms = $taxonomy_term_storage->loadMultiple($tids);
+
       foreach ($vocabularies as $vocabulary) {
         $vocab_types = isset($vocabulary->allowed_vocabulary_reference_types) ? $vocabulary->allowed_vocabulary_reference_types : [];
         if (in_array('node:' . $selected_app, $vocab_types)) {
-          foreach ($terms as $term) {
+          if ($term_order_by == 'rev') {
             foreach ($buckets as $bucket) {
-              if ($term->id() == $bucket['key'] && $term->bundle() === $vocabulary->id()) {
-                $vocab_list[$term->bundle()]['children'][] = $bucket;
-                $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+              foreach ($terms as $term) {
+                $this->vocabListSettings($term, $bucket, $vocabularies, $vocabulary, $vocab_list);
+              }
+            }
+          }
+          else {
+            foreach ($terms as $term) {
+              foreach ($buckets as $bucket) {
+                $this->vocabListSettings($term, $bucket, $vocabularies, $vocabulary, $vocab_list);
               }
             }
           }
@@ -283,6 +291,27 @@ class OsSearchFacetedTaxonomyQueryBuilder {
     $label = $entity_storage->load($value)->label();
 
     return $label;
+  }
+
+  /**
+   * Preparing the vocab list.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $term
+   *   Vocabulary term.
+   * @param array $bucket
+   *   Bucket from search api.
+   * @param array $vocabularies
+   *   List of vocabularies.
+   * @param \Drupal\Core\Entity\EntityInterface $vocabulary
+   *   Vocab from vocabularies.
+   * @param array $vocab_list
+   *   Filters in widget.
+   */
+  protected function vocabListSettings(EntityInterface $term, array $bucket, array $vocabularies, EntityInterface $vocabulary, array &$vocab_list) {
+    if ($term->id() == $bucket['key'] && $term->bundle() === $vocabulary->id()) {
+      $vocab_list[$term->bundle()]['children'][] = $bucket;
+      $vocab_list[$term->bundle()]['name'] = $vocabularies[$term->bundle()]->get('name');
+    }
   }
 
 }
