@@ -284,26 +284,27 @@
       if (file && file instanceof File) {
         // TODO: Get validating properties from somewhere and check the file against them
 
-        var maxFilesize = params.max_filesize_raw || settings.fetchSetting('maximumFileSizeRaw');
-        var size = maxFilesize > file.size,   // file is smaller than max
+        let maxFilesize = params.max_filesize_raw || settings.fetchSetting('maximumFileSizeRaw');
+        let size = maxFilesize > file.size,   // file is smaller than max
           ext = file.name.slice(file.name.lastIndexOf('.')+1).toLowerCase(),
-          extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
-          id;
+          extension = $scope.extensions.indexOf(ext) !== -1;    // extension is found
 
-        if (!size) {
-          $scope.validateErrorMsg = file.name + ' is larger than the maximum filesize of ' + (maxFilesize);
-          $scope.validateFailure = true;
-          return false;
-        }
         if (!extension) {
           $scope.validateErrorMsg = file.name + ' is not an accepted file type.';
           $scope.validateFailure = true;
           return false;
         }
+
         // If file is image then allow only a certain size as per the setting.
         let maxImageSize = settings.fetchSetting('maxFileSizeImagesRaw');
         if (file.type.indexOf('image/') !== -1 && file.size > maxImageSize) {
           $scope.validateErrorMsg = file.name + ' is larger than the maximum filesize of ' + ($scope.maxFileSizeImages);
+          $scope.validateFailure = true;
+          return false;
+        }
+
+        if (!size) {
+          $scope.validateErrorMsg = file.name + ' is larger than the maximum filesize of ' + ($scope.maxFilesize);
           $scope.validateFailure = true;
           return false;
         }
