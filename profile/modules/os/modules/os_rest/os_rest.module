@@ -5,6 +5,7 @@
  * Hook implementations for the os_rest module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\media\MediaInterface;
 
 /**
@@ -52,5 +53,28 @@ function os_rest_media_insert(MediaInterface $media) {
     if (!($group->getContentByEntityId('group_entity:media', $media->id()))) {
       $group->addContent($media, 'group_entity:media');
     }
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ *
+ * Logs all entities that are deleted so they can be returned
+ * in restful update results.
+ */
+function os_rest_entity_delete(EntityInterface $entity) {
+  $id = $entity->id();
+
+  if ($id !== FALSE) {
+    $extra = [];
+    $connection = \Drupal::database();
+    $connection->insert('entities_deleted')
+      ->fields([
+        'entity_id' => $id,
+        'entity_type' => $entity->getEntityTypeId(),
+        'deleted' => REQUEST_TIME,
+        'extra' => serialize($extra),
+      ])
+      ->execute();
   }
 }

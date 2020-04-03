@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for os rest module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function os_rest_schema() {
+  $tables = [];
+  $tables['entities_deleted'] = [
+    'description' => 'Keeps track of all entities of note that have been deleted in the past 30 days',
+    'fields' => [
+      'entity_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'entity_type' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'deleted' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'extra' => [
+        'description' => 'Serialized array of any additional information we should know about',
+        'type' => 'text',
+        'not null' => TRUE,
+      ],
+    ],
+  ];
+
+  return $tables;
+}
