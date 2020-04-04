@@ -70,7 +70,7 @@ abstract class OsExistingSiteJavascriptTestBase extends ExistingSiteWebDriverTes
    * @throws \Behat\Mink\Exception\DriverException
    */
   protected function waitForAjaxToFinish(): void {
-    $condition = "(0 === jQuery.active && 0 === jQuery(':animated').length)";
+    $condition = "(typeof jQuery != 'undefined' && 0 === jQuery.active && 0 === jQuery(':animated').length)";
     $this->assertJsCondition($condition, 10000);
   }
 

@@ -123,7 +123,7 @@ class CpImportPublicationsTest extends OsExistingSiteTestBase {
     ]);
 
     // Assert Saving Bibtex entry with string year worked.
-    $this->assertNotEmpty($pubArr);
+    $this->assertNotEmpty($pubArr, "Unable to load journal article [" . $title . "]");
     $this->assertArrayHasKey('success', $context);
     /** @var \Drupal\bibcite_entity\Entity\Reference $pubEntity */
     $pubEntity = array_values($pubArr)[0];
@@ -259,6 +259,10 @@ class CpImportPublicationsTest extends OsExistingSiteTestBase {
     ];
 
     $context = $this->cpImportHelper->savePublicationEntity($entry, 'pubmed');
+
+    if (isset($context['errors'])) {
+      $this->assertEmpty($context['errors'], 'Could not create publication. [' . $title . ']');
+    }
 
     $pubArr = $storage->loadByProperties([
       'type' => 'journal_article',
