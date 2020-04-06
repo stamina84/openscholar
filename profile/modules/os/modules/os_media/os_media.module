@@ -70,9 +70,14 @@ function os_media_form_views_exposed_form_alter(&$form, FormStateInterface $form
       unset($form['bundle']['#options'][$bundle]);
     }
 
+    $vsite_context_manager = \Drupal::service('vsite.context_manager');
+    /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
+    $active_vsite = $vsite_context_manager->getActiveVsite();
+    $current_user = \Drupal::currentUser();
     $form['add_files'] = [
       '#markup' => '<div class="cp-controls-wrapper"><div class="add_new button button--success" mb-open-modal panes="upload,web" types="image,audio,document,executable,html" >' . t('Add file') . '</div></div>',
       '#weight' => 100,
+      '#access' => $active_vsite->hasPermission('create group_entity:media entity', $current_user),
     ];
   }
 }

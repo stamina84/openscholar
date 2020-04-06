@@ -26,3 +26,8 @@ administer apps settings:
   description: 'Administer Apps Settings'
   restrict access: 'TRUE'
   section: 'Permission'
+
+administer files:
+  title: 'Administer files'
+  description: 'Administer files'
+  section: 'Permission'

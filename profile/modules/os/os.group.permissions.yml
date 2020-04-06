@@ -17,3 +17,8 @@ publish nodes:
   title: 'Publish content'
   description: 'Publish content across all content types.'
   section: 'Permission'
+
+edit widgets:
+  title: 'Edit widgets'
+  description: 'Edit widgets on Os layout.'
+  section: 'Permission'
