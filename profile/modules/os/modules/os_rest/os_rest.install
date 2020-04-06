@@ -14,10 +14,10 @@ function os_rest_schema() {
     'description' => 'Keeps track of all entities of note that have been deleted in the past 30 days',
     'fields' => [
       'entity_id' => [
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => TRUE,
-        'default' => 0,
+        'default' => '',
       ],
       'entity_type' => [
         'type' => 'varchar',

@@ -64,17 +64,33 @@ function os_rest_media_insert(MediaInterface $media) {
  */
 function os_rest_entity_delete(EntityInterface $entity) {
   $id = $entity->id();
+  $type = $entity->getEntityTypeId();
+  $allowed_loggable_types = [
+    'node',
+    'media',
+    'bibcite_reference',
+    'taxonomy_term',
+    'taxonomy_vocabulary',
+  ];
 
-  if ($id !== FALSE) {
-    $extra = [];
-    $connection = \Drupal::database();
-    $connection->insert('entities_deleted')
-      ->fields([
-        'entity_id' => $id,
-        'entity_type' => $entity->getEntityTypeId(),
-        'deleted' => REQUEST_TIME,
-        'extra' => serialize($extra),
-      ])
-      ->execute();
+  if (empty($id) || !in_array($type, $allowed_loggable_types)) {
+    return;
   }
+  $hook = 'os_rest_entity_delete_data';
+  $args = [
+    'entity' => $entity,
+  ];
+  $extra = \Drupal::moduleHandler()->invokeAll($hook, $args);
+  \Drupal::moduleHandler()->alter($hook, $extra);
+
+  $connection = \Drupal::database();
+  $connection->insert('entities_deleted')
+    ->fields([
+      'entity_id' => $id,
+      'entity_type' => $type,
+      'deleted' => \Drupal::time()->getRequestTime(),
+      'extra' => serialize($extra),
+    ])
+    ->execute();
+
 }
