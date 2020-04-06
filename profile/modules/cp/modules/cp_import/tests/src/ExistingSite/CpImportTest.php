@@ -428,7 +428,7 @@ class CpImportTest extends OsExistingSiteTestBase {
     $appImportFactory = $this->container->get('app_import_factory');
     $instance = $appImportFactory->create('os_blog_import');
 
-    // Test errors.
+    // Test Single Row error.
     $data[0] = [
       'Title' => '',
       'Body' => 'Body1',
@@ -439,8 +439,35 @@ class CpImportTest extends OsExistingSiteTestBase {
     $message = $instance->validateRows($data);
     $this->assertEmpty($message['@date']);
     $this->assertInstanceOf(TranslatableMarkup::class, $message['@title']);
+    $this->assertContains('Row 1: The Title is required.', $message['@title']->__toString());
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@summary']);
+    $this->assertContains('The Import file has 1 error(s).', $message['@summary']->__toString());
+
+    // Test Multiple error messages.
+    $data[0] = [
+      'Title' => '',
+      'Body' => 'Body1',
+      'Files' => '',
+      'Created date' => '01/01/2015',
+      'Path' => 'test1',
+    ];
+    $data[1] = [
+      'Title' => '',
+      'Body' => 'Body1',
+      'Files' => '',
+      'Created date' => '33/01/2015',
+      'Path' => 'test1',
+    ];
+    $message = $instance->validateRows($data);
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@title']);
+    $this->assertContains('<a data-toggle="tooltip" title="Rows: 1,2">2 Rows</a>: The Title is required.', $message['@title']->__toString());
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@date']);
+    $this->assertContains('Row 2: Created date format is invalid.', $message['@date']->__toString());
+    $this->assertInstanceOf(TranslatableMarkup::class, $message['@summary']);
+    $this->assertContains('The Import file has 3 error(s).', $message['@summary']->__toString());
 
     // Test no errors in row.
+    $data = [];
     $data[0] = [
       'Title' => 'Blog1',
       'Body' => 'Body1',

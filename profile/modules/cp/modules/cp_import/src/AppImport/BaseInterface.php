@@ -39,4 +39,17 @@ interface BaseInterface {
    */
   public function prepareRowActions(MigratePrepareRowEvent $event);
 
+  /**
+   * Formats the error message to be displayed.
+   *
+   * @param string $rows
+   *   Error rows.
+   * @param string $message
+   *   Message to be displayed.
+   *
+   * @return array
+   *   Formatted error message and count.
+   */
+  public function getErrorMessage(string $rows, string $message): array;
+
 }

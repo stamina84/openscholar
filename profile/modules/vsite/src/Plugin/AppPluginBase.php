@@ -171,6 +171,8 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
       '#upload_validators' => [
         'file_validate_extensions' => ['csv'],
       ],
+      // Default inline message disbled for import form.
+      '#error_no_message' => TRUE,
     ];
 
     $params = [

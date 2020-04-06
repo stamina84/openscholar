@@ -94,7 +94,7 @@ class NewsApp extends AppPluginBase {
     // Validate rows.
     if ($message = $faqImport->validateRows($data)) {
       $formState->setError($form['import_file']);
-      $this->messenger->addError($this->t('@title @news_date @image @file @date', $message));
+      $this->messenger->addError($this->t('@summary @title @news_date @image @file @date', $message));
     }
   }
 

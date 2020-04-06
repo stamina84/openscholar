@@ -219,7 +219,7 @@ class EventsApp extends AppPluginBase {
       // Validate rows.
       if ($message = $eventImport->validateRows($data)) {
         $formState->setError($form['import_file']);
-        $this->messenger->addError($this->t('@title @file @date @start_date @end_date', $message));
+        $this->messenger->addError($this->t('@summary @title @file @date @start_date @end_date', $message));
       }
     }
   }

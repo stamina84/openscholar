@@ -170,35 +170,51 @@ class AppImport extends Base {
         }
       }
     }
+    $msg_count = 0;
     $titleRows = rtrim($titleRows, ',');
     if ($titleRows) {
-      $message['@title'] = $this->t('Title is required for row/rows @titleRows</br>', ['@titleRows' => $titleRows]);
+      $msg_arr = $this->getErrorMessage($titleRows, 'The Title is required.');
+      $message['@title'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $newsDateRows = rtrim($newsDateRows, ',');
     if ($newsDateRows) {
-      $message['@news_date'] = $this->t('Date/Date Format is invalid for row/rows @newsDateRows</br>', ['@newsDateRows' => $newsDateRows]);
+      $msg_arr = $this->getErrorMessage($newsDateRows, 'News date format is invalid.');
+      $message['@news_date'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $emptyDateRows = rtrim($emptyDateRows, ',');
     if ($emptyDateRows) {
-      $message['@news_date'] = $this->t('Date is empty for row/rows @emptyDateRows</br>', ['@emptyDateRows' => $emptyDateRows]);
+      $msg_arr = $this->getErrorMessage($emptyDateRows, 'News date format is empty.');
+      $message['@news_date'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $imageRows = rtrim($imageRows, ',');
     if ($imageRows) {
-      $message['@image'] = $this->t('Image url is invalid for row/rows @imageRows</br>', ['@imageRows' => $imageRows]);
+      $msg_arr = $this->getErrorMessage($imageRows, 'Image url is invalid.');
+      $message['@image'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $fileRows = rtrim($fileRows, ',');
     if ($fileRows) {
-      $message['@file'] = $this->t('File url is invalid for row/rows @fileRows</br>', ['@fileRows' => $fileRows]);
+      $msg_arr = $this->getErrorMessage($fileRows, 'File url is invalid.');
+      $message['@file'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $dateRows = rtrim($dateRows, ',');
     if ($dateRows) {
-      $message['@date'] = $this->t('Date/Date Format is invalid for row/rows @dateRows</br>', ['@dateRows' => $dateRows]);
+      $msg_arr = $this->getErrorMessage($dateRows, 'Created date format is invalid.');
+      $message['@date'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
+    }
+    if ($msg_count > 0) {
+      $message['@summary'] = $this->t('The Import file has @count error(s). </br>', ['@count' => $msg_count]);
     }
     return $hasError ? $message : [];
   }

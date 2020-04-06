@@ -190,32 +190,46 @@ class AppImport extends Base {
         $endDateRows .= $row_number . ',';
       }
     }
+    $msg_count = 0;
     $titleRows = rtrim($titleRows, ',');
     if ($titleRows) {
-      $message['@title'] = $this->t('Title is required for row/rows @titleRows</br>', ['@titleRows' => $titleRows]);
+      $msg_arr = $this->getErrorMessage($titleRows, 'The Title is required.');
+      $message['@title'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $fileRows = rtrim($fileRows, ',');
     if ($fileRows) {
-      $message['@file'] = $this->t('File url is invalid for row/rows @fileRows</br>', ['@fileRows' => $fileRows]);
+      $msg_arr = $this->getErrorMessage($fileRows, 'File url is invalid.');
+      $message['@file'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $dateRows = rtrim($dateRows, ',');
     if ($dateRows) {
-      $message['@date'] = $this->t('Date/Date Format is invalid for row/rows @dateRows</br>', ['@dateRows' => $dateRows]);
+      $msg_arr = $this->getErrorMessage($dateRows, 'Created date Format is invalid.');
+      $message['@date'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
 
     $startDateRows = rtrim($startDateRows, ',');
     if ($startDateRows) {
-      $message['@start_date'] = $this->t('Start Date Format is invalid for row/rows @dateRows</br>', ['@dateRows' => $startDateRows]);
+      $msg_arr = $this->getErrorMessage($startDateRows, 'Start date format is invalid.');
+      $message['@start_date'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
 
     $endDateRows = rtrim($endDateRows, ',');
     if ($endDateRows) {
-      $message['@end_date'] = $this->t('End Date Format is invalid for row/rows @dateRows</br>', ['@dateRows' => $endDateRows]);
+      $msg_arr = $this->getErrorMessage($endDateRows, 'End date format is invalid.');
+      $message['@end_date'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
+    }
+    if ($msg_count > 0) {
+      $message['@summary'] = $this->t('The Import file has @count error(s). </br>', ['@count' => $msg_count]);
     }
     return $hasError ? $message : [];
   }

@@ -99,4 +99,26 @@ abstract class Base implements BaseInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getErrorMessage($rows, $message): array {
+    if (strpos($rows, ',') === FALSE) {
+      $message = $this->t('Row @rows: @message </br>', ['@rows' => $rows, '@message' => $message]);
+      $count = 1;
+    }
+    else {
+      $count = count(explode(',', $rows));
+      $message = $this->t('<a data-toggle="tooltip" title="Rows: @rows">@count Rows</a>: @msg </br>',
+        [
+          '@count' => $count,
+          '@rows' => $rows,
+          '@msg' => $message,
+        ]
+      );
+    }
+
+    return ['message' => $message, 'count' => $count];
+  }
+
 }
