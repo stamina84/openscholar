@@ -15,6 +15,11 @@ class OsSoftwareHelper implements OsSoftwareHelperInterface {
 
   use StringTranslationTrait;
 
+  /**
+   * Vsite Context Manager service.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManagerInterface
+   */
   private $vsiteContextManager;
 
   /**
@@ -96,6 +101,20 @@ class OsSoftwareHelper implements OsSoftwareHelperInterface {
       return;
     }
     $form['field_software_project']['widget'][0]['target_id']['#default_value'] = $node;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unsetRecommendedReleases($projectId): void {
+    $releaseNodes = $this->entityTypeManager->getStorage('node')->loadByProperties([
+      'field_software_project' => $projectId,
+      'field_is_recommended_version' => 1,
+    ]);
+    foreach ($releaseNodes as $releaseNode) {
+      $releaseNode->set('field_is_recommended_version', ['value' => 0]);
+      $releaseNode->save();
+    }
   }
 
 }
