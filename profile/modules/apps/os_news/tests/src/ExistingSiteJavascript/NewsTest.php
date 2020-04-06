@@ -14,6 +14,22 @@ use Drupal\views\Entity\View;
 class NewsTest extends OsExistingSiteJavascriptTestBase {
 
   /**
+   * Group administrator.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $groupAdmin;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->groupAdmin = $this->createUser();
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
+  }
+
+  /**
    * Tests the node add news form.
    */
   public function testNewsAddForm(): void {
@@ -184,6 +200,48 @@ class NewsTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->elementExists('css', '.breadcrumb li');
     $web_assert->pageTextContains('March 2020');
     $web_assert->linkNotExists('2020');
+  }
+
+  /**
+   * Test news list should not contains any media link.
+   */
+  public function testListPageNotContainsMedia() {
+    $media = $this->createMedia();
+    $this->group->addContent($media, "group_entity:media");
+
+    $assert_session = $this->assertSession();
+    $this->drupalLogin($this->groupAdmin);
+
+    // Creating news type node.
+    $title = $this->randomMachineName();
+    $this->visitViaVsite('node/add/news', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->getSession()->getPage()->fillField('title[0][value]', $title);
+    $this->getSession()->getPage()->fillField('field_date[0][value][date]', date("Y-m-d"));
+
+    // Attaching media to the news page.
+    $assert_session->waitForElementVisible('css', '.media-browser-drop-box');
+    $node_upload = $this->getCurrentPage()->find(
+      'css', '.field--name-field-attached-media #upmedia'
+    );
+    $node_upload->click();
+    $this->attachMediaViaMediaBrowser();
+
+    // Save news.
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Assertion to check attached media field on list page.
+    $news_with_media = $this->getNodeByTitle($title);
+    $this->assertNotEmpty($news_with_media);
+
+    // Redirect to the list page.
+    $this->visitViaVsite('news', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $assert_session->elementNotExists(
+      'css', '.field--name-field-attached-media'
+    );
   }
 
 }

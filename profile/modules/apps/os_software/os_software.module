@@ -51,14 +51,22 @@ function _os_software_hide_node_title_form(&$form) {
  *
  * Generates the node title for Software Releases.
  */
-function os_software_node_presave($node) {
+function os_software_node_presave(NodeInterface $node) {
   if ($node->bundle() != 'software_release') {
     return;
   }
 
-  // Sets the node title like "[project-node:title] [release-node:version]".
   /** @var \Drupal\os_software\OsSoftwareHelper $helper */
   $helper = Drupal::service('os.software.helper');
+
+  // Unset others as recommended release if this is recommended.
+  $field_recommended_version = $node->get('field_is_recommended_version')->getValue()[0]['value'];
+  if ((bool) $field_recommended_version) {
+    $project_id = $node->get('field_software_project')->getValue()[0]['target_id'];
+    $helper->unsetRecommendedReleases($project_id);
+  }
+
+  // Sets the node title like "[project-node:title] [release-node:version]".
   $title = $helper->prepareReleaseTitle($node);
   $node->set('title', $title);
 }

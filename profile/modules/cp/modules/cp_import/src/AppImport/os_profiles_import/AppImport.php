@@ -213,46 +213,65 @@ class AppImport extends Base {
       }
 
     }
+    $msg_count = 0;
     $firstNameRows = rtrim($firstNameRows, ',');
     if ($firstNameRows) {
-      $message['@firstNameRows'] = $this->t('First name is required for row/rows @firstNameRows</br>', ['@firstNameRows' => $firstNameRows]);
+      $msg_arr = $this->getErrorMessage($firstNameRows, 'First name is required.');
+      $message['@firstNameRows'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $lastNameRows = rtrim($lastNameRows, ',');
     if ($lastNameRows) {
-      $message['@lastNameRows'] = $this->t('Last name is required for row/rows @lastNameRows</br>', ['@lastNameRows' => $lastNameRows]);
+      $msg_arr = $this->getErrorMessage($lastNameRows, 'Last name is required.');
+      $message['@lastNameRows'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $photoRows = rtrim($photoRows, ',');
     if ($photoRows) {
-
-      $message['@photo'] = $this->t('Photo url is invalid for row/rows @photo</br>', ['@photo' => $photoRows]);
+      $msg_arr = $this->getErrorMessage($photoRows, 'Photo url is invalid.');
+      $message['@photo'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $dateRows = rtrim($dateRows, ',');
     if ($dateRows) {
-      $message['@date'] = $this->t('Date/Date Format is invalid for row/rows @dateRows</br>', ['@dateRows' => $dateRows]);
+      $msg_arr = $this->getErrorMessage($dateRows, 'Created date format is invalid.');
+      $message['@date'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $emailRows = rtrim($emailRows, ',');
     if ($emailRows) {
-      $message['@email'] = $this->t('Email/Email Format is invalid for row/rows @emailRows</br>', ['@emailRows' => $emailRows]);
+      $msg_arr = $this->getErrorMessage($emailRows, 'Email format is invalid.');
+      $message['@email'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $website1Rows = rtrim($website1Rows, ',');
     if ($website1Rows) {
-      $message['@website1'] = $this->t('Websites url 1 is invalid for row/rows @website1Rows</br>', ['@website1Rows' => $website1Rows]);
+      $msg_arr = $this->getErrorMessage($website1Rows, 'Websites url 1 is invalid.');
+      $message['@website1'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $website2Rows = rtrim($website2Rows, ',');
     if ($website2Rows) {
-      $message['@website2'] = $this->t('Websites url 2 is invalid for row/rows @website2Rows</br>', ['@website2Rows' => $website2Rows]);
+      $msg_arr = $this->getErrorMessage($website2Rows, 'Websites url 2 is invalid.');
+      $message['@website2'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
     }
     $website3Rows = rtrim($website3Rows, ',');
     if ($website3Rows) {
-      $message['@website3'] = $this->t('Websites url 3 is invalid for row/rows @website3Rows</br>', ['@website3Rows' => $website3Rows]);
+      $msg_arr = $this->getErrorMessage($website3Rows, 'Websites url 3 is invalid.');
+      $message['@website3'] = $msg_arr['message'];
+      $msg_count += $msg_arr['count'];
       $hasError = TRUE;
+    }
+    if ($msg_count > 0) {
+      $message['@summary'] = $this->t('The Import file has @count error(s). </br>', ['@count' => $msg_count]);
     }
     return $hasError ? $message : [];
   }

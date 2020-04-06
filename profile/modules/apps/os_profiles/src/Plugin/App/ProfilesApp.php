@@ -93,7 +93,7 @@ class ProfilesApp extends AppPluginBase {
     // Validate rows.
     if ($message = $faqImport->validateRows($data)) {
       $formState->setError($form['import_file']);
-      $this->messenger->addError($this->t('@firstNameRows @lastNameRows @photo @email @date @website1Rows @website2Rows @website3Rows', $message));
+      $this->messenger->addError($this->t('@summary @firstNameRows @lastNameRows @photo @email @date @website1Rows @website2Rows @website3Rows', $message));
     }
   }
 

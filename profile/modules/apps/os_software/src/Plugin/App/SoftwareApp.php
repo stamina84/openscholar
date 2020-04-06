@@ -109,7 +109,7 @@ class SoftwareApp extends AppPluginBase {
     // Validate rows.
     if ($message = $softwareImport->validateRows($data)) {
       $formState->setError($form['import_file']);
-      $this->messenger->addError($this->t('@title @file @body @date', $message));
+      $this->messenger->addError($this->t('@summary @title @file @body @date', $message));
     }
   }
 

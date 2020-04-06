@@ -28,4 +28,12 @@ interface OsSoftwareHelperInterface {
    */
   public function prePopulateSoftwareProjectField(array &$form) : void;
 
+  /**
+   * Unset other recommended releases when current one is marked recommended.
+   *
+   * @param int $projectId
+   *   Software project id for which releases are set.
+   */
+  public function unsetRecommendedReleases($projectId): void;
+
 }

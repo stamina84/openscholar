@@ -30,6 +30,9 @@ class PostLogoutRedirectTest extends OsExistingSiteJavascriptTestBase {
     // Tests.
     $this->drupalLogin($account);
     $this->visitViaVsite("node/{$node->id()}", $this->group);
+    // So clicking the account name does not go to /user,
+    // title is removed by js.
+    $this->assertJsCondition("('' == document.getElementById('toolbar-item-user').title)", 10000);
     $this->getSession()->getPage()->clickLink($account->getAccountName());
     $this->getSession()->getPage()->clickLink('Log out');
 

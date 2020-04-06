@@ -58,8 +58,8 @@ class PublicationAuthorDisplayFormatTest extends OsExistingSiteJavascriptTestBas
     foreach ($results as $value) {
       $name_arr[] = $value->getText();
     }
-    $this->assertTrue(in_array($name1, $name_arr), 'Name not present in autocomplete suggestion.');
-    $this->assertTrue(in_array($name2, $name_arr), 'Name not present in autocomplete suggestion.');
+    $this->assertTrue(in_array($name1, $name_arr), 'Name [' . $name1 . '] not present in autocomplete suggestions [' . implode(',', $name_arr) . '].');
+    $this->assertTrue(in_array($name2, $name_arr), 'Name [' . $name2 . '] not present in autocomplete suggestions [' . implode(',', $name_arr) . '].');
   }
 
   /**

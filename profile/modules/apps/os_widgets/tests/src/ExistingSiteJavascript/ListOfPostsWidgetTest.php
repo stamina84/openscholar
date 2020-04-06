@@ -105,10 +105,10 @@ class ListOfPostsWidgetTest extends OsExistingSiteJavascriptTestBase {
       'field_widget_title[0][value]' => $this->widgetName,
     ];
     $this->submitForm($edit, 'edit-submit');
-    $web_assert->statusCodeEquals(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $block = $this->entityTypeManager->getStorage('block_content')->loadByProperties(['field_widget_title' => $this->widgetName]);
-    $this->assertNotEmpty($block, 'A match was not found which means block was created successfully.');
+    $this->assertNotEmpty($block, 'A match was not found which means block [' . $this->widgetName . '] was created successfully.');
   }
 
   /**

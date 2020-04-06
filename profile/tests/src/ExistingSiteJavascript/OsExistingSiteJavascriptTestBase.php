@@ -70,7 +70,7 @@ abstract class OsExistingSiteJavascriptTestBase extends ExistingSiteWebDriverTes
    * @throws \Behat\Mink\Exception\DriverException
    */
   protected function waitForAjaxToFinish(): void {
-    $condition = "(0 === jQuery.active && 0 === jQuery(':animated').length)";
+    $condition = "(typeof jQuery != 'undefined' && 0 === jQuery.active && 0 === jQuery(':animated').length)";
     $this->assertJsCondition($condition, 10000);
   }
 
@@ -98,6 +98,8 @@ abstract class OsExistingSiteJavascriptTestBase extends ExistingSiteWebDriverTes
     $this->assertSession()->pageTextContains('Previously uploaded files');
     // Select "Previously uploaded files" tab.
     $this->getSession()->getPage()->find('css', '.media-browser-button--library')->click();
+    // Waiting for element to load.
+    $this->assertSession()->waitForElementVisible('css', '.media-row');
     // Select first media.
     $this->getSession()->getPage()->find('css', '.media-row')->click();
     // Insert to field.

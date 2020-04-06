@@ -43,12 +43,28 @@ class PlaceBlockPageVariant extends OriginalVariant {
   protected $blockManager;
 
   /**
+   * The vsite context manager.
+   *
+   * @var \Drupal\vsite\Plugin\VsiteContextManagerInterface
+   */
+  protected $vsiteContextManager;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->blockManager = $container->get('plugin.manager.block');
+    $instance->vsiteContextManager = $container->get('vsite.context_manager');
+    $instance->currentUser = $container->get('current_user');
 
     return $instance;
   }
@@ -259,6 +275,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
     ];
 
     $block_storage = $this->entityTypeManager->getStorage('block_content');
+    $active_vsite = $this->vsiteContextManager->getActiveVsite();
 
     foreach ($widgets_not_yet_placed as $b) {
       $plugin_id = $b->getpluginId();
@@ -278,7 +295,7 @@ class PlaceBlockPageVariant extends OriginalVariant {
 
       $block_build = [
         '#type' => 'inline_template',
-        '#template' => '<div class="block block-active display-contextual" data-block-type="{{ type }}" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
+        '#template' => '<div class="block block-active" data-block-type="{{ type }}" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>',
         '#context' => [
           'id' => $b->id(),
           'type' => $block_type,
@@ -293,7 +310,10 @@ class PlaceBlockPageVariant extends OriginalVariant {
       }
 
       $block_build['#context']['content'] = $this->entityTypeManager->getViewBuilder('block')->view($b);
-      $block_build['#contextual_links'] = $block_contextual_links;
+      if ($active_vsite && $active_vsite->hasPermission('edit widgets', $this->currentUser)) {
+        $block_build['#contextual_links'] = $block_contextual_links;
+        $block_build['#template'] = '<div class="block block-active display-contextual" data-block-type="{{ type }}" data-block-id="{{ id }}" tabindex="0"><h3 class="block-title">{{ title }}</h3>{{ content }}</div>';
+      }
 
       $output['existing-blocks'][$b->id()] = $block_build;
     }

@@ -249,3 +249,13 @@ aside {
     border: 0;
   }
 }
+.view-upcoming-calendar,
+.full-calendar-view {
+  .attachment {
+    @media#{$tablet} {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    }
+  }
+}

@@ -113,7 +113,8 @@ class FacetedTaxonomyWidget extends OsWidgetsBase implements OsWidgetsInterface 
     // Load search page.
     $query = $this->searchFacetedTaxonoQueryBuilder->getQuery();
     $query->keys('');
-
+    // Tag for search by faceted taxonomy widget.
+    $query->addTag('group_by_faceted_taxonomy');
     // Dependent filters.
     $this->searchQueryBuilder->queryBuilder($query);
 
