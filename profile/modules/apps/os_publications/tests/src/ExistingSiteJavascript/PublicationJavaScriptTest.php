@@ -162,4 +162,52 @@ class PublicationJavaScriptTest extends OsExistingSiteJavascriptTestBase {
 
   }
 
+  /**
+   * Test bibcite_reference list should not contains any media link.
+   */
+  public function testListPageNotContainsMedia() {
+    $assert_session = $this->assertSession();
+    $this->drupalLogin($this->groupAdmin);
+    $media = $this->createMedia();
+    $this->group->addContent($media, "group_entity:media");
+
+    // Creating bibcite_reference type node.
+    $title = $this->randomMachineName();
+    $bibcite_publisher = $this->randomMachineName();
+    $this->visitViaVsite('bibcite/reference/add/book', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->getSession()->getPage()->fillField('bibcite_publisher[0][value]', $title);
+    $this->getSession()->getPage()->fillField('bibcite_publisher[0][value]', $bibcite_publisher);
+    $this->getSession()->getPage()->fillField('bibcite_year[0][value]', 1998);
+    $this->getSession()->getPage()->fillField('author[0][target_id]', 'Withtesting Authortesting');
+
+    // Attaching media to the bibcite_reference page.
+    $assert_session->waitForElementVisible('css', '.media-browser-drop-box');
+    $node_upload = $this->getCurrentPage()->find('css', '.field--name-field-attach-files #upmedia');
+    $node_upload->click();
+    $this->attachMediaViaMediaBrowser();
+
+    // Save bibcite_reference.
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Assertion to check attached media field on list page.
+    $entityTypeManager = $this->container->get('entity_type.manager');
+    $books = $entityTypeManager->getStorage('bibcite_reference')->loadByProperties([
+      'bibcite_publisher' => $bibcite_publisher,
+    ]);
+
+    if ($books) {
+      $book = array_pop($books);
+      $this->markEntityForCleanup($book);
+    }
+
+    // Redirect to the list page.
+    $this->visitViaVsite('publications', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Attach Files');
+    $assert_session->elementExists('css', '.field--name-field-attach-files');
+  }
+
 }

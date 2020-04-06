@@ -31,12 +31,21 @@ class FaqTest extends OsExistingSiteJavascriptTestBase {
   protected $vsiteContextManager;
 
   /**
+   * Group administrator.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $groupAdmin;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
     $this->vsiteContextManager = $this->container->get('vsite.context_manager');
     $this->configFactory = $this->container->get('config.factory');
+    $this->groupAdmin = $this->createUser();
+    $this->addGroupAdmin($this->groupAdmin, $this->group);
   }
 
   /**
@@ -186,6 +195,42 @@ class FaqTest extends OsExistingSiteJavascriptTestBase {
     $this->assertContains('<strong>See also:</strong>', $page->getHtml());
     $web_assert->pageTextContains($term1->label());
     $web_assert->pageTextContains($term2->label());
+  }
+
+  /**
+   * Test faq list should not contains any media link.
+   */
+  public function testListPageNotContainsMedia() {
+    $media = $this->createMedia();
+    $this->group->addContent($media, "group_entity:media");
+
+    $assert_session = $this->assertSession();
+    $this->drupalLogin($this->groupAdmin);
+
+    // Creating faq Node.
+    $faq = $this->createNode([
+      'type' => 'faq',
+    ]);
+    $this->addGroupContent($faq, $this->group);
+
+    // Redirecting to edit page to attache media.
+    $this->visitViaVsite("node/{$faq->id()}/edit", $this->group);
+    $assert_session->statusCodeEquals(200);
+
+    // Attaching media to the faq page.
+    $assert_session->waitForElementVisible('css', '.media-browser-drop-box');
+    $node_upload = $this->getCurrentPage()->find('css', '.field--name-field-attached-media #upmedia');
+    $node_upload->click();
+    $this->attachMediaViaMediaBrowser();
+
+    // Save faq.
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Redirect to the list page.
+    $this->visitViaVsite('faq', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $assert_session->elementNotExists('css', '.field--name-field-attached-media');
   }
 
 }

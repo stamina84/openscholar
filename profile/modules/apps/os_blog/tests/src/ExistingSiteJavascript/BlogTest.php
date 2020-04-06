@@ -212,15 +212,19 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
   public function testMonthArchiveBreadcrumbs() {
     $web_assert = $this->assertSession();
 
-    $blog1 = $this->createNode([
-      'type' => 'blog',
-      'created' => strtotime('2020-01-01 20:00:00'),
-    ]);
+    $blog1 = $this->createNode(
+      [
+        'type'    => 'blog',
+        'created' => strtotime('2020-01-01 20:00:00'),
+      ]
+    );
     $this->addGroupContent($blog1, $this->group);
-    $blog2 = $this->createNode([
-      'type' => 'blog',
-      'created' => strtotime('2020-03-01 20:00:00'),
-    ]);
+    $blog2 = $this->createNode(
+      [
+        'type'    => 'blog',
+        'created' => strtotime('2020-03-01 20:00:00'),
+      ]
+    );
     $this->addGroupContent($blog2, $this->group);
 
     $this->visitViaVsite('blog/archives/2020/01', $this->group);
@@ -242,6 +246,43 @@ class BlogTest extends OsExistingSiteJavascriptTestBase {
     $web_assert->elementExists('css', '.breadcrumb li');
     $web_assert->pageTextContains('March 2020');
     $web_assert->linkNotExists('2020');
+  }
+
+  /**
+   * Test blog list should not contains any media link.
+   */
+  public function testListPageNotContainsMedia() {
+    $media = $this->createMedia();
+    $this->group->addContent($media, "group_entity:media");
+
+    $assert_session = $this->assertSession();
+    $this->drupalLogin($this->groupAdmin);
+
+    // Creating blog type node.
+    $title = $this->randomMachineName();
+    $this->visitViaVsite('node/add/blog', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->getSession()->getPage()->fillField('title[0][value]', $title);
+
+    // Attaching media to the blog page.
+    $assert_session->waitForElementVisible('css', '.media-browser-drop-box');
+    $node_upload = $this->getCurrentPage()->find('css', '.field--name-field-attached-media #upmedia');
+    $node_upload->click();
+    $this->attachMediaViaMediaBrowser();
+
+    // Save blog.
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Assertion to check attached media field on list page.
+    $blog_with_media = $this->getNodeByTitle($title);
+    $this->assertNotEmpty($blog_with_media);
+
+    // Redirect to the list page.
+    $this->visitViaVsite('blog', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $assert_session->elementNotExists('css', '.field--name-field-attached-media');
   }
 
 }
