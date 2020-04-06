@@ -132,6 +132,13 @@
 ul.nav-tabs {
   margin-left: 0;
   margin-bottom: 10px;
+  li {
+    a {
+      @media #{$mobile} {
+        padding: 8px;
+      }
+    }
+  }
 }
 /**** widget tabs ****/
 .block--type-tabs {
