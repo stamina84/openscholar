@@ -95,7 +95,8 @@ class OsFileResource extends FileUploadResource {
     if (isset($usage['file']['media'])) {
       ksort($usage['file']['media']);
       /** @var \Drupal\media\MediaInterface $media */
-      $media = \Drupal::entityTypeManager()->getStorage('media')->load(reset(array_keys($usage['file']['media'])));
+      $file_usage = array_keys($usage['file']['media']);
+      $media = \Drupal::entityTypeManager()->getStorage('media')->load(reset($file_usage));
     }
     else {
 

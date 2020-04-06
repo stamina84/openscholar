@@ -287,3 +287,34 @@ function os_media_inline_entity_form_entity_form_alter(&$entity_form, &$form_sta
   $account = Drupal::currentUser();
   $entity_form['#access'] = $group->hasPermission('update any group_entity:media entity', $account);
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function os_media_form_alter(&$form, &$form_state, $form_id) {
+
+  if (isset($form['field_attached_media']) || isset($form['field_attach_files'])) {
+    $validate_actions[] = '_validate_media';
+    $form['#validate'] = array_merge($validate_actions, $form['#validate']);
+  }
+}
+
+/**
+ * Changing the media in validation if form has field for document.
+ */
+function _validate_media(&$form, FormStateInterface $form_state) {
+  $field_media = '';
+  if (isset($form_state->getValue('field_attached_media')[0]['target_id'])) {
+    $field_media = $form_state->getValue('field_attached_media')[0]['target_id'];
+  }
+  elseif (isset($form_state->getValue('field_attach_files')[0]['target_id'])) {
+    $field_media = $form_state->getValue('field_attach_files')[0]['target_id'];
+  }
+  if ($field_media != '' && $field_media != NULL) {
+    $media = \Drupal::entityTypeManager()->getStorage('media')->load($field_media);
+    if ($media->bundle() == 'presentation') {
+      $media->set('bundle', 'document');
+      $media->save();
+    }
+  }
+}
