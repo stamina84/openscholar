@@ -9,7 +9,6 @@ use Drupal\Tests\openscholar\ExistingSiteJavascript\OsExistingSiteJavascriptTest
  *
  * @group functional-javascript
  * @group widgets
- * @group wip
  */
 class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
 
@@ -117,6 +116,8 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
     $this->visitViaVsite("", $this->group);
     $web_assert->pageTextContains('Add slide');
     $page = $this->getCurrentPage();
+    $page->findLink('Add slide')->mouseOver();
+    $web_assert->waitForElement('css', '.block--type-slideshow button');
     $page->find('css', '.block--type-slideshow button')->press();
     $page->find('css', '.block--type-slideshow .block-contentblock-edit')->press();
     $edit_locator = '.field--name-field-slideshow .glyphicon-pencil';
