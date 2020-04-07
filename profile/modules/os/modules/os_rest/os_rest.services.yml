@@ -19,3 +19,6 @@ services:
     tags:
       - { name: normalizer, priority: 2}
     arguments: ['@entity.manager']
+  os_rest.entities_deleted:
+    class: Drupal\os_rest\OsRestEntitiesDeleted
+    arguments: ['@database', '@module_handler', '@datetime.time']
