@@ -4,6 +4,7 @@ namespace Drupal\os_rest\Plugin\rest\resource;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\cp_taxonomy\CpTaxonomyHelperInterface;
+use Drupal\os_rest\OsRestEntitiesDeletedInterface;
 use Drupal\rest\ResourceResponse;
 use Drupal\taxonomy\TermInterface;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
@@ -66,12 +67,14 @@ class OsVocabularyUpdatesResource extends OsResourceBase {
    *   Entity Type Manager.
    * @param \Drupal\cp_taxonomy\CpTaxonomyHelperInterface $cpTaxonomyHelper
    *   Taxonomy helper.
+   * @param \Drupal\os_rest\OsRestEntitiesDeletedInterface $entitiesDeleted
+   *   Entities deleted.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, VsiteContextManagerInterface $vsite_context_manager, EntityTypeManagerInterface $entityTypeManager, CpTaxonomyHelperInterface $cpTaxonomyHelper) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger, $vsite_context_manager, $entityTypeManager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, VsiteContextManagerInterface $vsite_context_manager, EntityTypeManagerInterface $entityTypeManager, CpTaxonomyHelperInterface $cpTaxonomyHelper, OsRestEntitiesDeletedInterface $entitiesDeleted) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger, $vsite_context_manager, $entityTypeManager, $entitiesDeleted);
     $this->cpTaxonomyHelper = $cpTaxonomyHelper;
     $this->vocabularyStorage = $this->entityTypeManager->getStorage('taxonomy_vocabulary');
     $this->taxonomyStorage = $this->entityTypeManager->getStorage('taxonomy_term');
@@ -89,7 +92,8 @@ class OsVocabularyUpdatesResource extends OsResourceBase {
       $container->get('logger.factory')->get('rest'),
       $container->get('vsite.context_manager'),
       $container->get('entity_type.manager'),
-      $container->get('cp.taxonomy.helper')
+      $container->get('cp.taxonomy.helper'),
+      $container->get('os_rest.entities_deleted')
     );
   }
 
@@ -101,7 +105,7 @@ class OsVocabularyUpdatesResource extends OsResourceBase {
    * @return \Drupal\rest\ResourceResponse
    *   The response.
    */
-  public function get($timestamp, $a, Request $request): ResourceResponse {
+  public function get(int $timestamp, $a, Request $request): ResourceResponse {
 
     $vsite_id = $request->get('vsite');
     $group = $this->vsiteContextManager->getActiveVsite();
@@ -113,6 +117,8 @@ class OsVocabularyUpdatesResource extends OsResourceBase {
 
     $vocabularies = $this->vocabularyStorage->loadMultiple();
     $data = $this->getVocabulariesData($vocabularies, $group->id());
+    $deleted = $this->getDeletedEntities('taxonomy_vocabulary', $timestamp, $request);
+    $data = array_merge($data, $deleted);
     $resource = new ResourceResponse($data);
 
     $resource->addCacheableDependency('vsite:' . $group->id());

@@ -17,4 +17,17 @@ interface OsRestEntitiesDeletedInterface {
    */
   public function insertEntity(EntityInterface $entity): void;
 
+  /**
+   * Get deleted entities by timestamp.
+   *
+   * @param string $entity_type
+   *   Entity type.
+   * @param int $timestamp
+   *   Past timestamp filter.
+   *
+   * @return array
+   *   Collected deleted rows.
+   */
+  public function getEntities(string $entity_type, int $timestamp): array;
+
 }

@@ -3,10 +3,12 @@
 namespace Drupal\os_rest\Plugin\rest\resource;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\os_rest\OsRestEntitiesDeletedInterface;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class OsResourceBase.
@@ -30,6 +32,13 @@ abstract class OsResourceBase extends ResourceBase {
   protected $entityTypeManager;
 
   /**
+   * Entities Deleted Interface.
+   *
+   * @var \Drupal\os_rest\OsRestEntitiesDeletedInterface
+   */
+  protected $entitiesDeleted;
+
+  /**
    * Creates a new OsVocabularyResource object.
    *
    * @param array $configuration
@@ -46,11 +55,14 @@ abstract class OsResourceBase extends ResourceBase {
    *   Vsite context manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity Type Manager.
+   * @param \Drupal\os_rest\OsRestEntitiesDeletedInterface $entitiesDeleted
+   *   Entities Deleted Interface.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, VsiteContextManagerInterface $vsite_context_manager, EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, VsiteContextManagerInterface $vsite_context_manager, EntityTypeManagerInterface $entityTypeManager, OsRestEntitiesDeletedInterface $entitiesDeleted) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->vsiteContextManager = $vsite_context_manager;
     $this->entityTypeManager = $entityTypeManager;
+    $this->entitiesDeleted = $entitiesDeleted;
   }
 
   /**
@@ -64,7 +76,8 @@ abstract class OsResourceBase extends ResourceBase {
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('rest'),
       $container->get('vsite.context_manager'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('os_rest.entities_deleted')
     );
   }
 
@@ -109,6 +122,17 @@ abstract class OsResourceBase extends ResourceBase {
     $data['pager']['total_pages'] = 1;
 
     return $data;
+  }
+
+  /**
+   * Get deleted entities with service.
+   */
+  protected function getDeletedEntities(string $entity_type, int $timestamp, Request $request) {
+    // Logic represent in D7.
+    if ($timestamp < strtotime('-30 days')) {
+      return [];
+    }
+    return $this->entitiesDeleted->getEntities($entity_type, $timestamp);
   }
 
 }

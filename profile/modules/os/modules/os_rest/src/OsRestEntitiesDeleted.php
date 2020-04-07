@@ -86,4 +86,29 @@ class OsRestEntitiesDeleted implements OsRestEntitiesDeletedInterface {
       ->execute();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntities(string $entity_type, int $timestamp): array {
+    $result = $this->connection->select('entities_deleted', 'ed')
+      ->fields('ed')
+      ->condition('entity_type', $entity_type)
+      ->condition('deleted', $timestamp, '>')
+      ->execute();
+
+    $deleted = [];
+
+    while ($r = $result->fetchAssoc()) {
+      $deleted[] = [
+        'id' => $r->entity_id,
+        'status' => 'deleted',
+        'extra' => unserialize($r->extra),
+      ];
+    }
+
+    // drupal_alter('os_rest_deleted_entities', $deleted, $this);
+    // $return = array_merge($return, $deleted);.
+    return $deleted;
+  }
+
 }
