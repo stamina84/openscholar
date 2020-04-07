@@ -123,6 +123,20 @@ class EntitiesDeletedTest extends OsExistingSiteTestBase {
   }
 
   /**
+   * Test when file is deleted.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testFileTableRowInserted() {
+    $entity = $this->createFile();
+
+    $entity->delete();
+
+    $rows = $this->getEntitiesDeletedRows($entity);
+    $this->assertEmpty($rows);
+  }
+
+  /**
    * Get entities deleted rows by entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface|null $entity
