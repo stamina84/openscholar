@@ -1,0 +1,12 @@
+uuid: 7be89195-c1f1-4ee3-b50f-f5f0fd74cd26
+langcode: en
+status: true
+dependencies: {  }
+id: hwp_project
+label: Project
+description: 'The Harvard Web Publishing standard Project site.'
+applicableTo:
+  project: project
+enabledApps:
+  page: page
+privateApps: {  }
