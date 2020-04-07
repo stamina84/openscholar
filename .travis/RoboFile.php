@@ -311,6 +311,7 @@ class RoboFile extends \Robo\Tasks
     $tasks = [];
 
     $tasks[] = $this->taskExec('docker-compose exec -T php composer global require hirak/prestissimo');
+    $tasks[] = $this->taskExec('echo COMPOSER_AUTH=\'{"github-oauth": {"github.com":"' . getenv('GITHUB_TOKEN') . '"}}\' >> .env');
     $tasks[] = $this->taskExec('make');
     $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config/phpunit.xml web/core/phpunit.xml');
     $tasks[] = $this->taskExec('docker-compose exec -T php cp .travis/config//bootstrap.php web/core/tests/bootstrap.php');
