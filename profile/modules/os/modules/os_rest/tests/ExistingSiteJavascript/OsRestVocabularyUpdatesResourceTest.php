@@ -53,7 +53,7 @@ class OsRestVocabularyUpdatesResourceTest extends OsExistingSiteTestBase {
   }
 
   /**
-   * Tests vocabulary resource with multiple vocabs and tree terms.
+   * Tests vocabulary updates with deleted.
    */
   public function testVocabularyUpdatesWithDeletedVocabs() {
     $vid1 = strtolower('a' . $this->randomMachineName());

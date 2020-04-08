@@ -89,7 +89,7 @@ class OsRestEntitiesDeleted implements OsRestEntitiesDeletedInterface {
   /**
    * {@inheritdoc}
    */
-  public function getEntities(string $entity_type, int $timestamp): array {
+  public function getEntities(string $entity_type, int $timestamp, array $context = []): array {
     $result = $this->connection->select('entities_deleted', 'ed')
       ->fields('ed')
       ->condition('entity_type', $entity_type)
@@ -106,8 +106,7 @@ class OsRestEntitiesDeleted implements OsRestEntitiesDeletedInterface {
       ];
     }
 
-    // drupal_alter('os_rest_deleted_entities', $deleted, $this);
-    // $return = array_merge($return, $deleted);.
+    $this->moduleHandler->alter('os_rest_deleted_entities', $deleted, $context);
     return $deleted;
   }
 

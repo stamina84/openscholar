@@ -5,6 +5,7 @@
  * Hook implementations for the vsite module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\path_alias\PathAliasInterface;
 use Drupal\bibcite_entity\Entity\ReferenceInterface;
@@ -526,10 +527,20 @@ function vsite_path_alias_presave(PathAliasInterface $entity) {
  *
  * Add vsite information to the data saved with a deleted entity.
  */
-function vsite_os_rest_entity_delete_data($entity) {
+function vsite_os_rest_entity_delete_data(EntityInterface $entity) {
   $data = [];
   // Load all the group content for this entity.
   $group_contents = GroupContent::loadByEntity($entity);
+
+  // Vocabulary is a config, it needs to get group id specially.
+  if ($entity->getEntityTypeId() == 'taxonomy_vocabulary') {
+    $collection_name = \Drupal::config('taxonomy.vocabulary.' . $entity->id())->getStorage()->getCollectionName();
+    if (!empty($collection_name)) {
+      list(, $group_id) = explode(':', $collection_name);
+      $data['group'] = $group_id;
+      return $data;
+    }
+  }
 
   // Assuming that the content can be related only to 1 group.
   if (empty($group_contents)) {
@@ -542,4 +553,22 @@ function vsite_os_rest_entity_delete_data($entity) {
   $data['group'] = $group->id();
 
   return $data;
+}
+
+/**
+ * Filter out deleted entities that don't belong to the current space.
+ */
+
+/**
+ * Implements hook_os_rest_deleted_entities_alter().
+ */
+function vsite_os_rest_deleted_entities_alter(&$deleted, $context) {
+  if (empty($context['vsite'])) {
+    return;
+  }
+  foreach ($deleted as $key => $row) {
+    if (empty($row['extra']['group']) || $row['extra']['group'] != $context['vsite']) {
+      unset($deleted[$key]);
+    }
+  }
 }

@@ -24,10 +24,12 @@ interface OsRestEntitiesDeletedInterface {
    *   Entity type.
    * @param int $timestamp
    *   Past timestamp filter.
+   * @param array $context
+   *   Context for extra data.
    *
    * @return array
    *   Collected deleted rows.
    */
-  public function getEntities(string $entity_type, int $timestamp): array;
+  public function getEntities(string $entity_type, int $timestamp, array $context = []): array;
 
 }

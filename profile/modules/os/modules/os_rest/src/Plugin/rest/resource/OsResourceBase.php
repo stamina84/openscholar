@@ -132,7 +132,10 @@ abstract class OsResourceBase extends ResourceBase {
     if ($timestamp < strtotime('-30 days')) {
       return [];
     }
-    return $this->entitiesDeleted->getEntities($entity_type, $timestamp);
+    $context = [
+      'vsite' => $request->get('vsite'),
+    ];
+    return $this->entitiesDeleted->getEntities($entity_type, $timestamp, $context);
   }
 
 }

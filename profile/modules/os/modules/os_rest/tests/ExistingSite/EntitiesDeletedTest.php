@@ -106,6 +106,7 @@ class EntitiesDeletedTest extends OsExistingSiteTestBase {
 
     $rows = $this->getEntitiesDeletedRows($entity);
     $this->assertNotEmpty($rows);
+    $this->assertEquals(serialize(['group' => $this->group->id()]), $rows[$entity->id()]->extra);
   }
 
   /**
