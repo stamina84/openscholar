@@ -69,9 +69,7 @@ class OsRestVocabularyUpdatesResourceTest extends OsExistingSiteTestBase {
     $this->assertEquals(2, $json_array->count);
     $rows = $json_array->rows;
     $this->assertEquals($vid1, $rows[0]->id);
-    $this->assertEquals($vid1, $rows[0]->machine_name);
-    $this->assertEquals($vid1, $rows[0]->label);
-    $this->assertEquals(CpTaxonomyHelper::WIDGET_TYPE_OPTIONS_SELECT, $rows[0]->form);
+    $this->assertEquals($vid2, $rows[1]->id);
     $this->assertEquals('deleted', $rows[1]->status);
   }
 

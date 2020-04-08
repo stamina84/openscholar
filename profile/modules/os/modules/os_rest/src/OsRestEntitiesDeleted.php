@@ -100,9 +100,9 @@ class OsRestEntitiesDeleted implements OsRestEntitiesDeletedInterface {
 
     while ($r = $result->fetchAssoc()) {
       $deleted[] = [
-        'id' => $r->entity_id,
+        'id' => $r['entity_id'],
         'status' => 'deleted',
-        'extra' => unserialize($r->extra),
+        'extra' => unserialize($r['extra']),
       ];
     }
 

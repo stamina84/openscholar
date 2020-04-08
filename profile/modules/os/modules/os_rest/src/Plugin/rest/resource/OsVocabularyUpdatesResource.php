@@ -118,7 +118,8 @@ class OsVocabularyUpdatesResource extends OsResourceBase {
     $vocabularies = $this->vocabularyStorage->loadMultiple();
     $data = $this->getVocabulariesData($vocabularies, $group->id());
     $deleted = $this->getDeletedEntities('taxonomy_vocabulary', $timestamp, $request);
-    $data = array_merge($data, $deleted);
+    $data['rows'] = array_merge($data['rows'], $deleted);
+    $data['count'] = count($data['rows']);
     $resource = new ResourceResponse($data);
 
     $resource->addCacheableDependency('vsite:' . $group->id());
